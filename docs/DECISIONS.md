@@ -1,0 +1,58 @@
+# Decision Log
+
+*Companion to `trading_app_ssd_v0_9.md` §15 and `MASTER_IMPLEMENTATION_PLAN.md`. One row per decision. A closed decision changes only by a new row that supersedes it. Created 2026-10-16.*
+
+## Closed decisions
+
+| # | Decision | Outcome | Date | Source / note |
+| ------ | ------ | ------ | ------ | ------ |
+| D2 | Where the ledger lives | On each client; the data service holds market data only; signed bundles move data between devices | 2026-10-14 | SSD §15 |
+| D5 | "Birth" moment for a company | First-trade timestamp; allotment and incorporation recorded as secondary, lower-confidence fields | 2026-10-14 | SSD §10.4 |
+| D12 | Android timing | Web app first; Android after R2 | 2026-10-14 | SSD §15 |
+| D3 | Fill rule | Next session open for decisions after close; market-on-close allowed for human orders only | 2026-10-16 | Owner, plan §5 |
+| D4 | Provider cross-check tolerance | 0.5% on unadjusted close, plus any share-count mismatch | 2026-10-16 | Owner, plan §5 |
+| D6 | Benchmark for comparator C2 | Nifty 50 total-return index (price index, flagged, if TRI is unavailable) plus a sector index per instrument | 2026-10-16 | Owner, plan §5 |
+| D7 | Virtual capital and risk caps | ₹10,00,000; max 10% per position; max loss 2% per trade; daily loss halt at 3% | 2026-10-16 | Owner, plan §5 |
+| D23 | Code size and modularity | Files at most 500 lines (warning above 300); functions at most 60 lines; complexity at most 10; no import cycles; cross-package imports through the package entry point only. Enforced by `pnpm verify` | 2026-10-16 | Owner; implemented in WP-0.1 |
+
+## Astro-engine audit decisions (plan Appendix A)
+
+| # | Decision | Outcome | Date |
+| ------ | ------ | ------ | ------ |
+| A1 | Engine source | `Sub-programs/JV-try` (the JY lineage) | 2026-10-16 |
+| A2 | Copy scope for P4 | `packages/engine-core` only; other modules are pulled in later, one per P7 work package | 2026-10-16 |
+| A3 | Conventions | Lahiri ayanāṃśa and mean node as registered defaults, passed through the FR-A2 convention set; Lahiri polynomial validated against Swiss Ephemeris values; no true node or alternative ayanāṃśa for now | 2026-10-16 |
+| A4 | Golden corpus | Synthetic charts only; no client data in this repo | 2026-10-16 |
+| A5 | Reference generator | `tools/recompute_*.py` from JV-try may be reused to produce golden vectors; not shipped in runtime | 2026-10-16 |
+
+## Technical choices made during build
+
+| # | Choice | Reason | Date |
+| ------ | ------ | ------ | ------ |
+| T1 | Entity types are defined once as zod 4 schemas in `packages/core/src/domain` and inferred as TypeScript types | One source of truth; the same schemas validate imported bundles (FR-X2) and generate the JSON-schema snapshot | 2026-10-16 |
+| T2 | Timestamps are integer UTC milliseconds; session dates are `YYYY-MM-DD` strings in IST; no `Date` objects in persisted data | Deterministic JSON and byte-equal hashes (NFR-1, RB R6) | 2026-10-16 |
+| T3 | Unadjusted bars use integer paise; adjusted bars use plain numbers and are for analytics only | Money stays integer (SSD §5.2); adjustment factors are fractional | 2026-10-16 |
+
+## Scope decisions
+
+| Decision | Outcome | Date |
+| ------ | ------ | ------ |
+| AI | No AI in the decision path (SSD §1.3). AI agents for search or analysis are deferred; the owner will plan any AI integration later. No AI work packages exist in the plan | 2026-10-16 |
+
+## Open decisions and where they get decided
+
+| # | Decision | Decided at | Default |
+| ------ | ------ | ------ | ------ |
+| D1 | UI framework | WP-0.4 spike | Expo universal |
+| D8, D21 | Evaluation-universe size and window | WP-0.5 power note | From the power note |
+| D9 | Hold-out and forward dates; who holds the lock | Start of P5 | To be set |
+| D10 | Name rule for buyer-company test | P4 / P5 | Legal name in force on decision date, registered nāma-akṣara table |
+| D11 | Intraday data source | Deferred | Daily only |
+| D13 | Reviewing scholar access | Deferred | Per CN §15 item 17 |
+| D14, D15 | Trailing-stop multiple; minimum reward-to-risk | P5 | 2.0 × ATR14; none in R2 |
+| D16 | External anchoring method | P4 (WP-4.5) | OpenTimestamps |
+| D17 | Mechanical Prashna moment for Tājika | P7 (WP-7.7) | 09:00 IST, Mumbai |
+| D18 | Fundamentals, holdings and pledge data source | Deferred | Proxies in SSD §10.2 |
+| D19 | Order handling on circuit-locked days | P1 (WP-1.7) | Entries expire; exits carry over to next open |
+| D20 | Kota zone names and paths | P7 (WP-7.6) | Resolve from SA |
+| D22 | Limit-fill rule | P1 (WP-1.7) | Trade-through of one tick; touch-only as sensitivity |

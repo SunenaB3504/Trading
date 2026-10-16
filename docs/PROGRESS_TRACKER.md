@@ -5,15 +5,15 @@
 **Status values:** `Not started` · `In progress` · `Blocked` · `Done`  
 **Done means** the work package's acceptance test (see the plan) has been run and the result is recorded in the *Acceptance result* column. Failures are recorded as failures; a work package with a failing test stays `In progress`.
 
-**Last updated:** 2026-10-16 (WP-0.1 done)
+**Last updated:** 2026-10-16 (WP-1.1 done)
 
 ## Phase summary
 
 <!-- SUMMARY-START -->
 | Phase | Done | In progress | Blocked | Not started | Total |
 | ------ | ------ | ------ | ------ | ------ | ------ |
-| P0 · Decisions, skeleton and de-risking | 2 | 1 | 0 | 5 | 8 |
-| P1 · Core ledger and simulator | 0 | 0 | 0 | 11 | 11 |
+| P0 · Decisions, skeleton and de-risking | 3 | 0 | 0 | 5 | 8 |
+| P1 · Core ledger and simulator | 1 | 0 | 0 | 10 | 11 |
 | P2 · Data service and universe | 0 | 0 | 0 | 9 | 9 |
 | P3 · Web MVP (R1) | 0 | 0 | 0 | 7 | 7 |
 | P4 · Chart module and shadow mode (R1.5) | 0 | 0 | 0 | 6 | 6 |
@@ -22,7 +22,7 @@
 | P7 · Jyotisham feature modules and PH entries (R3) | 0 | 0 | 0 | 10 | 10 |
 <!-- SUMMARY-END -->
 
-**Next work package:** WP-0.6 (evaluation harness) and WP-1.1 (domain types), which can run in parallel; WP-0.3, 0.2, 0.4 also unblocked  
+**Next work package:** WP-1.2 (money utilities) and WP-1.3 (clock, PRNG, audit chain), then 1.4; WP-0.6 (evaluation harness) can run in parallel; WP-0.2, 0.4 also unblocked  
 **Open blockers:** none
 
 ---
@@ -31,9 +31,9 @@
 
 | WP | Work package | Depends on | Status | Started | Done | Acceptance result | Notes |
 | ------ | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
-| 0.1 | git init; monorepo skeleton; strict TS; lint (size caps, import boundaries, cycles); Vitest; `pnpm verify` | - | Done | 2026-10-16 | 2026-10-16 | `pnpm verify` green twice: typecheck, lint, size, cycles, 11 tests (incl. core cannot import fs/react/Math.random/Date.now; 501-line file fails; core-to-app import and cycles flagged) | Repo had an Initial commit from the owner at 16:16; skeleton changes not yet committed |
+| 0.1 | git init; monorepo skeleton; strict TS; lint (size caps, import boundaries, cycles); Vitest; `pnpm verify` | - | Done | 2026-10-16 | 2026-10-16 | `pnpm verify` green twice: typecheck, lint, size, cycles, 11 tests (incl. core cannot import fs/react/Math.random/Date.now; 501-line file fails; core-to-app import and cycles flagged) | Committed and pushed as 32dbc9a |
 | 0.2 | Freeze pilot code and data into research/pilot with provenance file | 0.1 | Not started |  |  |  |  |
-| 0.3 | Decision log (docs/DECISIONS.md): D3, D4, D6, D7, D23 and audit answers | - | In progress | 2026-10-16 |  |  | Decisions made in chat; DECISIONS.md not yet created |
+| 0.3 | Decision log (docs/DECISIONS.md): D3, D4, D6, D7, D23 and audit answers | - | Done | 2026-10-16 | 2026-10-16 | docs/DECISIONS.md created with closed, scope and open decisions | |
 | 0.4 | Web spike: Expo web vs plain React; dense table, chart, Store on IndexedDB and SQLite-WASM | 0.1 | Not started |  |  |  | Decides D1 |
 | 0.5 | Power note: expected non-overlapping n and MDE for universe sizes 20/50/100/200 | 0.6 | Not started |  |  |  | Decides D21 and D8 |
 | 0.6 | §11.3 evaluation harness with null and positive controls | 0.1 | Not started |  |  |  |  |
@@ -44,7 +44,7 @@
 
 | WP | Work package | Depends on | Status | Started | Done | Acceptance result | Notes |
 | ------ | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
-| 1.1 | Domain types (instrument, bar, order, fill, lot, ledger entry, trade, audit event) | 0.1 | Not started |  |  |  |  |
+| 1.1 | Domain types (instrument, bar, order, fill, lot, ledger entry, trade, audit event) | 0.1 | Done | 2026-10-16 | 2026-10-16 | `pnpm verify` green: 23 tests; 15 entity schemas compile, validate, and a JSON-schema snapshot is committed | zod 4 schemas are the source of truth (types inferred); timestamps are UTC epoch ms; see DECISIONS.md T1-T3 |
 | 1.2 | Money and quantity utilities (integer paise, rounding) | 1.1 | Not started |  |  |  |  |
 | 1.3 | Injected clock, seeded PRNG, SHA-256 hash-chain audit log | 1.1 | Not started |  |  |  |  |
 | 1.4 | NSE/BSE trading calendar and sessions | 1.1 | Not started |  |  |  | [V] holiday list |
@@ -150,3 +150,5 @@
 | ------ | ------ |
 | 2026-10-16 | Tracker created from plan v1.2; WP-0.8 marked Done, WP-0.3 In progress |
 | 2026-10-16 | WP-0.1 Done (skeleton, guardrails, `pnpm verify` green); D23 closed |
+| 2026-10-16 | WP-0.3 Done: docs/DECISIONS.md created |
+| 2026-10-16 | WP-1.1 Done: domain schemas in packages/core/src/domain |

@@ -1,0 +1,1065 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`JSON schemas > matches the committed snapshot 1`] = `
+{
+  "auditEvent": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "additionalProperties": false,
+    "properties": {
+      "createdAt": {
+        "maximum": 9007199254740991,
+        "minimum": 0,
+        "type": "integer",
+      },
+      "hash": {
+        "pattern": "^[0-9a-f]{64}$",
+        "type": "string",
+      },
+      "payloadRef": {
+        "minLength": 1,
+        "type": "string",
+      },
+      "prevHash": {
+        "pattern": "^[0-9a-f]{64}$",
+        "type": "string",
+      },
+      "seq": {
+        "maximum": 9007199254740991,
+        "minimum": 0,
+        "type": "integer",
+      },
+      "type": {
+        "minLength": 1,
+        "type": "string",
+      },
+    },
+    "required": [
+      "seq",
+      "prevHash",
+      "hash",
+      "type",
+      "payloadRef",
+      "createdAt",
+    ],
+    "type": "object",
+  },
+  "barAdj": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "additionalProperties": false,
+    "properties": {
+      "close": {
+        "exclusiveMinimum": 0,
+        "type": "number",
+      },
+      "date": {
+        "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+        "type": "string",
+      },
+      "high": {
+        "exclusiveMinimum": 0,
+        "type": "number",
+      },
+      "instrumentId": {
+        "minLength": 1,
+        "type": "string",
+      },
+      "low": {
+        "exclusiveMinimum": 0,
+        "type": "number",
+      },
+      "open": {
+        "exclusiveMinimum": 0,
+        "type": "number",
+      },
+      "snapshotId": {
+        "minLength": 1,
+        "type": "string",
+      },
+      "volume": {
+        "maximum": 9007199254740991,
+        "minimum": 0,
+        "type": "integer",
+      },
+    },
+    "required": [
+      "instrumentId",
+      "date",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "snapshotId",
+    ],
+    "type": "object",
+  },
+  "barUnadj": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "additionalProperties": false,
+    "properties": {
+      "circuitFlag": {
+        "enum": [
+          "none",
+          "upper",
+          "lower",
+        ],
+        "type": "string",
+      },
+      "close": {
+        "maximum": 9007199254740991,
+        "minimum": -9007199254740991,
+        "type": "integer",
+      },
+      "date": {
+        "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+        "type": "string",
+      },
+      "disputed": {
+        "type": "boolean",
+      },
+      "high": {
+        "maximum": 9007199254740991,
+        "minimum": -9007199254740991,
+        "type": "integer",
+      },
+      "instrumentId": {
+        "minLength": 1,
+        "type": "string",
+      },
+      "low": {
+        "maximum": 9007199254740991,
+        "minimum": -9007199254740991,
+        "type": "integer",
+      },
+      "open": {
+        "maximum": 9007199254740991,
+        "minimum": -9007199254740991,
+        "type": "integer",
+      },
+      "provider": {
+        "minLength": 1,
+        "type": "string",
+      },
+      "snapshotId": {
+        "minLength": 1,
+        "type": "string",
+      },
+      "volume": {
+        "maximum": 9007199254740991,
+        "minimum": 0,
+        "type": "integer",
+      },
+    },
+    "required": [
+      "instrumentId",
+      "date",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "provider",
+      "snapshotId",
+      "disputed",
+      "circuitFlag",
+    ],
+    "type": "object",
+  },
+  "calendarDay": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "additionalProperties": false,
+    "properties": {
+      "date": {
+        "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+        "type": "string",
+      },
+      "exchange": {
+        "enum": [
+          "NSE",
+          "BSE",
+        ],
+        "type": "string",
+      },
+      "isTradingDay": {
+        "type": "boolean",
+      },
+      "muhurat": {
+        "type": "boolean",
+      },
+      "sessionClose": {
+        "anyOf": [
+          {
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "type": "integer",
+          },
+          {
+            "type": "null",
+          },
+        ],
+      },
+      "sessionOpen": {
+        "anyOf": [
+          {
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "type": "integer",
+          },
+          {
+            "type": "null",
+          },
+        ],
+      },
+    },
+    "required": [
+      "exchange",
+      "date",
+      "isTradingDay",
+      "sessionOpen",
+      "sessionClose",
+      "muhurat",
+    ],
+    "type": "object",
+  },
+  "corporateAction": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "additionalProperties": false,
+    "properties": {
+      "dividendPaisePerShare": {
+        "anyOf": [
+          {
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "type": "integer",
+          },
+          {
+            "type": "null",
+          },
+        ],
+      },
+      "effectiveAt": {
+        "maximum": 9007199254740991,
+        "minimum": 0,
+        "type": "integer",
+      },
+      "exDate": {
+        "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+        "type": "string",
+      },
+      "id": {
+        "minLength": 1,
+        "type": "string",
+      },
+      "instrumentId": {
+        "minLength": 1,
+        "type": "string",
+      },
+      "ratio": {
+        "anyOf": [
+          {
+            "additionalProperties": false,
+            "properties": {
+              "denominator": {
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991,
+                "type": "integer",
+              },
+              "numerator": {
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991,
+                "type": "integer",
+              },
+            },
+            "required": [
+              "numerator",
+              "denominator",
+            ],
+            "type": "object",
+          },
+          {
+            "type": "null",
+          },
+        ],
+      },
+      "source": {
+        "minLength": 1,
+        "type": "string",
+      },
+      "type": {
+        "enum": [
+          "split",
+          "bonus",
+          "dividend",
+          "rename",
+          "merger",
+          "demerger",
+        ],
+        "type": "string",
+      },
+    },
+    "required": [
+      "id",
+      "instrumentId",
+      "type",
+      "exDate",
+      "ratio",
+      "dividendPaisePerShare",
+      "source",
+      "effectiveAt",
+    ],
+    "type": "object",
+  },
+  "decision": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "additionalProperties": false,
+    "properties": {
+      "bucket": {
+        "type": [
+          "string",
+          "null",
+        ],
+      },
+      "createdAt": {
+        "maximum": 9007199254740991,
+        "minimum": 0,
+        "type": "integer",
+      },
+      "id": {
+        "minLength": 1,
+        "type": "string",
+      },
+      "rationale": {
+        "type": "string",
+      },
+      "signalFlags": {
+        "items": {
+          "type": "string",
+        },
+        "type": "array",
+      },
+      "source": {
+        "anyOf": [
+          {
+            "const": "human",
+            "type": "string",
+          },
+          {
+            "pattern": "^rule:[A-Za-z0-9._-]+@[A-Za-z0-9._-]+$",
+            "type": "string",
+          },
+        ],
+      },
+    },
+    "required": [
+      "id",
+      "source",
+      "rationale",
+      "signalFlags",
+      "bucket",
+      "createdAt",
+    ],
+    "type": "object",
+  },
+  "fill": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "additionalProperties": false,
+    "properties": {
+      "costsPaise": {
+        "maximum": 9007199254740991,
+        "minimum": 0,
+        "type": "integer",
+      },
+      "fillRuleId": {
+        "minLength": 1,
+        "type": "string",
+      },
+      "filledAt": {
+        "maximum": 9007199254740991,
+        "minimum": 0,
+        "type": "integer",
+      },
+      "id": {
+        "minLength": 1,
+        "type": "string",
+      },
+      "instrumentId": {
+        "minLength": 1,
+        "type": "string",
+      },
+      "orderId": {
+        "minLength": 1,
+        "type": "string",
+      },
+      "pricePaise": {
+        "exclusiveMinimum": 0,
+        "maximum": 9007199254740991,
+        "type": "integer",
+      },
+      "quantity": {
+        "exclusiveMinimum": 0,
+        "maximum": 9007199254740991,
+        "type": "integer",
+      },
+      "side": {
+        "enum": [
+          "buy",
+          "sell",
+        ],
+        "type": "string",
+      },
+      "tradingDate": {
+        "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+        "type": "string",
+      },
+    },
+    "required": [
+      "id",
+      "orderId",
+      "instrumentId",
+      "side",
+      "quantity",
+      "pricePaise",
+      "costsPaise",
+      "fillRuleId",
+      "filledAt",
+      "tradingDate",
+    ],
+    "type": "object",
+  },
+  "instrument": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "additionalProperties": false,
+    "properties": {
+      "delistReason": {
+        "type": [
+          "string",
+          "null",
+        ],
+      },
+      "delistedOn": {
+        "anyOf": [
+          {
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "type": "string",
+          },
+          {
+            "type": "null",
+          },
+        ],
+      },
+      "exchange": {
+        "enum": [
+          "NSE",
+          "BSE",
+        ],
+        "type": "string",
+      },
+      "firstTradeSource": {
+        "type": [
+          "string",
+          "null",
+        ],
+      },
+      "firstTradeTs": {
+        "anyOf": [
+          {
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "type": "integer",
+          },
+          {
+            "type": "null",
+          },
+        ],
+      },
+      "id": {
+        "minLength": 1,
+        "type": "string",
+      },
+      "isin": {
+        "pattern": "^[A-Z]{2}[A-Z0-9]{9}[0-9]$",
+        "type": "string",
+      },
+      "kind": {
+        "enum": [
+          "equity",
+        ],
+        "type": "string",
+      },
+      "listingDate": {
+        "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+        "type": "string",
+      },
+      "sector": {
+        "minLength": 1,
+        "type": "string",
+      },
+      "symbol": {
+        "minLength": 1,
+        "type": "string",
+      },
+      "verification": {
+        "enum": [
+          "verified",
+          "unverified",
+          "time_assumed",
+        ],
+        "type": "string",
+      },
+    },
+    "required": [
+      "id",
+      "kind",
+      "exchange",
+      "symbol",
+      "isin",
+      "sector",
+      "listingDate",
+      "firstTradeTs",
+      "firstTradeSource",
+      "verification",
+      "delistedOn",
+      "delistReason",
+    ],
+    "type": "object",
+  },
+  "instrumentBucket": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "additionalProperties": false,
+    "properties": {
+      "bucket": {
+        "enum": [
+          "steady",
+          "underdogs",
+          "speculative",
+          "cyclicals",
+          "mundane",
+        ],
+        "type": "string",
+      },
+      "evaluatedAt": {
+        "maximum": 9007199254740991,
+        "minimum": 0,
+        "type": "integer",
+      },
+      "inputsHash": {
+        "minLength": 1,
+        "type": "string",
+      },
+      "instrumentId": {
+        "minLength": 1,
+        "type": "string",
+      },
+      "ruleVersion": {
+        "minLength": 1,
+        "type": "string",
+      },
+    },
+    "required": [
+      "instrumentId",
+      "bucket",
+      "ruleVersion",
+      "evaluatedAt",
+      "inputsHash",
+    ],
+    "type": "object",
+  },
+  "instrumentName": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "additionalProperties": false,
+    "properties": {
+      "effectiveFrom": {
+        "maximum": 9007199254740991,
+        "minimum": 0,
+        "type": "integer",
+      },
+      "effectiveTo": {
+        "anyOf": [
+          {
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "type": "integer",
+          },
+          {
+            "type": "null",
+          },
+        ],
+      },
+      "instrumentId": {
+        "minLength": 1,
+        "type": "string",
+      },
+      "legalName": {
+        "minLength": 1,
+        "type": "string",
+      },
+      "source": {
+        "minLength": 1,
+        "type": "string",
+      },
+    },
+    "required": [
+      "instrumentId",
+      "legalName",
+      "effectiveFrom",
+      "effectiveTo",
+      "source",
+    ],
+    "type": "object",
+  },
+  "instrumentStatus": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "additionalProperties": false,
+    "properties": {
+      "availableAt": {
+        "maximum": 9007199254740991,
+        "minimum": 0,
+        "type": "integer",
+      },
+      "bandPct": {
+        "anyOf": [
+          {
+            "exclusiveMinimum": 0,
+            "maximum": 20,
+            "type": "number",
+          },
+          {
+            "type": "null",
+          },
+        ],
+      },
+      "effectiveAt": {
+        "maximum": 9007199254740991,
+        "minimum": 0,
+        "type": "integer",
+      },
+      "instrumentId": {
+        "minLength": 1,
+        "type": "string",
+      },
+      "source": {
+        "minLength": 1,
+        "type": "string",
+      },
+      "surveillanceList": {
+        "enum": [
+          "none",
+          "asm",
+          "gsm",
+        ],
+        "type": "string",
+      },
+      "surveillanceStage": {
+        "anyOf": [
+          {
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "type": "integer",
+          },
+          {
+            "type": "null",
+          },
+        ],
+      },
+      "suspended": {
+        "type": "boolean",
+      },
+      "tradeForTrade": {
+        "type": "boolean",
+      },
+    },
+    "required": [
+      "instrumentId",
+      "surveillanceList",
+      "surveillanceStage",
+      "bandPct",
+      "tradeForTrade",
+      "suspended",
+      "effectiveAt",
+      "availableAt",
+      "source",
+    ],
+    "type": "object",
+  },
+  "ledgerEntry": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "additionalProperties": false,
+    "properties": {
+      "account": {
+        "enum": [
+          "cash",
+          "position",
+          "fees",
+          "realised_pnl",
+          "capital",
+        ],
+        "type": "string",
+      },
+      "amountPaise": {
+        "maximum": 9007199254740991,
+        "minimum": -9007199254740991,
+        "type": "integer",
+      },
+      "correctsEntryId": {
+        "anyOf": [
+          {
+            "minLength": 1,
+            "type": "string",
+          },
+          {
+            "type": "null",
+          },
+        ],
+      },
+      "createdAt": {
+        "maximum": 9007199254740991,
+        "minimum": 0,
+        "type": "integer",
+      },
+      "fillId": {
+        "anyOf": [
+          {
+            "minLength": 1,
+            "type": "string",
+          },
+          {
+            "type": "null",
+          },
+        ],
+      },
+      "id": {
+        "minLength": 1,
+        "type": "string",
+      },
+      "instrumentId": {
+        "anyOf": [
+          {
+            "minLength": 1,
+            "type": "string",
+          },
+          {
+            "type": "null",
+          },
+        ],
+      },
+      "quantityDelta": {
+        "maximum": 9007199254740991,
+        "minimum": -9007199254740991,
+        "type": "integer",
+      },
+      "seq": {
+        "maximum": 9007199254740991,
+        "minimum": 0,
+        "type": "integer",
+      },
+      "txnId": {
+        "minLength": 1,
+        "type": "string",
+      },
+    },
+    "required": [
+      "id",
+      "txnId",
+      "seq",
+      "account",
+      "instrumentId",
+      "amountPaise",
+      "quantityDelta",
+      "fillId",
+      "correctsEntryId",
+      "createdAt",
+    ],
+    "type": "object",
+  },
+  "lot": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "additionalProperties": false,
+    "properties": {
+      "entryCostsPaise": {
+        "maximum": 9007199254740991,
+        "minimum": 0,
+        "type": "integer",
+      },
+      "id": {
+        "minLength": 1,
+        "type": "string",
+      },
+      "instrumentId": {
+        "minLength": 1,
+        "type": "string",
+      },
+      "openFillId": {
+        "minLength": 1,
+        "type": "string",
+      },
+      "openedOn": {
+        "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+        "type": "string",
+      },
+      "quantityOriginal": {
+        "exclusiveMinimum": 0,
+        "maximum": 9007199254740991,
+        "type": "integer",
+      },
+      "quantityRemaining": {
+        "maximum": 9007199254740991,
+        "minimum": 0,
+        "type": "integer",
+      },
+      "unitCostPaise": {
+        "exclusiveMinimum": 0,
+        "maximum": 9007199254740991,
+        "type": "integer",
+      },
+    },
+    "required": [
+      "id",
+      "instrumentId",
+      "openFillId",
+      "openedOn",
+      "quantityOriginal",
+      "quantityRemaining",
+      "unitCostPaise",
+      "entryCostsPaise",
+    ],
+    "type": "object",
+  },
+  "order": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "additionalProperties": false,
+    "properties": {
+      "blockedReason": {
+        "anyOf": [
+          {
+            "enum": [
+              "circuit_upper",
+              "circuit_lower",
+              "outside_day_range",
+              "limit_not_reached",
+              "non_trading_day",
+              "halted",
+              "ineligible",
+              "expired",
+            ],
+            "type": "string",
+          },
+          {
+            "type": "null",
+          },
+        ],
+      },
+      "decisionId": {
+        "minLength": 1,
+        "type": "string",
+      },
+      "fillRuleId": {
+        "minLength": 1,
+        "type": "string",
+      },
+      "id": {
+        "minLength": 1,
+        "type": "string",
+      },
+      "instrumentId": {
+        "minLength": 1,
+        "type": "string",
+      },
+      "limitPaise": {
+        "anyOf": [
+          {
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991,
+            "type": "integer",
+          },
+          {
+            "type": "null",
+          },
+        ],
+      },
+      "placedAt": {
+        "maximum": 9007199254740991,
+        "minimum": 0,
+        "type": "integer",
+      },
+      "quantity": {
+        "exclusiveMinimum": 0,
+        "maximum": 9007199254740991,
+        "type": "integer",
+      },
+      "rationale": {
+        "type": "string",
+      },
+      "side": {
+        "enum": [
+          "buy",
+          "sell",
+        ],
+        "type": "string",
+      },
+      "source": {
+        "anyOf": [
+          {
+            "const": "human",
+            "type": "string",
+          },
+          {
+            "pattern": "^rule:[A-Za-z0-9._-]+@[A-Za-z0-9._-]+$",
+            "type": "string",
+          },
+        ],
+      },
+      "status": {
+        "enum": [
+          "open",
+          "filled",
+          "rejected",
+          "expired",
+          "cancelled",
+        ],
+        "type": "string",
+      },
+      "tradingDate": {
+        "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+        "type": "string",
+      },
+      "type": {
+        "enum": [
+          "market",
+          "limit",
+        ],
+        "type": "string",
+      },
+      "validity": {
+        "enum": [
+          "day",
+        ],
+        "type": "string",
+      },
+    },
+    "required": [
+      "id",
+      "decisionId",
+      "instrumentId",
+      "side",
+      "type",
+      "quantity",
+      "limitPaise",
+      "validity",
+      "placedAt",
+      "tradingDate",
+      "status",
+      "source",
+      "rationale",
+      "fillRuleId",
+      "blockedReason",
+    ],
+    "type": "object",
+  },
+  "trade": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "additionalProperties": false,
+    "properties": {
+      "bucket": {
+        "type": [
+          "string",
+          "null",
+        ],
+      },
+      "closedOn": {
+        "anyOf": [
+          {
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "type": "string",
+          },
+          {
+            "type": "null",
+          },
+        ],
+      },
+      "entryFillId": {
+        "minLength": 1,
+        "type": "string",
+      },
+      "exitFillId": {
+        "anyOf": [
+          {
+            "minLength": 1,
+            "type": "string",
+          },
+          {
+            "type": "null",
+          },
+        ],
+      },
+      "grossPnlPaise": {
+        "anyOf": [
+          {
+            "maximum": 9007199254740991,
+            "minimum": -9007199254740991,
+            "type": "integer",
+          },
+          {
+            "type": "null",
+          },
+        ],
+      },
+      "id": {
+        "minLength": 1,
+        "type": "string",
+      },
+      "instrumentId": {
+        "minLength": 1,
+        "type": "string",
+      },
+      "netPnlPaise": {
+        "anyOf": [
+          {
+            "maximum": 9007199254740991,
+            "minimum": -9007199254740991,
+            "type": "integer",
+          },
+          {
+            "type": "null",
+          },
+        ],
+      },
+      "openedOn": {
+        "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+        "type": "string",
+      },
+      "source": {
+        "anyOf": [
+          {
+            "const": "human",
+            "type": "string",
+          },
+          {
+            "pattern": "^rule:[A-Za-z0-9._-]+@[A-Za-z0-9._-]+$",
+            "type": "string",
+          },
+        ],
+      },
+      "tags": {
+        "items": {
+          "type": "string",
+        },
+        "type": "array",
+      },
+    },
+    "required": [
+      "id",
+      "instrumentId",
+      "entryFillId",
+      "exitFillId",
+      "openedOn",
+      "closedOn",
+      "grossPnlPaise",
+      "netPnlPaise",
+      "source",
+      "bucket",
+      "tags",
+    ],
+    "type": "object",
+  },
+}
+`;
