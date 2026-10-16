@@ -5,7 +5,7 @@
 **Status values:** `Not started` · `In progress` · `Blocked` · `Done`  
 **Done means** the work package's acceptance test (see the plan) has been run and the result is recorded in the *Acceptance result* column. Failures are recorded as failures; a work package with a failing test stays `In progress`.
 
-**Last updated:** 2026-10-16 (WP-1.10 done)
+**Last updated:** 2026-10-16 (WP-1.11 done; P1 complete)
 
 ## Phase summary
 
@@ -13,7 +13,7 @@
 | Phase | Done | In progress | Blocked | Not started | Total |
 | ------ | ------ | ------ | ------ | ------ | ------ |
 | P0 · Decisions, skeleton and de-risking | 3 | 0 | 0 | 5 | 8 |
-| P1 · Core ledger and simulator | 10 | 0 | 0 | 1 | 11 |
+| P1 · Core ledger and simulator | 11 | 0 | 0 | 0 | 11 |
 | P2 · Data service and universe | 0 | 0 | 0 | 9 | 9 |
 | P3 · Web MVP (R1) | 0 | 0 | 0 | 7 | 7 |
 | P4 · Chart module and shadow mode (R1.5) | 0 | 0 | 0 | 6 | 6 |
@@ -22,7 +22,7 @@
 | P7 · Jyotisham feature modules and PH entries (R3) | 0 | 0 | 0 | 10 | 10 |
 <!-- SUMMARY-END -->
 
-**Next work package:** WP-1.11 (replay runner and golden report hash) closes P1; WP-0.6 (evaluation harness) can run in parallel; WP-0.2, 0.4 also unblocked  
+**Next work package:** P1 is complete; next is P2 (WP-2.1 data adapters) and WP-0.6 (evaluation harness) in P0; WP-0.2, 0.4 also unblocked  
 **Open blockers:** none
 
 ---
@@ -54,7 +54,7 @@
 | 1.8 | Ledger (FIFO lots, double entry, P&L, reconciliation) | 1.2, 1.7 | Done | 2026-10-16 | 2026-10-16 | `pnpm verify` green: 206 tests; hand-worked buy, partial sell, two-lot FIFO, bonus-then-sell with exact basis, dividend, consolidation write-off; 4 property tests over 300 random order streams each (balanced, cash never negative, holdings = bought - sold, net P&L = realised - fees + unrealised to the paise, trade gross P&L = realised); tampering, missing-fill and wrong-lot cases fail reconciliation and `buildReport` refuses to report | Append-only: every function returns a new state. Costs per fill are posted to a fees account; trade rows allocate entry and exit costs by cumulative rounding so they sum exactly. Not done: cash in lieu for fractional shares (consolidation basis is written off), FR-L4 ledger versions (come with the replay runner, WP-1.11), cash limits beyond non-negative (risk layer, WP-1.9) |
 | 1.9 | Risk layer (position cap, per-trade loss, daily halt) | 1.8 | Done | 2026-10-16 | 2026-10-16 | `pnpm verify` green: 217 tests; hand-worked caps (100 shares at the 10% cap, 60 with 40 held, 400 and 66 shares by trade risk, halt at exactly -3%); property test over 1,000 random requests: quantity never exceeds the request, position stays within the cap, stop loss within 2% of equity | D7 defaults (10% / 2% / 3% of equity, in basis points). Caps cut an order down and say why; sells and exits are never limited; entries stop during a daily-loss halt; a buy with no stop gets the position cap only and is flagged. Loss is measured to the stop, so a gap can exceed it |
 | 1.10 | Metrics with block-bootstrap intervals; comparators C1-C6 | 1.8 | Done | 2026-10-16 | 2026-10-16 | `pnpm verify` green: 234 tests; hand-worked win rate, averages, payoff, expectancy (equals mean net return), profit factor, cost drag, drawdown, holding sessions on the exchange calendar, and C1-C4 and C6 on synthetic bar series; bootstrap is reproducible per seed and its 95% interval covered the true mean 90-99% of the time over 200 simulated samples | Trade rows now carry quantity, basis, proceeds and entry/exit costs (trade schema and snapshot extended) so net return = net P&L / (basis + entry costs). Circular block bootstrap, default 2,000 replicates and cube-root block length. Not done: C5 skipped-signal outcomes (needs shadow signals, R1.5), exit-blocked sessions per trade (lives on the fill result; to be attached in the replay runner), intervals for excess return vs a comparator (to follow with the Ledger B display) |
-| 1.11 | Replay runner and golden report hash | 1.3, 1.8, 1.10 | Not started |  |  |  |  |
+| 1.11 | Replay runner and golden report hash | 1.3, 1.8, 1.10 | Done | 2026-10-16 | 2026-10-16 | `pnpm verify` green: 244 tests; fixed snapshot + fixed orders reproduce golden hash e0b425cc... (fixtures/golden/replay_scenario_v1.json, checked against the code in tools/); same hash whatever order the orders are supplied in; any input change changes the hash; ledger reconciles and net P&L = realised - fees + unrealised | Synthetic six-month fixture (3 instruments, 5-for-1 split, dividend, lower-circuit day, 12 human orders incl. a risk-capped buy, a carried exit, an expired limit, an oversell rejection, a MOC). Orders are handled in placement order, so a carried exit can post after later-placed orders; daily-loss halt uses the last completed session because there is no intraday data. Costs use the assumed broker profile (D24) |
 
 ## P2 · Data service and universe
 
@@ -161,3 +161,4 @@
 | 2026-10-16 | WP-1.8 Done: ledger with FIFO, double entry, reconciliation gate |
 | 2026-10-16 | WP-1.9 Done: risk layer |
 | 2026-10-16 | WP-1.10 Done: trade metrics, block bootstrap, comparators C1-C4 and C6 |
+| 2026-10-16 | WP-1.11 Done: replay runner and golden hash. P1 exit check: 244 tests pass; coverage of ledger, fills and analytics is 99.4% statements and lines, 100% functions, 89.8% branches (target 90%); run `pnpm coverage` |

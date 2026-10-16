@@ -12,3 +12,4 @@ export * from './fills';
 export * from './ledger';
 export * from './risk';
 export * from './analytics';
+export * from './replay';

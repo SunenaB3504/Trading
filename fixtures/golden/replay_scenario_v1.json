@@ -1,0 +1,5 @@
+{
+  "scenario": "fixture-v1",
+  "note": "Golden output of packages/core/src/replay/fixtureScenario.ts. Changes only by a logged decision.",
+  "reportHash": "e0b425cce01d3276c53909e3af23d198a90d49d14f140fafca9a8a2be9b4b3a8"
+}
