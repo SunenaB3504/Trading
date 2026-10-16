@@ -1,6 +1,13 @@
 import type { CalendarDay } from '../domain/market';
 import type { UtcMillis } from '../domain/primitives';
-import { addDays, dayNumber, fromDayNumber, isWeekend, istToUtcMillis } from './dates';
+import {
+  addDays,
+  dayNumber,
+  fromDayNumber,
+  isWeekend,
+  istDateOfInstant,
+  istToUtcMillis,
+} from './dates';
 import { HOLIDAYS, REGULAR_WINDOW, SPECIAL_SESSIONS, SUPPORTED_FROM, SUPPORTED_TO } from './data';
 import type { Confidence, SessionWindow, SpecialKind } from './data';
 
@@ -130,7 +137,7 @@ export function tradingDaysBetween(from: string, to: string): string[] {
 
 /** The first regular-session open strictly after `instant`; the default fill time (D3). */
 export function nextRegularOpenAfter(instant: UtcMillis): UtcMillis {
-  const istDate = fromDayNumber(Math.floor((instant + 330 * 60_000) / 86_400_000));
+  const istDate = istDateOfInstant(instant);
   for (let d = istDate; d <= SUPPORTED_TO; d = addDays(d, 1)) {
     const s = sessionOn(d);
     const open = s.kind === 'regular' ? s.windows[0]?.openUtc : undefined;

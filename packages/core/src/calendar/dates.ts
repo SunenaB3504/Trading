@@ -75,6 +75,11 @@ export function addDays(date: string, days: number): string {
   return fromDayNumber(dayNumber(date) + days);
 }
 
+/** The IST calendar date (`YYYY-MM-DD`) on which a UTC instant falls. */
+export function istDateOfInstant(utcMillis: number): string {
+  return fromDayNumber(Math.floor((utcMillis + IST_OFFSET_MINUTES * 60_000) / MS_PER_DAY));
+}
+
 /** UTC milliseconds of an IST wall-clock time (`HH:MM`) on a session date. */
 export function istToUtcMillis(date: string, hhmm: string): number {
   const m = /^(\d{2}):(\d{2})$/.exec(hhmm);
