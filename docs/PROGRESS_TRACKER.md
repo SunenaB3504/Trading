@@ -5,7 +5,7 @@
 **Status values:** `Not started` · `In progress` · `Blocked` · `Done`  
 **Done means** the work package's acceptance test (see the plan) has been run and the result is recorded in the *Acceptance result* column. Failures are recorded as failures; a work package with a failing test stays `In progress`.
 
-**Last updated:** 2026-10-16 (WP-1.7 done)
+**Last updated:** 2026-10-16 (WP-1.8 done)
 
 ## Phase summary
 
@@ -13,7 +13,7 @@
 | Phase | Done | In progress | Blocked | Not started | Total |
 | ------ | ------ | ------ | ------ | ------ | ------ |
 | P0 · Decisions, skeleton and de-risking | 3 | 0 | 0 | 5 | 8 |
-| P1 · Core ledger and simulator | 7 | 0 | 0 | 4 | 11 |
+| P1 · Core ledger and simulator | 8 | 0 | 0 | 3 | 11 |
 | P2 · Data service and universe | 0 | 0 | 0 | 9 | 9 |
 | P3 · Web MVP (R1) | 0 | 0 | 0 | 7 | 7 |
 | P4 · Chart module and shadow mode (R1.5) | 0 | 0 | 0 | 6 | 6 |
@@ -22,7 +22,7 @@
 | P7 · Jyotisham feature modules and PH entries (R3) | 0 | 0 | 0 | 10 | 10 |
 <!-- SUMMARY-END -->
 
-**Next work package:** WP-1.8 (ledger: FIFO lots, double entry, reconciliation); WP-0.6 (evaluation harness) can run in parallel; WP-0.2, 0.4 also unblocked  
+**Next work package:** WP-1.9 (risk layer) and WP-1.10 (metrics and comparators), then WP-1.11 (replay runner); WP-0.6 (evaluation harness) can run in parallel; WP-0.2, 0.4 also unblocked  
 **Open blockers:** none
 
 ---
@@ -51,7 +51,7 @@
 | 1.5 | Corporate actions and price adjustment (idempotent) | 1.1, 1.2 | Done | 2026-10-16 | 2026-10-16 | `pnpm verify` green: 94 tests; hand-worked 5-for-1 split, 1:1 and 1:2 bonus, compounding actions, dividend adjustment; property tests: basis conserved exactly, no shares created, double-apply is a no-op | Ratio = shares after / before. Uneven basis paise kept in new `basisAdjustmentPaise` on lots (domain snapshot updated). Fractions and reverse-split cash-in-lieu reported, posted later by the ledger (WP-1.8). Also reproduces the 10 stated factors of the Prompt C response (docs/data-sources/corporate_actions_reference_cases.csv, incl. a same-day split + bonus), as ARITHMETIC regression only: the response's dates and prices are unverified and 3 dates look wrong (BSE, NYKAA, BAJAJFINSV). Real bhavcopy validation still open |
 | 1.6 | Cost model (effective-dated rates, DP charges, per-line rounding) | 1.2, 1.4 | Done | 2026-10-16 | 2026-10-16 | `pnpm verify` green: 107 tests; five hand-worked fills (delivery buy 11,874; delivery sell with DP 11,908; intraday sell 8,108; intraday buy 2,108 paise) plus effective-date, BSE fallback and flag tests; property test: total equals sum of lines | Rates from the owner's research file (copied to docs/data-sources/). Open [V]: broker profile is ASSUMED (generic discount, D24); STT inferred before 2024-10; stamp duty before 2020-07-01; CDSL charge before 2024-10; BSE rates before 2022-12 use NSE rates; STT per-trade rupee rounding not modelled; exchange slabs use first tier. Every result carries these as `unverified` flags. Dropped the dependency on WP-1.4 (not needed for rates) |
 | 1.7 | Fill engine (market, limit, stops/targets, circuit rules, rejections) | 1.4, 1.5, 1.6 | Done | 2026-10-16 | 2026-10-16 | `pnpm verify` green: 189 tests; 42 hand-worked scenarios (next-open incl. weekend/holiday skips, limit gap/trade-through/touch, circuit blocks and 0-3 session carry-overs, MOC, rejections) plus 7 stop/target tests (gap-through, stop-first when both hit, lower-circuit block) | D22 trade-through default with touch variant; D19 entries expire, exits carry over (max 20 sessions); band prices from previous close, rounded to a 5-paise tick. Stops/targets are a per-bar evaluator for the arm layer (R2), not order types. Costs are computed separately by WP-1.6; ledger posting is WP-1.8. Case table lives in fills/scenarios.data.ts (344 lines, data only, size warning accepted) |
-| 1.8 | Ledger (FIFO lots, double entry, P&L, reconciliation) | 1.2, 1.7 | Not started |  |  |  |  |
+| 1.8 | Ledger (FIFO lots, double entry, P&L, reconciliation) | 1.2, 1.7 | Done | 2026-10-16 | 2026-10-16 | `pnpm verify` green: 206 tests; hand-worked buy, partial sell, two-lot FIFO, bonus-then-sell with exact basis, dividend, consolidation write-off; 4 property tests over 300 random order streams each (balanced, cash never negative, holdings = bought - sold, net P&L = realised - fees + unrealised to the paise, trade gross P&L = realised); tampering, missing-fill and wrong-lot cases fail reconciliation and `buildReport` refuses to report | Append-only: every function returns a new state. Costs per fill are posted to a fees account; trade rows allocate entry and exit costs by cumulative rounding so they sum exactly. Not done: cash in lieu for fractional shares (consolidation basis is written off), FR-L4 ledger versions (come with the replay runner, WP-1.11), cash limits beyond non-negative (risk layer, WP-1.9) |
 | 1.9 | Risk layer (position cap, per-trade loss, daily halt) | 1.8 | Not started |  |  |  | D7 confirmed |
 | 1.10 | Metrics with block-bootstrap intervals; comparators C1-C6 | 1.8 | Not started |  |  |  | D6 confirmed |
 | 1.11 | Replay runner and golden report hash | 1.3, 1.8, 1.10 | Not started |  |  |  |  |
@@ -158,3 +158,4 @@
 | 2026-10-16 | WP-1.6 Done: cost model from owner-supplied rates; broker profile assumed (D24) |
 | 2026-10-16 | WP-1.4 Done: calendar from official NSE circulars; Prompt A response corrected |
 | 2026-10-16 | WP-1.7 Done: fill engine with 42 hand-worked scenarios |
+| 2026-10-16 | WP-1.8 Done: ledger with FIFO, double entry, reconciliation gate |
