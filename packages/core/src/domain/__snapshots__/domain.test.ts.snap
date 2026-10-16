@@ -775,6 +775,11 @@ exports[`JSON schemas > matches the committed snapshot 1`] = `
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "additionalProperties": false,
     "properties": {
+      "basisAdjustmentPaise": {
+        "maximum": 9007199254740991,
+        "minimum": 0,
+        "type": "integer",
+      },
       "entryCostsPaise": {
         "maximum": 9007199254740991,
         "minimum": 0,
@@ -821,6 +826,7 @@ exports[`JSON schemas > matches the committed snapshot 1`] = `
       "quantityRemaining",
       "unitCostPaise",
       "entryCostsPaise",
+      "basisAdjustmentPaise",
     ],
     "type": "object",
   },

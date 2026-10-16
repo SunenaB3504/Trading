@@ -5,3 +5,4 @@ export * from './clock';
 export * from './hash';
 export * from './random';
 export * from './audit';
+export * from './corporate';

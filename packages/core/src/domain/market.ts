@@ -36,7 +36,11 @@ const ratioSchema = z.object({
   denominator: z.number().int().positive().safe(),
 });
 
-/** FR-U3. Splits and bonuses carry a ratio; dividends carry paise per share. */
+/**
+ * FR-U3. Splits and bonuses carry a ratio, defined as shares held AFTER over shares held
+ * BEFORE: a 1-into-5 split is 5/1, a 1:1 bonus is 2/1, a 1:2 bonus is 3/2, and a 1-for-10
+ * consolidation is 1/10. Dividends carry paise per share.
+ */
 export const corporateActionSchema = z.object({
   id: idSchema,
   instrumentId: idSchema,

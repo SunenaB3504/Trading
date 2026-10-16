@@ -20,6 +20,12 @@ export const lotSchema = z.object({
   quantityRemaining: z.number().int().nonnegative().safe(),
   unitCostPaise: paiseSchema.positive(),
   entryCostsPaise: paiseSchema.nonnegative(),
+  /**
+   * Whole paise of cost basis that a split or bonus could not spread evenly over the new
+   * shares. Carrying it here keeps `unitCostPaise × quantityRemaining + basisAdjustmentPaise`
+   * equal to the pre-action basis, exactly.
+   */
+  basisAdjustmentPaise: paiseSchema.nonnegative(),
 });
 
 /**
