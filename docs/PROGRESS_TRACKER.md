@@ -5,14 +5,14 @@
 **Status values:** `Not started` · `In progress` · `Blocked` · `Done`  
 **Done means** the work package's acceptance test (see the plan) has been run and the result is recorded in the *Acceptance result* column. Failures are recorded as failures; a work package with a failing test stays `In progress`.
 
-**Last updated:** 2026-10-16
+**Last updated:** 2026-10-16 (WP-0.1 done)
 
 ## Phase summary
 
 <!-- SUMMARY-START -->
 | Phase | Done | In progress | Blocked | Not started | Total |
 | ------ | ------ | ------ | ------ | ------ | ------ |
-| P0 · Decisions, skeleton and de-risking | 1 | 1 | 0 | 6 | 8 |
+| P0 · Decisions, skeleton and de-risking | 2 | 1 | 0 | 5 | 8 |
 | P1 · Core ledger and simulator | 0 | 0 | 0 | 11 | 11 |
 | P2 · Data service and universe | 0 | 0 | 0 | 9 | 9 |
 | P3 · Web MVP (R1) | 0 | 0 | 0 | 7 | 7 |
@@ -22,7 +22,7 @@
 | P7 · Jyotisham feature modules and PH entries (R3) | 0 | 0 | 0 | 10 | 10 |
 <!-- SUMMARY-END -->
 
-**Next work package:** WP-0.1  
+**Next work package:** WP-0.6 (evaluation harness) and WP-1.1 (domain types), which can run in parallel; WP-0.3, 0.2, 0.4 also unblocked  
 **Open blockers:** none
 
 ---
@@ -31,7 +31,7 @@
 
 | WP | Work package | Depends on | Status | Started | Done | Acceptance result | Notes |
 | ------ | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
-| 0.1 | git init; monorepo skeleton; strict TS; lint (size caps, import boundaries, cycles); Vitest; `pnpm verify` | - | Not started |  |  |  |  |
+| 0.1 | git init; monorepo skeleton; strict TS; lint (size caps, import boundaries, cycles); Vitest; `pnpm verify` | - | Done | 2026-10-16 | 2026-10-16 | `pnpm verify` green twice: typecheck, lint, size, cycles, 11 tests (incl. core cannot import fs/react/Math.random/Date.now; 501-line file fails; core-to-app import and cycles flagged) | Repo had an Initial commit from the owner at 16:16; skeleton changes not yet committed |
 | 0.2 | Freeze pilot code and data into research/pilot with provenance file | 0.1 | Not started |  |  |  |  |
 | 0.3 | Decision log (docs/DECISIONS.md): D3, D4, D6, D7, D23 and audit answers | - | In progress | 2026-10-16 |  |  | Decisions made in chat; DECISIONS.md not yet created |
 | 0.4 | Web spike: Expo web vs plain React; dense table, chart, Store on IndexedDB and SQLite-WASM | 0.1 | Not started |  |  |  | Decides D1 |
@@ -136,7 +136,7 @@
 | D4 | Cross-check tolerance | Closed 2026-10-16: 0.5% on close |
 | D6 | Benchmark | Closed 2026-10-16: Nifty 50 TRI + sector index |
 | D7 | Capital and caps | Closed 2026-10-16: Rs 10,00,000; 10% / 2% / 3% |
-| D23 | Code size and modularity rules | Proposed: 500-line cap (warn at 300), 60-line functions, no cycles; awaiting confirmation |
+| D23 | Code size and modularity rules | Closed 2026-10-16: 500-line cap (warn at 300), 60-line functions, complexity 10, no cycles; enforced by `pnpm verify` |
 | D1 | UI framework | Open until WP-0.4 spike |
 | D21 / D8 | Evaluation-universe size | Open until WP-0.5 power note |
 | D16 | External anchoring method | Open until P4 (default OpenTimestamps) |
@@ -149,3 +149,4 @@
 | Date | Change |
 | ------ | ------ |
 | 2026-10-16 | Tracker created from plan v1.2; WP-0.8 marked Done, WP-0.3 In progress |
+| 2026-10-16 | WP-0.1 Done (skeleton, guardrails, `pnpm verify` green); D23 closed |
