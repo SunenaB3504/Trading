@@ -5,7 +5,7 @@
 **Status values:** `Not started` · `In progress` · `Blocked` · `Done`  
 **Done means** the work package's acceptance test (see the plan) has been run and the result is recorded in the *Acceptance result* column. Failures are recorded as failures; a work package with a failing test stays `In progress`.
 
-**Last updated:** 2026-10-16 (WP-1.1 done)
+**Last updated:** 2026-10-16 (WP-1.2 done)
 
 ## Phase summary
 
@@ -13,7 +13,7 @@
 | Phase | Done | In progress | Blocked | Not started | Total |
 | ------ | ------ | ------ | ------ | ------ | ------ |
 | P0 · Decisions, skeleton and de-risking | 3 | 0 | 0 | 5 | 8 |
-| P1 · Core ledger and simulator | 1 | 0 | 0 | 10 | 11 |
+| P1 · Core ledger and simulator | 2 | 0 | 0 | 9 | 11 |
 | P2 · Data service and universe | 0 | 0 | 0 | 9 | 9 |
 | P3 · Web MVP (R1) | 0 | 0 | 0 | 7 | 7 |
 | P4 · Chart module and shadow mode (R1.5) | 0 | 0 | 0 | 6 | 6 |
@@ -22,7 +22,7 @@
 | P7 · Jyotisham feature modules and PH entries (R3) | 0 | 0 | 0 | 10 | 10 |
 <!-- SUMMARY-END -->
 
-**Next work package:** WP-1.2 (money utilities) and WP-1.3 (clock, PRNG, audit chain), then 1.4; WP-0.6 (evaluation harness) can run in parallel; WP-0.2, 0.4 also unblocked  
+**Next work package:** WP-1.3 (clock, PRNG, audit chain), then 1.4 and 1.5; WP-0.6 (evaluation harness) can run in parallel; WP-0.2, 0.4 also unblocked  
 **Open blockers:** none
 
 ---
@@ -45,7 +45,7 @@
 | WP | Work package | Depends on | Status | Started | Done | Acceptance result | Notes |
 | ------ | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
 | 1.1 | Domain types (instrument, bar, order, fill, lot, ledger entry, trade, audit event) | 0.1 | Done | 2026-10-16 | 2026-10-16 | `pnpm verify` green: 23 tests; 15 entity schemas compile, validate, and a JSON-schema snapshot is committed | zod 4 schemas are the source of truth (types inferred); timestamps are UTC epoch ms; see DECISIONS.md T1-T3 |
-| 1.2 | Money and quantity utilities (integer paise, rounding) | 1.1 | Not started |  |  |  |  |
+| 1.2 | Money and quantity utilities (integer paise, rounding) | 1.1 | Done | 2026-10-16 | 2026-10-16 | `pnpm verify` green: 44 tests; property tests (fast-check) incl. mulDiv vs an exact BigInt oracle for 4 rounding modes, overflow throws, format/parse round-trip | No BigInt in core: exact mulDiv via quotient/remainder split; ppm rates for cost lines |
 | 1.3 | Injected clock, seeded PRNG, SHA-256 hash-chain audit log | 1.1 | Not started |  |  |  |  |
 | 1.4 | NSE/BSE trading calendar and sessions | 1.1 | Not started |  |  |  | [V] holiday list |
 | 1.5 | Corporate actions and price adjustment (idempotent) | 1.1, 1.2 | Not started |  |  |  |  |
@@ -152,3 +152,4 @@
 | 2026-10-16 | WP-0.1 Done (skeleton, guardrails, `pnpm verify` green); D23 closed |
 | 2026-10-16 | WP-0.3 Done: docs/DECISIONS.md created |
 | 2026-10-16 | WP-1.1 Done: domain schemas in packages/core/src/domain |
+| 2026-10-16 | WP-1.2 Done: money utilities in packages/core/src/money |

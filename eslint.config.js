@@ -46,5 +46,9 @@ export default tseslint.config(
     },
   },
   { files: ['packages/core/src/**/*.ts', 'packages/astro-engine/src/**/*.ts'], rules: coreBans },
-  { files: ['**/*.test.ts'], rules: { 'max-lines-per-function': 'off' } },
+  {
+    // Tests may use BigInt as an independent reference oracle; the core-code bans stay for src files.
+    files: ['**/*.test.ts'],
+    rules: { 'max-lines-per-function': 'off', 'no-restricted-globals': 'off' },
+  },
 );
