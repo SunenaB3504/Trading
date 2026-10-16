@@ -1,0 +1,23 @@
+=== ETERNAL first trade 2021-07-23 anchor_valid=True
+=== ETERNAL: real-data pipeline ===
+=== PAYTM first trade 2021-11-18 anchor_valid=True
+=== PAYTM: real-data pipeline ===
+=== NYKAA first trade 2021-11-10 anchor_valid=True
+=== NYKAA: real-data pipeline ===
+=== POLICYBZR first trade 2021-11-15 anchor_valid=True
+=== POLICYBZR: real-data pipeline ===
+=== NAZARA first trade 2021-03-30 anchor_valid=True
+=== NAZARA: real-data pipeline ===
+=== DELHIVERY first trade 2022-05-24 anchor_valid=True
+=== DELHIVERY: real-data pipeline ===
+=== CARTRADE first trade 2021-08-20 anchor_valid=True
+=== CARTRADE: real-data pipeline ===
+=== EASEMYTRIP first trade 2021-03-19 anchor_valid=True
+=== EASEMYTRIP: real-data pipeline ===
+=== DIXON first trade 2017-09-18 anchor_valid=True
+=== DIXON: real-data pipeline ===
+=== TATAELXSI first trade 2004-06-01 anchor_valid=False
+=== TATAELXSI: real-data pipeline ===
+=== POLYCAB first trade 2019-04-16 anchor_valid=True
+=== POLYCAB: real-data pipeline ===
+DONE 128 tests; raw p<.05: 4 expected 5.9 global Holm<.05: 0

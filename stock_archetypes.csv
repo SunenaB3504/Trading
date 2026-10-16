@@ -1,0 +1,101 @@
+archetype,company,nse_ticker,rationale,sourced_data_from_web_search,verification_status,listing_date,first_trade_time_ist,exchange
+1-Normal,Reliance Industries Ltd,RELIANCE,Nifty 50 heavyweight; deep LOB,,UNVERIFIED (background knowledge),,,NSE/BSE Mumbai
+1-Normal,Tata Consultancy Services Ltd,TCS,Nifty 50; steady IT services growth,,UNVERIFIED (background knowledge),,,NSE/BSE Mumbai
+1-Normal,HDFC Bank Ltd,HDFCBANK,Nifty 50; merger Jul 2023 is outside 12-month window,,UNVERIFIED (background knowledge),,,NSE/BSE Mumbai
+1-Normal,ICICI Bank Ltd,ICICIBANK,Nifty 50; high institutional holding,,UNVERIFIED (background knowledge),,,NSE/BSE Mumbai
+1-Normal,Infosys Ltd,INFY,Nifty 50; large-cap IT,,UNVERIFIED (background knowledge),,,NSE/BSE Mumbai
+1-Normal,ITC Ltd,ITC,Nifty 50; hotels demerger Jan 2025 is outside 12 months,,UNVERIFIED (background knowledge),,,NSE/BSE Mumbai
+1-Normal,State Bank of India,SBIN,Nifty 50; PSU bank,,UNVERIFIED (background knowledge),,,NSE/BSE Mumbai
+1-Normal,Bharti Airtel Ltd,BHARTIARTL,Nifty 50; telecom,,UNVERIFIED (background knowledge),,,NSE/BSE Mumbai
+1-Normal,Larsen & Toubro Ltd,LT,Nifty 50; engineering and construction,,UNVERIFIED (background knowledge),,,NSE/BSE Mumbai
+1-Normal,Kotak Mahindra Bank Ltd,KOTAKBANK,Nifty 50; private bank,,UNVERIFIED (background knowledge),,,NSE/BSE Mumbai
+1-Normal,Axis Bank Ltd,AXISBANK,Nifty 50; private bank,,UNVERIFIED (background knowledge),,,NSE/BSE Mumbai
+1-Normal,Asian Paints Ltd,ASIANPAINT,Nifty 50; consumer durables,,UNVERIFIED (background knowledge),,,NSE/BSE Mumbai
+1-Normal,Maruti Suzuki India Ltd,MARUTI,Nifty 50; autos,,UNVERIFIED (background knowledge),,,NSE/BSE Mumbai
+1-Normal,Nestle India Ltd,NESTLEIND,Nifty 50; FMCG staple,,UNVERIFIED (background knowledge),,,NSE/BSE Mumbai
+1-Normal,Titan Company Ltd,TITAN,Nifty 50; consumer discretionary,,UNVERIFIED (background knowledge),,,NSE/BSE Mumbai
+1-Normal,Sun Pharmaceutical Industries Ltd,SUNPHARMA,Nifty 50; pharma,,UNVERIFIED (background knowledge),,,NSE/BSE Mumbai
+1-Normal,UltraTech Cement Ltd,ULTRACEMCO,Nifty 50; cement,,UNVERIFIED (background knowledge),,,NSE/BSE Mumbai
+1-Normal,Bajaj Finance Ltd,BAJFINANCE,Nifty 50; NBFC,,UNVERIFIED (background knowledge),,,NSE/BSE Mumbai
+1-Normal,Bajaj Finserv Ltd,BAJAJFINSV,Nifty 50; financial services,,UNVERIFIED (background knowledge),,,NSE/BSE Mumbai
+1-Normal,HCL Technologies Ltd,HCLTECH,Nifty 50; IT services,,UNVERIFIED (background knowledge),,,NSE/BSE Mumbai
+1-Normal,Power Grid Corporation of India Ltd,POWERGRID,Nifty 50; regulated utility,,UNVERIFIED (background knowledge),,,NSE/BSE Mumbai
+1-Normal,NTPC Ltd,NTPC,Nifty 50; power generation,,UNVERIFIED (background knowledge),,,NSE/BSE Mumbai
+1-Normal,Mahindra & Mahindra Ltd,M&M,Nifty 50; autos and farm equipment,,UNVERIFIED (background knowledge),,,NSE/BSE Mumbai
+1-Normal,Tech Mahindra Ltd,TECHM,Nifty 50; IT services,,UNVERIFIED (background knowledge),,,NSE/BSE Mumbai
+1-Normal,Cipla Ltd,CIPLA,Nifty 50; pharma,,UNVERIFIED (background knowledge),,,NSE/BSE Mumbai
+2-Underdog,Knowledge Marine & Engineering Works Ltd,KMEW,Low D/E reported by Simply Wall St screen (2024-25); lead only,Appeared in Simply Wall St undiscovered-gems screen,UNVERIFIED - CAGR/ROE/market cap/coverage not checked,,,NSE
+2-Underdog,NGL Fine-Chem Ltd,NGLFINE,Small-cap specialty chem; lead only,Appeared in Simply Wall St undiscovered-gems screen,UNVERIFIED - CAGR/ROE/market cap/coverage not checked,,,NSE
+2-Underdog,Swaraj Engines Ltd,SWARAJENG,Tractor engines; low debt; lead only,Appeared in search results,UNVERIFIED - may have analyst coverage,,,NSE
+2-Underdog,Fineotex Chemical Ltd,FCL,Textile chemicals; low debt,,UNVERIFIED (background knowledge),,,NSE
+2-Underdog,Shilchar Technologies Ltd,SHILCTECH,Transformers; high ROE,,UNVERIFIED (background knowledge),,,NSE
+2-Underdog,Diffusion Engineers Ltd,DIFFNKG,Welding consumables and engineering,,UNVERIFIED (background knowledge),,,NSE
+2-Underdog,Indo Tech Transformers Ltd,INDOTECH,Transformers; growth,,UNVERIFIED (background knowledge),,,NSE
+2-Underdog,Goldiam International Ltd,GOLDIAM,Jewellery exporter; low debt,,UNVERIFIED (background knowledge),,,NSE
+2-Underdog,Rajratan Global Wire Ltd,RAJRATAN,Tyre bead wire,,UNVERIFIED (background knowledge),,,NSE
+2-Underdog,Aeroflex Industries Ltd,AEROFLEX,Flexible flow solutions,,UNVERIFIED (background knowledge),,,NSE
+2-Underdog,Dynamic Cables Ltd,DYCL,Cables; growth,,UNVERIFIED (background knowledge),,,NSE
+2-Underdog,Salasar Techno Engineering Ltd,SALASAR,Steel structures,,UNVERIFIED (background knowledge),,,NSE
+2-Underdog,Jash Engineering Ltd,JASH,Flow control,,UNVERIFIED (background knowledge),,,NSE
+2-Underdog,Kross Ltd,KROSS,Auto components,,UNVERIFIED (background knowledge),,,NSE
+2-Underdog,Tolins Tyres Ltd,TOLINS,Tyre retreading,,UNVERIFIED (background knowledge),,,NSE
+2-Underdog,GPT Healthcare Ltd,GPTHEALTH,Hospitals,,UNVERIFIED (background knowledge),,,NSE
+2-Underdog,Premier Explosives Ltd,PREMEXPLN,Defence explosives; growth,,UNVERIFIED (background knowledge),,,NSE
+2-Underdog,Apollo Micro Systems Ltd,APOLLO,Defence electronics,,UNVERIFIED (background knowledge),,,NSE
+2-Underdog,Quality Power Electrical Equipments Ltd,QPOWER,Power equipment,,UNVERIFIED (background knowledge),,,NSE
+2-Underdog,Insolation Energy Ltd,INA,Solar modules,,UNVERIFIED (background knowledge),,,NSE
+2-Underdog,Vishnu Prakash R Punglia Ltd,VPRPL,Infra contractor,,UNVERIFIED (background knowledge),,,NSE
+2-Underdog,Bondada Engineering Ltd,BONDADA,Telecom/solar EPC,,UNVERIFIED (background knowledge),,,NSE
+2-Underdog,Hariom Pipe Industries Ltd,HARIOMPIPE,Steel pipes,,UNVERIFIED (background knowledge),,,NSE
+2-Underdog,Sigachi Industries Ltd,SIGACHI,Excipients; check surveillance status,,UNVERIFIED (background knowledge),,,NSE
+2-Underdog,Pitti Engineering Ltd,PITTIENG,Engineering components; may exceed cap,,UNVERIFIED (background knowledge),,,NSE
+2-Underdog,Lloyds Engineering Works Ltd,LLOYDSENGG,Engineering; may exceed cap,,UNVERIFIED (background knowledge),,,NSE
+3-SurveillanceFlagged,GTL Ltd,GTL,Moved out of GSM June 2026 per NSE circular,Listed in June 2026 GSM exit list,Sourced; historical flag only,,,NSE
+3-SurveillanceFlagged,LCC Infotech Ltd,LCCINFOTEC,Moved out of GSM June 2026,Listed in June 2026 GSM exit list,Sourced; historical flag only,,,NSE
+3-SurveillanceFlagged,Omkar Speciality Chemicals Ltd,OMKARCHEM,Moved out of GSM June 2026,Listed in June 2026 GSM exit list,Sourced; historical flag only,,,NSE
+3-SurveillanceFlagged,Sadbhav Engineering Ltd,SADBHAV,Moved out of GSM June 2026,Listed in June 2026 GSM exit list,Sourced; historical flag only,,,NSE
+3-SurveillanceFlagged,Sadbhav Infrastructure Project Ltd,SADBHIN,Moved out of GSM June 2026,Listed in June 2026 GSM exit list,Sourced; historical flag only,,,NSE
+3-SurveillanceFlagged,Ansal Properties & Infrastructure Ltd,ANSALAPI,Moved out of GSM effective 8 Sep 2026,Listed in NSE circular 4 Sep 2026,Sourced; historical flag only,,,NSE
+3-SurveillanceFlagged,GFL Steels? (GFSTEELS),GFSTEELS,Moved out of GSM effective 8 Sep 2026,Listed in NSE circular 4 Sep 2026,Sourced; company legal name not confirmed,,,NSE
+3-SurveillanceFlagged,IL&FS Engineering and Construction Co Ltd,IL&FSENGG,Moved out of GSM effective 8 Sep 2026,Listed in NSE circular 4 Sep 2026,Sourced; historical flag only,,,NSE
+3-SurveillanceFlagged,Impex Ferro Tech Ltd,IMPEXFERRO,Moved out of GSM effective 8 Sep 2026,Listed in NSE circular 4 Sep 2026,Sourced; historical flag only,,,NSE
+3-SurveillanceFlagged,Arshiya Ltd,ARSHIYA,GSM Stage I 19 Feb 2026; exited 10 Mar 2026,Search result,Sourced; historical flag only,,,NSE
+3-SurveillanceFlagged,GLFL (full legal name not retrieved),GLFL,GSM Stage II effective 25 Feb 2026,Search result,Sourced; current stage unknown,,,NSE
+3-SurveillanceFlagged,Bhagyanagar India Ltd,not confirmed,Promoter pledge 96.08% as of 31 Mar 2026,Search result,Sourced; stale (Mar 2026),,,NSE/BSE
+3-SurveillanceFlagged,Brahmaputra Infrastructure Ltd,not confirmed,Promoter pledge 100% as of 31 Mar 2026,Search result,Sourced; stale (Mar 2026),,,NSE/BSE
+3-SurveillanceFlagged,Thyrocare Technologies Ltd,THYROCARE,Listed by Equitymaster pledge screener (undated); likely outdated,Equitymaster screener (undated),Weak source; do not rely,,,NSE
+3-SurveillanceFlagged,Jayaswal Neco Industries Ltd,not confirmed,Listed by Equitymaster pledge screener (undated); likely outdated,Equitymaster screener (undated),Weak source; do not rely,,,BSE
+3-SurveillanceFlagged,Reliance Communications Ltd,RCOM,Historically high debt and insolvency; check current status,,UNVERIFIED (background knowledge),,,NSE/BSE
+3-SurveillanceFlagged,Reliance Infrastructure Ltd,RELINFRA,Historically high debt; check status,,UNVERIFIED (background knowledge),,,NSE/BSE
+3-SurveillanceFlagged,Reliance Power Ltd,RPOWER,Historically high debt; check status,,UNVERIFIED (background knowledge),,,NSE/BSE
+3-SurveillanceFlagged,Jaiprakash Associates Ltd,JPASSOCIAT,Historically high debt; check status,,UNVERIFIED (background knowledge),,,NSE/BSE
+3-SurveillanceFlagged,Vodafone Idea Ltd,IDEA,High debt; negative cash flow; not operator-driven,,UNVERIFIED (background knowledge),,,NSE/BSE
+3-SurveillanceFlagged,Hindustan Construction Co Ltd,HCC,High debt history,,UNVERIFIED (background knowledge),,,NSE/BSE
+3-SurveillanceFlagged,Gammon India Ltd,not confirmed,Insolvency history; check listing status,,UNVERIFIED (background knowledge),,,BSE
+3-SurveillanceFlagged,Rolta India Ltd,not confirmed,Insolvency history; check listing status,,UNVERIFIED (background knowledge),,,BSE
+3-SurveillanceFlagged,Alok Industries Ltd,ALOKINDS,High debt history; now under new ownership,,UNVERIFIED (background knowledge),,,NSE/BSE
+4-Seasonal,Balrampur Chini Mills Ltd,BALRAMCHIN,Sugar and ethanol,Market cap ~Rs 11983 Cr (3 Jul 2026); 1Y return ~-3%,Partly sourced; stale,,,NSE/BSE Mumbai
+4-Seasonal,Triveni Engineering & Industries Ltd,TRIVENI,Sugar and ethanol,Market cap ~Rs 10251 Cr (3 Jul 2026); 1Y return ~+25%,Partly sourced; stale,,,NSE/BSE Mumbai
+4-Seasonal,Bannari Amman Sugars Ltd,BANARISUG,Sugar,Named in Angel One ethanol screen,Partly sourced,,,BSE
+4-Seasonal,E.I.D.-Parry (India) Ltd,EIDPARRY,Sugar and nutraceuticals,Named in Angel One ethanol screen,Partly sourced,,,NSE/BSE
+4-Seasonal,Dalmia Bharat Sugar and Industries Ltd,DALMIASUG,Sugar,,UNVERIFIED (background knowledge),,,NSE/BSE
+4-Seasonal,Dhampur Sugar Mills Ltd,DHAMPURSUG,Sugar,,UNVERIFIED (background knowledge),,,NSE/BSE
+4-Seasonal,Dwarikesh Sugar Industries Ltd,DWARKESH,Sugar,,UNVERIFIED (background knowledge),,,NSE/BSE
+4-Seasonal,Avadh Sugar & Energy Ltd,AVADHSUGAR,Sugar,,UNVERIFIED (background knowledge),,,NSE/BSE
+4-Seasonal,Magadh Sugar & Energy Ltd,MAGADSUGAR,Sugar,,UNVERIFIED (background knowledge),,,NSE/BSE
+4-Seasonal,Chambal Fertilisers and Chemicals Ltd,CHAMBLFERT,Fertilizer; monsoon and subsidy,,UNVERIFIED (background knowledge),,,NSE/BSE
+4-Seasonal,Coromandel International Ltd,COROMANDEL,Fertilizer and agrochemicals,,UNVERIFIED (background knowledge),,,NSE/BSE
+4-Seasonal,Paradeep Phosphates Ltd,PARADEEP,Fertilizer,,UNVERIFIED (background knowledge),,,NSE/BSE
+4-Seasonal,Rashtriya Chemicals and Fertilizers Ltd,RCF,Fertilizer; PSU,,UNVERIFIED (background knowledge),,,NSE/BSE
+4-Seasonal,Fertilisers and Chemicals Travancore Ltd,FACT,Fertilizer; PSU,,UNVERIFIED (background knowledge),,,NSE/BSE
+4-Seasonal,Gujarat State Fertilizers & Chemicals Ltd,GSFC,Fertilizer,,UNVERIFIED (background knowledge),,,NSE/BSE
+4-Seasonal,UPL Ltd,UPL,Agrochemicals; monsoon sensitive,,UNVERIFIED (background knowledge),,,NSE/BSE
+4-Seasonal,PI Industries Ltd,PIIND,Agrochemicals,,UNVERIFIED (background knowledge),,,NSE/BSE
+4-Seasonal,Dhanuka Agritech Ltd,DHANUKA,Agrochemicals; domestic kharif/rabi,,UNVERIFIED (background knowledge),,,NSE/BSE
+4-Seasonal,Rallis India Ltd,RALLIS,Agrochemicals,,UNVERIFIED (background knowledge),,,NSE/BSE
+4-Seasonal,Bayer CropScience Ltd,BAYERCROP,Agrochemicals,,UNVERIFIED (background knowledge),,,NSE/BSE
+4-Seasonal,Sumitomo Chemical India Ltd,SUMICHEM,Agrochemicals,,UNVERIFIED (background knowledge),,,NSE/BSE
+4-Seasonal,Insecticides (India) Ltd,INSECTICID,Agrochemicals,,UNVERIFIED (background knowledge),,,NSE/BSE
+4-Seasonal,Waaree Energies Ltd,WAAREEENER,Solar modules; solar cycle,,UNVERIFIED (background knowledge),,,NSE/BSE
+4-Seasonal,Premier Energies Ltd,PREMIERENE,Solar cells and modules,,UNVERIFIED (background knowledge),,,NSE/BSE
+4-Seasonal,Adani Green Energy Ltd,ADANIGREEN,Renewable generation; solar and wind seasonality,,UNVERIFIED (background knowledge),,,NSE/BSE

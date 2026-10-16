@@ -1,0 +1,169 @@
+{
+  "metadata": {
+    "ticker": "TCS",
+    "company_name": "TCS",
+    "listing_t0": "2004-08-25 10:00",
+    "sample": "2007-09-17 to 2026-09-15",
+    "n_days": 4660,
+    "n_permutations": 2000,
+    "execution_timestamp": "2026-10-14 15:30:15"
+  },
+  "jathakam_summary": {
+    "listing_utc": "2004-08-25T04:30:00",
+    "lagna": {
+      "longitude": 178.837,
+      "sign": "Virgo"
+    },
+    "moon": {
+      "longitude": 241.709,
+      "sign": "Sagittarius",
+      "nakshatra_index": 18
+    },
+    "planets": {
+      "Sun": {
+        "longitude": 128.395,
+        "sign": "Leo"
+      },
+      "Moon": {
+        "longitude": 241.709,
+        "sign": "Sagittarius"
+      },
+      "Mars": {
+        "longitude": 135.452,
+        "sign": "Leo"
+      },
+      "Mercury": {
+        "longitude": 125.976,
+        "sign": "Leo"
+      },
+      "Jupiter": {
+        "longitude": 149.464,
+        "sign": "Leo"
+      },
+      "Venus": {
+        "longitude": 82.815,
+        "sign": "Gemini"
+      },
+      "Saturn": {
+        "longitude": 88.768,
+        "sign": "Gemini"
+      },
+      "Rahu": {
+        "longitude": 11.224,
+        "sign": "Aries"
+      },
+      "Ketu": {
+        "longitude": 191.224,
+        "sign": "Libra"
+      }
+    },
+    "indu_lagna": {
+      "sign": "Taurus",
+      "sign_index": 1,
+      "note": "single local source (Uttara Kalamrita); counting convention registered"
+    }
+  },
+  "hypothesis_evaluations": {
+    "Rule_1_Jupiter_Indu_Lagna": {
+      "signal_column": "Sig_Jupiter_IduLagna",
+      "target_metric": "R20",
+      "status": "OK",
+      "arm_b0_baseline_mean": 0.5356447613734728,
+      "arm_b1_matched_placebo_mean": 0.5621807180242148,
+      "arm_b2_shifted_placebo_mean": 0.056988427281119525,
+      "arm_a_active_overlay_mean": -0.45592199973901654,
+      "effect": -1.1128856230212427,
+      "sample_size_active_days": 508,
+      "p_value_two_sided": 0.3458270864567716,
+      "p_holm": 1.0,
+      "holm_significant": false,
+      "traffic_light": "GRAY",
+      "operational_classification": "No effect over placebo after Holm correction (ignore rule)"
+    },
+    "Rule_2_8th_House_Malefics": {
+      "signal_column": "Sig_8th_House_Malefic",
+      "target_metric": "MDD10",
+      "status": "OK",
+      "arm_b0_baseline_mean": -2.6949486295905283,
+      "arm_b1_matched_placebo_mean": -2.691440893130806,
+      "arm_b2_shifted_placebo_mean": -2.3737925293133473,
+      "arm_a_active_overlay_mean": -2.403469037716493,
+      "effect": 0.34102307259176623,
+      "sample_size_active_days": 677,
+      "p_value_two_sided": 0.5097451274362819,
+      "p_holm": 1.0,
+      "holm_significant": false,
+      "traffic_light": "GRAY",
+      "operational_classification": "No effect over placebo after Holm correction (ignore rule)"
+    },
+    "Rule_3_Chandrashtama_Volatility": {
+      "signal_column": "Sig_Chandrashtama",
+      "target_metric": "DailyRange",
+      "status": "OK",
+      "arm_b0_baseline_mean": 2.4933666876533924,
+      "arm_b1_matched_placebo_mean": 2.5057785376928066,
+      "arm_b2_shifted_placebo_mean": 2.5498009117834934,
+      "arm_a_active_overlay_mean": 2.5176709156351635,
+      "effect": 0.02656137485812682,
+      "sample_size_active_days": 396,
+      "p_value_two_sided": 0.7551224387806097,
+      "p_holm": 1.0,
+      "holm_significant": false,
+      "traffic_light": "GRAY",
+      "operational_classification": "No effect over placebo after Holm correction (ignore rule)"
+    },
+    "Rule_5_Lunar_Paksha_Waxing_Moon": {
+      "signal_column": "Sig_Lunar_Paksha",
+      "target_metric": "R5",
+      "status": "OK",
+      "arm_b0_baseline_mean": 0.13500836181589126,
+      "arm_b1_matched_placebo_mean": 0.13394991178461835,
+      "arm_b2_shifted_placebo_mean": 0.05355518963977016,
+      "arm_a_active_overlay_mean": 0.01593909934047239,
+      "effect": -0.23372483704104968,
+      "sample_size_active_days": 2286,
+      "p_value_two_sided": 0.23288355822088955,
+      "p_holm": 1.0,
+      "holm_significant": false,
+      "traffic_light": "GRAY",
+      "operational_classification": "No effect over placebo after Holm correction (ignore rule)"
+    },
+    "Rule_6_Tarabala_Adverse": {
+      "signal_column": "Sig_Tarabala_Adverse",
+      "target_metric": "MDD5",
+      "status": "OK",
+      "arm_b0_baseline_mean": -1.5978212897189954,
+      "arm_b1_matched_placebo_mean": -1.6055043490895884,
+      "arm_b2_shifted_placebo_mean": -1.645258238494241,
+      "arm_a_active_overlay_mean": -1.5250818429254993,
+      "effect": 0.10826120155148278,
+      "sample_size_active_days": 1529,
+      "p_value_two_sided": 0.09795102448775612,
+      "p_holm": 0.5877061469265368,
+      "holm_significant": false,
+      "traffic_light": "GRAY",
+      "operational_classification": "No effect over placebo after Holm correction (ignore rule)"
+    },
+    "Rule_7_Moon_Rahu_Window": {
+      "signal_column": "Sig_Moon_Rahu_Node",
+      "target_metric": "DailyRange",
+      "status": "OK",
+      "arm_b0_baseline_mean": 2.4933666876533924,
+      "arm_b1_matched_placebo_mean": 2.495811021640557,
+      "arm_b2_shifted_placebo_mean": 2.4250521981075415,
+      "arm_a_active_overlay_mean": 2.4789491656903637,
+      "effect": -0.01543787967548571,
+      "sample_size_active_days": 308,
+      "p_value_two_sided": 0.8465767116441779,
+      "p_holm": 1.0,
+      "holm_significant": false,
+      "traffic_light": "GRAY",
+      "operational_classification": "No effect over placebo after Holm correction (ignore rule)"
+    },
+    "Rule_4_Sarvatobhadra_SBC_Vedha": {
+      "status": "NOT_ENCODED",
+      "traffic_light": "NOT_TESTED",
+      "operational_classification": "Name-letter mapping and vedha doctrine blocked in source audit"
+    }
+  }
+}

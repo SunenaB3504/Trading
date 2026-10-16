@@ -1,0 +1,7 @@
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+.DS_Store
+# large local research caches (not part of the app repo)
+Study-docs/research/price_cache_*.csv
