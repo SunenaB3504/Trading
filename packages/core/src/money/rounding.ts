@@ -69,6 +69,14 @@ export function mulDiv(amount: number, num: number, den: number, mode: RoundingM
   return amount < 0 && total !== 0 ? -total : total;
 }
 
+/**
+ * Applies a rate in parts per billion (1% = 10_000_000 ppb; Rs 10 per crore = 1_000 ppb) to an
+ * amount in paise. Exchange charges are quoted per crore, which ppm cannot express exactly.
+ */
+export function applyRatePpb(amountPaise: number, ratePpb: number, mode: RoundingMode): number {
+  return mulDiv(amountPaise, ratePpb, 1_000_000_000, mode);
+}
+
 /** Applies a rate expressed in parts per million (1% = 10_000 ppm) to an amount. */
 export function applyRatePpm(amountPaise: number, ratePpm: number, mode: RoundingMode): number {
   return mulDiv(amountPaise, ratePpm, 1_000_000, mode);

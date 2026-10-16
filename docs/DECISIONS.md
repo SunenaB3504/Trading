@@ -33,6 +33,9 @@
 | T2 | Timestamps are integer UTC milliseconds; session dates are `YYYY-MM-DD` strings in IST; no `Date` objects in persisted data | Deterministic JSON and byte-equal hashes (NFR-1, RB R6) | 2026-10-16 |
 | T3 | Unadjusted bars use integer paise; adjusted bars use plain numbers and are for analytics only | Money stays integer (SSD §5.2); adjustment factors are fractional | 2026-10-16 |
 
+| T4 | Cost rates are held as parts per billion of turnover (Rs 10 per crore = 1,000 ppb), each line rounded half-up to paise, GST rounded once on the taxable total | Exchange charges are quoted per crore and cannot be exact in ppm; matches the registered rounding rule (FR-T4) | 2026-10-16 |
+| T5 | Cost schedule starts 2020-04-01; NSE exchange charge and IPFT are combined in one line using the first volume slab; BSE before 2022-12-01 falls back to NSE rates, flagged | Account turnover is far below the first slab boundary; BSE early rates not found | 2026-10-16 |
+
 ## Scope decisions
 
 | Decision | Outcome | Date |
@@ -43,6 +46,7 @@
 
 | # | Decision | Decided at | Default |
 | ------ | ------ | ------ | ------ |
+| D24 | Broker whose brokerage and DP add-on to simulate | Before relying on cost results | Assumed generic discount broker: delivery free; intraday 0.03% capped at Rs 20; DP add-on Rs 9.50; all results flagged `broker.profile-assumed` |
 | D1 | UI framework | WP-0.4 spike | Expo universal |
 | D8, D21 | Evaluation-universe size and window | WP-0.5 power note | From the power note |
 | D9 | Hold-out and forward dates; who holds the lock | Start of P5 | To be set |

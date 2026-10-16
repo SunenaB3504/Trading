@@ -5,7 +5,7 @@
 **Status values:** `Not started` · `In progress` · `Blocked` · `Done`  
 **Done means** the work package's acceptance test (see the plan) has been run and the result is recorded in the *Acceptance result* column. Failures are recorded as failures; a work package with a failing test stays `In progress`.
 
-**Last updated:** 2026-10-16 (WP-1.5 done)
+**Last updated:** 2026-10-16 (WP-1.6 done)
 
 ## Phase summary
 
@@ -13,7 +13,7 @@
 | Phase | Done | In progress | Blocked | Not started | Total |
 | ------ | ------ | ------ | ------ | ------ | ------ |
 | P0 · Decisions, skeleton and de-risking | 3 | 0 | 0 | 5 | 8 |
-| P1 · Core ledger and simulator | 4 | 0 | 1 | 6 | 11 |
+| P1 · Core ledger and simulator | 5 | 0 | 1 | 5 | 11 |
 | P2 · Data service and universe | 0 | 0 | 0 | 9 | 9 |
 | P3 · Web MVP (R1) | 0 | 0 | 0 | 7 | 7 |
 | P4 · Chart module and shadow mode (R1.5) | 0 | 0 | 0 | 6 | 6 |
@@ -22,7 +22,7 @@
 | P7 · Jyotisham feature modules and PH entries (R3) | 0 | 0 | 0 | 10 | 10 |
 <!-- SUMMARY-END -->
 
-**Next work package:** WP-1.6 (cost model, needs Prompt B rates) and WP-1.4 (calendar, needs verified data from Prompt A follow-up); WP-0.6 (evaluation harness) can run in parallel; WP-0.2, 0.4 also unblocked  
+**Next work package:** WP-0.6 (evaluation harness) recommended; WP-1.4 (calendar) still blocked on verified data; WP-1.7 (fill engine) needs 1.4; WP-0.2, 0.4 also unblocked  
 **Open blockers:** none
 
 ---
@@ -49,7 +49,7 @@
 | 1.3 | Injected clock, seeded PRNG, SHA-256 hash-chain audit log | 1.1 | Done | 2026-10-16 | 2026-10-16 | `pnpm verify` green: 73 tests; SHA-256 matches NIST vectors and Node crypto on 800 random inputs; PRNG matches an independent Python reference; any edit, deletion or reorder breaks chain verification | Pure-TS SHA-256, UTF-8 and canonical JSON (no TextEncoder/crypto); a lost chain tail is only caught by the external anchor (WP-4.5) |
 | 1.4 | NSE/BSE trading calendar and sessions | 1.1 | Blocked | 2026-10-16 |  |  | Waiting on verified holiday data. Prompt A response received; review found likely gaps (2021-09-10, 2025-02-01, 2026-02-01 budget Sunday, 2025 Muhurat time, two 2026 dates) and unverified source URLs; follow-up prompt issued |
 | 1.5 | Corporate actions and price adjustment (idempotent) | 1.1, 1.2 | Done | 2026-10-16 | 2026-10-16 | `pnpm verify` green: 94 tests; hand-worked 5-for-1 split, 1:1 and 1:2 bonus, compounding actions, dividend adjustment; property tests: basis conserved exactly, no shares created, double-apply is a no-op | Ratio = shares after / before. Uneven basis paise kept in new `basisAdjustmentPaise` on lots (domain snapshot updated). Fractions and reverse-split cash-in-lieu reported, posted later by the ledger (WP-1.8). Validated on synthetic cases only; real NSE cases pending Prompt C |
-| 1.6 | Cost model (effective-dated rates, DP charges, per-line rounding) | 1.2, 1.4 | Not started |  |  |  | [V] rates |
+| 1.6 | Cost model (effective-dated rates, DP charges, per-line rounding) | 1.2, 1.4 | Done | 2026-10-16 | 2026-10-16 | `pnpm verify` green: 107 tests; five hand-worked fills (delivery buy 11,874; delivery sell with DP 11,908; intraday sell 8,108; intraday buy 2,108 paise) plus effective-date, BSE fallback and flag tests; property test: total equals sum of lines | Rates from the owner's research file (copied to docs/data-sources/). Open [V]: broker profile is ASSUMED (generic discount, D24); STT inferred before 2024-10; stamp duty before 2020-07-01; CDSL charge before 2024-10; BSE rates before 2022-12 use NSE rates; STT per-trade rupee rounding not modelled; exchange slabs use first tier. Every result carries these as `unverified` flags. Dropped the dependency on WP-1.4 (not needed for rates) |
 | 1.7 | Fill engine (market, limit, stops/targets, circuit rules, rejections) | 1.4, 1.5, 1.6 | Not started |  |  |  | 40+ scenario table |
 | 1.8 | Ledger (FIFO lots, double entry, P&L, reconciliation) | 1.2, 1.7 | Not started |  |  |  |  |
 | 1.9 | Risk layer (position cap, per-trade loss, daily halt) | 1.8 | Not started |  |  |  | D7 confirmed |
@@ -155,3 +155,4 @@
 | 2026-10-16 | WP-1.2 Done: money utilities in packages/core/src/money |
 | 2026-10-16 | WP-1.3 Done: clock, hashing, seeded PRNG, audit chain |
 | 2026-10-16 | WP-1.5 Done: corporate actions and price adjustment; WP-1.4 waiting on verified calendar data |
+| 2026-10-16 | WP-1.6 Done: cost model from owner-supplied rates; broker profile assumed (D24) |
