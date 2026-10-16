@@ -53,6 +53,13 @@ export const tradeSchema = z.object({
   exitFillId: idSchema.nullable(),
   openedOn: tradingDateSchema,
   closedOn: tradingDateSchema.nullable(),
+  quantity: quantitySchema,
+  /** Cost basis consumed by this round trip. */
+  basisPaise: paiseSchema,
+  proceedsPaise: paiseSchema,
+  /** Entry and exit costs attributed to this round trip (cumulatively rounded, so they sum exactly). */
+  entryCostsPaise: paiseSchema.nonnegative(),
+  exitCostsPaise: paiseSchema.nonnegative(),
   grossPnlPaise: paiseSchema.nullable(),
   netPnlPaise: paiseSchema.nullable(),
   source: decisionSourceSchema,

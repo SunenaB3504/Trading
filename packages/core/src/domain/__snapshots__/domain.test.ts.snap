@@ -965,6 +965,11 @@ exports[`JSON schemas > matches the committed snapshot 1`] = `
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "additionalProperties": false,
     "properties": {
+      "basisPaise": {
+        "maximum": 9007199254740991,
+        "minimum": -9007199254740991,
+        "type": "integer",
+      },
       "bucket": {
         "type": [
           "string",
@@ -982,9 +987,19 @@ exports[`JSON schemas > matches the committed snapshot 1`] = `
           },
         ],
       },
+      "entryCostsPaise": {
+        "maximum": 9007199254740991,
+        "minimum": 0,
+        "type": "integer",
+      },
       "entryFillId": {
         "minLength": 1,
         "type": "string",
+      },
+      "exitCostsPaise": {
+        "maximum": 9007199254740991,
+        "minimum": 0,
+        "type": "integer",
       },
       "exitFillId": {
         "anyOf": [
@@ -1033,6 +1048,16 @@ exports[`JSON schemas > matches the committed snapshot 1`] = `
         "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
         "type": "string",
       },
+      "proceedsPaise": {
+        "maximum": 9007199254740991,
+        "minimum": -9007199254740991,
+        "type": "integer",
+      },
+      "quantity": {
+        "exclusiveMinimum": 0,
+        "maximum": 9007199254740991,
+        "type": "integer",
+      },
       "source": {
         "anyOf": [
           {
@@ -1059,6 +1084,11 @@ exports[`JSON schemas > matches the committed snapshot 1`] = `
       "exitFillId",
       "openedOn",
       "closedOn",
+      "quantity",
+      "basisPaise",
+      "proceedsPaise",
+      "entryCostsPaise",
+      "exitCostsPaise",
       "grossPnlPaise",
       "netPnlPaise",
       "source",

@@ -92,7 +92,9 @@ function exitCostShares(pieces: readonly Piece[], total: number, sold: number): 
 function tradesFor(fill: Fill, pieces: readonly Piece[], state: LedgerState): Trade[] {
   const shares = exitCostShares(pieces, fill.costsPaise, fill.quantity);
   return pieces.map((p, i) => {
-    const gross = subPaise(mulPaise(fill.pricePaise, p.quantity), p.basisPaise);
+    const proceeds = mulPaise(fill.pricePaise, p.quantity);
+    const gross = subPaise(proceeds, p.basisPaise);
+    const exitCosts = shares[i] ?? 0;
     const meta = state.lotMeta[p.lotId];
     return {
       id: `${fill.id}:${p.lotId}`,
@@ -101,8 +103,13 @@ function tradesFor(fill: Fill, pieces: readonly Piece[], state: LedgerState): Tr
       exitFillId: fill.id,
       openedOn: p.openedOn,
       closedOn: fill.tradingDate,
+      quantity: p.quantity,
+      basisPaise: p.basisPaise,
+      proceedsPaise: proceeds,
+      entryCostsPaise: p.entryCostPaise,
+      exitCostsPaise: exitCosts,
       grossPnlPaise: gross,
-      netPnlPaise: subPaise(subPaise(gross, p.entryCostPaise), shares[i] ?? 0),
+      netPnlPaise: subPaise(subPaise(gross, p.entryCostPaise), exitCosts),
       source: meta?.source ?? 'human',
       bucket: meta?.bucket ?? null,
       tags: meta?.tags ?? [],
