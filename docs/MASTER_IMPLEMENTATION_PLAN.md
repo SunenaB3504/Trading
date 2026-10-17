@@ -219,7 +219,7 @@ Planned after the R3 entries in hand are reported: nation chart registry and eve
 | D32 | Legal review before pricing or store text | WP-11.1 | **Confirmed gate 2026-10-17:** review right after the R2 report |
 | D34 | How the paid astro layer is gated | WP-3.10, 3.11 | **Closed 2026-10-17:** soft client-side gate; no astro data in the public snapshot; research pipeline never gated |
 | D25 | Eligibility thresholds | WP-2.9 | **Confirmed 2026-10-17:** config `elig-v1` |
-| D35 | Bucket cut-offs and surveillance sources | WP-2.7, WP-2.4 | Proposed; open points listed in DECISIONS.md |
+| D35 | Bucket cut-offs and surveillance sources | WP-2.7, WP-2.4 | **Closed 2026-10-17:** config `bucket-v1` (see DECISIONS.md) |
 | D33 | Guardrails and Tara scoring | n/a | **Closed 2026-10-17:** separate pre-registered arms PH-11, PH-12; not baseline |
 | D30 | Tara Bala direction and display | WP-4.8 | **Closed 2026-10-17, corrected same day:** trader to stock; category name only, no boost |
 

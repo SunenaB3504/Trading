@@ -1,0 +1,73 @@
+symbol,sector,basis
+BALRAMCHIN,sugar_distilleries,sugar and ethanol maker
+DHAMPURSUG,sugar_distilleries,sugar and ethanol maker
+TRIVENI,sugar_distilleries,sugar and ethanol maker (also engineering)
+RENUKA,sugar_distilleries,sugar and ethanol maker
+BAJAJHIND,sugar_distilleries,sugar and ethanol maker
+DALMIASUG,sugar_distilleries,sugar and ethanol maker
+AVADHSUGAR,sugar_distilleries,sugar and distillery
+UTTAMSUGAR,sugar_distilleries,sugar and ethanol maker
+DWARKESH,sugar_distilleries,sugar and ethanol maker
+MAWANASUG,sugar_distilleries,sugar and ethanol maker
+EIDPARRY,sugar_distilleries,sugar with nutrient and bio products
+CHAMBLFERT,fertilisers,urea and complex fertiliser maker
+COROMANDEL,fertilisers,phosphatic fertiliser with crop protection
+RCF,fertilisers,fertiliser maker
+NFL,fertilisers,fertiliser maker
+FACT,fertilisers,fertiliser maker
+GSFC,fertilisers,fertiliser maker
+GNFC,fertilisers,fertiliser and chemicals maker
+PARADEEP,fertilisers,phosphatic fertiliser maker
+DEEPAKFERT,fertilisers,industrial chemicals and fertiliser maker
+MADRASFERT,fertilisers,fertiliser maker
+ZUARI,fertilisers,fertiliser maker
+UPL,agrochemicals_pesticides,crop protection
+PIIND,agrochemicals_pesticides,crop protection and custom manufacturing
+RALLIS,agrochemicals_pesticides,crop protection
+BAYERCROP,agrochemicals_pesticides,crop protection
+DHANUKA,agrochemicals_pesticides,crop protection
+SUMICHEM,agrochemicals_pesticides,crop protection
+INSECTICID,agrochemicals_pesticides,crop protection
+SHARDACROP,agrochemicals_pesticides,crop protection
+BHARATRAS,agrochemicals_pesticides,crop protection
+KSCL,seeds_plantations,seed producer
+HARRMALAYA,seeds_plantations,tea and rubber plantations
+MCLEODRUSS,seeds_plantations,tea producer
+JAYSHREETEA,seeds_plantations,tea producer
+SUZLON,renewable_energy,wind turbine maker
+INOXWIND,renewable_energy,wind turbine maker
+ADANIGREEN,renewable_energy,solar and wind power generator
+WAAREEENER,renewable_energy,solar module maker
+PREMIERENE,renewable_energy,solar module maker
+INOXGREEN,renewable_energy,wind power services
+KPIGREEN,renewable_energy,solar and wind power generator
+SWSOLAR,renewable_energy,solar engineering and construction
+HAL,defence_aerospace,military aircraft maker
+BEL,defence_aerospace,defence electronics
+BDL,defence_aerospace,missile maker
+MAZDOCK,defence_aerospace,naval shipbuilder
+GRSE,defence_aerospace,naval shipbuilder
+COCHINSHIP,defence_aerospace,shipbuilder for navy and commercial customers
+DATAPATTNS,defence_aerospace,defence and aerospace electronics
+ASTRAMICRO,defence_aerospace,defence and aerospace microwave products
+PARAS,defence_aerospace,defence and space optics
+SOLARINDS,defence_aerospace,explosives and defence products
+MTARTECH,defence_aerospace,"precision parts for nuclear, space and defence"
+BEML,defence_aerospace,defence and heavy equipment
+ONGC,oil_gas_upstream_refining,exploration and production
+OIL,oil_gas_upstream_refining,exploration and production
+HINDOILEXP,oil_gas_upstream_refining,exploration and production
+RELIANCE,oil_gas_upstream_refining,refining with other businesses
+BPCL,oil_gas_upstream_refining,refining and marketing
+IOC,oil_gas_upstream_refining,refining and marketing
+HINDPETRO,oil_gas_upstream_refining,refining and marketing
+MRPL,oil_gas_upstream_refining,refining
+CHENNPETRO,oil_gas_upstream_refining,refining
+SCI,shipping_maritime,shipping line
+GESHIP,shipping_maritime,shipping line
+SEAMECLTD,shipping_maritime,offshore support vessels
+HINDCOPPER,strategic_metals_mining,copper mining
+NALCO,strategic_metals_mining,aluminium
+HINDALCO,strategic_metals_mining,aluminium and copper
+HINDZINC,strategic_metals_mining,zinc and lead mining
+VEDL,strategic_metals_mining,"zinc, aluminium and oil and gas"
