@@ -37,7 +37,7 @@ export const DEFAULT_LIFECYCLE: Pick<LifecycleContext, 'ceaseAfterSessions' | 'g
 };
 
 /** Trading sessions d with `after < d <= upTo` (any session kind). */
-function sessionsAfter(after: string, upTo: string): number {
+export function sessionsAfter(after: string, upTo: string): number {
   if (upTo <= after) return 0;
   return tradingDaysBetween(after, upTo).filter((d) => d > after).length;
 }

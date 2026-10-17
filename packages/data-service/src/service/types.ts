@@ -2,6 +2,7 @@ import type { Clock } from '@trading/core';
 import type { SeriesStore } from '../canonical/seriesStore';
 import type { InstrumentIdentity } from '../canonical/identity';
 import type { SnapshotStore } from '../snapshot/snapshotStore';
+import type { StatusHistory } from '../status/statusHistory';
 import type { Lifecycle } from '../universe/lifecycle';
 
 export interface ServiceRequest {
@@ -33,4 +34,6 @@ export interface ServiceDeps {
   identities: readonly InstrumentIdentity[];
   lifecycles: readonly Lifecycle[];
   providerHealth: () => ProviderHealth[];
+  /** Band and surveillance records; without it `/status` reports them as not recorded. */
+  statusHistory?: StatusHistory;
 }

@@ -1,0 +1,76 @@
+{
+ "longterm": {
+  "data": [
+   {
+    "asmSurvIndicator": "Stage I",
+    "asmTime": "16-Oct-2026",
+    "companyName": "A2Z Infra Engineering Limited",
+    "isin": "INE619I01012",
+    "series": null,
+    "survCode": "LTASM - I (13)",
+    "survDesc": "Long Term Additional Surveillance Measure (LTASM) - Stage I",
+    "symbol": "A2ZINFRA",
+    "srno": 1
+   },
+   {
+    "asmSurvIndicator": "Stage IV",
+    "asmTime": "16-Oct-2026",
+    "companyName": "Bliss GVS Pharma Limited",
+    "isin": "INE416D01022",
+    "series": null,
+    "survCode": "LTASM - IV (16)",
+    "survDesc": "Long Term Additional Surveillance Measure (LTASM) - Stage IV",
+    "symbol": "BLISSGVS",
+    "srno": 22
+   },
+   {
+    "asmSurvIndicator": "Stage II",
+    "asmTime": "16-Oct-2026",
+    "companyName": "D. P. Abhushan Limited",
+    "isin": "INE266Y01019",
+    "series": null,
+    "survCode": "LTASM - II (14)",
+    "survDesc": "Long Term Additional Surveillance Measure (LTASM) - Stage II",
+    "symbol": "DPABHUSHAN",
+    "srno": 33
+   },
+   {
+    "asmSurvIndicator": "Stage III",
+    "asmTime": "16-Oct-2026",
+    "companyName": "Twamev Construction and Infrastructure Limited",
+    "isin": "INE388G01026",
+    "series": null,
+    "survCode": "LTASM - III (15)",
+    "survDesc": "Long Term Additional Surveillance Measure (LTASM) - Stage III",
+    "symbol": "TICL",
+    "srno": 121
+   }
+  ]
+ },
+ "shortterm": {
+  "data": [
+   {
+    "asmSurvIndicator": "Stage I",
+    "asmTime": "16-Oct-2026",
+    "companyName": "Abans Enterprises Limited",
+    "isin": "INE365O01028",
+    "series": null,
+    "survCode": "STASM - I (11)",
+    "survDesc": "Short Term Additional Surveillance Measure (STASM) - Stage I",
+    "symbol": "ABANSENT",
+    "srno": 1
+   },
+   {
+    "asmSurvIndicator": "Stage II",
+    "asmTime": "16-Oct-2026",
+    "companyName": "Fascinate Textiles Limited",
+    "isin": "INE1Q2D01019",
+    "series": null,
+    "survCode": "STASM - II (12)",
+    "survDesc": "Short Term Additional Surveillance Measure (STASM) - Stage II",
+    "symbol": "FASCINATE",
+    "srno": 23
+   }
+  ]
+ }
+}

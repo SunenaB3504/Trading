@@ -63,10 +63,39 @@ function actions(deps: ServiceDeps, req: ServiceRequest): ServiceResponse {
   );
 }
 
+const NOT_RECORDED = {
+  surveillanceList: null,
+  surveillanceStage: null,
+  bandPct: null,
+  tradeForTrade: null,
+  flags: ['surveillance_status_not_recorded'],
+};
+
+/** Band and surveillance as recorded on or before `asOf`; nulls with a flag when no source is wired in. */
+function surveillanceFields(
+  deps: ServiceDeps,
+  symbol: string,
+  asOf: string,
+): Record<string, unknown> {
+  if (deps.statusHistory === undefined) return NOT_RECORDED;
+  const s = deps.statusHistory.statusOn(symbol, asOf);
+  return {
+    surveillanceList: s.surveillanceList,
+    surveillanceStage: s.gsmStage ?? s.asm?.stage ?? null,
+    gsmStage: s.gsmStage,
+    asm: s.asm,
+    asmKnown: s.asmKnown,
+    bandPct: s.bandPct,
+    tradeForTrade: s.tradeForTrade,
+    statusSourceDate: s.sourceDate,
+    flags: s.flags,
+  };
+}
+
 /**
- * Status from price history only: listing and cessation come from the lifecycle (FR-U9). Surveillance
- * stage and price band need an exchange source that is not connected yet (WP-2.4), so they are null
- * and say so, rather than looking like "no restriction".
+ * Listing and cessation come from price history (FR-U9). Band and surveillance come from the recorded
+ * security lists and reports (WP-2.4) when a status history is supplied; otherwise they are null and
+ * say so, rather than looking like "no restriction".
  */
 function status(deps: ServiceDeps, req: ServiceRequest): ServiceResponse {
   const id = resolveSymbol(deps.identities, req.query.symbol);
@@ -81,11 +110,7 @@ function status(deps: ServiceDeps, req: ServiceRequest): ServiceResponse {
     listed: life.firstSeen <= asOf,
     ceased: life.status !== 'active' && life.lastSeen < asOf,
     suspended: life.gaps.some((g) => g.from < asOf && asOf < g.to),
-    surveillanceList: null,
-    surveillanceStage: null,
-    bandPct: null,
-    tradeForTrade: null,
-    flags: ['surveillance_status_not_recorded'],
+    ...surveillanceFields(deps, req.query.symbol ?? '', asOf),
   });
 }
 

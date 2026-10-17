@@ -30,3 +30,23 @@ Findings from these recordings (2026-10-17):
 - For 2024-06-03 the legacy and UDiFF files give identical records (prices, previous close, volume, ISIN) for all nine sampled symbol/series pairs.
 - Mindtree kept trading until 2022-11-22 although its merger into L&T Infotech took effect earlier in the month, so the last session is not the effective date. A cessation reason needs a corporate-action record or a second source.
 - LTI became LTIM with the same ISIN (INE214T01019), which the identity rule treats as one stock.
+
+## Band, trade-for-trade and surveillance files (recorded 2026-10-17, WP-2.4)
+
+| File | Source | Notes |
+| ------ | ------ | ------ |
+| `sec_list_2020-10-16_subset.csv`, `sec_list_2025-10-16_subset.csv`, `sec_list_2026-10-16_subset.csv` | `nsearchives.nseindia.com/content/equities/sec_list_DDMMYYYY.csv` | Selected rows. Columns Symbol, Series, Security Name, Band, Remarks |
+| `sec_bhavdata_full_2025-10-16_subset.csv` | `nsearchives.nseindia.com/products/content/sec_bhavdata_full_16102025.csv` | The same day's prices for the same symbols: previous close, open, high, low, close, delivery. Real upper and lower circuit sessions among them |
+| `nse_report_asm_2026-10-16_subset.json` | `www.nseindia.com/api/reportASM` | A few entries of each long-term and short-term stage |
+| `nse_report_gsm_2026-10-16_subset.json` | `www.nseindia.com/api/reportGSM` | One entry of each distinct code |
+
+Findings:
+
+- **`sec_list` is the band source.** It lists every security open for trading that day (3,587 on 2026-10-16) with its price band (2, 5, 10, 20, 40 for rights entitlements, or "No Band"), series and a remark. Files exist from 2019-12-31 (404 for 2019-12-20 and earlier, and for exchange holidays). Nothing earlier is available from this path.
+- **"No Band" names are not unrestricted.** They are derivatives names and index constituents, which have dynamic bands instead. A fixed-band circuit test cannot be applied to them.
+- **The remark carries the GSM stage only** ("GSM STAGE - IV", with inconsistent capitalisation, and one name with a trailing tab). ASM is not in this file. Stage 0 means shortlisted only.
+- **`sec_bhavdata_full` has no band column.** It adds previous close and delivery data to the usual prices; trade-for-trade shows only as series BE and BZ.
+- **ASM and GSM reports show today's list only.** `/api/reportASM` and `/api/reportGSM` need a session cookie from the NSE home page (the home page itself returned 403 to a script, yet the cookie it set was accepted), and a `date` parameter is ignored. No ASM archive was found at the paths tried. ASM history can therefore only be built by recording the report every day from now on.
+- **GSM codes also encode other measures**: "IBC I & GSM 0", "LTASM I & GSM 0", "ESM I & GSM 0", and ASM codes "LTASM - I (13)", "STASM - II (12)".
+- **Real circuits exist in the sample**: on 2025-10-16, 32 names closed at the upper band with the high on it, and 13 at the lower band with the low on it, all at 5%. Computing the band from the previous close with the core band functions (tick 5 paise) reproduced the exchange's closing prices exactly, for example ACCENTMIC 25,795 to 27,080 paise units.
+- **BSE was not checked.**
