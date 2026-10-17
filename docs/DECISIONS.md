@@ -46,6 +46,8 @@
 
 | T11 | Instrument identity is derived from bhavcopy history: the same ISIN is one stock (rename); the same symbol whose next listing starts within 10 calendar days is one stock (face-value change issues a new ISIN); a symbol reappearing after a longer gap is a different instrument. The id is `<first symbol>:<first ISIN>` | Recorded events show the new ISIN starting the session after the ex-date, and no external instrument master is available. Mergers, demergers and symbol reuse inside 10 days are not handled and would need manual review | 2026-10-17 |
 
+| T12 | An instrument counts as ceased after 10 regular sessions without a bar. Its reason is `merger` only when a merger or demerger corporate action takes effect within 14 days after its last session; otherwise it is recorded as `ceased_unknown` and must be confirmed from another source. The as-of universe keeps any instrument that traded in the 5 sessions before the window start, including ones that cease later | Prices cannot give the reason: Mindtree kept trading for days after its merger took effect. The as-of rule is what removes survivorship bias (FR-U9) | 2026-10-17 |
+
 ## Scope decisions
 
 | Decision | Outcome | Date |

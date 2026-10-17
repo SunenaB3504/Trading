@@ -5,7 +5,7 @@
 **Status values:** `Not started` · `In progress` · `Blocked` · `Done`  
 **Done means** the work package's acceptance test (see the plan) has been run and the result is recorded in the *Acceptance result* column. Failures are recorded as failures; a work package with a failing test stays `In progress`.
 
-**Last updated:** 2026-10-16 (WP-2.6 done; P1 complete)
+**Last updated:** 2026-10-16 (WP-2.5 done; P1 complete)
 
 ## Phase summary
 
@@ -14,7 +14,7 @@
 | ------ | ------ | ------ | ------ | ------ | ------ |
 | P0 · Decisions, skeleton and de-risking | 5 | 0 | 0 | 3 | 8 |
 | P1 · Core ledger and simulator | 11 | 0 | 0 | 0 | 11 |
-| P2 · Data service and universe | 4 | 0 | 0 | 5 | 9 |
+| P2 · Data service and universe | 5 | 0 | 0 | 4 | 9 |
 | P3 · Web MVP (R1) | 0 | 0 | 0 | 7 | 7 |
 | P4 · Chart module and shadow mode (R1.5) | 0 | 0 | 0 | 6 | 6 |
 | P5 · Experiment harness and buyer-company overlay (R2) | 0 | 0 | 0 | 7 | 7 |
@@ -22,7 +22,7 @@
 | P7 · Jyotisham feature modules and PH entries (R3) | 0 | 0 | 0 | 10 | 10 |
 <!-- SUMMARY-END -->
 
-**Next work package:** WP-2.7 (objective bucket builder, needs bucket cut-offs) and WP-2.4/2.5 (band-ASM-GSM status and delisted names, need data sources); owner to confirm D8/D21, T6 and the E1-E7 thresholds (D25); WP-0.2, 0.4 also unblocked  
+**Next work package:** WP-2.7 (objective bucket builder, needs bucket cut-offs), WP-2.8 (snapshot hashing and service endpoints), WP-2.4 (band/ASM/GSM, needs a data source); owner to confirm D8/D21, T6 and D25; WP-0.2, 0.4 also unblocked  
 **Open blockers:** none
 
 ---
@@ -64,7 +64,7 @@
 | 2.2 | Canonical OHLCV; unadjusted and adjusted kept separate | 2.1, 1.5 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 338 tests, 18 new. On 43 real NSE bars around five events (TATASTEEL, IRCTC, NESTLEIND, RELIANCE, BAJAJFINSV incl. a same-day split + bonus): adjusted = unadjusted x factor, confirmed by an independent recomputation (verifyAdjustment) that also catches a tampered bar; history continuous after adjustment while the unadjusted series keeps the cliff; stored unadjusted bars unchanged by adjusting; our adjusted RELIANCE closes agree with Yahoo's on all 6 shared sessions to within 1 paisa. Yahoo rows are refused for the unadjusted series; provider disagreement is flagged disputed with the exchange file preferred | Instrument identity joins the old and new ISIN after a face-value change and renames, from the data itself (decision T11). Real quirk found: the new ISIN begins the session after the ex-date. Circuit flags stay `none` until WP-2.4; the instrument master is built from bhavcopy history only (no external source) |
 | 2.3 | Provider cross-check on unadjusted closes; disputed-day flag | 2.2 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 347 tests, 9 new. D4 rule (dispute above 0.5% on close, or any share-count difference) implemented and tested at the boundary (50 bps agrees, 51 disputes). Real comparisons: NSE legacy vs NSE UDiFF for 2024-06-03 give identical records for all 9 sampled symbols; NSE (adjusted with our action table) vs Yahoo for RELIANCE agree on close and volume on all 6 shared sessions; an injected 1% close error and a 1-share volume error are both caught; a missing split/bonus is diagnosed as a constant ratio and located between two sessions (checked on real Tata Steel bars); disputed dates can be flagged on the canonical series without mutating it | Cross-check is on a common basis: Yahoo is compared with NSE adjusted by our own table, since Yahoo adjusts price AND volume (T9). Sessions covered by only one provider are listed, not disputed. Needs a fetch loop (WP-2.9) before it runs on a whole universe; thresholds beyond close and volume (open, high, low) are not checked |
 | 2.4 | Band/ASM/GSM ingestion; point-in-time status; circuit flag | 2.1 | Not started |  |  |  |  |
-| 2.5 | Delisted and merged instruments retained (FR-U9) | 2.1 | Not started |  |  |  |  |
+| 2.5 | Delisted and merged instruments retained; last-trade date and reason | 2.1 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 381 tests, 11 new. On real NSE bars around two mergers: HDFC's last session is found as 2023-07-12 and linked to the merger when the action is supplied; Mindtree's last session 2022-11-22 is recorded with an honest `unknown` reason when no action is supplied; HDFC is in the universe as of 2023-07-10 although delisted three sessions later, and drops out once it has been silent longer than allowed (the survivorship acceptance test); LTI and LTIM are one stock; long gaps inside a series are listed as suspensions; delisting fields for the instrument record are produced | The reason for a cessation cannot be read from prices (Mindtree traded for days after its merger took effect), so it needs a corporate-action record or a second source (decision T12). Default: ceased after 10 sessions without a bar. The recording is short, so tests use a 3-session threshold. A real delisting list (NSE) is not yet ingested |
 | 2.6 | Eligibility rules E1-E7 with recorded first failure; `time_assumed` flag handling | 2.4, 2.5 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 370 tests, 23 new. Rules E1-E7 evaluated in order, every result reported and the first failure recorded; each threshold tested exactly at the boundary; thresholds frozen in a hashed config (`elig-v1`, changing any value changes the hash and every result carries it); point-in-time facts built from real NSE bars using only data before the window (verified by truncating later bars) and fed through the rules end to end | Done ahead of 2.4 and 2.5 because the rules need only facts the data already gives. Thresholds are PROPOSED (decision D25): Rs 5 crore median daily traded value, 60-session warm-up, at most 5 missing sessions, 98% two-provider coverage. Evidence: on 2025-10-16, 1,000 main-board equities traded at least Rs 5 crore and 494 at least Rs 25 crore. Surveillance and price bands are flagged `not_recorded` until WP-2.4; an instrument with no sourced listing timestamp passes but is flagged `time_assumed`; liquidity is close x volume (an approximation of exchange traded value); E7 fails when coverage is not measured |
 | 2.7 | Objective bucket builder (astro-blind, versioned) | 2.6 | Not started |  |  |  |  |
 | 2.8 | DataSnapshot creation and hashing; service endpoints | 2.3, 2.7 | Not started |  |  |  |  |
@@ -168,3 +168,4 @@
 | 2026-10-17 | WP-2.2 Done: canonical series, instrument identity across ISIN changes, adjustment verified on real events and against Yahoo |
 | 2026-10-17 | WP-2.3 Done: provider cross-check, verified on real NSE and Yahoo data |
 | 2026-10-17 | WP-2.6 Done: eligibility rules E1-E7 with frozen hashed thresholds (D25 proposed) |
+| 2026-10-17 | WP-2.5 Done: lifecycle and as-of universe on real merger data (T12) |

@@ -38,3 +38,16 @@ export type {
 } from './crosscheck/crossCheck';
 export { buildFacts } from './universe/facts';
 export type { FactsInput } from './universe/facts';
+export {
+  DEFAULT_LIFECYCLE,
+  delistingFields,
+  lifecycleOf,
+  universeAsOf,
+} from './universe/lifecycle';
+export type {
+  Lifecycle,
+  LifecycleContext,
+  LifecycleStatus,
+  SuspensionGap,
+  UniverseAsOf,
+} from './universe/lifecycle';
