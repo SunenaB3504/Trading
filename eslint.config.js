@@ -35,7 +35,7 @@ const coreBans = {
 };
 
 export default tseslint.config(
-  { ignores: ['**/node_modules/**', '**/dist/**', '**/coverage/**', 'Study-docs/**', 'docs/**', 'research/**', 'fixtures/**', '**/*.generated.ts', '.dependency-cruiser.cjs'] },
+  { ignores: ['**/node_modules/**', '**/dist/**', '**/coverage/**', 'Study-docs/**', 'docs/**', 'research/**', '**/upstream/**', 'fixtures/**', '**/*.generated.ts', '.dependency-cruiser.cjs'] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {

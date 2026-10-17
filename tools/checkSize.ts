@@ -14,6 +14,7 @@ const SKIP_DIR = new Set([
   'Study-docs',
   'docs',
   'research',
+  'upstream',
   'fixtures',
 ]);
 const SKIP_FILE = /(\.generated\.|\.d\.ts$)/;

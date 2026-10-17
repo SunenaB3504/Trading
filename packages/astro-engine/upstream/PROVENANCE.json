@@ -1,0 +1,13 @@
+{
+  "source": "C:/Users/Admin/Sunil/Sub-programs/JV-try/packages/engine-core/src",
+  "copiedOn": "2026-10-17",
+  "status": "frozen reference copy; the refactored engine lives in ../src (WP-4.1). Do not edit.",
+  "dependsOn": "astronomy-engine ^2.1.19",
+  "files": {
+    "astronomy.ts": "fbb2abda00df25530f23ad3b06a86f83b7842fa08b650ca2c95ccd650203b7f9",
+    "constants.ts": "32965e0ac9e31769d3370419b5593cedaece1c5057953a79ecfbeaa1c9a39abb",
+    "index.ts": "48fd25411a2fd7d89abdfa84b6aabd82574d662656a5bfaf1ff76243a1e071cc",
+    "types.ts": "236daa703c77fb2c6aa82ba3064f79d211bf13d88327b9b4b4d3b227ccf131cc",
+    "vedicMath.ts": "96b97205d3ea9520bdea7cb8a95b9c9da2f851db3e583fa12f775339a9d256a9"
+  }
+}
