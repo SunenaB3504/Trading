@@ -2,6 +2,8 @@ import { useMemo, useState } from 'react';
 import { Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { DataServiceClient } from './dataClient/client';
 import type { FetchLike } from './dataClient/client';
+import { GrantAllEntitlements } from './entitlement/grantAll';
+import { EntitlementProvider } from './entitlement/react';
 import { useOnline } from './hooks/useOnline';
 import { DataScreen } from './screens/DataScreen';
 import { LedgerScreen } from './screens/LedgerScreen';
@@ -42,26 +44,31 @@ export default function App() {
   const kv: KeyValueStore = useMemo(() => new IndexedDbKv(), []);
   const client = useMemo(() => new DataServiceClient(browserFetch, serviceUrl()), []);
   const now = useMemo(() => () => Date.now(), []);
+  const entitlements = useMemo(() => new GrantAllEntitlements(), []);
   return (
-    <SafeAreaView style={styles.root}>
-      <View style={styles.header}>
-        <Text style={styles.brand}>Mock trading</Text>
-        <Text style={online ? styles.online : styles.offline}>{online ? 'Online' : 'Offline'}</Text>
-      </View>
-      <View style={styles.tabs} accessibilityRole="tablist">
-        <TabButton id="ledger" active={tab} onSelect={setTab}>
-          Ledger
-        </TabButton>
-        <TabButton id="data" active={tab} onSelect={setTab}>
-          Data
-        </TabButton>
-      </View>
-      {tab === 'ledger' ? (
-        <LedgerScreen kv={kv} now={now} />
-      ) : (
-        <DataScreen client={client} kv={kv} now={now} />
-      )}
-    </SafeAreaView>
+    <EntitlementProvider service={entitlements}>
+      <SafeAreaView style={styles.root}>
+        <View style={styles.header}>
+          <Text style={styles.brand}>Mock trading</Text>
+          <Text style={online ? styles.online : styles.offline}>
+            {online ? 'Online' : 'Offline'}
+          </Text>
+        </View>
+        <View style={styles.tabs} accessibilityRole="tablist">
+          <TabButton id="ledger" active={tab} onSelect={setTab}>
+            Ledger
+          </TabButton>
+          <TabButton id="data" active={tab} onSelect={setTab}>
+            Data
+          </TabButton>
+        </View>
+        {tab === 'ledger' ? (
+          <LedgerScreen kv={kv} now={now} />
+        ) : (
+          <DataScreen client={client} kv={kv} now={now} />
+        )}
+      </SafeAreaView>
+    </EntitlementProvider>
   );
 }
 

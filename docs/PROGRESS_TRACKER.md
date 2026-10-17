@@ -5,7 +5,7 @@
 **Status values:** `Not started` · `In progress` · `Blocked` · `Done`  
 **Done means** the work package's acceptance test (see the plan) has been run and the result is recorded in the *Acceptance result* column. Failures are recorded as failures; a work package with a failing test stays `In progress`.
 
-**Last updated:** 2026-10-17 (WP-3.8 done)
+**Last updated:** 2026-10-17 (WP-3.10 done)
 
 ## Phase summary
 
@@ -15,7 +15,7 @@
 | P0 · Decisions, skeleton and de-risking | 7 | 0 | 0 | 1 | 8 |
 | P1 · Core ledger and simulator | 11 | 0 | 0 | 0 | 11 |
 | P2 · Data service and universe | 8 | 0 | 0 | 1 | 9 |
-| P3 · Web MVP (R1) | 2 | 0 | 0 | 9 | 11 |
+| P3 · Web MVP (R1) | 3 | 0 | 0 | 8 | 11 |
 | P4 · Chart module and shadow mode (R1.5) | 0 | 0 | 0 | 8 | 8 |
 | P5 · Experiment harness and buyer-company overlay (R2) | 0 | 0 | 0 | 7 | 7 |
 | P6 · Android shell (A1) | 0 | 0 | 0 | 1 | 1 |
@@ -23,7 +23,7 @@
 | P11 · Commercialization (after R2; gated by D32) | 0 | 0 | 0 | 4 | 4 |
 <!-- SUMMARY-END -->
 
-**Next work package:** WP-3.10 (entitlement seam), WP-3.3 (order entry through the adapter), WP-3.2 (universe screen); WP-2.9 (universe pull) waits on a daily ASM recording job and the four missing AMFI lists. Owner to confirm D1, review the sector table (T17) and resolve the three D26 points  
+**Next work package:** WP-3.3 (order entry through the adapter), WP-3.2 (universe screen), WP-3.9 (snapshot client, waits on D26), WP-3.11 (gate leak tests); WP-2.9 (universe pull) waits on a daily ASM recording job and the four missing AMFI lists. Owner to confirm D1, review the sector table (T17) and resolve the three D26 points  
 **Open blockers:** none
 
 ---
@@ -84,7 +84,7 @@
 | 3.7 | Phone-width layout and accessibility | 3.2 | Not started |  |  |  |  |
 | 3.8 | IExecutionAdapter and PaperExecutionAdapter (Paise balances, idempotency keys) | 1.8, 1.10 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 454 tests. Placing the twelve fixture orders through the adapter and settling reproduces the golden report hash and the replay outcomes exactly; the same key and request returns the same result and one order; cash is a safe-integer paise value; positions match the report | Placement checks only the order shape (quantity, limit price, duplicate id, unknown instrument); cash, size and circuit decisions happen at fill time as in the replay and appear in the order list with a reason. An order stays pending until its fill session has a bar. A circuit carry-over that runs past the end of the data would expire early. The app does not use the adapter yet (WP-3.3) | 
 | 3.9 | Snapshot client: signed download-only pull, staleness, network-audit test | 2.8, 3.1, D26 | Not started |  |  |  | Added 2026-10-17 |
-| 3.10 | IEntitlementService seam with grant-all stub; no prices or store text | 3.1 | Not started |  |  |  | Added 2026-10-17; FR-P9 |
+| 3.10 | IEntitlementService seam with grant-all stub; no prices or store text | 3.1 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 460 tests; airplane-mode check still passes with the provider in place. The stub grants every feature; the tier configuration is empty; guard tests find no store SDK in any package, no reference to the seam outside the app, and no SKU or tier wording in source | `hasFeatureAccess` and `getEntitlements`; a React provider and `useFeatureAccess` hook (null while loading, so nothing shows locked); no screen uses a gate yet. FR-P9 |
 | 3.11 | Gate leak tests with the astro feature off (FR-P10) | 3.10, 3.6, 3.9 | Not started |  |  |  | Added 2026-10-17 |
 
 ## P4 · Chart module and shadow mode (R1.5)
@@ -210,3 +210,4 @@
 | 2026-10-17 | WP-2.7 Done: bucket-v1 rules, AMFI lists, market cap and index parsers, sector table; D35 closed; T15 to T17 |
 | 2026-10-17 | WP-3.1 Done: Expo app shell with ledger and data screens, IndexedDB store, typed data-service client, read-through cache; airplane-mode check passes in Chrome |
 | 2026-10-17 | WP-3.8 Done: IExecutionAdapter and PaperExecutionAdapter over the P1 engine; golden-hash conformance, idempotency, cancel and wait-for-data tests |
+| 2026-10-17 | WP-3.10 Done: entitlement seam with grant-all stub, provider and hook, guard tests |
