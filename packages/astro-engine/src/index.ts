@@ -13,3 +13,5 @@ export { extractFeatures, FRAGILE_DEGREES } from './features';
 export type { FeatureInput, FeatureSet } from './features';
 export { taraBala, TARA_NAMES } from './tara';
 export type { Tara } from './tara';
+export { GENESIS, SignalLog, defineSignal, logDay, verifyEntries } from './signal';
+export type { LogEntry, SignalDefinition, SignalFn, SignalSpec, SignalValue } from './signal';
