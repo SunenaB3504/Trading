@@ -28,7 +28,7 @@ export const URL_CLASSES = {
   pr: 'nse-pr-zip',
 } as const;
 
-type Result = 'stored' | 'have' | 'none' | 'failed';
+export type Result = 'stored' | 'have' | 'none' | 'failed';
 
 export interface SessionPull {
   date: string;
@@ -57,10 +57,16 @@ async function stored(store: RawStore, recheckMissing: boolean): Promise<Set<str
   );
 }
 
-async function one(
+/** One dated file: skipped if already held, kept raw if fetched, recorded as missing if the exchange has none. */
+export async function fetchDay(
   deps: FetchDeps,
   have: Set<string>,
-  req: { urlClass: string; provider: 'nse-bhavcopy' | 'nse-pr'; url: string; date: string },
+  req: {
+    urlClass: string;
+    provider: 'nse-bhavcopy' | 'nse-pr' | 'nse-index';
+    url: string;
+    date: string;
+  },
 ): Promise<{ result: Result; problem?: string }> {
   const { urlClass, provider, url, date } = req;
   if (have.has(`${urlClass}|${date}`)) return { result: 'have' };
@@ -89,7 +95,7 @@ export async function pullSession(
   weekend = false,
 ): Promise<SessionPull> {
   const format = bhavcopyFormatFor(date);
-  const bhav = await one(deps, have, {
+  const bhav = await fetchDay(deps, have, {
     urlClass: format === 'legacy' ? URL_CLASSES.bhavLegacy : URL_CLASSES.bhavUdiff,
     provider: 'nse-bhavcopy',
     url: bhavcopyUrl(date, format),
@@ -98,7 +104,7 @@ export async function pullSession(
   // No archive is published for a weekend, so only the bhavcopy is asked for there.
   const pr: { result: Result; problem?: string } = weekend
     ? { result: 'none' }
-    : await one(deps, have, {
+    : await fetchDay(deps, have, {
         urlClass: URL_CLASSES.pr,
         provider: 'nse-pr',
         url: prZipUrl(date),

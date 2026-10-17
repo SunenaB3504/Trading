@@ -1,5 +1,11 @@
 import { createRng } from '@trading/core';
-import { FileRawStore, RateLimiter, nodeHttpClient, pullRange } from '@trading/data-service';
+import {
+  FileRawStore,
+  RateLimiter,
+  nodeHttpClient,
+  pullIndexRange,
+  pullRange,
+} from '@trading/data-service';
 import type { FetchDeps, SessionPull } from '@trading/data-service';
 
 /**
@@ -10,6 +16,7 @@ import type { FetchDeps, SessionPull } from '@trading/data-service';
  * Usage:  pnpm pull:bars --from 2024-02-01 --to 2026-10-16 [--dir data/raw/nse-bars] [--spacing-ms 2000]
  *            [--weekends] (also Saturdays and Sundays, bhavcopy only, to find special sessions)
  *            [--recheck-missing] (ask again for dates earlier answered "no such file")
+ *            [--index] (pull the daily index closes instead of the bhavcopy and PR archive)
  */
 const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -50,6 +57,24 @@ function depsFor(dir: string, spacing: number, seed: string): FetchDeps {
   };
 }
 
+async function pullIndex(from: string, to: string, deps: FetchDeps): Promise<number> {
+  const days = await pullIndexRange(from, to, deps, (d) => {
+    const problem = d.problem === undefined ? '' : ` PROBLEM ${d.problem}`;
+    console.log(`${d.date} index ${d.result}${problem}`);
+  });
+  const n = (r: string): number => days.filter((d) => d.result === r).length;
+  console.log(
+    JSON.stringify({
+      days: days.length,
+      stored: n('stored'),
+      have: n('have'),
+      none: n('none'),
+      failed: n('failed'),
+    }),
+  );
+  return n('failed') === 0 ? 0 : 1;
+}
+
 export async function main(args: readonly string[]): Promise<number> {
   const from = option(args, '--from');
   const to = option(args, '--to');
@@ -62,6 +87,7 @@ export async function main(args: readonly string[]): Promise<number> {
     Number(option(args, '--spacing-ms') ?? '2000'),
     `pull-bars-${from}-${to}`,
   );
+  if (args.includes('--index')) return pullIndex(from, to, deps);
   let failed = 0;
   const results = await pullRange(
     from,

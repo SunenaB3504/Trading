@@ -120,3 +120,6 @@ export {
   weekdays,
 } from './jobs/barPuller';
 export type { DayEvidence, DerivedCalendar, PullOptions, SessionPull } from './jobs/barPuller';
+export { INDEX_URL_CLASS, loadIndexCloses, pullIndexRange } from './jobs/indexPuller';
+export type { IndexDay } from './jobs/indexPuller';
+export { fetchDay } from './jobs/barPuller';
