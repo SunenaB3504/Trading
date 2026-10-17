@@ -56,6 +56,7 @@
 
 | # | Decision | Decided at | Default |
 | ------ | ------ | ------ | ------ |
+| D25 | Eligibility thresholds E1-E7 | Before the universe is built | **Proposed, awaiting owner confirmation** (config `elig-v1`): main-board series EQ, BE, BZ; 60 sessions of history; median daily traded value at least Rs 5 crore over the 60-session lookback; at most 5 sessions without a bar; two-provider coverage at least 98%. Basis: on 2025-10-16, 1,000 main-board equities traded at least Rs 5 crore that day, 494 at least Rs 25 crore, 216 at least Rs 100 crore, so Rs 5 crore leaves roughly 800 to 1,000 names to choose about 100 from; a Rs 1 lakh position is 0.02% of that volume, which the no-market-impact fill model needs |
 | D24 | Broker whose brokerage and DP add-on to simulate | Before relying on cost results | Assumed generic discount broker: delivery free; intraday 0.03% capped at Rs 20; DP add-on Rs 9.50; all results flagged `broker.profile-assumed` |
 | D1 | UI framework | WP-0.4 spike | Expo universal |
 | D8, D21 | Evaluation-universe size and window | **Owner to confirm.** WP-0.5 recommends about 100 names and at least 8 years of history (docs/POWER_NOTE.md) | From the power note |

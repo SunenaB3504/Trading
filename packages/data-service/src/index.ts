@@ -36,3 +36,5 @@ export type {
   PricePoint,
   SuspectedAction,
 } from './crosscheck/crossCheck';
+export { buildFacts } from './universe/facts';
+export type { FactsInput } from './universe/facts';
