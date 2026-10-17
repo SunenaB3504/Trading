@@ -59,7 +59,8 @@ function dataReady(snap: ReplaySnapshot, r: OrderRequest): boolean {
  * `rejected` or `expired` order with a reason. `settle()` simulates every pending order whose fill
  * session has data in the snapshot; an order whose session has no bar yet stays `pending`. A circuit
  * carry-over that runs past the end of the data would expire early, so settle only when the data
- * reaches well past the order.
+ * reaches well past the order. Reads apply corporate actions due by the clock's date, so orders should
+ * be placed in date order (or the book rebuilt from the saved orders, as the app does).
  */
 export class PaperExecutionAdapter implements IExecutionAdapter {
   private readonly run: Run;
@@ -138,8 +139,13 @@ export class PaperExecutionAdapter implements IExecutionAdapter {
     return Promise.resolve([...done, ...open, ...gone]);
   }
 
-  getPositions(): Promise<Position[]> {
+  /** Corporate actions with an ex-date up to the clock's date (idempotent). */
+  private catchUp(): void {
     applyDue(this.run, istDateOfInstant(this.clock.now()));
+  }
+
+  getPositions(): Promise<Position[]> {
+    this.catchUp();
     const ids = [...new Set(this.run.state.lots.map((l) => l.instrumentId))].sort();
     return Promise.resolve(
       ids
@@ -153,6 +159,7 @@ export class PaperExecutionAdapter implements IExecutionAdapter {
   }
 
   getCashBalance(): Promise<number> {
+    this.catchUp();
     return Promise.resolve(cashBalance(this.run.state));
   }
 

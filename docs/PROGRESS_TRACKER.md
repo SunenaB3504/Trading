@@ -5,7 +5,7 @@
 **Status values:** `Not started` · `In progress` · `Blocked` · `Done`  
 **Done means** the work package's acceptance test (see the plan) has been run and the result is recorded in the *Acceptance result* column. Failures are recorded as failures; a work package with a failing test stays `In progress`.
 
-**Last updated:** 2026-10-17 (WP-3.10 done)
+**Last updated:** 2026-10-17 (WP-3.3 done)
 
 ## Phase summary
 
@@ -15,7 +15,7 @@
 | P0 · Decisions, skeleton and de-risking | 7 | 0 | 0 | 1 | 8 |
 | P1 · Core ledger and simulator | 11 | 0 | 0 | 0 | 11 |
 | P2 · Data service and universe | 8 | 0 | 0 | 1 | 9 |
-| P3 · Web MVP (R1) | 3 | 0 | 0 | 8 | 11 |
+| P3 · Web MVP (R1) | 4 | 0 | 0 | 7 | 11 |
 | P4 · Chart module and shadow mode (R1.5) | 0 | 0 | 0 | 8 | 8 |
 | P5 · Experiment harness and buyer-company overlay (R2) | 0 | 0 | 0 | 7 | 7 |
 | P6 · Android shell (A1) | 0 | 0 | 0 | 1 | 1 |
@@ -23,7 +23,7 @@
 | P11 · Commercialization (after R2; gated by D32) | 0 | 0 | 0 | 4 | 4 |
 <!-- SUMMARY-END -->
 
-**Next work package:** WP-3.3 (order entry through the adapter), WP-3.2 (universe screen), WP-3.9 (snapshot client, waits on D26), WP-3.11 (gate leak tests); WP-2.9 (universe pull) waits on a daily ASM recording job and the four missing AMFI lists. Owner to confirm D1, review the sector table (T17) and resolve the three D26 points  
+**Next work package:** WP-3.4 (Ledger A and B side by side), WP-3.2 (universe screen), WP-3.6 (bundle export and import), WP-3.11 (gate leak tests); WP-3.9 waits on D26; WP-2.9 (universe pull) waits on a daily ASM recording job and the four missing AMFI lists. Owner to confirm D1, review the sector table (T17) and resolve the three D26 points  
 **Open blockers:** none
 
 ---
@@ -77,7 +77,7 @@
 | ------ | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
 | 3.1 | App shell, web Store adapter, data-service client, offline views | 0.4, 1.11, 2.8 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 446 tests. Airplane-mode check (`pnpm e2e:airplane`, Chrome): ledger opens and shows the golden report hash, the badge switches to Offline, the data screen falls back to its last saved answer, the ledger still opens, and both are saved on the device in IndexedDB; no page errors | Built on Expo as the D1 default; owner has not yet confirmed D1. The check found a real bug (fetch called as a method threw "Illegal invocation"), fixed. The ledger shown is the core demo scenario, not the owner's own trades (WP-3.3). SQLite store for Android comes with WP-6.1 |
 | 3.2 | Universe screen (instruments, buckets, flags, eligibility reasons) | 3.1, 2.7 | Not started |  |  |  |  |
-| 3.3 | Order entry, positions, cash | 3.1, 1.8, 3.8 | Not started |  |  |  |  |
+| 3.3 | Order entry, positions, cash | 3.1, 1.8, 3.8 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 470 tests. Form to order request to `IExecutionAdapter`; a buy of 10 AAA fills at the next open and leaves the same cash as a direct replay of that order; sells with nothing held show as rejected with the reason; bad input is explained in plain words; the book is rebuilt from the saved orders after a restart. Browser check (`pnpm e2e:orders`, Chrome) passes: cost preview, fill, cash and position change, bad quantity, reload | Trades the core demo instruments (AAA, BBB, CCC) with the clock at the end of the demo data, not live data. The book is rebuilt from the saved orders on every change, in placement order, so it always equals a replay (the adapter alone is order-sensitive when orders are entered out of date order). The calendar check caught my own test date 2026-03-03 as a holiday. Ledger B (market comparator) comes with WP-3.4, so only Ledger A is updated here |
 | 3.4 | Ledger A / Ledger B side by side with snapshot ID | 3.3, 1.10 | Not started |  |  |  |  |
 | 3.5 | Win/loss report with intervals and breakdowns | 3.4 | Not started |  |  |  |  |
 | 3.6 | Signed bundle export/import; scheduled export; persistence request | 3.1, 1.3 | Not started |  |  |  |  |
@@ -211,3 +211,4 @@
 | 2026-10-17 | WP-3.1 Done: Expo app shell with ledger and data screens, IndexedDB store, typed data-service client, read-through cache; airplane-mode check passes in Chrome |
 | 2026-10-17 | WP-3.8 Done: IExecutionAdapter and PaperExecutionAdapter over the P1 engine; golden-hash conformance, idempotency, cancel and wait-for-data tests |
 | 2026-10-17 | WP-3.10 Done: entitlement seam with grant-all stub, provider and hook, guard tests |
+| 2026-10-17 | WP-3.3 Done: order entry through the paper adapter with cost preview, saved orders and a rebuilt book; browser check passes |

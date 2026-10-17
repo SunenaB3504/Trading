@@ -1,0 +1,273 @@
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import type { KeyValueStore } from '../store/kv';
+import { previewCosts } from '../trading/costPreview';
+import type { OrderForm } from '../trading/orderRequest';
+import { PaperSession, demoMarket } from '../trading/paperSession';
+import type { SessionView } from '../trading/paperSession';
+import { Note, Row, Section, colors } from '../ui/Section';
+
+const FIRST_FORM: OrderForm = {
+  instrumentId: 'AAA',
+  side: 'buy',
+  type: 'market',
+  quantity: '10',
+  limit: '',
+  stop: '',
+  date: '2026-03-02',
+};
+
+function Choice<T extends string>(props: {
+  label: string;
+  value: T;
+  options: readonly T[];
+  onChange: (v: T) => void;
+  testID: string;
+}) {
+  return (
+    <View style={styles.field}>
+      <Text style={styles.label}>{props.label}</Text>
+      <View style={styles.choices} testID={props.testID}>
+        {props.options.map((o) => (
+          <Pressable
+            key={o}
+            accessibilityRole="button"
+            accessibilityState={{ selected: o === props.value }}
+            onPress={() => props.onChange(o)}
+            style={[styles.choice, o === props.value ? styles.choiceOn : null]}
+          >
+            <Text style={o === props.value ? styles.choiceTextOn : styles.choiceText}>{o}</Text>
+          </Pressable>
+        ))}
+      </View>
+    </View>
+  );
+}
+
+function Field(props: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  testID: string;
+  keyboard?: 'default' | 'numeric' | 'decimal-pad';
+}) {
+  return (
+    <View style={styles.field}>
+      <Text style={styles.label}>{props.label}</Text>
+      <TextInput
+        testID={props.testID}
+        value={props.value}
+        onChangeText={props.onChange}
+        keyboardType={props.keyboard ?? 'default'}
+        style={styles.input}
+        accessibilityLabel={props.label}
+      />
+    </View>
+  );
+}
+
+function Book({ view }: { view: SessionView }) {
+  return (
+    <>
+      <Section title="Cash and positions">
+        <Row label="Cash" value={view.cash} />
+        {view.positions.length === 0 ? <Note>No open positions.</Note> : null}
+        {view.positions.map((p) => (
+          <Row
+            key={p.instrumentId}
+            label={`${p.instrumentId}, ${p.quantity} shares`}
+            value={`basis ${p.basis}`}
+          />
+        ))}
+      </Section>
+      <Section title="Orders">
+        {view.orders.length === 0 ? <Note>No orders yet.</Note> : null}
+        <View testID="order-list">
+          {view.orders.map((o) => (
+            <Row
+              key={o.id}
+              label={`${o.line}${o.reason ? ` (${o.reason})` : ''}`}
+              value={o.state}
+            />
+          ))}
+        </View>
+      </Section>
+    </>
+  );
+}
+
+type Market = ReturnType<typeof demoMarket>;
+type SetField = <K extends keyof OrderForm>(k: K, v: OrderForm[K]) => void;
+
+function useTrade(kv: KeyValueStore, now: () => number) {
+  const [session, setSession] = useState<PaperSession | null>(null);
+  const [view, setView] = useState<SessionView | null>(null);
+  const [form, setForm] = useState<OrderForm>(FIRST_FORM);
+  const [message, setMessage] = useState<string | null>(null);
+  useEffect(() => {
+    void PaperSession.open(kv, now).then(async (s) => {
+      setSession(s);
+      setView(await s.view());
+    });
+  }, [kv, now]);
+  const set: SetField = (k, v) => setForm((f) => ({ ...f, [k]: v }));
+  const submit = useCallback(async () => {
+    if (session === null) return;
+    const r = await session.place(form);
+    setMessage(r.ok ? `Order ${r.orderId} placed. It fills at the next session's open.` : r.error);
+    setView(await session.view());
+  }, [session, form]);
+  return { view, form, message, set, submit };
+}
+
+function OrderFields(props: { market: Market; form: OrderForm; set: SetField }) {
+  const { market, form, set } = props;
+  return (
+    <>
+      <Choice
+        label="Instrument"
+        value={form.instrumentId}
+        options={market.instruments}
+        onChange={(v) => set('instrumentId', v)}
+        testID="pick-instrument"
+      />
+      <Choice
+        label="Side"
+        value={form.side}
+        options={['buy', 'sell'] as const}
+        onChange={(v) => set('side', v)}
+        testID="pick-side"
+      />
+      <Choice
+        label="Type"
+        value={form.type}
+        options={['market', 'limit'] as const}
+        onChange={(v) => set('type', v)}
+        testID="pick-type"
+      />
+      <Field
+        label="Quantity"
+        value={form.quantity}
+        onChange={(v) => set('quantity', v)}
+        testID="qty-input"
+        keyboard="numeric"
+      />
+      {form.type === 'limit' ? (
+        <Field
+          label="Limit price (₹)"
+          value={form.limit}
+          onChange={(v) => set('limit', v)}
+          testID="limit-input"
+          keyboard="decimal-pad"
+        />
+      ) : null}
+      {form.side === 'buy' ? (
+        <Field
+          label="Stop price (₹, optional)"
+          value={form.stop}
+          onChange={(v) => set('stop', v)}
+          testID="stop-input"
+          keyboard="decimal-pad"
+        />
+      ) : null}
+      <Field
+        label="Decision date (placed after the close)"
+        value={form.date}
+        onChange={(v) => set('date', v)}
+        testID="date-input"
+      />
+    </>
+  );
+}
+
+function CostSection({ market, form }: { market: Market; form: OrderForm }) {
+  const preview = useMemo(
+    () =>
+      previewCosts(market.snapshot, {
+        instrumentId: form.instrumentId,
+        side: form.side,
+        quantity: Number(form.quantity) || 0,
+        date: form.date,
+      }),
+    [market, form],
+  );
+  return (
+    <Section title="Cost preview">
+      {preview === null ? (
+        <Note>Enter a quantity and a valid date to see the estimated charges.</Note>
+      ) : null}
+      {preview?.rows.map((r) => (
+        <Row key={r.label} label={r.label} value={r.value} />
+      ))}
+      {preview?.caveats.map((c) => (
+        <Note key={c}>{`Assumption: ${c}`}</Note>
+      ))}
+      <Note>
+        Estimate at the last close; the real fill is the next open. Not investment advice.
+      </Note>
+    </Section>
+  );
+}
+
+export function TradeScreen({ kv, now }: { kv: KeyValueStore; now: () => number }) {
+  const market = useMemo(() => demoMarket(), []);
+  const { view, form, message, set, submit } = useTrade(kv, now);
+  return (
+    <ScrollView contentContainerStyle={styles.page} testID="trade-screen">
+      <Section title="New order (virtual money)">
+        <OrderFields market={market} form={form} set={set} />
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => void submit()}
+          style={styles.place}
+          testID="place-order"
+        >
+          <Text style={styles.placeText}>Place order</Text>
+        </Pressable>
+        {message !== null ? (
+          <Text style={styles.message} testID="order-message">
+            {message}
+          </Text>
+        ) : null}
+      </Section>
+      <CostSection market={market} form={form} />
+      {view !== null ? <Book view={view} /> : <Note>Loading the book...</Note>}
+    </ScrollView>
+  );
+}
+
+const styles = StyleSheet.create({
+  page: { padding: 16, maxWidth: 720, width: '100%', alignSelf: 'center' },
+  field: { marginBottom: 10 },
+  label: { color: colors.muted, fontSize: 13, marginBottom: 4 },
+  input: {
+    borderWidth: 1,
+    borderColor: colors.line,
+    borderRadius: 6,
+    padding: 10,
+    minHeight: 44,
+    color: colors.text,
+  },
+  choices: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  choice: {
+    borderWidth: 1,
+    borderColor: colors.line,
+    borderRadius: 6,
+    paddingHorizontal: 14,
+    minHeight: 44,
+    justifyContent: 'center',
+  },
+  choiceOn: { borderColor: colors.accent, backgroundColor: '#e8f0fe' },
+  choiceText: { color: colors.text },
+  choiceTextOn: { color: colors.accent, fontWeight: '600' },
+  place: {
+    backgroundColor: colors.accent,
+    borderRadius: 6,
+    minHeight: 48,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 6,
+  },
+  placeText: { color: '#fff', fontWeight: '600' },
+  message: { marginTop: 8, color: colors.text },
+});

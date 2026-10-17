@@ -1,0 +1,126 @@
+import {
+  FixedClock,
+  PaperExecutionAdapter,
+  buildFixtureScenario,
+  istToUtcMillis,
+} from '@trading/core';
+import type { OrderRecord, OrderRequest, Position, ReplaySnapshot } from '@trading/core';
+import { formatPaise } from '../format/rupees';
+import { getStamped, putStamped } from '../store/kv';
+import type { KeyValueStore } from '../store/kv';
+import { makeOrderRequest } from './orderRequest';
+import type { OrderForm } from './orderRequest';
+
+export const REQUESTS_KEY = 'paper/requests';
+
+interface Stored {
+  key: string;
+  request: OrderRequest;
+}
+
+export interface SessionView {
+  cash: string;
+  positions: Array<{ instrumentId: string; quantity: number; basis: string }>;
+  orders: Array<{ id: string; line: string; state: OrderRecord['state']; reason: string | null }>;
+}
+
+export type PlaceOutcome = { ok: true; orderId: string } | { ok: false; error: string };
+
+/** The instruments and prices the demo book trades: the core's frozen demo snapshot. */
+export function demoMarket(): {
+  snapshot: ReplaySnapshot;
+  instruments: string[];
+  lastDate: string;
+} {
+  const s = buildFixtureScenario();
+  const instruments = Object.keys(s.snapshot.bars).sort();
+  const dates = Object.values(s.snapshot.bars).flatMap((b) => b.map((x) => x.date));
+  return { snapshot: s.snapshot, instruments, lastDate: dates.reduce((a, b) => (a > b ? a : b)) };
+}
+
+function describeOrder(o: OrderRecord, req: OrderRequest | undefined): string {
+  const side = req?.order.side ?? '';
+  const inst = req?.order.instrumentId ?? '';
+  const filled =
+    o.state === 'filled'
+      ? `${o.filledQuantity} of ${o.requestedQuantity}`
+      : `${o.requestedQuantity}`;
+  return `${side} ${filled} ${inst}`.trim();
+}
+
+/**
+ * The owner's paper book. Every order goes through `IExecutionAdapter`. The accepted requests are saved
+ * on the device, and the book is rebuilt from them in placement order whenever it changes: the engine
+ * is deterministic (NFR-1), so the book always equals a replay of the same orders, whatever order they
+ * were entered in. The demo book lives at the end of the demo data, so its clock stands there.
+ */
+export class PaperSession {
+  private adapter: PaperExecutionAdapter;
+
+  private constructor(
+    private readonly stored: Stored[],
+    private readonly kv: KeyValueStore,
+    private readonly now: () => number,
+  ) {
+    this.adapter = PaperSession.rebuild(stored);
+  }
+
+  private static rebuild(stored: readonly Stored[]): PaperExecutionAdapter {
+    const { snapshot, lastDate } = demoMarket();
+    const clock = new FixedClock(istToUtcMillis(lastDate, '16:00'));
+    const adapter = new PaperExecutionAdapter(() => snapshot, buildFixtureScenario().config, clock);
+    const inOrder = [...stored].sort(
+      (a, b) =>
+        a.request.order.placedAt - b.request.order.placedAt ||
+        (a.request.order.id < b.request.order.id ? -1 : 1),
+    );
+    // The adapter takes requests synchronously inside its promises, so queueing them here is safe.
+    for (const item of inOrder) void adapter.placeOrder(item.request, item.key);
+    adapter.settle();
+    return adapter;
+  }
+
+  static async open(kv: KeyValueStore, now: () => number): Promise<PaperSession> {
+    const saved = await getStamped<Stored[]>(kv, REQUESTS_KEY);
+    return new PaperSession([...(saved?.value ?? [])], kv, now);
+  }
+
+  async place(form: OrderForm): Promise<PlaceOutcome> {
+    const built = makeOrderRequest(form, this.stored.length + 1);
+    if (!built.ok) return built;
+    const key = `ui-${built.request.order.id}`;
+    const probe = PaperSession.rebuild(this.stored);
+    const result = await probe.placeOrder(built.request, key);
+    if (result.status === 'rejected')
+      return { ok: false, error: `Order rejected: ${result.reasonCode}` };
+    this.stored.push({ key, request: built.request });
+    await putStamped(this.kv, REQUESTS_KEY, this.stored, this.now());
+    this.adapter = PaperSession.rebuild(this.stored);
+    return { ok: true, orderId: result.orderId };
+  }
+
+  async view(): Promise<SessionView> {
+    const [orders, positions, cash]: [OrderRecord[], Position[], number] = await Promise.all([
+      this.adapter.getOrders(),
+      this.adapter.getPositions(),
+      this.adapter.getCashBalance(),
+    ]);
+    const byId = new Map(this.stored.map((s) => [s.request.order.id, s.request]));
+    return {
+      cash: formatPaise(cash),
+      positions: positions.map((p) => ({
+        instrumentId: p.instrumentId,
+        quantity: p.quantity,
+        basis: formatPaise(p.basisPaise),
+      })),
+      orders: orders
+        .map((o) => ({
+          id: o.orderId,
+          line: describeOrder(o, byId.get(o.orderId)),
+          state: o.state,
+          reason: o.reason,
+        }))
+        .reverse(),
+    };
+  }
+}

@@ -6,13 +6,11 @@
  *
  * Usage:  pnpm --filter @trading/app export:web && pnpm tsx tools/e2e/airplaneMode.ts
  */
-import { createServer } from 'node:http';
 import type { Server } from 'node:http';
-import { existsSync, readFileSync, statSync } from 'node:fs';
-import { extname, join, resolve } from 'node:path';
 import type { AddressInfo } from 'node:net';
 import { chromium } from 'playwright-core';
 import type { BrowserContext, Page } from 'playwright-core';
+import { checkLog, serveStatic } from './support';
 import { FixedClock } from '../../packages/core/src/index';
 import {
   SeriesStore,
@@ -22,30 +20,8 @@ import {
   startServer,
 } from '../../packages/data-service/src/index';
 
-const dist = resolve('packages/app/dist');
 const GOLDEN = 'e0b425cce01d3276c53909e3af23d198a90d49d14f140fafca9a8a2be9b4b3a8';
-const types: Record<string, string> = {
-  '.html': 'text/html',
-  '.js': 'text/javascript',
-  '.json': 'application/json',
-  '.ico': 'image/x-icon',
-};
-
-function serveStatic(): Promise<Server> {
-  const server = createServer((req, res) => {
-    const path = decodeURIComponent(new URL(req.url ?? '/', 'http://x').pathname);
-    let file = join(dist, path);
-    if (!existsSync(file) || statSync(file).isDirectory()) file = join(dist, 'index.html');
-    res.writeHead(200, { 'content-type': types[extname(file)] ?? 'application/octet-stream' });
-    res.end(readFileSync(file));
-  });
-  return new Promise((resolveListen) => server.listen(0, '127.0.0.1', () => resolveListen(server)));
-}
-
-const checks: Array<{ name: string; ok: boolean; detail?: string }> = [];
-const check = (name: string, ok: boolean, detail?: string): void => {
-  checks.push(detail === undefined ? { name, ok } : { name, ok, detail });
-};
+const { checks, check } = checkLog();
 
 const LEDGER_TITLE = 'Own trades (Ledger A), demo scenario';
 
@@ -55,7 +31,6 @@ async function startFixtures(): Promise<{
   appOrigin: string;
   serviceUrl: string;
 }> {
-  if (!existsSync(join(dist, 'index.html'))) throw new Error('export the web build first');
   const web = await serveStatic();
   const appOrigin = `http://127.0.0.1:${(web.address() as AddressInfo).port}`;
   const handler = createHandler({
