@@ -15,6 +15,7 @@
     "cycles": "depcruise --config .dependency-cruiser.cjs packages",
     "test": "vitest run",
     "coverage": "vitest run --coverage",
+    "e2e:airplane": "tsx tools/e2e/airplaneMode.ts",
     "verify": "pnpm typecheck && pnpm lint && pnpm size && pnpm cycles && pnpm test"
   },
   "devDependencies": {
@@ -24,6 +25,7 @@
     "dependency-cruiser": "^16.10.4",
     "eslint": "^9.39.5",
     "fast-check": "^4.10.2",
+    "playwright-core": "^1.64.1",
     "prettier": "^3.9.10",
     "tsx": "^4.23.15",
     "typescript": "^5.9.3",

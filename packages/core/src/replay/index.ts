@@ -9,3 +9,4 @@ export type {
   ReplayResult,
   ReplaySnapshot,
 } from './types';
+export { buildFixtureScenario } from './fixtureScenario';

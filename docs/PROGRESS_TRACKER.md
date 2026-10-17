@@ -5,7 +5,7 @@
 **Status values:** `Not started` · `In progress` · `Blocked` · `Done`  
 **Done means** the work package's acceptance test (see the plan) has been run and the result is recorded in the *Acceptance result* column. Failures are recorded as failures; a work package with a failing test stays `In progress`.
 
-**Last updated:** 2026-10-17 (WP-2.7 done)
+**Last updated:** 2026-10-17 (WP-3.1 done)
 
 ## Phase summary
 
@@ -15,7 +15,7 @@
 | P0 · Decisions, skeleton and de-risking | 7 | 0 | 0 | 1 | 8 |
 | P1 · Core ledger and simulator | 11 | 0 | 0 | 0 | 11 |
 | P2 · Data service and universe | 8 | 0 | 0 | 1 | 9 |
-| P3 · Web MVP (R1) | 0 | 0 | 0 | 11 | 11 |
+| P3 · Web MVP (R1) | 1 | 0 | 0 | 10 | 11 |
 | P4 · Chart module and shadow mode (R1.5) | 0 | 0 | 0 | 8 | 8 |
 | P5 · Experiment harness and buyer-company overlay (R2) | 0 | 0 | 0 | 7 | 7 |
 | P6 · Android shell (A1) | 0 | 0 | 0 | 1 | 1 |
@@ -23,7 +23,7 @@
 | P11 · Commercialization (after R2; gated by D32) | 0 | 0 | 0 | 4 | 4 |
 <!-- SUMMARY-END -->
 
-**Next work package:** WP-2.9 (universe pull; needs a daily ASM recording job and the four missing AMFI lists), then P3 (WP-3.1 app shell) once the owner confirms D1. Owner to review the sector table (T17) and resolve the three D26 points  
+**Next work package:** WP-3.8 (execution adapter), then WP-3.2 (universe screen), WP-3.3 (order entry), WP-3.10 (entitlement seam); WP-2.9 (universe pull) waits on a daily ASM recording job and the four missing AMFI lists. Owner to confirm D1, review the sector table (T17) and resolve the three D26 points  
 **Open blockers:** none
 
 ---
@@ -75,7 +75,7 @@
 
 | WP | Work package | Depends on | Status | Started | Done | Acceptance result | Notes |
 | ------ | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
-| 3.1 | App shell, web Store adapter, data-service client, offline views | 0.4, 1.11, 2.8 | Not started |  |  |  |  |
+| 3.1 | App shell, web Store adapter, data-service client, offline views | 0.4, 1.11, 2.8 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 446 tests. Airplane-mode check (`pnpm e2e:airplane`, Chrome): ledger opens and shows the golden report hash, the badge switches to Offline, the data screen falls back to its last saved answer, the ledger still opens, and both are saved on the device in IndexedDB; no page errors | Built on Expo as the D1 default; owner has not yet confirmed D1. The check found a real bug (fetch called as a method threw "Illegal invocation"), fixed. The ledger shown is the core demo scenario, not the owner's own trades (WP-3.3). SQLite store for Android comes with WP-6.1 |
 | 3.2 | Universe screen (instruments, buckets, flags, eligibility reasons) | 3.1, 2.7 | Not started |  |  |  |  |
 | 3.3 | Order entry, positions, cash | 3.1, 1.8, 3.8 | Not started |  |  |  |  |
 | 3.4 | Ledger A / Ledger B side by side with snapshot ID | 3.3, 1.10 | Not started |  |  |  |  |
@@ -208,3 +208,4 @@
 | 2026-10-17 | WP-0.4 Done: web spike of Expo versus plain React; recommends keeping Expo (D1) |
 | 2026-10-17 | Market-cap research checked against real files: NSE daily mcap file (from 2024-02-01), AMFI lists (from Dec 2017), Nifty 50 closes (from 2012); research response found partly wrong; circuit flag agreement with NSE band-hit list measured (T13 note) |
 | 2026-10-17 | WP-2.7 Done: bucket-v1 rules, AMFI lists, market cap and index parsers, sector table; D35 closed; T15 to T17 |
+| 2026-10-17 | WP-3.1 Done: Expo app shell with ledger and data screens, IndexedDB store, typed data-service client, read-through cache; airplane-mode check passes in Chrome |
