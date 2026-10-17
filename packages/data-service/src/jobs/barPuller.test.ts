@@ -16,6 +16,9 @@ import {
   toCorporateActions,
   unzipAll,
   unzipFirst,
+  dayEvidence,
+  deriveCalendar,
+  pullDates,
   weekdays,
 } from '../index';
 import type { FetchDeps, HttpClient, HttpResponse } from '../index';
@@ -120,7 +123,9 @@ const status = (code: number): HttpResponse => ({
   headers: {},
 });
 
-function fakeNse(opts: { missingPr?: string[]; failBhav?: string[] } = {}): {
+function fakeNse(
+  opts: { missingPr?: string[]; failBhav?: string[]; missingBhav?: string[] } = {},
+): {
   client: HttpClient;
   calls: string[];
 } {
@@ -137,6 +142,7 @@ function fakeNse(opts: { missingPr?: string[]; failBhav?: string[] } = {}): {
       const prDate = /PR(\d{2})(\d{2})(\d{2})\.zip/.exec(url);
       if (date !== null) {
         const iso = `${date[1]}-${date[2]}-${date[3]}`;
+        if (opts.missingBhav?.includes(iso) === true) return Promise.resolve(status(404));
         return Promise.resolve(opts.failBhav?.includes(iso) === true ? status(500) : ok(bhavZip));
       }
       if (prDate !== null) {
@@ -267,5 +273,57 @@ describe('reading the archive back', () => {
     const identities = buildIdentities(await loadBars(d.store, '2024-10-25', '2024-10-25'));
     expect(identities.length).toBeGreaterThan(5);
     expect(new IdentityIndex(identities).idFor('RELIANCE', '2025-10-16')).toBeDefined();
+  });
+});
+
+describe('holidays and special sessions from the archive', () => {
+  it('remembers a missing file, so a holiday is not asked for twice, until told to check again', async () => {
+    const { client, calls } = fakeNse({ missingBhav: ['2024-10-25'], missingPr: ['2024-10-25'] });
+    const d = deps(client);
+    const first = await pullRange('2024-10-25', '2024-10-25', d);
+    expect(first[0]).toMatchObject({ bhavcopy: 'none', pr: 'none' });
+    expect(calls).toHaveLength(2);
+    const second = await pullRange('2024-10-25', '2024-10-25', d);
+    expect(second[0]).toMatchObject({ bhavcopy: 'have', pr: 'have' });
+    expect(calls).toHaveLength(2);
+    const third = await pullRange('2024-10-25', '2024-10-25', d, undefined, {
+      recheckMissing: true,
+    });
+    expect(third[0]).toMatchObject({ bhavcopy: 'none', pr: 'none' });
+    expect(calls).toHaveLength(4);
+    expect(await loadBars(d.store, '2024-10-25', '2024-10-25')).toEqual([]); // a marker is not data
+  });
+
+  it('asks for weekends only on request, and then for the bhavcopy alone', () => {
+    expect(pullDates('2024-10-25', '2024-10-28')).toEqual(['2024-10-25', '2024-10-28']);
+    expect(pullDates('2024-10-25', '2024-10-28', true)).toHaveLength(4);
+  });
+
+  it('finds a special weekend session and leaves the PR archive out of the weekend request', async () => {
+    const { client, calls } = fakeNse({ missingBhav: ['2024-10-26'] });
+    const out = await pullRange('2024-10-26', '2024-10-27', deps(client), undefined, {
+      weekends: true,
+    });
+    expect(out.map((s) => [s.date, s.bhavcopy, s.pr])).toEqual([
+      ['2024-10-26', 'none', 'none'],
+      ['2024-10-27', 'stored', 'none'],
+    ]);
+    expect(calls.some((u) => u.includes('/pr/'))).toBe(false);
+  });
+
+  it('derives sessions, holidays, weekend sessions and unsettled days from what was asked', async () => {
+    const d = deps(
+      fakeNse({
+        missingBhav: ['2024-10-21', '2024-10-23', '2024-10-26'],
+        missingPr: ['2024-10-21', '2024-10-26'],
+      }).client,
+    );
+    await pullRange('2024-10-21', '2024-10-24', d);
+    await pullRange('2024-10-26', '2024-10-27', d, undefined, { weekends: true });
+    const cal = deriveCalendar(await dayEvidence(d.store), '2024-10-21', '2024-10-27');
+    expect(cal.holidays).toEqual(['2024-10-21']); // both files missing
+    expect(cal.sessions).toEqual(['2024-10-22', '2024-10-24']);
+    expect(cal.weekendSessions).toEqual(['2024-10-27']);
+    expect(cal.uncertain).toEqual(['2024-10-23', '2024-10-25']); // one file missing; never asked
   });
 });

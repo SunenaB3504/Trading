@@ -110,10 +110,13 @@ export {
 export type { ActionsFile, Converted, NseAction, NseActionType } from './corporate/nseActions';
 export {
   URL_CLASSES,
+  dayEvidence,
+  deriveCalendar,
   loadActions,
   loadBars,
+  pullDates,
   pullRange,
   pullSession,
   weekdays,
 } from './jobs/barPuller';
-export type { SessionPull } from './jobs/barPuller';
+export type { DayEvidence, DerivedCalendar, PullOptions, SessionPull } from './jobs/barPuller';

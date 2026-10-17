@@ -4,6 +4,8 @@
  *
  * Confidence:
  * - official:    read from the exchange's annual holiday circular (NSE/CMTR/...), 2026-10-16
+ * - archive:     derived from the exchange's published files (WP-2.9): a weekday on which neither the
+ *                bhavcopy nor the PR archive exists is a holiday, and a weekend bhavcopy is a special session
  * - secondary:   reported by several news outlets citing exchange circulars, or the 2023 annual
  *                list taken from a research response and matching reviewer recollection
  * - recalled:    reviewer recollection plus a research response; not checked against a circular
@@ -12,7 +14,9 @@
  * Known limitation: closures notified after the annual circular (election polling days) and extra
  * Saturday disaster-recovery sessions can be missing for any year; check the exchange notices.
  */
-export type Confidence = 'official' | 'secondary' | 'recalled' | 'unconfirmed';
+import { ARCHIVE_FROM, ARCHIVE_HOLIDAYS, ARCHIVE_SPECIAL } from './archiveCalendar.generated';
+
+export type Confidence = 'official' | 'archive' | 'secondary' | 'recalled' | 'unconfirmed';
 
 export interface HolidayEntry {
   date: string;
@@ -38,7 +42,7 @@ export interface SpecialSession {
   source: string;
 }
 
-export const SUPPORTED_FROM = '2020-01-01';
+export const SUPPORTED_FROM = ARCHIVE_FROM;
 export const SUPPORTED_TO = '2026-12-31';
 export const REGULAR_WINDOW: SessionWindow = { open: '09:15', close: '15:30' };
 
@@ -50,6 +54,7 @@ function year(y: number, source: string, confidence: Confidence, rows: Row[]): H
 
 /** Weekday closures from the annual circulars, then ad hoc closures. */
 export const HOLIDAYS: HolidayEntry[] = [
+  ...ARCHIVE_HOLIDAYS,
   ...year(2020, 'NSE/CMTR/42877', 'official', [
     ['02-21', 'Mahashivratri'],
     ['03-10', 'Holi'],
@@ -204,6 +209,7 @@ function special(
 
 /** Sessions held on days that are otherwise closed (weekends or holidays). */
 export const SPECIAL_SESSIONS: SpecialSession[] = [
+  ...ARCHIVE_SPECIAL,
   special('2020-02-01', 'budget', FULL_DAY, 'recalled', 'recalled', 'Union Budget Saturday'),
   special('2020-11-14', 'muhurat', MUHURAT_EVENING, 'official', 'recalled', 'NSE/CMTR/42877'),
   special('2021-11-04', 'muhurat', MUHURAT_EVENING, 'official', 'recalled', 'NSE/CMTR/46623'),

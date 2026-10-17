@@ -52,7 +52,13 @@ function toUtc(date: string, windows: readonly SessionWindow[]): DaySession['win
   }));
 }
 
-const RANK: Record<Confidence, number> = { official: 0, secondary: 1, recalled: 2, unconfirmed: 3 };
+const RANK: Record<Confidence, number> = {
+  official: 0,
+  archive: 1,
+  secondary: 2,
+  recalled: 3,
+  unconfirmed: 4,
+};
 const weakest = (a: Confidence, b: Confidence): Confidence => (RANK[a] >= RANK[b] ? a : b);
 
 /** What the exchange did on `date`. Throws outside 2020-01-01..2026-12-31. */
