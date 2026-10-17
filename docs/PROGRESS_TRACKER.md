@@ -5,7 +5,7 @@
 **Status values:** `Not started` · `In progress` · `Blocked` · `Done`  
 **Done means** the work package's acceptance test (see the plan) has been run and the result is recorded in the *Acceptance result* column. Failures are recorded as failures; a work package with a failing test stays `In progress`.
 
-**Last updated:** 2026-10-17 (WP-3.4 done)
+**Last updated:** 2026-10-17 (WP-3.5 done)
 
 ## Phase summary
 
@@ -15,7 +15,7 @@
 | P0 · Decisions, skeleton and de-risking | 7 | 0 | 0 | 1 | 8 |
 | P1 · Core ledger and simulator | 11 | 0 | 0 | 0 | 11 |
 | P2 · Data service and universe | 8 | 0 | 0 | 1 | 9 |
-| P3 · Web MVP (R1) | 5 | 0 | 0 | 6 | 11 |
+| P3 · Web MVP (R1) | 6 | 0 | 0 | 5 | 11 |
 | P4 · Chart module and shadow mode (R1.5) | 0 | 0 | 0 | 8 | 8 |
 | P5 · Experiment harness and buyer-company overlay (R2) | 0 | 0 | 0 | 7 | 7 |
 | P6 · Android shell (A1) | 0 | 0 | 0 | 1 | 1 |
@@ -23,7 +23,7 @@
 | P11 · Commercialization (after R2; gated by D32) | 0 | 0 | 0 | 4 | 4 |
 <!-- SUMMARY-END -->
 
-**Next work package:** WP-3.5 (win/loss report with intervals), WP-3.6 (bundle export and import), WP-3.2 (universe screen), WP-3.11 (gate leak tests), WP-3.7 (phone layout); WP-3.9 waits on D26; WP-2.9 (universe pull) waits on a daily ASM recording job and the four missing AMFI lists. Owner to confirm D1, review the sector table (T17) and resolve the three D26 points  
+**Next work package:** WP-3.6 (bundle export and import), WP-3.2 (universe screen), WP-3.7 (phone layout), WP-3.11 (gate leak tests); WP-3.9 waits on D26; WP-2.9 (universe pull) waits on a daily ASM recording job and the four missing AMFI lists. Owner to confirm D1, review the sector table (T17) and resolve the three D26 points  
 **Open blockers:** none
 
 ---
@@ -79,7 +79,7 @@
 | 3.2 | Universe screen (instruments, buckets, flags, eligibility reasons) | 3.1, 2.7 | Not started |  |  |  |  |
 | 3.3 | Order entry, positions, cash | 3.1, 1.8, 3.8 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 470 tests. Form to order request to `IExecutionAdapter`; a buy of 10 AAA fills at the next open and leaves the same cash as a direct replay of that order; sells with nothing held show as rejected with the reason; bad input is explained in plain words; the book is rebuilt from the saved orders after a restart. Browser check (`pnpm e2e:orders`, Chrome) passes: cost preview, fill, cash and position change, bad quantity, reload | Trades the core demo instruments (AAA, BBB, CCC) with the clock at the end of the demo data, not live data. The book is rebuilt from the saved orders on every change, in placement order, so it always equals a replay (the adapter alone is order-sensitive when orders are entered out of date order). The calendar check caught my own test date 2026-03-03 as a holiday. Ledger B (market comparator) comes with WP-3.4, so only Ledger A is updated here |
 | 3.4 | Ledger A / Ledger B side by side with snapshot ID | 3.3, 1.10 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 480 tests. `computeLedgerB` gives C1 (hold-on 5/20/60), C2 (benchmark windows), C3 (excursions and timing), C4 (+1/+5/+20 after exit) for every closed trade and open position and C6 (equal-weight buy and hold, cash) for the portfolio, on split-adjusted prices; hand-checked against the comparator functions on the golden replay, including a position held through the 5-for-1 split. The Compare tab shows both ledgers side by side with the snapshot id; browser check passes (`pnpm e2e:orders`) | C2 shows "no benchmark loaded" because the demo data has no index; the Nifty 50 series (D6, price index flagged) is not wired in yet. C5 does not apply to a manual book. The golden replay is unchanged. FR-L2, FR-L3 |
-| 3.5 | Win/loss report with intervals and breakdowns | 3.4 | Not started |  |  |  |  |
+| 3.5 | Win/loss report with intervals and breakdowns | 3.4 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 491 tests. `winLossReport` gives win rate, average win and loss, payoff, expectancy and profit factor in a net and a gross view, block-bootstrap 95% intervals for win rate and expectancy (reproducible for a fixed seed), and breakdowns by stock, source, bucket, holding period and entry tag. Net numbers equal the P1 `summarizeTrades` on the same trades (hand-worked cases and the golden replay). The Report tab shows it with a net/gross switch and small-sample warnings; browser check passes | Breakdowns by sector and volatility bucket need reference data the demo book lacks. Fewer than 30 closed trades is flagged as too few to read; groups under 5 trades are marked thin; under 2 trades there is no interval. Timing metrics (FR-W5) appear per trade on the Compare tab. FR-W1 to FR-W4 |
 | 3.6 | Signed bundle export/import; scheduled export; persistence request | 3.1, 1.3 | Not started |  |  |  |  |
 | 3.7 | Phone-width layout and accessibility | 3.2 | Not started |  |  |  |  |
 | 3.8 | IExecutionAdapter and PaperExecutionAdapter (Paise balances, idempotency keys) | 1.8, 1.10 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 454 tests. Placing the twelve fixture orders through the adapter and settling reproduces the golden report hash and the replay outcomes exactly; the same key and request returns the same result and one order; cash is a safe-integer paise value; positions match the report | Placement checks only the order shape (quantity, limit price, duplicate id, unknown instrument); cash, size and circuit decisions happen at fill time as in the replay and appear in the order list with a reason. An order stays pending until its fill session has a bar. A circuit carry-over that runs past the end of the data would expire early. The app does not use the adapter yet (WP-3.3) | 
@@ -213,3 +213,4 @@
 | 2026-10-17 | WP-3.10 Done: entitlement seam with grant-all stub, provider and hook, guard tests |
 | 2026-10-17 | WP-3.3 Done: order entry through the paper adapter with cost preview, saved orders and a rebuilt book; browser check passes |
 | 2026-10-17 | WP-3.4 Done: Ledger B comparators C1 to C4 and C6 on split-adjusted prices, Compare tab with both ledgers side by side and the snapshot id |
+| 2026-10-17 | WP-3.5 Done: win/loss report with net and gross views, bootstrap intervals and breakdowns; Report tab |

@@ -3,9 +3,17 @@ import {
   PaperExecutionAdapter,
   buildFixtureScenario,
   computeLedgerB,
+  createRng,
   istToUtcMillis,
+  winLossReport,
 } from '@trading/core';
-import type { OrderRecord, OrderRequest, Position, ReplaySnapshot } from '@trading/core';
+import type {
+  OrderRecord,
+  OrderRequest,
+  Position,
+  ReplaySnapshot,
+  WinLossReport,
+} from '@trading/core';
 import { formatPaise } from '../format/rupees';
 import { getStamped, putStamped } from '../store/kv';
 import type { KeyValueStore } from '../store/kv';
@@ -15,6 +23,7 @@ import { makeOrderRequest } from './orderRequest';
 import type { OrderForm } from './orderRequest';
 
 export const REQUESTS_KEY = 'paper/requests';
+const REPORT_SEED = 'win-loss-report-v1';
 
 interface Stored {
   key: string;
@@ -110,6 +119,11 @@ export class PaperSession {
     return toComparisonView(
       computeLedgerB(result, snapshot, cfg.actions, cfg.endDate, cfg.capitalPaise),
     );
+  }
+
+  /** Win/loss report with bootstrap intervals; the seed is fixed so the same book gives the same numbers. */
+  report(): WinLossReport {
+    return winLossReport(this.adapter.result().state.trades, createRng(REPORT_SEED));
   }
 
   async view(): Promise<SessionView> {

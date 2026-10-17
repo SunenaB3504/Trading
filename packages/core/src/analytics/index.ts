@@ -12,3 +12,5 @@ export {
   postExit,
 } from './comparators';
 export type { Bars, Excursions } from './comparators';
+export { MIN_TRADES, THIN_GROUP, holdingClass, winLossReport } from './winLoss';
+export type { CostView, GroupRow, Intervals, ViewSummary, WinLossReport } from './winLoss';

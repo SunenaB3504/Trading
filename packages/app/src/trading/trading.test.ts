@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { formatPaise } from '../format/rupees';
 import { MemoryKv } from '../store/kv';
 import { previewCosts } from './costPreview';
+import { toWinLossView } from '../viewModels/winLossView';
 import { makeOrderRequest, parseRupees } from './orderRequest';
 import type { OrderForm } from './orderRequest';
 import { PaperSession, REQUESTS_KEY, demoMarket } from './paperSession';
@@ -212,5 +213,40 @@ describe('Ledger A beside Ledger B (FR-L2, FR-L3)', () => {
     expect(card?.title).toMatch(/since 2026-03-04, open$/);
     expect(card?.lines.map((l) => l.label)).not.toContain('After the exit');
     expect(card?.lines[0]?.label).toBe('Return on cost so far');
+  });
+});
+
+describe('win/loss report from the owner book (FR-W1 to FR-W4)', () => {
+  it('is empty with no trades, and warns about small samples with one trade, in both views', async () => {
+    const s = await PaperSession.open(new MemoryKv(), NOW);
+    const empty = toWinLossView(s.report(), 'net');
+    expect(empty.headline[0]).toEqual({ label: 'Closed trades', value: '0' });
+    expect(empty.warnings[0]).toMatch(/No closed trades yet/);
+    await s.place(form({ quantity: '10', date: '2026-03-02' }));
+    await s.place(form({ side: 'sell', quantity: '10', date: '2026-04-01' }));
+    const net = toWinLossView(s.report(), 'net');
+    const gross = toWinLossView(s.report(), 'gross');
+    expect(net.headline[0]).toEqual({ label: 'Closed trades', value: '1' });
+    expect(net.warnings.join(' ')).toMatch(/Only 1 closed trades/);
+    expect(net.warnings.join(' ')).toMatch(/At least two closed trades/);
+    expect(net.warnings.join(' ')).toMatch(/after all costs/);
+    expect(gross.warnings.join(' ')).toMatch(/before brokerage/);
+    expect(net.headline.at(-1)?.label).toBe('Net profit');
+    expect(gross.headline.at(-1)?.label).toBe('Gross profit');
+    expect(net.breakdowns.find((t) => t.title === 'By stock')?.rows).toEqual([
+      expect.objectContaining({ key: 'AAA', count: '1', thin: true }),
+    ]);
+  });
+
+  it('gives intervals once there are two trades, and the same numbers each time', async () => {
+    const s = await PaperSession.open(new MemoryKv(), NOW);
+    await s.place(form({ quantity: '10', date: '2026-03-02' }));
+    await s.place(form({ side: 'sell', quantity: '10', date: '2026-03-20' }));
+    await s.place(form({ instrumentId: 'CCC', quantity: '10', date: '2026-03-02' }));
+    await s.place(form({ instrumentId: 'CCC', side: 'sell', quantity: '10', date: '2026-03-24' }));
+    const a = toWinLossView(s.report(), 'net');
+    expect(a.headline.find((r) => r.label === 'Win rate')?.value).toMatch(/95% interval/);
+    expect(a.headline.find((r) => r.label === 'Closed trades')?.value).toBe('2');
+    expect(toWinLossView(s.report(), 'net')).toEqual(a);
   });
 });

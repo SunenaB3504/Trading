@@ -54,6 +54,21 @@ async function compare(page: Page): Promise<void> {
   await page.getByText('New order (virtual money)').waitFor();
 }
 
+async function report(page: Page): Promise<void> {
+  await page.getByRole('tab', { name: 'Report' }).click();
+  await page.getByTestId('report-screen').waitFor({ timeout: 10_000 });
+  const net = await page.getByTestId('report-screen').innerText();
+  check(
+    'the report says there are no closed trades yet',
+    /No closed trades yet/.test(net) && /Net view: after all costs/.test(net),
+  );
+  await page.getByRole('tab', { name: 'Gross of costs' }).click();
+  await page.getByText(/Gross view: before brokerage/).waitFor({ timeout: 10_000 });
+  check('the gross view can be switched on', true);
+  await page.getByRole('tab', { name: 'Trade' }).click();
+  await page.getByText('New order (virtual money)').waitFor();
+}
+
 async function badInput(page: Page): Promise<void> {
   await page.getByTestId('qty-input').fill('x');
   await page.getByTestId('place-order').click();
@@ -83,6 +98,7 @@ async function main(): Promise<void> {
     await openTrade(page, url);
     await place(page);
     await compare(page);
+    await report(page);
     await badInput(page);
     await afterReload(page, url);
     check('no page errors', errors.length === 0, errors.join(' | '));
