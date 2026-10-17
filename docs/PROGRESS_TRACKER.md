@@ -5,7 +5,7 @@
 **Status values:** `Not started` · `In progress` · `Blocked` · `Done`  
 **Done means** the work package's acceptance test (see the plan) has been run and the result is recorded in the *Acceptance result* column. Failures are recorded as failures; a work package with a failing test stays `In progress`.
 
-**Last updated:** 2026-10-17 (WP-0.4 done)
+**Last updated:** 2026-10-17 (WP-2.7 done)
 
 ## Phase summary
 
@@ -14,7 +14,7 @@
 | ------ | ------ | ------ | ------ | ------ | ------ |
 | P0 · Decisions, skeleton and de-risking | 7 | 0 | 0 | 1 | 8 |
 | P1 · Core ledger and simulator | 11 | 0 | 0 | 0 | 11 |
-| P2 · Data service and universe | 7 | 0 | 0 | 2 | 9 |
+| P2 · Data service and universe | 8 | 0 | 0 | 1 | 9 |
 | P3 · Web MVP (R1) | 0 | 0 | 0 | 11 | 11 |
 | P4 · Chart module and shadow mode (R1.5) | 0 | 0 | 0 | 8 | 8 |
 | P5 · Experiment harness and buyer-company overlay (R2) | 0 | 0 | 0 | 7 | 7 |
@@ -23,7 +23,7 @@
 | P11 · Commercialization (after R2; gated by D32) | 0 | 0 | 0 | 4 | 4 |
 <!-- SUMMARY-END -->
 
-**Next work package:** WP-2.7 (bucket builder; waiting on the market-cap data the owner is collecting), then P3 (WP-3.1 app shell and web store) once D1 is confirmed. WP-2.9 needs a daily ASM recording job. Owner to resolve the three D26 points  
+**Next work package:** WP-2.9 (universe pull; needs a daily ASM recording job and the four missing AMFI lists), then P3 (WP-3.1 app shell) once the owner confirms D1. Owner to review the sector table (T17) and resolve the three D26 points  
 **Open blockers:** none
 
 ---
@@ -67,7 +67,7 @@
 | 2.4 | Band/ASM/GSM ingestion; point-in-time status; circuit flag | 2.1 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 413 tests. Parsers for the security list and the ASM and GSM reports tested on real NSE files; status for a date never uses a later file; circuit flags match 45 real limit closes; `/status` serves the data | Band and GSM stage exist from 2019-12-31 only; ASM has no archive, so it must be recorded daily from now (a recording job is still to be built, WP-2.9). BSE not checked. Before 2019-12-31 status is unknown and flagged |
 | 2.5 | Delisted and merged instruments retained; last-trade date and reason | 2.1 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 381 tests, 11 new. On real NSE bars around two mergers: HDFC's last session is found as 2023-07-12 and linked to the merger when the action is supplied; Mindtree's last session 2022-11-22 is recorded with an honest `unknown` reason when no action is supplied; HDFC is in the universe as of 2023-07-10 although delisted three sessions later, and drops out once it has been silent longer than allowed (the survivorship acceptance test); LTI and LTIM are one stock; long gaps inside a series are listed as suspensions; delisting fields for the instrument record are produced | The reason for a cessation cannot be read from prices (Mindtree traded for days after its merger took effect), so it needs a corporate-action record or a second source (decision T12). Default: ceased after 10 sessions without a bar. The recording is short, so tests use a 3-session threshold. A real delisting list (NSE) is not yet ingested |
 | 2.6 | Eligibility rules E1-E7 with recorded first failure; `time_assumed` flag handling | 2.4, 2.5 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 370 tests, 23 new. Rules E1-E7 evaluated in order, every result reported and the first failure recorded; each threshold tested exactly at the boundary; thresholds frozen in a hashed config (`elig-v1`, changing any value changes the hash and every result carries it); point-in-time facts built from real NSE bars using only data before the window (verified by truncating later bars) and fed through the rules end to end | Done ahead of 2.4 and 2.5 because the rules need only facts the data already gives. Thresholds are PROPOSED (decision D25): Rs 5 crore median daily traded value, 60-session warm-up, at most 5 missing sessions, 98% two-provider coverage. Evidence: on 2025-10-16, 1,000 main-board equities traded at least Rs 5 crore and 494 at least Rs 25 crore. Surveillance and price bands are flagged `not_recorded` until WP-2.4; an instrument with no sourced listing timestamp passes but is flagged `time_assumed`; liquidity is close x volume (an approximation of exchange traded value); E7 fails when coverage is not measured |
-| 2.7 | Objective bucket builder (astro-blind, versioned) | 2.6 | Not started |  |  |  | Sources found 2026-10-17 (D35): NSE daily mcap file from 2024-02-01, AMFI lists from Dec 2017, Nifty 50 from 2012. Still open: owner choice of an AMFI-rank Underdogs rule, a sector-classification source, and what to do for windows before 2018 |
+| 2.7 | Objective bucket builder (astro-blind, versioned) | 2.6 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 435 tests. Rules `bucket-v1` (D35) as pure functions with hashed rules and inputs; volatility and beta from closes using earlier dates only; AMFI lists (14 periods, 2017 H2 to 2026 H1) parsed from the PDFs; NSE daily market cap file, index close and sector table parsers; tested on real files | AMFI lists for 2020 H1 to 2021 H2 not found, so those windows have size unknown; the sector table (70 names) is assistant-written and needs owner review; the large-cap group stands in for Nifty 50 membership; no bulk pull of bars or the NSE market cap files yet (WP-2.9) |
 | 2.8 | DataSnapshot creation and hashing; service endpoints | 2.3, 2.7 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 399 tests. Same inputs give the same id regardless of clock, order or build tag; tampering caught; all SSD §9.2 endpoints plus a local HTTP server tested on real NSE bars | Snapshot is point in time (asOf). `/status` gives lifecycle only; surveillance and band stay null with a flag until WP-2.4. Signing and hosting wait for D26 / WP-3.9. WP-2.7 buckets are not in the snapshot yet |
 | 2.9 | Universe pull (hand-traded set and evaluation universe) and disputes list | 2.8, 0.5 | Not started |  |  |  |  |
 
@@ -166,7 +166,7 @@
 | D21 / D8 | Evaluation-universe size | Closed 2026-10-17: about 100 names, 8 years; 16 years for market-wide rules |
 | D25 | Eligibility thresholds | Closed 2026-10-17: elig-v1 |
 | T6 | Batch-means test decides; bootstrap descriptive | Closed 2026-10-17; SSD section 11.3 step 4 amended |
-| D35 | Bucket cut-offs and surveillance sources | Proposed 2026-10-17; open points listed in DECISIONS.md |
+| D35 | Bucket cut-offs and surveillance sources | Closed 2026-10-17: config bucket-v1 |
 | D16 | External anchoring method | Open until P4 (default OpenTimestamps) |
 | D14 / D15 | Trailing stop; minimum reward-to-risk | Open until P5 |
 | D9 | Hold-out and forward dates; lock holder | Open until P5 start |
@@ -207,3 +207,4 @@
 | 2026-10-17 | WP-2.4 Done: band, trade-for-trade and surveillance from real NSE files, point-in-time status, circuit flags (T13, T14). Findings: band and GSM from 2019-12-31 only; ASM has no archive |
 | 2026-10-17 | WP-0.4 Done: web spike of Expo versus plain React; recommends keeping Expo (D1) |
 | 2026-10-17 | Market-cap research checked against real files: NSE daily mcap file (from 2024-02-01), AMFI lists (from Dec 2017), Nifty 50 closes (from 2012); research response found partly wrong; circuit flag agreement with NSE band-hit list measured (T13 note) |
+| 2026-10-17 | WP-2.7 Done: bucket-v1 rules, AMFI lists, market cap and index parsers, sector table; D35 closed; T15 to T17 |
