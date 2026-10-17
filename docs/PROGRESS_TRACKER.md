@@ -5,7 +5,7 @@
 **Status values:** `Not started` · `In progress` · `Blocked` · `Done`  
 **Done means** the work package's acceptance test (see the plan) has been run and the result is recorded in the *Acceptance result* column. Failures are recorded as failures; a work package with a failing test stays `In progress`.
 
-**Last updated:** 2026-10-17 (WP-3.7 done)
+**Last updated:** 2026-10-17 (WP-3.11 done)
 
 ## Phase summary
 
@@ -15,7 +15,7 @@
 | P0 · Decisions, skeleton and de-risking | 7 | 0 | 0 | 1 | 8 |
 | P1 · Core ledger and simulator | 11 | 0 | 0 | 0 | 11 |
 | P2 · Data service and universe | 8 | 0 | 0 | 1 | 9 |
-| P3 · Web MVP (R1) | 9 | 0 | 0 | 2 | 11 |
+| P3 · Web MVP (R1) | 10 | 0 | 0 | 1 | 11 |
 | P4 · Chart module and shadow mode (R1.5) | 0 | 0 | 0 | 8 | 8 |
 | P5 · Experiment harness and buyer-company overlay (R2) | 0 | 0 | 0 | 7 | 7 |
 | P6 · Android shell (A1) | 0 | 0 | 0 | 1 | 1 |
@@ -23,7 +23,7 @@
 | P11 · Commercialization (after R2; gated by D32) | 0 | 0 | 0 | 4 | 4 |
 <!-- SUMMARY-END -->
 
-**Next work package:** WP-3.11 (gate leak tests); WP-3.9 waits on D26; WP-2.9 (universe pull, which also feeds the Universe screen) waits on a daily ASM recording job and the four missing AMFI lists. After those, P3 exit review (R1). Owner to confirm D1, review the sector table (T17) and resolve the three D26 points  
+**Next work package:** WP-3.9 (snapshot client; waits on D26), WP-2.9 (universe pull; waits on a daily ASM recording job and the four missing AMFI lists). Those two are what P3 and P2 still need before the R1 exit review. Owner to confirm D1, review the sector table (T17) and resolve the three D26 points  
 **Open blockers:** none
 
 ---
@@ -85,7 +85,7 @@
 | 3.8 | IExecutionAdapter and PaperExecutionAdapter (Paise balances, idempotency keys) | 1.8, 1.10 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 454 tests. Placing the twelve fixture orders through the adapter and settling reproduces the golden report hash and the replay outcomes exactly; the same key and request returns the same result and one order; cash is a safe-integer paise value; positions match the report | Placement checks only the order shape (quantity, limit price, duplicate id, unknown instrument); cash, size and circuit decisions happen at fill time as in the replay and appear in the order list with a reason. An order stays pending until its fill session has a bar. A circuit carry-over that runs past the end of the data would expire early. The app does not use the adapter yet (WP-3.3) | 
 | 3.9 | Snapshot client: signed download-only pull, staleness, network-audit test | 2.8, 3.1, D26 | Not started |  |  |  | Added 2026-10-17 |
 | 3.10 | IEntitlementService seam with grant-all stub; no prices or store text | 3.1 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 460 tests; airplane-mode check still passes with the provider in place. The stub grants every feature; the tier configuration is empty; guard tests find no store SDK in any package, no reference to the seam outside the app, and no SKU or tier wording in source | `hasFeatureAccess` and `getEntitlements`; a React provider and `useFeatureAccess` hook (null while loading, so nothing shows locked); no screen uses a gate yet. FR-P9 |
-| 3.11 | Gate leak tests with the astro feature off (FR-P10) | 3.10, 3.6, 3.9 | Not started |  |  |  | Added 2026-10-17 |
+| 3.11 | Gate leak tests with the astro feature off (FR-P10) | 3.10, 3.6, 3.9 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 553 tests. One test group per FR-P10 item with the gate off: the astro layer's loader is never called; birth details are never written (a locked save leaves storage empty); no astro key or word in the ledger, universe, book, comparison, report, exported bundle or anything saved on the device; the locked notice has no digit, percent, rupee sign or astro word; repository scans find no astro vocabulary or astro-engine import outside the gated folder `src/astro`, no console output in the app, and no astro field in a snapshot the data service creates. A canary test shows the detectors do fire on a deliberate leak | Items (d) screens, (e) accessibility labels and notifications, and the snapshot schema (e) are covered by scanning source and data for vocabulary and field names; there are no notifications or deep links in the app yet, so those items are open until they exist. Only the gate and its helpers exist today (no birth screen or astro engine on the device until WP-4.7), so these tests protect the seam before the layer is built. A leak under a field name the patterns do not know would pass; the pattern list must grow with the layer. FR-P10 |
 
 ## P4 · Chart module and shadow mode (R1.5)
 
@@ -217,3 +217,4 @@
 | 2026-10-17 | WP-3.6 Done: signed bundle export and import with hash chain, HMAC signature, export reminder and persistence request; browser check passes |
 | 2026-10-17 | WP-3.2 Done: Universe tab with eligibility reasons, flags and buckets on a seeded set; BucketInputs gained bandKnown |
 | 2026-10-17 | WP-3.7 Done: phone layout and accessibility checked at 360 and 320 px in Chrome; tab strip made scrollable; contrast test added |
+| 2026-10-17 | WP-3.11 Done: gate seam (loader, birth-data save, leak detectors, locked notice) with per-item leak tests and repository scans, plus a canary |
