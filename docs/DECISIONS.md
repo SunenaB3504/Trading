@@ -44,6 +44,8 @@
 | T9 | Yahoo prices are used only to cross-check split-adjusted prices; the raw (unadjusted) series comes from NSE bhavcopy | Recorded Yahoo responses show open/high/low/close already adjusted for later splits and bonuses (pre-bonus Reliance closes are halved), so they cannot be the unadjusted series. The cross-check compares NSE prices adjusted with our own corporate-action table against Yahoo | 2026-10-17 |
 | T10 | Bhavcopy format by date: legacy `cmDDMONYYYYbhav` files to 2024-07-05, UDiFF from 2024-07-08; January to July 2024 exists in both and can be used to cross-check the two parsers | Checked against nsearchives.nseindia.com on 2026-10-17: legacy 404 from 2024-07-08, UDiFF 200 from 2024-01-02 and 404 for 2023 | 2026-10-17 |
 
+| T11 | Instrument identity is derived from bhavcopy history: the same ISIN is one stock (rename); the same symbol whose next listing starts within 10 calendar days is one stock (face-value change issues a new ISIN); a symbol reappearing after a longer gap is a different instrument. The id is `<first symbol>:<first ISIN>` | Recorded events show the new ISIN starting the session after the ex-date, and no external instrument master is available. Mergers, demergers and symbol reuse inside 10 days are not handled and would need manual review | 2026-10-17 |
+
 ## Scope decisions
 
 | Decision | Outcome | Date |

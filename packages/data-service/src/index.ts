@@ -21,3 +21,10 @@ export type { FetchDeps, FetchRequest, HttpClient, HttpResponse } from './http/f
 export { nodeHttpClient } from './http/nodeClient';
 export { FileRawStore, MemoryRawStore, sha256 } from './store/rawStore';
 export type { RawMeta, RawRecord, RawStore } from './store/rawStore';
+export { IdentityIndex, buildIdentities } from './canonical/identity';
+export type { InstrumentIdentity, Listing } from './canonical/identity';
+export { canonicalize } from './canonical/canonicalize';
+export type { CanonicalResult, Conflict, RefusedRow } from './canonical/canonicalize';
+export { buildAdjusted, verifyAdjustment } from './canonical/adjusted';
+export type { AdjustmentMismatch } from './canonical/adjusted';
+export { SeriesStore } from './canonical/seriesStore';

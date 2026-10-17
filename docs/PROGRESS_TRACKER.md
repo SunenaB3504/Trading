@@ -5,7 +5,7 @@
 **Status values:** `Not started` · `In progress` · `Blocked` · `Done`  
 **Done means** the work package's acceptance test (see the plan) has been run and the result is recorded in the *Acceptance result* column. Failures are recorded as failures; a work package with a failing test stays `In progress`.
 
-**Last updated:** 2026-10-16 (WP-2.1 done; P1 complete)
+**Last updated:** 2026-10-16 (WP-2.2 done; P1 complete)
 
 ## Phase summary
 
@@ -14,7 +14,7 @@
 | ------ | ------ | ------ | ------ | ------ | ------ |
 | P0 · Decisions, skeleton and de-risking | 5 | 0 | 0 | 3 | 8 |
 | P1 · Core ledger and simulator | 11 | 0 | 0 | 0 | 11 |
-| P2 · Data service and universe | 1 | 0 | 0 | 8 | 9 |
+| P2 · Data service and universe | 2 | 0 | 0 | 7 | 9 |
 | P3 · Web MVP (R1) | 0 | 0 | 0 | 7 | 7 |
 | P4 · Chart module and shadow mode (R1.5) | 0 | 0 | 0 | 6 | 6 |
 | P5 · Experiment harness and buyer-company overlay (R2) | 0 | 0 | 0 | 7 | 7 |
@@ -22,7 +22,7 @@
 | P7 · Jyotisham feature modules and PH entries (R3) | 0 | 0 | 0 | 10 | 10 |
 <!-- SUMMARY-END -->
 
-**Next work package:** WP-2.2 (canonical series, needs the instrument master) and WP-2.3 (provider cross-check on split-adjusted prices); owner to confirm D8/D21 and T6; WP-0.2, 0.4 also unblocked  
+**Next work package:** WP-2.3 (provider cross-check, now possible with real NSE vs adjusted-Yahoo comparison), WP-2.4 (band/ASM/GSM status) and WP-2.5 (delisted names); owner to confirm D8/D21 and T6; WP-0.2, 0.4 also unblocked  
 **Open blockers:** none
 
 ---
@@ -61,7 +61,7 @@
 | WP | Work package | Depends on | Status | Started | Done | Acceptance result | Notes |
 | ------ | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
 | 2.1 | Provider adapters (NSE bhavcopy, Yahoo-compatible, CSV) and raw cache | 1.1 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 320 tests, 34 of them in data-service. Contract tests against responses recorded from NSE and Yahoo on 2026-10-17 (fixtures/providers): both bhavcopy formats parse every recorded row into exact integer paise (bonds, SME and debt series included), Yahoo and NSE agree field for field on RELIANCE 2025-10-16, 404/malformed/null-gap handling, zip extraction, CSV import. Rate limiter, exponential back-off with seeded jitter, Retry-After, 404-as-not-found, raw responses stored with provider, URL class, parameters, fetch time and SHA-256 (memory and append-only file stores) | Findings: Yahoo open/high/low/close are split-adjusted, so Yahoo is only a cross-check (decision T9); NSE legacy files end 2024-07-05 and UDiFF files start by 2024-01 (T10). The live HTTP client is written but not exercised in tests. Next: WP-2.2 canonical series needs the instrument master (symbol to ISIN history) |
-| 2.2 | Canonical OHLCV; unadjusted and adjusted kept separate | 2.1, 1.5 | Not started |  |  |  |  |
+| 2.2 | Canonical OHLCV; unadjusted and adjusted kept separate | 2.1, 1.5 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 338 tests, 18 new. On 43 real NSE bars around five events (TATASTEEL, IRCTC, NESTLEIND, RELIANCE, BAJAJFINSV incl. a same-day split + bonus): adjusted = unadjusted x factor, confirmed by an independent recomputation (verifyAdjustment) that also catches a tampered bar; history continuous after adjustment while the unadjusted series keeps the cliff; stored unadjusted bars unchanged by adjusting; our adjusted RELIANCE closes agree with Yahoo's on all 6 shared sessions to within 1 paisa. Yahoo rows are refused for the unadjusted series; provider disagreement is flagged disputed with the exchange file preferred | Instrument identity joins the old and new ISIN after a face-value change and renames, from the data itself (decision T11). Real quirk found: the new ISIN begins the session after the ex-date. Circuit flags stay `none` until WP-2.4; the instrument master is built from bhavcopy history only (no external source) |
 | 2.3 | Provider cross-check on unadjusted closes; disputed-day flag | 2.2 | Not started |  |  |  | D4 confirmed |
 | 2.4 | Band/ASM/GSM ingestion; point-in-time status; circuit flag | 2.1 | Not started |  |  |  |  |
 | 2.5 | Delisted and merged instruments retained (FR-U9) | 2.1 | Not started |  |  |  |  |
@@ -165,3 +165,4 @@
 | 2026-10-17 | WP-0.6 Done: §11.3 evaluation harness. Bootstrap p-value found liberal; decisions use batch-means test (T6) |
 | 2026-10-17 | WP-0.5 Done: power note. Market-wide signal support added to the harness (T8) |
 | 2026-10-17 | WP-2.1 Done: provider adapters on recorded NSE and Yahoo responses. Corporate-action cases now validated against real bhavcopy closes |
+| 2026-10-17 | WP-2.2 Done: canonical series, instrument identity across ISIN changes, adjustment verified on real events and against Yahoo |
