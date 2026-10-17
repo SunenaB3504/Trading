@@ -18,6 +18,7 @@
     "e2e:airplane": "tsx tools/e2e/airplaneMode.ts",
     "e2e:orders": "tsx tools/e2e/orderEntry.ts",
     "e2e:backup": "tsx tools/e2e/backup.ts",
+    "e2e:universe": "tsx tools/e2e/universe.ts",
     "verify": "pnpm typecheck && pnpm lint && pnpm size && pnpm cycles && pnpm test"
   },
   "devDependencies": {

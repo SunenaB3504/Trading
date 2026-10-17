@@ -130,6 +130,7 @@ export function buildBucketInputs(
       asmStage: s.asm?.stage ?? null,
       asmKnown: s.asmKnown,
       bandPct: s.bandPct,
+      bandKnown: s.inSecurityList === true,
       sector: ctx.sectors.get(f.symbol) ?? null,
     };
   });

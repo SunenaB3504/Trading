@@ -10,12 +10,13 @@ import { CompareScreen } from './screens/CompareScreen';
 import { DataScreen } from './screens/DataScreen';
 import { LedgerScreen } from './screens/LedgerScreen';
 import { ReportScreen } from './screens/ReportScreen';
+import { UniverseScreen } from './screens/UniverseScreen';
 import { TradeScreen } from './screens/TradeScreen';
 import { IndexedDbKv } from './store/indexedDbKv';
 import type { KeyValueStore } from './store/kv';
 import { colors } from './ui/Section';
 
-type Tab = 'ledger' | 'trade' | 'compare' | 'report' | 'backup' | 'data';
+type Tab = 'ledger' | 'universe' | 'trade' | 'compare' | 'report' | 'backup' | 'data';
 
 /** `fetch` must be called as a plain function; calling it as a method of another object throws "Illegal invocation". */
 const browserFetch: FetchLike = (url, init) => fetch(url, init);
@@ -62,6 +63,9 @@ export default function App() {
           <TabButton id="ledger" active={tab} onSelect={setTab}>
             Ledger
           </TabButton>
+          <TabButton id="universe" active={tab} onSelect={setTab}>
+            Universe
+          </TabButton>
           <TabButton id="trade" active={tab} onSelect={setTab}>
             Trade
           </TabButton>
@@ -79,6 +83,7 @@ export default function App() {
           </TabButton>
         </View>
         {tab === 'ledger' ? <LedgerScreen kv={kv} now={now} /> : null}
+        {tab === 'universe' ? <UniverseScreen /> : null}
         {tab === 'trade' ? <TradeScreen kv={kv} now={now} /> : null}
         {tab === 'compare' ? <CompareScreen kv={kv} now={now} /> : null}
         {tab === 'report' ? <ReportScreen kv={kv} now={now} /> : null}

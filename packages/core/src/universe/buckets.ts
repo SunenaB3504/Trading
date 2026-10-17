@@ -59,6 +59,8 @@ export interface BucketInputs {
   asmStage: number | null;
   asmKnown: boolean;
   bandPct: number | null;
+  /** True when a security list covered the date, so a null band means "No Band" and not "unknown". */
+  bandKnown: boolean;
   /** Registered sector tag from the frozen sector table. */
   sector: string | null;
 }
@@ -92,7 +94,7 @@ function partialOf(i: BucketInputs): string[] {
   if (i.amfiRank === null) out.push('size_unknown');
   if (i.lowVolatility === null) out.push('volatility_unknown');
   if (i.beta === null) out.push('beta_unknown');
-  if (i.bandPct === null && i.gsmStage === null) out.push('band_unknown');
+  if (!i.bandKnown) out.push('band_unknown');
   if (!i.asmKnown) out.push('asm_unknown');
   if (i.sector === null) out.push('sector_unknown');
   return out;

@@ -20,6 +20,7 @@ const base: BucketInputs = {
   asmStage: null,
   asmKnown: true,
   bandPct: 20,
+  bandKnown: true,
   sector: null,
 };
 const run = (over: Partial<BucketInputs>) => assignBucket({ ...base, ...over });
@@ -135,6 +136,7 @@ describe('bucket rules v1 (D35)', () => {
       lowVolatility: null,
       beta: null,
       bandPct: null,
+      bandKnown: false,
       asmKnown: false,
     });
     expect(r.bucket).toBeNull();
@@ -147,6 +149,8 @@ describe('bucket rules v1 (D35)', () => {
       'sector_unknown',
     ]);
     expect(run({}).partial).toEqual(['sector_unknown']);
+    // a security list that says "No Band" is knowledge, not a gap
+    expect(run({ bandPct: null }).partial).toEqual(['sector_unknown']);
   });
 
   it('stamps the rules and a hash of the inputs, which changes with any input', () => {
