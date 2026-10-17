@@ -14,6 +14,8 @@ import type {
   ReplaySnapshot,
   WinLossReport,
 } from '@trading/core';
+import { REQUESTS_KEY } from '../backup/backupService';
+import type { StoredOrder } from '../backup/backupService';
 import { formatPaise } from '../format/rupees';
 import { getStamped, putStamped } from '../store/kv';
 import type { KeyValueStore } from '../store/kv';
@@ -22,13 +24,10 @@ import type { ComparisonView } from '../viewModels/comparisonView';
 import { makeOrderRequest } from './orderRequest';
 import type { OrderForm } from './orderRequest';
 
-export const REQUESTS_KEY = 'paper/requests';
+export { REQUESTS_KEY } from '../backup/backupService';
 const REPORT_SEED = 'win-loss-report-v1';
 
-interface Stored {
-  key: string;
-  request: OrderRequest;
-}
+type Stored = StoredOrder;
 
 export interface SessionView {
   cash: string;
