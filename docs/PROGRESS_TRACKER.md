@@ -5,7 +5,7 @@
 **Status values:** `Not started` · `In progress` · `Blocked` · `Done`  
 **Done means** the work package's acceptance test (see the plan) has been run and the result is recorded in the *Acceptance result* column. Failures are recorded as failures; a work package with a failing test stays `In progress`.
 
-**Last updated:** 2026-10-17 (WP-3.2 done)
+**Last updated:** 2026-10-17 (WP-3.7 done)
 
 ## Phase summary
 
@@ -15,7 +15,7 @@
 | P0 · Decisions, skeleton and de-risking | 7 | 0 | 0 | 1 | 8 |
 | P1 · Core ledger and simulator | 11 | 0 | 0 | 0 | 11 |
 | P2 · Data service and universe | 8 | 0 | 0 | 1 | 9 |
-| P3 · Web MVP (R1) | 8 | 0 | 0 | 3 | 11 |
+| P3 · Web MVP (R1) | 9 | 0 | 0 | 2 | 11 |
 | P4 · Chart module and shadow mode (R1.5) | 0 | 0 | 0 | 8 | 8 |
 | P5 · Experiment harness and buyer-company overlay (R2) | 0 | 0 | 0 | 7 | 7 |
 | P6 · Android shell (A1) | 0 | 0 | 0 | 1 | 1 |
@@ -23,7 +23,7 @@
 | P11 · Commercialization (after R2; gated by D32) | 0 | 0 | 0 | 4 | 4 |
 <!-- SUMMARY-END -->
 
-**Next work package:** WP-3.7 (phone layout and accessibility), WP-3.11 (gate leak tests); WP-3.9 waits on D26; WP-2.9 (universe pull, which also feeds this screen) waits on a daily ASM recording job and the four missing AMFI lists. Owner to confirm D1, review the sector table (T17) and resolve the three D26 points  
+**Next work package:** WP-3.11 (gate leak tests); WP-3.9 waits on D26; WP-2.9 (universe pull, which also feeds the Universe screen) waits on a daily ASM recording job and the four missing AMFI lists. After those, P3 exit review (R1). Owner to confirm D1, review the sector table (T17) and resolve the three D26 points  
 **Open blockers:** none
 
 ---
@@ -81,7 +81,7 @@
 | 3.4 | Ledger A / Ledger B side by side with snapshot ID | 3.3, 1.10 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 480 tests. `computeLedgerB` gives C1 (hold-on 5/20/60), C2 (benchmark windows), C3 (excursions and timing), C4 (+1/+5/+20 after exit) for every closed trade and open position and C6 (equal-weight buy and hold, cash) for the portfolio, on split-adjusted prices; hand-checked against the comparator functions on the golden replay, including a position held through the 5-for-1 split. The Compare tab shows both ledgers side by side with the snapshot id; browser check passes (`pnpm e2e:orders`) | C2 shows "no benchmark loaded" because the demo data has no index; the Nifty 50 series (D6, price index flagged) is not wired in yet. C5 does not apply to a manual book. The golden replay is unchanged. FR-L2, FR-L3 |
 | 3.5 | Win/loss report with intervals and breakdowns | 3.4 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 491 tests. `winLossReport` gives win rate, average win and loss, payoff, expectancy and profit factor in a net and a gross view, block-bootstrap 95% intervals for win rate and expectancy (reproducible for a fixed seed), and breakdowns by stock, source, bucket, holding period and entry tag. Net numbers equal the P1 `summarizeTrades` on the same trades (hand-worked cases and the golden replay). The Report tab shows it with a net/gross switch and small-sample warnings; browser check passes | Breakdowns by sector and volatility bucket need reference data the demo book lacks. Fewer than 30 closed trades is flagged as too few to read; groups under 5 trades are marked thin; under 2 trades there is no interval. Timing metrics (FR-W5) appear per trade on the Compare tab. FR-W1 to FR-W4 |
 | 3.6 | Signed bundle export/import; scheduled export; persistence request | 3.1, 1.3 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 517 tests. Core: HMAC-SHA256 (RFC 4231 vectors and a differential test against Node), bundle build and verify with checksum, hash chain per order, and keyed signature. Browser check (`pnpm e2e:backup`, Chrome) passes: export, a bundle with one changed character is refused and the book is untouched, clearing the browser store empties the book, import restores it (with the key the signature is checked; without it the file is checked for changes only), no page errors | The signature is HMAC with a per-device key, shown at export for safekeeping (T18); a restored device without the key can verify changes but not authorship. A chain that loses its tail still verifies, so rollback needs the external anchor (D16, WP-4.5). Import is paste-based with a download button on web; a file picker and native share come with the Android shell. Reminder after 7 days or never; persistent-storage request shown. FR-X1 to FR-X4 |
-| 3.7 | Phone-width layout and accessibility | 3.2 | Not started |  |  |  |  |
+| 3.7 | Phone-width layout and accessibility | 3.2 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 536 tests. Browser check (`pnpm e2e:phone`, Chrome) opens all seven tabs at 360 px and 320 px: no horizontal page scroll, every control at least 44 px by 44 px, every field has an accessible name, a 16 px side gutter, tab roles in place, no text under 11.5 px (74 checks, none failing). A contrast test confirms the palette meets WCAG AA (4.5 to 1) for every text and background pair | Found and fixed: the seven-tab bar pushed the page 222 px wider than a phone (now a sideways-scrolling tab strip), and the Universe card headers were 32 px tall. Still to do by hand: a real phone, screen-reader listening, touch scrolling, and larger system text sizes; the check measures layout, not how it reads aloud. NFR-9 |
 | 3.8 | IExecutionAdapter and PaperExecutionAdapter (Paise balances, idempotency keys) | 1.8, 1.10 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 454 tests. Placing the twelve fixture orders through the adapter and settling reproduces the golden report hash and the replay outcomes exactly; the same key and request returns the same result and one order; cash is a safe-integer paise value; positions match the report | Placement checks only the order shape (quantity, limit price, duplicate id, unknown instrument); cash, size and circuit decisions happen at fill time as in the replay and appear in the order list with a reason. An order stays pending until its fill session has a bar. A circuit carry-over that runs past the end of the data would expire early. The app does not use the adapter yet (WP-3.3) | 
 | 3.9 | Snapshot client: signed download-only pull, staleness, network-audit test | 2.8, 3.1, D26 | Not started |  |  |  | Added 2026-10-17 |
 | 3.10 | IEntitlementService seam with grant-all stub; no prices or store text | 3.1 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 460 tests; airplane-mode check still passes with the provider in place. The stub grants every feature; the tier configuration is empty; guard tests find no store SDK in any package, no reference to the seam outside the app, and no SKU or tier wording in source | `hasFeatureAccess` and `getEntitlements`; a React provider and `useFeatureAccess` hook (null while loading, so nothing shows locked); no screen uses a gate yet. FR-P9 |
@@ -216,3 +216,4 @@
 | 2026-10-17 | WP-3.5 Done: win/loss report with net and gross views, bootstrap intervals and breakdowns; Report tab |
 | 2026-10-17 | WP-3.6 Done: signed bundle export and import with hash chain, HMAC signature, export reminder and persistence request; browser check passes |
 | 2026-10-17 | WP-3.2 Done: Universe tab with eligibility reasons, flags and buckets on a seeded set; BucketInputs gained bandKnown |
+| 2026-10-17 | WP-3.7 Done: phone layout and accessibility checked at 360 and 320 px in Chrome; tab strip made scrollable; contrast test added |

@@ -1,14 +1,9 @@
 import type { ReactNode } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-export const colors = {
-  text: '#1b1b1f',
-  muted: '#5c5f66',
-  line: '#e3e4e8',
-  accent: '#1a56db',
-  warn: '#8a5a00',
-  background: '#ffffff',
-};
+import { colors } from './colors';
+
+export { colors };
 
 export function Section({ title, children }: { title: string; children: ReactNode }) {
   return (

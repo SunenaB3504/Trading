@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { DataServiceClient } from './dataClient/client';
 import type { FetchLike } from './dataClient/client';
 import { GrantAllEntitlements } from './entitlement/grantAll';
@@ -59,7 +59,13 @@ export default function App() {
             {online ? 'Online' : 'Offline'}
           </Text>
         </View>
-        <View style={styles.tabs} accessibilityRole="tablist">
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.tabsScroll}
+          contentContainerStyle={styles.tabs}
+          accessibilityRole="tablist"
+        >
           <TabButton id="ledger" active={tab} onSelect={setTab}>
             Ledger
           </TabButton>
@@ -81,7 +87,7 @@ export default function App() {
           <TabButton id="data" active={tab} onSelect={setTab}>
             Data
           </TabButton>
-        </View>
+        </ScrollView>
         {tab === 'ledger' ? <LedgerScreen kv={kv} now={now} /> : null}
         {tab === 'universe' ? <UniverseScreen /> : null}
         {tab === 'trade' ? <TradeScreen kv={kv} now={now} /> : null}
@@ -100,7 +106,8 @@ const styles = StyleSheet.create({
   brand: { fontSize: 18, fontWeight: '700', color: colors.text },
   online: { color: '#0a7d33', fontWeight: '600' },
   offline: { color: colors.warn, fontWeight: '600' },
-  tabs: { flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: colors.line },
+  tabsScroll: { flexGrow: 0, borderBottomWidth: 1, borderBottomColor: colors.line },
+  tabs: { flexDirection: 'row' },
   tab: { paddingHorizontal: 20, minHeight: 44, justifyContent: 'center' },
   tabActive: { borderBottomWidth: 2, borderBottomColor: colors.accent },
   tabText: { color: colors.muted },

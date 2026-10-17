@@ -71,6 +71,6 @@ const styles = StyleSheet.create({
   label: { color: colors.muted, fontSize: 13, marginBottom: 2 },
   pair: { flexDirection: 'row', gap: 12 },
   cell: { flex: 1 },
-  head: { fontSize: 11, color: colors.muted, textTransform: 'uppercase' },
+  head: { fontSize: 12, color: colors.muted, textTransform: 'uppercase' },
   text: { color: colors.text, fontSize: 14 },
 });
