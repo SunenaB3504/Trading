@@ -21,6 +21,8 @@ export interface FetchRequest {
   urlClass: string;
   url: string;
   params?: Record<string, string>;
+  /** Extra request headers, for example the cookie and referer NSE's JSON reports need. */
+  headers?: Record<string, string>;
 }
 
 export interface FetchDeps {
@@ -49,7 +51,7 @@ export async function fetchAndStore(
 ): Promise<{ body: Uint8Array; record: RawRecord }> {
   const response = await retryWithBackoff(async () => {
     await deps.limiter.wait();
-    const r = await deps.client.get(req.url);
+    const r = await deps.client.get(req.url, req.headers);
     if (r.status === 404) throw new ProviderError('not-found', `404 for ${req.url}`);
     if (r.status !== 200) {
       throw new HttpStatusError(

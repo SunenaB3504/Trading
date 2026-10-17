@@ -25,6 +25,9 @@ export function nodeHttpClient(options: NodeClientOptions = {}): HttpClient {
         res.headers.forEach((v, k) => {
           out[k.toLowerCase()] = v;
         });
+        // several Set-Cookie headers cannot be folded into one value, so keep them on separate lines
+        const cookies = (res.headers as { getSetCookie?: () => string[] }).getSetCookie?.();
+        if (cookies !== undefined && cookies.length > 0) out['set-cookie'] = cookies.join('\n');
         return { status: res.status, body: new Uint8Array(await res.arrayBuffer()), headers: out };
       } finally {
         clearTimeout(timer);

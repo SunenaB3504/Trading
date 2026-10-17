@@ -260,4 +260,23 @@ describe('raw stores', () => {
     expect(await store.get('0'.repeat(64))).toBeNull();
     expect((await store.list()).map((r) => r.fetchedAt)).toEqual([5, 6]);
   });
+
+  it('finds a body again whichever provider stored it (a new provider needs no change here)', async () => {
+    const dir = mkdtempSync(join(tmpdir(), 'rawstore-'));
+    dirs.push(dir);
+    const store = new FileRawStore(dir);
+    const body = new TextEncoder().encode('status list');
+    const rec = await store.put(
+      {
+        provider: 'nse-status',
+        urlClass: 'nse-sec-list',
+        url: 'u',
+        params: {},
+        fetchedAt: 1,
+        status: 200,
+      },
+      body,
+    );
+    expect(await store.get(rec.checksum)).toEqual(body);
+  });
 });

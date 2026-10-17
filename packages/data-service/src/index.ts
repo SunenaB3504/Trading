@@ -87,3 +87,15 @@ export { MIN_BETA_RETURNS, betaOf, buildBucketInputs, volatilityOf } from './uni
 export type { BucketContext, DatedClose, InstrumentFeed } from './universe/bucketInputs';
 export { parseSectorTable } from './universe/sectors';
 export type { SectorTable } from './universe/sectors';
+export {
+  ASM_URL,
+  GSM_URL,
+  HOME_URL,
+  URL_CLASS,
+  cookieHeader,
+  loadHistory,
+  recordDailyStatus,
+} from './jobs/statusRecorder';
+export type { RecordOutcome } from './jobs/statusRecorder';
+export { reportDate } from './status/surveillanceReports';
+export type { ReportResult } from './status/surveillanceReports';

@@ -1,5 +1,12 @@
 import { createHash } from 'node:crypto';
-import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import {
+  appendFileSync,
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  writeFileSync,
+} from 'node:fs';
 import { join } from 'node:path';
 import type { ProviderName } from '../providers/rawBar';
 
@@ -73,8 +80,10 @@ export class FileRawStore implements RawStore {
   }
 
   get(checksum: string): Promise<Uint8Array | null> {
-    for (const provider of ['nse-bhavcopy', 'yahoo', 'csv']) {
-      const file = join(this.dir, provider, `${checksum}.bin`);
+    // Every provider has its own folder, so look in all of them rather than a fixed list.
+    for (const entry of readdirSync(this.dir, { withFileTypes: true })) {
+      if (!entry.isDirectory()) continue;
+      const file = join(this.dir, entry.name, `${checksum}.bin`);
       if (existsSync(file)) return Promise.resolve(new Uint8Array(readFileSync(file)));
     }
     return Promise.resolve(null);

@@ -21,6 +21,37 @@ export interface GsmEntry {
 }
 
 type Raw = Record<string, unknown>;
+
+export interface ReportResult<T> {
+  entries: T[];
+  skipped: number;
+  /** The day the report says it is for (`YYYY-MM-DD`), or null. A report with a different day is stale. */
+  asOf: string | null;
+}
+
+const MONTHS: Readonly<Record<string, string>> = {
+  jan: '01',
+  feb: '02',
+  mar: '03',
+  apr: '04',
+  may: '05',
+  jun: '06',
+  jul: '07',
+  aug: '08',
+  sep: '09',
+  oct: '10',
+  nov: '11',
+  dec: '12',
+};
+
+/** `16-Oct-2026` or `16-Oct-2026 08:08:02` to `2026-10-16`. */
+export function reportDate(text: unknown): string | null {
+  const m = typeof text === 'string' ? /^(\d{1,2})-([A-Za-z]{3})-(\d{4})/.exec(text.trim()) : null;
+  const month = m?.[2] === undefined ? undefined : MONTHS[m[2].toLowerCase()];
+  return m === null || month === undefined
+    ? null
+    : `${m[3]}-${month}-${(m[1] as string).padStart(2, '0')}`;
+}
 const text = (v: unknown): string => (typeof v === 'string' ? v : '');
 
 function asmEntry(raw: Raw, kind: AsmEntry['kind']): AsmEntry | null {
@@ -34,7 +65,7 @@ function asmEntry(raw: Raw, kind: AsmEntry['kind']): AsmEntry | null {
 }
 
 /** NSE `/api/reportASM`: the list in force now, long term and short term. There is no history behind it. */
-export function parseAsmReport(json: unknown): { entries: AsmEntry[]; skipped: number } {
+export function parseAsmReport(json: unknown): ReportResult<AsmEntry> {
   const root = json as { longterm?: { data?: Raw[] }; shortterm?: { data?: Raw[] } } | null;
   if (root === null || typeof root !== 'object' || root.longterm === undefined)
     throw new ProviderError('malformed', 'ASM report has no longterm list');
@@ -49,7 +80,8 @@ export function parseAsmReport(json: unknown): { entries: AsmEntry[]; skipped: n
   };
   add(root.longterm.data, 'long_term');
   add(root.shortterm?.data, 'short_term');
-  return { entries, skipped };
+  const first = [...(root.longterm.data ?? []), ...(root.shortterm?.data ?? [])][0];
+  return { entries, skipped, asOf: reportDate(first?.asmTime) };
 }
 
 const GSM_CODE = /GSM\s*-?\s*(0|I{1,3}|IV|V|VI)\b/i;
@@ -70,7 +102,7 @@ function gsmEntry(raw: Raw): GsmEntry | null {
 }
 
 /** NSE `/api/reportGSM`: the list in force now. Some names are also under LTASM, ESM or an IBC stage. */
-export function parseGsmReport(json: unknown): { entries: GsmEntry[]; skipped: number } {
+export function parseGsmReport(json: unknown): ReportResult<GsmEntry> {
   if (!Array.isArray(json)) throw new ProviderError('malformed', 'GSM report is not a list');
   const entries: GsmEntry[] = [];
   let skipped = 0;
@@ -79,5 +111,5 @@ export function parseGsmReport(json: unknown): { entries: GsmEntry[]; skipped: n
     if (e === null) skipped += 1;
     else entries.push(e);
   }
-  return { entries, skipped };
+  return { entries, skipped, asOf: reportDate((json[0] as Raw | undefined)?.gsmTime) };
 }

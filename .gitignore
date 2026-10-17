@@ -9,3 +9,6 @@ Study-docs/research/price_cache_*.csv
 # spike build output
 research/spikes/**/.expo/
 research/spikes/**/dist/
+
+# raw provider responses recorded by the daily job (back this folder up; ASM history exists nowhere else)
+data/raw/

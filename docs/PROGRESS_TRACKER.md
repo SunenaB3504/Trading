@@ -5,7 +5,7 @@
 **Status values:** `Not started` · `In progress` · `Blocked` · `Done`  
 **Done means** the work package's acceptance test (see the plan) has been run and the result is recorded in the *Acceptance result* column. Failures are recorded as failures; a work package with a failing test stays `In progress`.
 
-**Last updated:** 2026-10-17 (WP-3.11 done)
+**Last updated:** 2026-10-17 (WP-2.9 in progress: recording job built)
 
 ## Phase summary
 
@@ -14,7 +14,7 @@
 | ------ | ------ | ------ | ------ | ------ | ------ |
 | P0 · Decisions, skeleton and de-risking | 7 | 0 | 0 | 1 | 8 |
 | P1 · Core ledger and simulator | 11 | 0 | 0 | 0 | 11 |
-| P2 · Data service and universe | 8 | 0 | 0 | 1 | 9 |
+| P2 · Data service and universe | 8 | 1 | 0 | 0 | 9 |
 | P3 · Web MVP (R1) | 10 | 0 | 0 | 1 | 11 |
 | P4 · Chart module and shadow mode (R1.5) | 0 | 0 | 0 | 8 | 8 |
 | P5 · Experiment harness and buyer-company overlay (R2) | 0 | 0 | 0 | 7 | 7 |
@@ -23,7 +23,7 @@
 | P11 · Commercialization (after R2; gated by D32) | 0 | 0 | 0 | 4 | 4 |
 <!-- SUMMARY-END -->
 
-**Next work package:** WP-3.9 (snapshot client; waits on D26), WP-2.9 (universe pull; waits on a daily ASM recording job and the four missing AMFI lists). Those two are what P3 and P2 still need before the R1 exit review. Owner to confirm D1, review the sector table (T17) and resolve the three D26 points  
+**Next work package:** WP-2.9 remaining part (bar pull, cross-check, disputes list, frozen buckets; needs the four missing AMFI lists and a Nifty 50 series for the beta rule), WP-3.9 (snapshot client; waits on D26). Owner to schedule the daily recording job, confirm D1, review the sector table (T17) and resolve the three D26 points  
 **Open blockers:** none
 
 ---
@@ -69,7 +69,7 @@
 | 2.6 | Eligibility rules E1-E7 with recorded first failure; `time_assumed` flag handling | 2.4, 2.5 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 370 tests, 23 new. Rules E1-E7 evaluated in order, every result reported and the first failure recorded; each threshold tested exactly at the boundary; thresholds frozen in a hashed config (`elig-v1`, changing any value changes the hash and every result carries it); point-in-time facts built from real NSE bars using only data before the window (verified by truncating later bars) and fed through the rules end to end | Done ahead of 2.4 and 2.5 because the rules need only facts the data already gives. Thresholds are PROPOSED (decision D25): Rs 5 crore median daily traded value, 60-session warm-up, at most 5 missing sessions, 98% two-provider coverage. Evidence: on 2025-10-16, 1,000 main-board equities traded at least Rs 5 crore and 494 at least Rs 25 crore. Surveillance and price bands are flagged `not_recorded` until WP-2.4; an instrument with no sourced listing timestamp passes but is flagged `time_assumed`; liquidity is close x volume (an approximation of exchange traded value); E7 fails when coverage is not measured |
 | 2.7 | Objective bucket builder (astro-blind, versioned) | 2.6 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 435 tests. Rules `bucket-v1` (D35) as pure functions with hashed rules and inputs; volatility and beta from closes using earlier dates only; AMFI lists (14 periods, 2017 H2 to 2026 H1) parsed from the PDFs; NSE daily market cap file, index close and sector table parsers; tested on real files | AMFI lists for 2020 H1 to 2021 H2 not found, so those windows have size unknown; the sector table (70 names) is assistant-written and needs owner review; the large-cap group stands in for Nifty 50 membership; no bulk pull of bars or the NSE market cap files yet (WP-2.9) |
 | 2.8 | DataSnapshot creation and hashing; service endpoints | 2.3, 2.7 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 399 tests. Same inputs give the same id regardless of clock, order or build tag; tampering caught; all SSD §9.2 endpoints plus a local HTTP server tested on real NSE bars | Snapshot is point in time (asOf). `/status` gives lifecycle only; surveillance and band stay null with a flag until WP-2.4. Signing and hosting wait for D26 / WP-3.9. WP-2.7 buckets are not in the snapshot yet |
-| 2.9 | Universe pull (hand-traded set and evaluation universe) and disputes list | 2.8, 0.5 | Not started |  |  |  |  |
+| 2.9 | Universe pull (hand-traded set and evaluation universe) and disputes list | 2.8, 0.5 | In progress | 2026-10-17 |  | Part done, `pnpm verify` green: 563 tests. The daily recording job for the security list and the ASM and GSM reports is built and ran live: the first real day (2026-10-16) is stored and the status history rebuilt from it shows ASM as known. Stale reports are not filed under another date; one failing report does not stop the others; a closed day is a note, not an error | Not done: the pull of daily bars for the evaluation universe (about 100 names, 8 to 16 years) with the Yahoo cross-check and disputes list, and freezing the buckets. Needs the owner to schedule the job (docs/data-sources/daily_status_recording.md) and back up `data/raw`. A bug found live: the file store could not read back a body from the new provider, fixed |
 
 ## P3 · Web MVP (R1)
 
@@ -218,3 +218,4 @@
 | 2026-10-17 | WP-3.2 Done: Universe tab with eligibility reasons, flags and buckets on a seeded set; BucketInputs gained bandKnown |
 | 2026-10-17 | WP-3.7 Done: phone layout and accessibility checked at 360 and 320 px in Chrome; tab strip made scrollable; contrast test added |
 | 2026-10-17 | WP-3.11 Done: gate seam (loader, birth-data save, leak detectors, locked notice) with per-item leak tests and repository scans, plus a canary |
+| 2026-10-17 | WP-2.9 started: daily status recording job built and run live for 2026-10-16 (security list, ASM, GSM); raw archive in data/raw (not in git) |
