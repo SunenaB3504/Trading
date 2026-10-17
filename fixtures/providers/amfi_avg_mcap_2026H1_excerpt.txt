@@ -1,0 +1,14 @@
+                                                Average Market Capitalization of listed companies during the six months ended 30 June 2026
+
+                                                                            BSE 6 month                NSE 6 month                                      MSEI 6     Average of   Categorization
+                                                                                                                                                    month Avg            All    as per SEBI
+Sr. No.                      Company name       ISIN            BSE Symbol     Avg Total   NSE Symbol   Avg Total                            MSEI   Total Market                Circular dated
+                                                                            Market Cap in              Market Cap                           Symbol   Cap in (Rs   Exchanges     Oct 6, 2017
+                                                                                                                                                                     (Rs. Cr.)
+                                                                               (Rs. Crs.)              (Rs. Crs.)                                        Crs.)                  Large Cap
+99 Cipla Ltd.                                   INE059A01026 CIPLA             1,08,558.40 CIPLA       1,08,571.41 -
+100 Gail (India) Ltd.                           INE129A01019 GAIL              1,06,342.10 GAIL        1,06,350.21 -
+101 Bosch Ltd                                        INE323A01026 BOSCHLTD    1,06,277.11 BOSCHLTD       1,06,279.35 -                                                 1,06,278.23 Mid Cap
+249 Godfrey Phillips India Ltd.                    INE260B01028 GODFRYPHLP         33,670.55 GODFRYPHLP 33,666.53 -                                                  27,784.79 Small Cap
+250 Godrej Industries Ltd.                         INE233A01035 GODREJIND          33,663.78 GODREJIND     33,664.64 -                                               27,675.23 Small Cap
+251 Navin Fluorine International Limited           INE048G01026 NAVINFLUOR         33,450.26 NAVINFLUOR    33,433.61 -                                               27,475.11 Small Cap

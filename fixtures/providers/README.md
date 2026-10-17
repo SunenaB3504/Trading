@@ -50,3 +50,22 @@ Findings:
 - **GSM codes also encode other measures**: "IBC I & GSM 0", "LTASM I & GSM 0", "ESM I & GSM 0", and ASM codes "LTASM - I (13)", "STASM - II (12)".
 - **Real circuits exist in the sample**: on 2025-10-16, 32 names closed at the upper band with the high on it, and 13 at the lower band with the low on it, all at 5%. Computing the band from the previous close with the core band functions (tick 5 paise) reproduced the exchange's closing prices exactly, for example ACCENTMIC 25,795 to 27,080 paise units.
 - **BSE was not checked.**
+
+## Shares, market cap, indices and circuit lists (recorded 2026-10-17, WP-2.7)
+
+| File | Source | Notes |
+| ------ | ------ | ------ |
+| `nse_pr_mcap_2024-10-25_subset.csv`, `nse_pr_mcap_2024-10-28_subset.csv`, `nse_pr_mcap_2025-10-16_subset.csv` | `mcap*.csv` inside `nsearchives.nseindia.com/archives/equities/bhavcopy/pr/PRddmmyy.zip` | Ten symbols each. Columns: Trade Date, Symbol, Series, Security Name, Category, Last Trade Date, Face Value, **Issue Size**, Close Price, **Market Cap** |
+| `nse_pr_bh_2025-10-16.csv` | `bh*.csv` in the same zip | NSE's own list of securities that hit their price band that day (H or L), 152 names |
+| `nse_ind_close_all_2025-10-16_subset.csv` | `nsearchives.nseindia.com/content/indices/ind_close_all_DDMMYYYY.csv` | Index closes: Nifty 50, Nifty Next 50, Nifty 500, Nifty Smallcap 250 |
+| `amfi_avg_mcap_2024H2_excerpt.txt`, `amfi_avg_mcap_2026H1_excerpt.txt` | AMFI half-yearly "Average Market Capitalization" PDFs, text extracted | Header and the rows around ranks 100 and 250 only |
+
+Findings:
+
+- **NSE publishes issued shares and market cap for every security every day, but only from 2024-02-01.** The `mcap` file in the daily PR zip carries "Issue Size" (shares outstanding) and "Market Cap". Earlier PR zips hold price files only (no `mcap`; checked at month ends of 2022 and 2023, and 2024-01-31 has none).
+- **It is point in time and unadjusted.** Reliance: 6,765,817,114 shares at 2,655.70 on 2024-10-25 (market cap 17.97 lakh crore); 13,531,634,228 shares at 1,334.35 on the ex-bonus date 2024-10-28 (18.06 lakh crore). The share count doubles on the ex-date itself, so price times shares stays continuous.
+- **Daily PR zips exist for 2010 and later** (checked 2010-03, 2012, 2014, 2016, 2018, 2022) with prices, corporate actions (`bc`) and the band-hit list (`bh`), but not shares.
+- **AMFI lists are downloadable and parseable** with `pdftotext -layout`. URL patterns that worked: `portal.amfiindia.com/spages/AverageMarketCapitalization30Jun2026.pdf` and `www.amfiindia.com/Themes/Theme1/downloads/...` for 2019 (Jan-June, Jul-Dec), June 2022, Dec 2023, Dec 2024, June 2025, Dec 2025. Patterns that returned 404: January-June 2018 and June 2020. Real rank boundaries: rank 100 about 26,291 crore (2019 H2), 47,453 (2022 H1), 100,118 (2024 H2), 106,342 (2026 H1); rank 250 about 8,949 (2019 H1), 9,147 (2019 H2), 16,440 (2022 H1), 37,854 (2024 H2), 33,664 (2026 H1).
+- **Nifty 50 daily closes** are in `ind_close_all` back to at least 2012-10-15 (404 on 2010-10-15 and 2015-10-16, the latter probably a holiday).
+- **Sector classification is still unsourced.** The Nifty 500 list (`ind_nifty500list.csv`) carries a macro "Industry" column for current members only; BSE's scrip list returned 403 to a script.
+- **Circuit lists vs our own flag.** Of 50 names our rule flagged upper-locked on 2025-10-16, 41 were also on NSE's H list; of 28 flagged lower-locked, 23 were on its L list. The mismatches are low-priced names with 1-paisa ticks, where NSE's band rounding differs from ours. NSE's own list is the authority where it exists.

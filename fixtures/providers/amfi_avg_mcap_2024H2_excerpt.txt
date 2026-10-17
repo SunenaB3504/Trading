@@ -1,0 +1,14 @@
+                                              Average Market Capitalization of listed companies during the six months ended 31 December 2024
+
+                                                                                                                                                    MSEI 6
+
+Sr. No.                         Company name         ISIN  BSE Symbol         BSE 6 month    NSE Symbol  NSE 6 month                          MSEI    month     Average of All  Categorizatio
+                                                                                 Avg Total                 Avg Total                          Symb  Avg Total     Exchanges     n as per SEBI
+                                                                                                         Market Cap                                                 (Rs. Cr.)   Circular dated
+                                                                              Market Cap in                (Rs. Crs.)                           ol    Market                    Oct 6, 2017
+99 Cummins India Ltd.                                INE298A01020 CUMMINSIND 1,01,317.83 CUMMINSIND 1,01,330.03                                                 1,01,323.93 Large Cap
+100 Info Edge(India) Ltd.                            INE663F01024 NAUKRI      1,00,114.37 NAUKRI         1,00,123.61                                            1,00,118.99 Large Cap
+101 Indian Hotels Co. Ltd                               INE053A01029 INDHOTEL     99,479.22 INDHOTEL         99,498.25                       99,488.74 Mid Cap
+249 Indraprashtha Gas Ltd.
+250 Aditya Birla Fashion and Retail Limited              INE470Y01017 NIACL        37,853.97 NIACL            37,854.78                       37,854.38 Mid Cap
+251 Apollo Tyres Ltd
