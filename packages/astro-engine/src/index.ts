@@ -9,3 +9,7 @@ export { makeChart, nameInForce } from './entity';
 export type { ChartEntity, ChartKind } from './entity';
 export { DEFAULT_RULES, freezeConventions, isIntact, requireRules } from './registry';
 export type { FrozenConventions, Rules } from './registry';
+export { extractFeatures, FRAGILE_DEGREES } from './features';
+export type { FeatureInput, FeatureSet } from './features';
+export { taraBala, TARA_NAMES } from './tara';
+export type { Tara } from './tara';
