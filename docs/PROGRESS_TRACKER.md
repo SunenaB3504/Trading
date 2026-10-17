@@ -5,14 +5,14 @@
 **Status values:** `Not started` · `In progress` · `Blocked` · `Done`  
 **Done means** the work package's acceptance test (see the plan) has been run and the result is recorded in the *Acceptance result* column. Failures are recorded as failures; a work package with a failing test stays `In progress`.
 
-**Last updated:** 2026-10-16 (WP-0.6 done; P1 complete)
+**Last updated:** 2026-10-16 (WP-0.5 done; P1 complete)
 
 ## Phase summary
 
 <!-- SUMMARY-START -->
 | Phase | Done | In progress | Blocked | Not started | Total |
 | ------ | ------ | ------ | ------ | ------ | ------ |
-| P0 · Decisions, skeleton and de-risking | 4 | 0 | 0 | 4 | 8 |
+| P0 · Decisions, skeleton and de-risking | 5 | 0 | 0 | 3 | 8 |
 | P1 · Core ledger and simulator | 11 | 0 | 0 | 0 | 11 |
 | P2 · Data service and universe | 0 | 0 | 0 | 9 | 9 |
 | P3 · Web MVP (R1) | 0 | 0 | 0 | 7 | 7 |
@@ -22,7 +22,7 @@
 | P7 · Jyotisham feature modules and PH entries (R3) | 0 | 0 | 0 | 10 | 10 |
 <!-- SUMMARY-END -->
 
-**Next work package:** WP-0.5 (power note, now possible with the harness) then P2 (WP-2.1 data adapters); WP-0.2, 0.4 also unblocked  
+**Next work package:** owner to confirm D8/D21 (evaluation universe size) from docs/POWER_NOTE.md, then P2 (WP-2.1 data adapters); WP-0.2, 0.4 also unblocked  
 **Open blockers:** none
 
 ---
@@ -35,8 +35,8 @@
 | 0.2 | Freeze pilot code and data into research/pilot with provenance file | 0.1 | Not started |  |  |  |  |
 | 0.3 | Decision log (docs/DECISIONS.md): D3, D4, D6, D7, D23 and audit answers | - | Done | 2026-10-16 | 2026-10-16 | docs/DECISIONS.md created with closed, scope and open decisions | |
 | 0.4 | Web spike: Expo web vs plain React; dense table, chart, Store on IndexedDB and SQLite-WASM | 0.1 | Not started |  |  |  | Decides D1 |
-| 0.5 | Power note: expected non-overlapping n and MDE for universe sizes 20/50/100/200 | 0.6 | Not started |  |  |  | Decides D21 and D8 |
-| 0.6 | §11.3 evaluation harness with null and positive controls | 0.1 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 281 tests. (a) Null control, 1,000 synthetic panels (10 instruments x 1,000 dates, H = 20): non-overlapping test and batch-means test each reject a true null 4.9% of the time (band 4-6%), their conjunction 1.0%, shifted-signal placebo 6.3% on 300 panels. (b) Planted-effect search finds an MDE of 2.0% on a 20-day return (80.0% power on an independent seed; 0.5% detection at zero effect; 100% at double). (c) TypeScript matches an independent Python/scipy reference to 1e-9 on a fixed 4 x 120 panel (embargo, ESS, non-overlapping t/p, batch-means, BH/BY, placebo shift list, t and incomplete-beta values). (d) Same seed gives byte-identical reports | Finding: the SSD's centred joint-block-bootstrap p-value is too liberal on dependent data (about 9-12% false positives at nominal 5%, bootstrap SD about 8% too small), so decisions use a calibrated batch-means test; the bootstrap stays as a descriptive interval. Needs SSD §11.3 step 4 amendment (decision T6). Detection for the MDE uses non-overlap AND batch-means (placebo optional, which would raise the MDE). Not done: B3 calendar control and synthetic buyers (R2), deflated Sharpe / PBO |
+| 0.5 | Power note: expected non-overlapping n and MDE for universe sizes 20/50/100/200 | 0.6 | Done | 2026-10-17 | 2026-10-17 | docs/POWER_NOTE.md produced from a reproducible simulation (tools/powerNote.ts, 40 cells). Company-specific signals: MDE 1.0% (100 names, 4 years) and 0.7% (8 years) over a 20-session hold; 2.3% over 60 sessions at 8 years; 50 to 100 names cuts the MDE by 39%, 100 to 200 by 27%. Market-wide signals: about 3.5% at 8 years whatever the number of names; a 60-session market-wide rule gives no verdict until about 16 years | Recommendation (awaiting owner confirmation): about 100 names and at least 8 years of history for the evaluation universe; hand-traded set stays 15-20. Synthetic prices, independent noise and equal volatility, so real MDEs will be larger. The PH register has no numeric claimed effects yet, so no rule can be judged adequately powered |
+| 0.6 | §11.3 evaluation harness with null and positive controls | 0.1 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 281 tests. (a) Null control, 1,000 synthetic panels (10 instruments x 1,000 dates, H = 20): non-overlapping test and batch-means test each reject a true null 4.9% of the time (band 4-6%), their conjunction 1.0%, shifted-signal placebo 6.3% on 300 panels. (b) Planted-effect search finds an MDE of 2.0% on a 20-day return (80.0% power on an independent seed; 0.5% detection at zero effect; 100% at double). (c) TypeScript matches an independent Python/scipy reference to 1e-9 on a fixed 8 x 240 panel (paired design) and a second 4 x 400 market-wide panel (embargo, ESS, non-overlapping t/p, batch-means, BH/BY, placebo shift list, t and incomplete-beta values). (d) Same seed gives byte-identical reports | Finding: the SSD's centred joint-block-bootstrap p-value is too liberal on dependent data (about 9-12% false positives at nominal 5%, bootstrap SD about 8% too small), so decisions use a calibrated batch-means test; the bootstrap stays as a descriptive interval. Needs SSD §11.3 step 4 amendment (decision T6). Detection for the MDE uses non-overlap AND batch-means (placebo optional, which would raise the MDE). Market-wide signals (every instrument on or off together) are supported: the non-overlapping test falls back to Welch across dates (5.2% / 4.7% false positives; scipy parity on a second fixture; decision T8). Not done: B3 calendar control and synthetic buyers (R2), deflated Sharpe / PBO |
 | 0.7 | Fix Python re-evaluation reference (App. A.4 items 1-9) | 0.1 | Not started |  |  |  | The original pilot script is not in the repo. tools/eval_reference.py is a new, independent reference for the §11.3 steps that avoids the A.4 defects; the original pilot scripts still need freezing into research/pilot (WP-0.2) |
 | 0.8 | Astro-engine audit of JV-try (Appendix A of the plan) | - | Done | 2026-10-16 | 2026-10-16 | Findings recorded in plan Appendix A | First-pass audit; owner answers recorded in plan v1.2 |
 
@@ -163,3 +163,4 @@
 | 2026-10-16 | WP-1.10 Done: trade metrics, block bootstrap, comparators C1-C4 and C6 |
 | 2026-10-16 | WP-1.11 Done: replay runner and golden hash. P1 exit check: 244 tests pass; coverage of ledger, fills and analytics is 99.4% statements and lines, 100% functions, 89.8% branches (target 90%); run `pnpm coverage` |
 | 2026-10-17 | WP-0.6 Done: §11.3 evaluation harness. Bootstrap p-value found liberal; decisions use batch-means test (T6) |
+| 2026-10-17 | WP-0.5 Done: power note. Market-wide signal support added to the harness (T8) |

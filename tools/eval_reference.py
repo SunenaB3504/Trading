@@ -68,6 +68,7 @@ def date_diffs(dates):
 
 def non_overlap(offset):
     diffs = date_diffs([t for t in range(D) if t % H == offset])
+    assert len(diffs) >= 10, "fixture must exercise the paired design (>= 10 dates with both sides)"
     r = stats.ttest_1samp(diffs, 0.0)
     return {"n": int(len(diffs)), "meanDiff": float(diffs.mean()), "t": float(r.statistic), "p": float(r.pvalue)}
 
@@ -110,6 +111,37 @@ def allowed_shifts(dates, horizon, periods):
     return out
 
 
+# --- market-wide (shared) signal: Welch test across non-overlapping dates
+shared = json.load(open("fixtures/eval/panel_shared_small.json"))
+SI, SD_, SH = shared["instruments"], shared["dates"], shared["horizon"]
+sret = np.array(shared["ret"], dtype=float).reshape(SI, SD_)
+son = np.array(shared["on"], dtype=int).reshape(SI, SD_)
+suse = np.ones((SI, SD_), dtype=bool)
+for i in range(SI):
+    blocked = np.zeros(SD_, dtype=bool)
+    for t in range(SD_):
+        if son[i, t] == 1:
+            blocked[max(0, t - SH + 1): min(SD_, t + SH)] = True
+    suse[i] = (son[i] == 1) | (~blocked)
+s_on = suse & (son == 1)
+s_off = suse & (son == 0)
+ssum_on = np.where(s_on, sret, 0.0).sum(axis=0)
+scnt_on = s_on.sum(axis=0).astype(float)
+ssum_off = np.where(s_off, sret, 0.0).sum(axis=0)
+scnt_off = s_off.sum(axis=0).astype(float)
+sdates = [t for t in range(SD_) if t % SH == 0]
+paired = [t for t in sdates if scnt_on[t] > 0 and scnt_off[t] > 0]
+on_means = np.array([ssum_on[t] / scnt_on[t] for t in sdates if scnt_on[t] > 0])
+off_means = np.array([ssum_off[t] / scnt_off[t] for t in sdates if scnt_off[t] > 0])
+w = stats.ttest_ind(on_means, off_means, equal_var=False)
+shared_result = {
+    "pairedDates": len(paired),
+    "n": int(min(len(on_means), len(off_means))),
+    "meanDiff": float(on_means.mean() - off_means.mean()),
+    "t": float(w.statistic),
+    "p": float(w.pvalue),
+}
+
 pvals = [0.01, 0.04, 0.03, 0.005, 0.2, 0.0004]
 c_m = sum(1.0 / j for j in range(1, len(pvals) + 1))
 t_cases = [(0.5, 3), (2.0, 10), (2.228, 10), (3.0, 25), (-1.2, 8), (6.0, 4)]
@@ -127,6 +159,7 @@ expected = {
     "studentP": [{"t": t, "df": df, "p": float(2 * stats.t.sf(abs(t), df))} for t, df in t_cases],
     "incBeta": [{"x": 0.3, "a": 2.0, "b": 5.0, "v": float(special.betainc(2.0, 5.0, 0.3))},
                 {"x": 0.9, "a": 0.5, "b": 4.5, "v": float(special.betainc(0.5, 4.5, 0.9))}],
+    "sharedNonOverlap0": shared_result,
     "pvalues": pvals,
 }
 json.dump(expected, open("fixtures/eval/reference_expected.json", "w"), indent=1)

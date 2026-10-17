@@ -60,6 +60,31 @@ describe('null control: no effect planted', () => {
   }, 120_000);
 });
 
+describe('null control for a market-wide signal (all instruments on or off together)', () => {
+  it('the across-dates test is correctly sized and the conjunction is conservative', () => {
+    const root = createRng('shared-null-v1');
+    const n = 600;
+    let welch = 0,
+      both = 0;
+    for (let i = 0; i < n; i += 1) {
+      const p = syntheticPanel(
+        { ...OPTS, instruments: 20, sharedSignal: true },
+        root.fork(`p${String(i)}`),
+      );
+      const agg = aggregateByDate(p, embargoMask(p));
+      const r = nonOverlappingTest(p, agg, 0);
+      expect(r.design).toBe('across-dates');
+      const bm = blockMeansTest(agg, 80);
+      if (r.p < 0.05) welch += 1;
+      if (r.p < 0.05 && bm !== null && bm.p < 0.05) both += 1;
+    }
+    // 600 panels: binomial 3-sigma band around 5% is 1.9% to 8.1%
+    expect(welch / n).toBeGreaterThan(0.019);
+    expect(welch / n).toBeLessThan(0.081);
+    expect(both / n).toBeLessThan(0.05);
+  }, 120_000);
+});
+
 describe('positive control: planted effect', () => {
   const root = createRng('mde-v1');
   const base = syntheticPanel(OPTS, root.fork('base'));

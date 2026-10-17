@@ -9,7 +9,7 @@ export {
 export type { DateAggregates, Panel } from './panel';
 export { autocorrelation, effectiveSampleSize, onReturnSeries } from './ess';
 export type { EssResult } from './ess';
-export { nonOverlappingTest, tTestOfMean } from './nonOverlap';
+export { nonOverlappingTest, tTestOfMean, welchTest } from './nonOverlap';
 export type { NonOverlapResult } from './nonOverlap';
 export { blockMeansTest } from './blockMeans';
 export type { BlockMeansResult } from './blockMeans';
@@ -17,7 +17,7 @@ export { jointBlockBootstrap } from './bootstrapDiff';
 export type { JointBootstrap, JointBootstrapOptions } from './bootstrapDiff';
 export { allowedShiftList, shiftedPlacebo } from './placebo';
 export type { PlaceboOptions, PlaceboResult } from './placebo';
-export { estimatePower, findMde, plantEffect } from './positiveControl';
+export { estimatePower, findMde, isSharedSignal, plantEffect } from './positiveControl';
 export type { MdeOptions, MdeResult, PowerOptions } from './positiveControl';
 export { benjaminiHochberg, benjaminiYekutieli } from './multiplicity';
 export type { MultiplicityResult } from './multiplicity';

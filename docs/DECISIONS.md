@@ -39,6 +39,8 @@
 | T6 | In the §11.3 harness, decisions use the non-overlapping t-test, a batch-means test (blocks of 4 x H) and the shifted-signal placebo; the joint block bootstrap (centred p) is reported as a descriptive interval only | Measured on 1,000 null panels: the centred bootstrap p rejects 9-12% of true nulls at a nominal 5% (its spread is about 8% too small); the other three are correctly sized (4.9%, 4.9%, 6.3%). **Needs the owner's confirmation and an amendment to SSD §11.3 step 4** | 2026-10-17 |
 | T7 | The MDE search declares an effect detected when the non-overlapping test AND the batch-means test are significant and the difference is positive (placebo optional, off by default for speed) | Matches the conjunction used for "Supported"; leaving the placebo out makes the MDE optimistic, and production runs should switch it on | 2026-10-17 |
 
+| T8 | The non-overlapping test is paired within each date when at least 10 non-overlapping dates have both signal-on and signal-off rows; otherwise (a market-wide signal that is on or off for every instrument at once) it compares on-date means with off-date means by Welch's test | A market-wide signal has no within-date contrast, so the paired design cannot run at all; checked correct-size by simulation (5.2% and 4.7% false positives) and against scipy | 2026-10-17 |
+
 ## Scope decisions
 
 | Decision | Outcome | Date |
@@ -51,7 +53,7 @@
 | ------ | ------ | ------ | ------ |
 | D24 | Broker whose brokerage and DP add-on to simulate | Before relying on cost results | Assumed generic discount broker: delivery free; intraday 0.03% capped at Rs 20; DP add-on Rs 9.50; all results flagged `broker.profile-assumed` |
 | D1 | UI framework | WP-0.4 spike | Expo universal |
-| D8, D21 | Evaluation-universe size and window | WP-0.5 power note | From the power note |
+| D8, D21 | Evaluation-universe size and window | **Owner to confirm.** WP-0.5 recommends about 100 names and at least 8 years of history (docs/POWER_NOTE.md) | From the power note |
 | D9 | Hold-out and forward dates; who holds the lock | Start of P5 | To be set |
 | D10 | Name rule for buyer-company test | P4 / P5 | Legal name in force on decision date, registered nāma-akṣara table |
 | D11 | Intraday data source | Deferred | Daily only |

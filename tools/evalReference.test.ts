@@ -39,6 +39,7 @@ interface Expected {
   allowedShifts: number[];
   studentP: Array<{ t: number; df: number; p: number }>;
   incBeta: Array<{ x: number; a: number; b: number; v: number }>;
+  sharedNonOverlap0: { pairedDates: number; n: number; meanDiff: number; t: number; p: number };
   pvalues: number[];
 }
 
@@ -55,7 +56,7 @@ const use = embargoMask(panel);
 const agg = aggregateByDate(panel, use);
 const close = (a: number, b: number): void => expect(Math.abs(a - b)).toBeLessThan(1e-9);
 
-describe('TypeScript harness vs the Python/scipy reference (fixed 4 x 120 panel, H = 10)', () => {
+describe('TypeScript harness vs the Python/scipy reference (fixed 8 x 240 panel, H = 10)', () => {
   it('embargo and counts', () => {
     expect(use.reduce((n, v) => n + v, 0)).toBe(expected.embargoKept);
     expect(panel.on.reduce((n, v) => n + v, 0)).toBe(expected.rawNOn);
@@ -74,6 +75,26 @@ describe('TypeScript harness vs the Python/scipy reference (fixed 4 x 120 panel,
   ] as const)('non-overlapping test, offset %s', (key, offset) => {
     const r = nonOverlappingTest(panel, agg, offset);
     const want = expected[key];
+    expect(r.design).toBe('paired');
+    expect(r.n).toBe(want.n);
+    close(r.meanDiff, want.meanDiff);
+    close(r.t, want.t);
+    close(r.p, want.p);
+  });
+
+  it('market-wide signal: Welch test across dates matches scipy', () => {
+    const f = read<PanelFile>('panel_shared_small.json');
+    const shared: Panel = {
+      instruments: f.instruments,
+      dates: f.dates,
+      horizon: f.horizon,
+      ret: Float64Array.from(f.ret),
+      on: Uint8Array.from(f.on),
+    };
+    const r = nonOverlappingTest(shared, aggregateByDate(shared, embargoMask(shared)), 0);
+    const want = expected.sharedNonOverlap0;
+    expect(want.pairedDates).toBe(0);
+    expect(r.design).toBe('across-dates');
     expect(r.n).toBe(want.n);
     close(r.meanDiff, want.meanDiff);
     close(r.t, want.t);

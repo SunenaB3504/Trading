@@ -11,6 +11,7 @@ import {
   effectiveSampleSize,
   embargoMask,
   evaluateRule,
+  isSharedSignal,
   logGamma,
   makePanel,
   nonOverlappingTest,
@@ -19,6 +20,7 @@ import {
   studentTTwoSidedP,
   syntheticPanel,
   tTestOfMean,
+  welchTest,
   verdictOf,
 } from './index';
 import type { VerdictInput } from './index';
@@ -127,6 +129,7 @@ describe('tests of the difference', () => {
       createRng('no'),
     );
     const r = nonOverlappingTest(p, aggregateByDate(p, embargoMask(p)), 3);
+    expect(r.design).toBe('paired');
     expect(r.n).toBeLessThanOrEqual(20);
     expect(r.n).toBeGreaterThan(10);
   });
@@ -134,6 +137,50 @@ describe('tests of the difference', () => {
   it('batch-means test needs enough blocks and a populated comparison', () => {
     const p = makePanel(1, 30, 5);
     expect(blockMeansTest(aggregateByDate(p, embargoMask(p)), 20)).toBeNull();
+  });
+});
+
+describe('market-wide signals', () => {
+  const opts = {
+    instruments: 12,
+    dates: 800,
+    horizon: 20,
+    dailyVol: 0.02,
+    marketVol: 0.01,
+    startProbability: 0.0125,
+    episodeLength: 20,
+    sharedSignal: true,
+  };
+
+  it('every instrument shares one pattern, so there is no within-date contrast', () => {
+    const p = syntheticPanel(opts, createRng('shared'));
+    expect(isSharedSignal(p)).toBe(true);
+    const agg = aggregateByDate(p, embargoMask(p));
+    expect(
+      dateDifferences(
+        agg,
+        Array.from({ length: p.dates }, (_, t) => t),
+      ),
+    ).toHaveLength(0);
+    const independent = syntheticPanel({ ...opts, sharedSignal: false }, createRng('shared'));
+    expect(isSharedSignal(independent)).toBe(false);
+  });
+
+  it('falls back to Welch across dates and keeps the shared pattern when an effect is planted', () => {
+    const p = syntheticPanel(opts, createRng('shared'));
+    const r = nonOverlappingTest(p, aggregateByDate(p, embargoMask(p)), 0);
+    expect(r.design).toBe('across-dates');
+    expect(r.n).toBeGreaterThan(5);
+    const planted = plantEffect(p, 0.05, createRng('plant-shared'));
+    expect(isSharedSignal(planted)).toBe(true);
+  });
+
+  it('Welch test matches a hand-worked case', () => {
+    // a: mean 3, var 2.5; b: mean 5, var 2.5; n = 5 each -> se^2 = 1, t = -2, df = 8
+    const r = welchTest([1, 2, 3, 4, 5], [3, 4, 5, 6, 7]);
+    expect(r.diff).toBe(-2);
+    expect(r.t).toBeCloseTo(-2, 12);
+    expect(r.p).toBeCloseTo(0.0805, 3);
   });
 });
 

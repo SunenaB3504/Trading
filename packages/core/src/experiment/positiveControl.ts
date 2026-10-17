@@ -19,14 +19,16 @@ export interface PowerOptions {
 
 /**
  * §11.3 step 6. A copy of the panel in which each instrument's signal pattern is moved by a random
- * circular offset (count and run lengths unchanged) and `effect` is added to the returns of the
+ * circular offset (one common offset for a market-wide signal; count and run lengths unchanged) and `effect` is added to the returns of the
  * rows where it is now on. The base panel's own signal/return relation is thereby broken.
  */
 export function plantEffect(p: Panel, effect: number, rng: Rng): Panel {
   const on = new Uint8Array(p.on.length);
   const ret = Float64Array.from(p.ret);
+  const shared = isSharedSignal(p);
+  let offset = rng.nextInt(p.dates);
   for (let i = 0; i < p.instruments; i += 1) {
-    const offset = rng.nextInt(p.dates);
+    if (!shared && i > 0) offset = rng.nextInt(p.dates);
     for (let t = 0; t < p.dates; t += 1) {
       const flag = p.on[i * p.dates + t] as number;
       const to = i * p.dates + ((t + offset) % p.dates);
@@ -35,6 +37,16 @@ export function plantEffect(p: Panel, effect: number, rng: Rng): Panel {
     }
   }
   return { ...p, on, ret };
+}
+
+/** True when every instrument has exactly the same signal pattern (a market-wide signal). */
+export function isSharedSignal(p: Panel): boolean {
+  for (let i = 1; i < p.instruments; i += 1) {
+    for (let t = 0; t < p.dates; t += 1) {
+      if (p.on[i * p.dates + t] !== p.on[t]) return false;
+    }
+  }
+  return p.instruments > 1;
 }
 
 /**

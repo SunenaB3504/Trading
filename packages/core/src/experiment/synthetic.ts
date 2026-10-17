@@ -15,6 +15,8 @@ export interface SyntheticOptions {
   startProbability: number;
   /** Sessions each signal episode lasts. */
   episodeLength: number;
+  /** When true every instrument shares one signal pattern (a market-wide signal such as a transit). */
+  sharedSignal?: boolean;
 }
 
 function normal(rng: Rng): number {
@@ -62,7 +64,8 @@ export function syntheticPanel(o: SyntheticOptions, rng: Rng): Panel {
       for (let k = 0; k < o.horizon; k += 1) sum += r[t + k] as number;
       p.ret[i * o.dates + t] = sum;
     }
-    fillSignal(p, i, o, signalRng.fork(`i${String(i)}`));
+    if (o.sharedSignal !== true || i === 0) fillSignal(p, i, o, signalRng.fork(`i${String(i)}`));
+    else p.on.copyWithin(i * o.dates, 0, o.dates);
   }
   return p;
 }
