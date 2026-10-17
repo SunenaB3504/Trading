@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 /**
  * Airplane-mode check for the web app (WP-3.1, NFR-6). Serves the exported web build, runs the real
  * data service on a second port, opens the app in Chrome, then cuts the network and confirms that the
@@ -11,6 +12,7 @@ import { existsSync, readFileSync, statSync } from 'node:fs';
 import { extname, join, resolve } from 'node:path';
 import type { AddressInfo } from 'node:net';
 import { chromium } from 'playwright-core';
+import type { BrowserContext, Page } from 'playwright-core';
 import { FixedClock } from '../../packages/core/src/index';
 import {
   SeriesStore,
@@ -45,7 +47,14 @@ const check = (name: string, ok: boolean, detail?: string): void => {
   checks.push(detail === undefined ? { name, ok } : { name, ok, detail });
 };
 
-async function main(): Promise<void> {
+const LEDGER_TITLE = 'Own trades (Ledger A), demo scenario';
+
+async function startFixtures(): Promise<{
+  web: Server;
+  service: Server;
+  appOrigin: string;
+  serviceUrl: string;
+}> {
   if (!existsSync(join(dist, 'index.html'))) throw new Error('export the web build first');
   const web = await serveStatic();
   const appOrigin = `http://127.0.0.1:${(web.address() as AddressInfo).port}`;
@@ -60,62 +69,66 @@ async function main(): Promise<void> {
   });
   const service = await startServer(handler, { port: 0, allowedOrigin: appOrigin });
   const serviceUrl = `http://127.0.0.1:${(service.address() as AddressInfo).port}`;
+  return { web, service, appOrigin, serviceUrl };
+}
 
+function savedKeys(page: Page): Promise<string[]> {
+  return page.evaluate(
+    () =>
+      new Promise<string[]>((res, rej) => {
+        const req = indexedDB.open('trading-app', 1);
+        req.onsuccess = () => {
+          const r = req.result.transaction('kv').objectStore('kv').getAllKeys();
+          r.onsuccess = () => res(r.result.map(String));
+          r.onerror = () => rej(r.error);
+        };
+        req.onerror = () => rej(req.error);
+      }),
+  );
+}
+
+async function online(page: Page, url: string): Promise<void> {
+  await page.goto(url);
+  await page.getByText(LEDGER_TITLE).waitFor({ timeout: 30_000 });
+  const body = await page.locator('body').innerText();
+  check('ledger shows the golden report hash', body.includes(GOLDEN));
+  check('ledger shows rupee figures', /₹[\d,]+\.\d\d/.test(body));
+  check('badge says Online', body.includes('Online'));
+  await page.getByRole('tab', { name: 'Data' }).click();
+  await page.getByText('Connected').waitFor({ timeout: 15_000 });
+  check('data screen connects to the data service', true);
+}
+
+async function offline(page: Page, context: BrowserContext, service: Server): Promise<void> {
+  await context.setOffline(true);
+  await service.close();
+  await page.getByText('Offline', { exact: true }).waitFor({ timeout: 10_000 });
+  check('badge switches to Offline', true);
+  await page.getByRole('button', { name: 'Check again' }).click();
+  await page.getByText('Offline, showing last saved').waitFor({ timeout: 15_000 });
+  check('data screen falls back to the last saved answer', true);
+  await page.getByRole('tab', { name: 'Ledger' }).click();
+  await page.getByText(LEDGER_TITLE).waitFor({ timeout: 10_000 });
+  const body = await page.locator('body').innerText();
+  check('ledger still opens offline with the same hash', body.includes(GOLDEN));
+  const saved = await savedKeys(page);
+  check(
+    'the ledger view and the data answer are saved on the device',
+    saved.length >= 2,
+    saved.join(', '),
+  );
+}
+
+async function main(): Promise<void> {
+  const { web, service, appOrigin, serviceUrl } = await startFixtures();
   const browser = await chromium.launch({ channel: 'chrome', headless: true });
   const context = await browser.newContext({ viewport: { width: 390, height: 800 } });
   const page = await context.newPage();
   const errors: string[] = [];
-  const consoleLines: string[] = [];
-  page.on('console', (m) => consoleLines.push(`${m.type()}: ${m.text()}`));
   page.on('pageerror', (e) => errors.push(String(e)));
   try {
-    await page.goto(`${appOrigin}/?service=${encodeURIComponent(serviceUrl)}`);
-    await page.getByText('Own trades (Ledger A), demo scenario').waitFor({ timeout: 30_000 });
-    const body = await page.locator('body').innerText();
-    check('ledger shows the golden report hash', body.includes(GOLDEN));
-    check('ledger shows rupee figures', /₹[\d,]+\.\d\d/.test(body));
-    check('badge says Online', body.includes('Online'));
-
-    await page.getByRole('tab', { name: 'Data' }).click();
-    await page
-      .getByText('Connected')
-      .waitFor({ timeout: 15_000 })
-      .catch(async (e: unknown) => {
-        console.error(await page.locator('body').innerText(), errors, consoleLines);
-        throw e;
-      });
-    check('data screen connects to the data service', true);
-
-    await context.setOffline(true);
-    await service.close();
-    await page.getByText('Offline', { exact: true }).waitFor({ timeout: 10_000 });
-    check('badge switches to Offline', true);
-    await page.getByRole('button', { name: 'Check again' }).click();
-    await page.getByText('Offline, showing last saved').waitFor({ timeout: 15_000 });
-    check('data screen falls back to the last saved answer', true);
-
-    await page.getByRole('tab', { name: 'Ledger' }).click();
-    await page.getByText('Own trades (Ledger A), demo scenario').waitFor({ timeout: 10_000 });
-    const offlineBody = await page.locator('body').innerText();
-    check('ledger still opens offline with the same hash', offlineBody.includes(GOLDEN));
-
-    const saved = await page.evaluate(
-      () =>
-        new Promise<string[]>((res, rej) => {
-          const req = indexedDB.open('trading-app', 1);
-          req.onsuccess = () => {
-            const r = req.result.transaction('kv').objectStore('kv').getAllKeys();
-            r.onsuccess = () => res(r.result.map(String));
-            r.onerror = () => rej(r.error);
-          };
-          req.onerror = () => rej(req.error);
-        }),
-    );
-    check(
-      'the ledger view and the data answer are saved on the device',
-      saved.length >= 2,
-      saved.join(', '),
-    );
+    await online(page, `${appOrigin}/?service=${encodeURIComponent(serviceUrl)}`);
+    await offline(page, context, service);
     check('no page errors', errors.length === 0, errors.join(' | '));
   } finally {
     await browser.close();
