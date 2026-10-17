@@ -123,6 +123,11 @@ Every work package (WP) lists: SSD IDs, deliverable, acceptance test. Order with
 | 3.5 | Win/loss report with intervals and breakdowns; net and gross views | UC4, FR-W2–W4 | Numbers match the P1 metrics tests on the same snapshot |
 | 3.6 | Signed bundle export/import; hash-chain check; scheduled export prompt and persistence request | FR-X1–X4 | Break one byte → import refused; clear browser store → restore from bundle |
 | 3.7 | Phone-width layout, 44 px targets, no horizontal scroll | NFR-9 | Manual check at 360 px width |
+| 3.8 | `IExecutionAdapter` (SSD §9.4) and `PaperExecutionAdapter` over the P1 ledger, risk, cost and fill engine; idempotency keys; UI order entry uses only the interface | FR-P8, §9.4 | Conformance suite: same inputs through the adapter and through direct P1 calls give the golden replay hash; duplicate key returns the same result; `getCashBalance` returns a safe-integer paise value |
+| 3.9 | Snapshot client: signed download-only pull, hash and signature check, staleness from as-of date, GRAY-NODATA fallback, network-audit test | FR-P1–P3, §7.6, D26 | Tampered snapshot refused and the previous one kept; airplane mode keeps trading; test fails if any non-GET request, other origin or user data appears |
+| 3.10 | `IEntitlementService` (SSD §9.5) with a stub that grants every feature; screens ask it, nothing else; no prices, SKUs or store text | FR-P9, §9.5 | Lint/test: no store SDK import outside the future P11 adapter; core and harness do not import it; stub returns all features |
+
+Order entry (WP-3.3) goes through WP-3.8; WP-3.9 waits for WP-2.8 and D26.
 
 **P3 exit (R1):** the owner can place trades, see C1–C6 and win/loss with intervals; reconciliation passes; export/restore works.
 
@@ -136,6 +141,8 @@ Every work package (WP) lists: SSD IDs, deliverable, acceptance test. Order with
 | 4.4 | SignalDefinition (with claimed effect size, direction, horizon, periods), SignalLog written before the day's outcome | FR-S1, S2, S3 | Log rows have `written_at` before the bar's `available_at` |
 | 4.5 | Daily pre-open job: hash signals, append to audit chain, **external anchor** (OpenTimestamps), `unanchored` days excluded | FR-S9, D16, FR-S11 | Anchor receipt verifies; a missed day is marked and excluded |
 | 4.6 | GRAY-NODATA fallback | FR-S11 | Failing ephemeris/snapshot yields NODATA, not a halt |
+| 4.7 | On-device personal profile: encrypted birth-detail store (SQLite and keystore on Android; WebCrypto on web), offline gazetteer with historical timezones, local Lagna, Moon rāśi, janma nakṣatra, Vimshottari daśā/bhukti. Indu Lagna reads "pending verification" until WP-7.4 | FR-P4, FR-P5, NFR-4, D27 | Synthetic charts match the golden corpus on Node and Hermes; stored data is unreadable without the key; delete removes it; no network call in the flow |
+| 4.8 | Personal shields: Chandrāṣṭama window and informational banner (no cash percentage), Tara Bala category trader-to-stock (no score, no boost) | FR-P6, FR-P7 | All 27 stock stars against a fixed trader star match a hand-worked table (Pushya to Mūla = Vipat; the reverse would give Mitra); window start/end match hand-worked Moon ingress cases; banner text has no percentage or advice |
 
 **P4 exit (R1.5):** a row per instrument-day; anchors verifiable; signals hidden in the trader UI.
 
@@ -174,6 +181,17 @@ Expo build profile, SQLite store adapter, bundle import with snapshots, runbook 
 
 **Dependencies that need early (non-code) work:** SA text verification for 7.4 to 7.8; D17 and D20; IMD data licence and source; the nāma-akṣara table (D10) for 7.5.
 
+### P11 · Commercialization (after the R2 report; gated by D32)
+
+| WP | Deliverable | Depends on | Acceptance test |
+| ------ | ------ | ------ | ------ |
+| 11.1 | Legal and regulatory review recorded (SEBI, data protection, store policies, GST, refunds) | R2 report, D31 | Written outcome stored in `docs/`; D32 closed |
+| 11.2 | `commercial_tier_config` filled and store text written | 11.1 | No text in the SSD or code before 11.1 is Done |
+| 11.3 | Store-billing implementation of `IEntitlementService`, with verification chosen per platform | 11.1, 3.10, 6.1 | Purchase verified on a real device; refund and restore behave correctly; engine output identical with the gate on or off |
+| 11.4 | Conversion messaging, only if it carries an evidence tag and a null distribution | 11.1, R2 report | No hindsight "saved capital" figure without a stated method and untested label |
+
+Not part of P11 and not planned: live broker routing (D28).
+
 ### P8 onward (R4, R5, P10 forward trial)
 Planned after the R3 entries in hand are reported: nation chart registry and event datasets (FR-A8, R4); bonds, futures, forex (R5); forward paper trial (P10). Detailed work packages are written when P7 closes.
 
@@ -192,6 +210,14 @@ Planned after the R3 entries in hand are reported: nation chart registry and eve
 | D14, D15 | Trailing stop, min R:R | WP-5.x | Deferred to P5; SSD defaults (2.0 × ATR14; no minimum) |
 | D16 | Anchor method | WP-4.5 | Deferred to P4; default OpenTimestamps |
 | D21 | Evaluation-universe size | WP-2.9 | Deferred to the power note (WP-0.5) |
+| D26 | Snapshot hosting, signing, redistribution licence | WP-3.9 (and WP-2.8 content) | Open: static host or GCP bucket plus CDN; signing-key holder; may provider prices be published |
+| D27 | Astro engine on device, year length, gazetteer | WP-4.1 / WP-4.7 | Open: pure-TS engine-core if Hermes parity holds; 365.25-day daśā year |
+| D28 | Live broker execution | n/a | **Out of v1**; interface only |
+| D29 | Chandrāṣṭama banner wording | WP-4.8 | **Closed 2026-10-17:** informational, [H], no percentage |
+| D31 | Product direction | n/a | **Closed 2026-10-17:** commercial phase P11 after R2 |
+| D32 | Legal review before pricing or store text | WP-11.1 | **Open, mandatory gate** |
+| D33 | Guardrails and Tara scoring | n/a | **Closed 2026-10-17:** separate pre-registered arms PH-11, PH-12; not baseline |
+| D30 | Tara Bala direction and display | WP-4.8 | **Closed 2026-10-17, corrected same day:** trader to stock; category name only, no boost |
 
 ---
 
@@ -251,6 +277,8 @@ Planned after the R3 entries in hand are reported: nation chart registry and eve
 | 1.0 | 2026-10-16 | First master implementation plan, derived from SSD v0.9 §13 with work packages, acceptance tests and first-two-weeks start |
 | 1.1 | 2026-10-16 | Added WP-0.8 engine audit; WP-4.1 rewritten from the audit; P7 expanded to per-module work packages (WP-7.0 to 7.9); P8 stub; Appendix A |
 | 1.2 | 2026-10-16 | Audit questions closed (Appendix A): JV-try source, engine-core-only copy scope, Lahiri + mean node parameterised, synthetic golden corpus, recompute scripts reusable |
+| 1.3 | 2026-10-17 | Owner on-device spec merged (SSD v0.10): WP-3.8 execution adapter, WP-3.9 snapshot client, WP-4.7 personal profile, WP-4.8 personal shields; D26 to D30 |
+| 1.4 | 2026-10-17 | Commercial direction recorded (SSD v0.11): P11 added after R2; WP-3.10 entitlement seam; D31 to D33; PH-11 and PH-12 |
 
 ---
 

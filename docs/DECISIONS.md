@@ -14,6 +14,10 @@
 | D6 | Benchmark for comparator C2 | Nifty 50 total-return index (price index, flagged, if TRI is unavailable) plus a sector index per instrument | 2026-10-16 | Owner, plan §5 |
 | D7 | Virtual capital and risk caps | ₹10,00,000; max 10% per position; max loss 2% per trade; daily loss halt at 3% | 2026-10-16 | Owner, plan §5 |
 | D23 | Code size and modularity | Files at most 500 lines (warning above 300); functions at most 60 lines; complexity at most 10; no import cycles; cross-package imports through the package entry point only. Enforced by `pnpm verify` | 2026-10-16 | Owner; implemented in WP-0.1 |
+| D29 | Chandrāṣṭama banner wording | Informational, tagged [H], no cash-buffer percentage and no advice text | 2026-10-17 | Owner, SSD FR-P6 |
+| D30 | Tara Bala direction and display | Count from the trader's janma nakṣatra (count 1) to the stock's; show the category name and its classical group, not a 0 to 100% score, no boost or order downgrade. Corrected the same day: the first draft counted stock to trader, which gives opposite results (Pushya to Mūla is Vipat, not Mitra) | 2026-10-17 | Owner, SSD FR-P7 |
+| D31 | Product direction | Commercial use is allowed as a separate phase P11 after the R2 report; until then the SSD stays a research specification | 2026-10-17 | Owner, SSD §13.1 |
+| D33 | Chandrāṣṭama guardrails and Tara scoring | Kept out of the baseline engine; each becomes a pre-registered overlay arm (PH-11, PH-12) with frozen parameters and a null | 2026-10-17 | Owner, PH register |
 
 ## Astro-engine audit decisions (plan Appendix A)
 
@@ -73,3 +77,7 @@
 | D19 | Order handling on circuit-locked days | P1 (WP-1.7) | Entries expire; exits carry over to next open |
 | D20 | Kota zone names and paths | P7 (WP-7.6) | Resolve from SA |
 | D22 | Limit-fill rule | P1 (WP-1.7) | Trade-through of one tick; touch-only as sensitivity |
+| D26 | Snapshot hosting, signing key holder, and whether provider prices may be published | Before WP-3.9 | Static host or GCP bucket plus CDN, GET-only; until closed the app uses bundles |
+| D27 | Astro engine on device (Hermes parity), daśā year length, offline gazetteer source | WP-4.1 / WP-4.7 | engine-core if parity holds; 365.25-day year |
+| D28 | Live broker execution | n/a | Out of v1; interface only |
+| D32 | Legal and regulatory review before any pricing, tier or store text enters the SSD (SEBI, data protection, store policies, GST, refunds) | Gate for P11 | Mandatory; `commercial_tier_config` stays empty until closed |

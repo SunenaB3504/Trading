@@ -28,6 +28,8 @@
 | PH-08 | Any | Tājika Ithasāla at the registered moment improves entries | Ithasāla 1st–11th lords | FR-A13, D17 | C |
 | PH-09 | Any (personal) | Buyer Chandrāṣṭama days have worse discretionary outcomes | Buyer Moon, transit Moon | FR-A4 | S (with T23/H21 [V]) |
 | PH-10 | Any | Signal-state router decision table as a whole beats B0 | Outputs of entries that individually passed | FR-S8 | Only after ≥1 entry is Supported |
+| PH-11 | Any (personal) | Chandrāṣṭama execution guardrails (smaller size, limit-only entries) improve discretionary outcomes versus no guardrail | Buyer Moon, transit Moon | FR-P6, PH-09 | S (after PH-09) |
+| PH-12 | Any (personal) | Tara Bala category (trader to stock) separates entry outcomes | Trader and stock janma nakṣatra | FR-P7, FR-A2 | S |
 
 --------------------------------------------------------------------------------
 
@@ -97,9 +99,21 @@
 *   **Gate.**  Not run until at least one PH entry is Supported on out-of-sample data. Running the full v0.7 router before then would combine untested components and add a large number of free parameters.
 *   **Frozen.**  Decision table (inputs, precedence, ties, mapping to GREEN/YELLOW/RED/GRAY-NOSIGNAL/GRAY-NODATA); sizing per state within FR-T8 caps.
 
+#### PH-11 · Any bucket · Chandrāṣṭama execution guardrails
+*   **Claim [H].**  During the buyer's Chandrāṣṭama window, entries made with the guardrail (a position cap cut by a registered fraction, passive limit entries instead of market) have better net outcomes than the same entries without it.
+*   **Gate.**  After PH-09 is reported: the guardrail only makes sense if the window itself is shown to matter. The guardrail is **not** in the baseline engine or the default app behaviour (D33).
+*   **Frozen.**  The cap fraction, the limit-price rule and its fill handling (D22), window definition (FR-P6), horizon. Arms: B0 = same entries with no guardrail; B1 = guardrail applied on random matched days of the same count; A = guardrail in the window.
+*   **Null.**  No difference after costs and unfilled-order effects.
+
+#### PH-12 · Any bucket · Tara Bala category
+*   **Claim [H].**  Entries where the Tara category (trader to stock, FR-P7) is in the classical good group (2, 4, 6, 8, 9) have better outcomes than those in the bad group (3, 5, 7).
+*   **Frozen.**  The stock's nakṣatra convention (one of first-trade star or name-syllable star), grouping of the nine categories, horizon. No numeric boost or score. Arms: B0 = entries unfiltered; B1 = random relabelling with the same group sizes; B2 = reversed direction as a negative control; A = the registered grouping.
+*   **Null.**  No difference between groups beyond the placebo distribution.
+
 --------------------------------------------------------------------------------
 
 #### Change log
 | Version | Date | Change |
 | ------ | ------ | ------ |
 | 0.1 | 2026-10-16 | Created from SSD v0.7 §5.8 playbook. Protocols restated as PH-01 to PH-10 with tags, frozen parameters and expected nulls. Solar-ingress rule reclassified as a seasonality control (PH-05). Garbha split into rainfall stage (a) and market stage (b). Untestable or hindsight elements removed (operator-accumulation claim, order-book sizing, news-peak exits, instant exits through circuits). Router gated behind at least one supported entry. |
+| 0.2 | 2026-10-17 | Added PH-11 (Chandrāṣṭama execution guardrails) and PH-12 (Tara Bala category), moved out of the baseline by D33 |

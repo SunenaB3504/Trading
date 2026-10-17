@@ -1,5 +1,5 @@
 ### Mock Trading and Jyotisham Test App: Software Specification Document (SSD) and Master Implementation Plan
-*Draft v0.9, 2026-10-16. Platform specification only. Web first, Android second. Virtual money only. Not investment advice. It tests hypotheses; it does not claim that any astrological rule has predictive value. Default expectation for every astro rule is the null result.*
+*Draft v0.11, 2026-10-17. Platform specification only. Web first, Android second. Virtual money only. Not investment advice. It tests hypotheses; it does not claim that any astrological rule has predictive value. Default expectation for every astro rule is the null result.*
 
 **Status.**  Draft for owner review. The platform has not been built. One exploratory Python pilot was run before this document (Appendix A); its headline claim did not survive re-evaluation and is recorded as not supported. Items marked  **[D]**  are owner decisions with a proposed default;  **[V]**  must be verified against the vendor or source before use.
 
@@ -15,6 +15,10 @@
 Where this SSD and CN disagree on an  *engineering*  point, this SSD governs for the build; where they disagree on an  *experiment-design*  point, CN governs. Nothing in PH may change a requirement in this SSD; PH rules run only through the overlay contract (§9.3).
 
 **What changed in v0.8 (summary).**  The v0.3 to v0.7 additions presented playbook rules, trade tickets and a pilot "win" as if the effect were established, which contradicted §1.3 and §4. v0.8 restores the platform/experiment separation: playbook moved to PH; tickets become experimental rule-arm output; astro-blind universe; circuit-limit fills; corrected Indu Lagna; calendar-matched control for solar rules; full §11.3 evaluation standard with a positive control; Appendix A retracted and documented; §13.3 sprint roadmap removed. Full list in §18.
+
+**What changed in v0.11 (summary).**  Commercial direction recorded without commercial text. (1) A separate commercialization phase P11 after the R2 report, gated by legal review (D31, D32). (2) `IEntitlementService` added as an app-layer interface with no prices, SKUs or store text (§9.5, FR-P9). (3) Chandrāṣṭama execution guardrails and Tara Bala scoring stay out of the baseline and become pre-registered arms PH-11 and PH-12 (D33). (4) Tara Bala direction corrected to trader to stock (FR-P7, D30).
+
+**What changed in v0.10 (summary).**  Owner-supplied spec for the on-device app and the execution seam, reviewed and merged. (1) Download-only, zero-upload privacy model and offline fallback (§7.6, FR-P1 to FR-P4, D26). (2) On-device personal profile: local Kundli, encrypted storage, offline gazetteer (FR-P5, D27). (3) Personal risk shields: Chandrāṣṭama banner with **no cash percentage**, Tara Bala shown as a **category name, trader to stock, with no 0 to 100 score** (FR-P6, FR-P7). (4) `IExecutionAdapter` seam with a paper implementation (§9.4, FR-P8); balances are `Paise`, not BigInt; live-broker use is out of v1 (D28). Full list in §18.
 
 **What changed in v0.9 (summary).**  Review-driven. (1) Survivorship bias addressed: delisted names retained (FR-U9, E1 to E3 note, §10.5, R-risks). (2) Universe size now set by a power calculation in P0 (D8 revised, D21, §10.5), and the stock_archetypes.csv reconciliation is stated. (3) Simulator fixes: circuit detection (FR-T10), limit fills require trade-through (FR-T11), in-session fills restricted (FR-T2), stop/target fill rules (FR-T12), cost-model effective dating and rounding (FR-T4). (4) Anchoring strengthened: OpenTimestamps default, moved to R1.5, missed-day policy (FR-S9, D16). (5) Browser-storage persistence and Android data path (FR-X4, §7.5). (6) Evaluation standard: embargo, period-general placebo exclusion, claimed effect size, threshold precedence, MDE search procedure (§11.3, FR-S1, FR-S13). (7) P0 gains a platform spike, a power calculation and an early build of the §11.3 harness. Full list in §18.
 
@@ -213,9 +217,22 @@ When a **frozen rule arm** (never the trader UI by itself) produces a candidate,
 6.  **Composite score.**  Not in R2. The v0.7 "Personal Resonance Score" (40% fundamentals/DCF/analyst targets, 30% transit, 30% personal) needs data the platform does not have (FR-D11) and adds three free weights. It may return in R3 as its own PH entry with frozen weights and its own null.
 7.  **Flags (indicators, not overrides).**  Buyer Chandrāṣṭama window (T23 feature, logged); surveillance stage and price band (FR-U7); exit-blocked-by-circuit count.
 
+##### 5.9a On-device personalization and personal shields **[N]**
+| ID | Requirement | Pri | Rel |
+| ------ | ------ | ------ | ------ |
+| FR-P1 | **Download-only sync.**  Snapshot pull as in §7.6; signature and hash verified before use; a failed check keeps the previous snapshot. | M | R1.5 |
+| FR-P2 | **Zero upload.**  No birth data, balance, trade log or device telemetry is transmitted. No analytics or crash SDK. Enforced by a network-audit test. | M | R1 |
+| FR-P3 | **Offline behaviour.**  Last verified snapshot stays usable; staleness is measured against the snapshot's as-of date and the trading calendar; stale signal displays show GRAY-NODATA. | M | R1.5 |
+| FR-P4 | **Encrypted local storage of birth details.**  Name, date, time and place are stored encrypted. Android: SQLite with the key held in the platform keystore (SecureStore holds the key only, because of its small size limit). Web: WebCrypto AES-GCM with a non-extractable key in IndexedDB, and a visible notice that web protection is weaker. Deletion on request (NFR-4). | M | R1.5 |
+| FR-P5 | **Local chart computation.**  From the stored birth details the app computes Lagna, Moon rāśi, janma nakṣatra and Vimshottari daśā/bhukti with the engine from `packages/astro-engine`. Birth place resolves through a bundled offline gazetteer with historical timezone rules; the convention set (FR-A2) fixes ayanāṃśa, node and the daśā year length. Indu Lagna (FR-A12) is shown only after its golden vectors pass (WP-7.4); until then the field reads "pending verification". | M | R1.5 |
+| FR-P6 | **Chandrāṣṭama indicator.**  The window is when the sidereal Moon is in the 8th sign from the natal Moon rāśi, about 2.25 days a month, shown in IST with start and end. The banner is informational and tagged **[H]** with its hypothesis ID. It shows **no cash-buffer percentage and no advice text** (owner decision 2026-10-17). Any buffer rule would be its own PH entry, with a frozen parameter and a null. | M | R1.5 |
+| FR-P7 | **Tara Bala.**  Count inclusively from the **trader's** janma nakṣatra (count 1) to the **stock's** (27 nakṣatras, wrapping): count = ((stock index − trader index) mod 27) + 1; take it mod 9 (0 becomes 9): 1 Janma, 2 Sampat, 3 Vipat, 4 Kshema, 5 Pratyak, 6 Sadhana, 7 Naidhana, 8 Mitra, 9 Parama Mitra. Classical good group: 2, 4, 6, 8, 9; bad group: 3, 5, 7; Janma is mixed. Direction corrected 2026-10-17 (the earlier stock-to-trader draft was wrong; the two directions give opposite results). Worked case: trader Pushya (8) to stock Mūla (19) is 12, 12 mod 9 = 3, **Vipat**; the reverse count is 17, which gives Mitra and must not be used. The app shows the category name and its classical group, tagged [M]/[H] and [V] until checked against SA, **not a 0 to 100% score and no boost or order downgrade** (the composite stays deferred, §5.9 item 6). The stock's nakṣatra comes from one frozen convention (FR-A2): first-trade star (§10.4) or name-syllable star, not both; `time_assumed` is carried where it applies. | S | R1.5 |
+| FR-P8 | **Pluggable execution.**  All order entry goes through `IExecutionAdapter` (§9.4). v1 ships only the paper adapter. | M | R1 |
+| FR-P9 **[N]** | **Feature entitlement seam.**  Screens and services that belong to a possible paid layer ask `IEntitlementService` (§9.5) and never a store SDK. The baseline engine, the experiment harness and every research run are never gated. v1 ships only a stub that grants everything; no price, SKU, tier name or store text appears in the SSD or the code until D32 is closed. | M | R1 |
+
 ##### 5.10 UI/UX wireframe architecture
 - **Screen 1: Personal onboarding and chart input.**  Name, birth date, time, place; on-device computation of Lagna, Moon rāśi, janma nakṣatra, Indu Lagna (FR-A12), daśā/bhukti. Consent record (NFR-4).
-- **Screen 2: Daily dashboard.**  Ledger A and B summary; watchlist with daily signal states (from R2; shadow-only before), each with its PH/H-ID, evidence tag and, where available, its null distribution; Chandrāṣṭama shown as an informational banner. No "recommended cash buffer" or advice text.
+- **Screen 2: Daily dashboard.**  Ledger A and B summary; watchlist with daily signal states (from R2; shadow-only before), each with its PH/H-ID, evidence tag and, where available, its null distribution; Chandrāṣṭama shown as an informational banner per FR-P6 and Tara Bala as a category name per FR-P7. No "recommended cash buffer", percentage score or advice text.
 - **Screen 3: Order and ticket view.**  Manual order entry (trader role) with cost preview; experimental arm tickets (§5.9) shown read-only with their labels; R:R computed from the registered ATR multiples.
 - Data is end-of-day. There is no real-time streaming feed before FR-D8 is resolved.
 
@@ -235,7 +252,7 @@ When a **frozen rule arm** (never the trader UI by itself) produces a candidate,
 | NFR-1 | **Reproducibility.**  Any report can be regenerated from a bundle and a snapshot to byte-equal output. |
 | NFR-2 | **Cross-engine equality.**  A golden test runs on V8 (web and Node) and Hermes (Android) and requires equal features_hash (CN §11.5.2). The corpus includes boundary cases (angles within quantisation distance of a rāśi, nakṣatra or pāda edge) because trigonometric results may differ in the last bits between engines. |
 | NFR-3 | **Performance.**  Replay of 20 instruments × 10 years of daily data with all overlays completes in under 60 s on a mid-range laptop; UI interactions under 200 ms for cached data. Placebo and bootstrap runs are worker jobs and are exempt. |
-| NFR-4 | **Privacy.**  Birth data is personal data: minimum collection, consent record, encryption at rest where the platform allows, deletion on request (CN §12). |
+| NFR-4 | **Privacy.**  Birth data is personal data: minimum collection, consent record, encryption at rest where the platform allows, deletion on request (CN §12). The app sends no personal data or telemetry anywhere (FR-P2). |
 | NFR-5 | **Security.**  No secrets in the client. The data service has no write access to the ledger. Dependency versions pinned; lockfile reviewed. |
 | NFR-6 | **Offline.**  Replay and ledger views work without network. Live data features degrade with a clear message. |
 | NFR-7 | **Auditability.**  Hash-chained audit log for freezes, rule changes and data snapshot creation, with daily external anchors (D16). |
@@ -294,9 +311,15 @@ The router moved from L3 to L5 in v0.8: it is an overlay, not a risk control.
 *   **Framework default [D]:**  Expo universal app (React Native with react-native-web), since RB already assumes Expo and TypeScript. The same UI code targets web now and Android later.
 *   **Fallback gate:**  decided by a P0 spike (Expo web with SQLite-WASM or IndexedDB, a dense table and a chart); if the web experience for dense tables or charts is poor, replace only the app shell with a plain React web app on the same core. Nothing below the UI changes.
 *   **Storage adapter:**  one Store interface. Web: IndexedDB or SQLite-WASM. Android: SQLite. The same migrations run on both.
-*   **Android data path:**  the data service runs on the owner's machine and is not reachable from the phone by default. Android consumes **hashed snapshots carried inside bundles**; it does not fetch market data live in A1.
+*   **Android data path:**  the data service runs on the owner's machine and is not reachable from the phone by default. Android consumes **hashed snapshots carried inside bundles**; it does not fetch market data live in A1. Where D26 is closed, the app may also pull the signed daily snapshot described in §7.6; bundles remain the only way to move a ledger.
 *   **Device move:**  until a sync design is chosen, devices are moved by signed bundle export/import (FR-X1, FR-X2). No multi-device live sync in v1.
 *   **Android-readiness rules from day one:**  no DOM or browser API in core; no Node API in core; no Intl or locale dependence in any computed value; no BigInt in core; all dates in UTC with IST for display only.
+
+##### 7.6 Snapshot distribution and the privacy model **[N]**
+*   **One-way pull.**  On open or pull-to-refresh the app issues an HTTP `GET` for the day's signed snapshot (default name `base_tickets_YYYYMMDD.json`, from static storage or a CDN; host chosen by D26). The file holds only instrument-level, user-independent data and carries a manifest hash and a signature the app verifies before use. Its content is defined at WP-2.8; anything experimental in it is labelled per §5.9.
+*   **Nothing leaves the device.**  Birth details, balances, orders, fills and device data are never sent anywhere. The app contains no analytics or crash-reporting SDK. A test enforces that the app makes only `GET` requests, only to the allow-listed snapshot origin, with no user data in the URL, headers or body.
+*   **Offline.**  Without a network the app keeps working from the last verified snapshot. When the snapshot is older than the calendar allows, signal-dependent displays fall to GRAY-NODATA (FR-S11) and paper trading is not interrupted.
+*   **Licensing.**  Publishing market data through a public store or CDN is redistribution. Whether the snapshot may contain provider prices at all is part of D26 (NFR-10).
 
 --------------------------------------------------------------------------------
 
@@ -355,6 +378,38 @@ interface Clock { now(): Date; }   // replay: simulated; live-paper: wall clock
 
 ##### 9.3 Overlay contract
 Per CN §5: evaluate(candidate, context) -> { decision, size_multiplier?, direction?, reason_code, state_code?, features_hash }. Pure function of its inputs; versioned; carries its H- or PH-ID; sandboxed in the experiment service. The signal-state router and every PH protocol are implementations of this contract.
+
+##### 9.4 IExecutionAdapter **[N]**
+```ts
+interface IExecutionAdapter {
+  placeOrder(req: OrderRequest, idempotencyKey: string): Promise<ExecutionResult>;
+  cancelOrder(orderId: string): Promise<CancelResult>;
+  getOrders(): Promise<OrderRecord[]>;
+  getPositions(): Promise<Position[]>;
+  getCashBalance(): Promise<Paise>;   // integer paise as a safe-integer Number; never BigInt
+}
+type ExecutionResult =
+  | { status: 'accepted'; orderId: string }
+  | { status: 'rejected'; reasonCode: string };   // pre-trade risk, circuit lock, no cash, duplicate key
+```
+*   The owner's draft called the argument `TradeTicket`. It is `OrderRequest` here, because "ticket" already means the experimental arm output of §5.9.
+*   `placeOrder` accepts or rejects. Fills arrive later (next open, D3), so they are read through `getOrders`, not returned by the call.
+*   The same idempotency key returns the same result. The clock is injected at construction (principle 2).
+*   `PaperExecutionAdapter` wraps the ledger, risk checks, cost model and fill engine of P1; it is the only implementation in v1. Paper and rule-arm trades take this one path so their results stay comparable.
+*   A broker implementation is **not** part of v1 (D28). The interface is not a promise that live trading is "seamless": it would add broker API registration, regulatory compliance, partial fills and authentication.
+
+##### 9.5 IEntitlementService **[N]**
+```ts
+type FeatureId = string;   // e.g. 'astro_layer'; the set is configuration, not code
+interface IEntitlementService {
+  hasFeatureAccess(feature: FeatureId): Promise<boolean>;
+  getEntitlements(): Promise<readonly FeatureId[]>;
+}
+```
+*   Lives in the app layer. Core, `astro-engine` and the experiment harness do not import it.
+*   Tier names, prices, SKUs and store wording are held in an abstract `commercial_tier_config` that is empty in this SSD and filled only after legal review (D32).
+*   Real implementations (store billing, receipt or transaction verification) belong to P11. Open technical points for then: Play purchases normally need server-side verification, the web build has no store billing, and iOS is outside the current plan (D12).
+*   A feature gate decides what a user sees. It never changes what the engine computes or what an experiment records.
 
 --------------------------------------------------------------------------------
 
@@ -501,6 +556,7 @@ Sizing is relative:  **S**  about 1 week,  **M**  2 to 3 weeks,  **L**  4 to 6 w
 | **P8** | Event and country layer ( **R4** ) | Event datasets adapters, exposure map, nation chart registry, astro-on-top-of-objective comparison | L | Exposure map frozen; datasets snapshotted with lags; comparison report |
 | **P9** | Other instruments ( **R5** ) | Bonds, then futures, then forex, one at a time | L per instrument | Each instrument passes its own scenario and test vectors before the next |
 | **P10** | Forward paper trial | Live-paper arms over a registered period | ongoing | Target N reached or declared inconclusive |
+| **P11** | Commercialization ( **after R2**, gated by D32) | Legal and regulatory review; `commercial_tier_config` filled; store-billing implementations of `IEntitlementService`; store listing and consent text; any conversion messaging only with a null distribution and an untested label | M | Legal sign-off recorded; entitlement verified on a real device; no performance claim shown without its evidence tag |
 
 ##### 13.2 Dependencies
 ```
@@ -561,6 +617,14 @@ P0 now carries the web spike, the power note and the evaluation harness because 
 | D20 **[N]** | Kota zone names and path definitions | Resolve from SA before FR-A11 is coded |
 | D21 **[N]** | Evaluation-universe size and window | Set from the P0 power note (§10.5); rule is untestable at this scale if its MDE exceeds the claimed effect |
 | D22 **[N]** | Limit-fill rule | Trade-through of one tick required; touch-only as a sensitivity variant |
+| D26 **[N]** | Snapshot hosting, signing and licensing | GCP Cloud Storage with CDN, or any static host, serving signed daily files by `GET` only. Open points: who holds the signing key, and whether provider prices may be redistributed (NSE and Yahoo terms, NFR-10). Until closed, the snapshot carries only data we may publish and the app uses bundles |
+| D27 **[N]** | Astro-engine runtime and conventions on device | Pure-TS engine from `engine-core` (A1 to A5) if the WP-4.1 audit shows it runs on Hermes and V8 with equal output; otherwise a bundled WASM build is a new decision. Daśā year length 365.25 days; offline gazetteer source chosen at WP-4.7 |
+| D28 **[N]** | Live broker execution | **Out of v1.** Interface only (§9.4). Any broker adapter needs a scope change to §1.2/1.3, regulatory review and a new SSD section |
+| D29 **[N]** | Chandrāṣṭama banner wording | **Closed 2026-10-17:** informational, tagged [H], no cash-buffer percentage |
+| D30 **[N]** | Tara Bala direction and display | **Closed 2026-10-17:** **Reopened and corrected 2026-10-17:** count from the trader's nakṣatra to the stock's; category name only, no 0 to 100% score, no boost or downgrade |
+| D31 **[N]** | Product direction | **Closed 2026-10-17:** the platform may become a commercial product, as a separate phase P11 after the R2 report. Until then the SSD stays a research specification |
+| D32 **[N]** | Legal and regulatory review before any pricing, tier or store text enters the SSD | **Open, mandatory gate for P11:** SEBI rules on paid recommendations and research, data protection law, store policies, GST and refunds. Pricing stays out of the SSD until closed |
+| D33 **[N]** | Chandrāṣṭama execution guardrails and Tara Bala scoring | **Closed 2026-10-17:** not part of the baseline engine. Each is a separate pre-registered overlay arm (PH-11, PH-12) with its own frozen parameters and null |
 
 --------------------------------------------------------------------------------
 
@@ -613,6 +677,8 @@ P0 now carries the web spike, the power note and the evaluation harness because 
 | 0.7 | 2026-10-15 | Pure TS engine, integer paise, statutory fees, FR-A10 to FR-A14, ATR targets, section reordering |
 | 0.8 | 2026-10-16 | Restored platform/experiment separation. Non-goal: no buy/sell verdicts in UI. Principles 9 to 11 (astro-blind universe, external time anchor, H-ID for every rule). Playbook moved to PH register; §5.8 now a pointer. FR-U6 objective buckets; FR-U7 status, FR-U8 name history; FR-T10 circuit fills, FR-T11 limit fills from daily bars; money as safe-integer Number, BigInt dropped. FR-D10 to FR-D12 (band/ASM, fundamentals deferred, IMD rainfall). FR-A10 to FR-A14 fixed table, given PH links, demoted to R3; Indu Lagna corrected to 9th lords; Kota zone naming marked [V]; Garbha tested against rainfall first; Tājika gated by D17. FR-S5 adds B3 calendar-matched control; FR-S8 router as one overlay with decision table and split GRAY codes; FR-S9 external anchoring; FR-S13 positive control. §5.9 ticket rewritten as experimental arm output; R:R contradiction removed; lost trailing-stop value made D14; composite score deferred. §5.10 no streaming, no advice text. Router moved from L3 to L5. E1 excludes SME; E6 allows surveillance with FR-T10; "Crookeds" renamed "Speculative". §11.1.1 attribution made two-sided; execution effect sensitivity-only. §11.3 rewritten as a nine-step standard. §13.3 sprint roadmap removed. Risks and decisions D14 to D20 added. Appendix A retracted and documented. Broken formulas, broken cross-references (§5.12) and table columns fixed |
 | 0.9 | 2026-10-16 | Review-driven. FR-U9 survivorship control; FR-U1 `time_assumed` flag; E1 to E3 as of window start, E7 unadjusted cross-check; §10.5 power note, archetypes CSV reconciliation, D8 revised, D21. FR-T2 in-session fills restricted; FR-T4 DP charges, effective-dated rates, rounding; FR-T10 circuit detection and open-at-band block; FR-T11 trade-through default (D22); FR-T12 stop/target fills. FR-S1 claimed effect size and periods; FR-S9 moved to R1.5 with unanchored-day exclusion; FR-S13 MDE search procedure; D16 OpenTimestamps default. FR-X4 persistence; §7.5 Android data path and P0 web spike. C2 total-return index; §11.1 shorts scoped out; §11.3 embargo, period-general placebo exclusion, threshold precedence, missing-claim verdict rule. NFR-2 boundary cases. P0 expanded (spike, power note, harness first). Risks added. SA path updated |
+| 0.10 | 2026-10-17 | Owner spec for the on-device app merged after review. §7.6 snapshot distribution and privacy model; §5.9a FR-P1 to FR-P8 (download-only sync, zero upload, offline fallback, encrypted birth storage, local chart, Chandrāṣṭama banner without cash percentage, Tara Bala by category trader-to-stock, execution adapter); §9.4 `IExecutionAdapter` with `Paise` return and `OrderRequest` name; §7.5 and NFR-4 amended; D26 to D30 added. Review points raised: BigInt rule, Tara direction, unvalidated cash percentages, Hermes engine support, redistribution licensing, live-broker scope |
+| 0.11 | 2026-10-17 | Commercial direction without commercial text: P11 after R2, D31 to D33; `IEntitlementService` (§9.5, FR-P9) with empty `commercial_tier_config`; guardrails and Tara scoring moved to PH-11 and PH-12; Tara direction corrected. Reviewed and not adopted: BigInt ledger, hindsight "Saved Capital" card before R2, fundamentals in a free tier without a data source, Kite adapter in the v1 diagram |
 
 --------------------------------------------------------------------------------
 

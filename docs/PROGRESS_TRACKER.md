@@ -5,7 +5,7 @@
 **Status values:** `Not started` · `In progress` · `Blocked` · `Done`  
 **Done means** the work package's acceptance test (see the plan) has been run and the result is recorded in the *Acceptance result* column. Failures are recorded as failures; a work package with a failing test stays `In progress`.
 
-**Last updated:** 2026-10-16 (WP-2.5 done; P1 complete)
+**Last updated:** 2026-10-17 (plan v1.4: commercial direction recorded; WP-3.10 and P11 added)
 
 ## Phase summary
 
@@ -15,11 +15,12 @@
 | P0 · Decisions, skeleton and de-risking | 5 | 0 | 0 | 3 | 8 |
 | P1 · Core ledger and simulator | 11 | 0 | 0 | 0 | 11 |
 | P2 · Data service and universe | 5 | 0 | 0 | 4 | 9 |
-| P3 · Web MVP (R1) | 0 | 0 | 0 | 7 | 7 |
-| P4 · Chart module and shadow mode (R1.5) | 0 | 0 | 0 | 6 | 6 |
+| P3 · Web MVP (R1) | 0 | 0 | 0 | 10 | 10 |
+| P4 · Chart module and shadow mode (R1.5) | 0 | 0 | 0 | 8 | 8 |
 | P5 · Experiment harness and buyer-company overlay (R2) | 0 | 0 | 0 | 7 | 7 |
 | P6 · Android shell (A1) | 0 | 0 | 0 | 1 | 1 |
 | P7 · Jyotisham feature modules and PH entries (R3) | 0 | 0 | 0 | 10 | 10 |
+| P11 · Commercialization (after R2; gated by D32) | 0 | 0 | 0 | 4 | 4 |
 <!-- SUMMARY-END -->
 
 **Next work package:** WP-2.7 (objective bucket builder, needs bucket cut-offs), WP-2.8 (snapshot hashing and service endpoints), WP-2.4 (band/ASM/GSM, needs a data source); owner to confirm D8/D21, T6 and D25; WP-0.2, 0.4 also unblocked  
@@ -76,11 +77,14 @@
 | ------ | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
 | 3.1 | App shell, web Store adapter, data-service client, offline views | 0.4, 1.11, 2.8 | Not started |  |  |  |  |
 | 3.2 | Universe screen (instruments, buckets, flags, eligibility reasons) | 3.1, 2.7 | Not started |  |  |  |  |
-| 3.3 | Order entry, positions, cash | 3.1, 1.8 | Not started |  |  |  |  |
+| 3.3 | Order entry, positions, cash | 3.1, 1.8, 3.8 | Not started |  |  |  |  |
 | 3.4 | Ledger A / Ledger B side by side with snapshot ID | 3.3, 1.10 | Not started |  |  |  |  |
 | 3.5 | Win/loss report with intervals and breakdowns | 3.4 | Not started |  |  |  |  |
 | 3.6 | Signed bundle export/import; scheduled export; persistence request | 3.1, 1.3 | Not started |  |  |  |  |
 | 3.7 | Phone-width layout and accessibility | 3.2 | Not started |  |  |  |  |
+| 3.8 | IExecutionAdapter and PaperExecutionAdapter (Paise balances, idempotency keys) | 1.8, 1.10 | Not started |  |  |  | Added 2026-10-17; 3.3 uses it |
+| 3.9 | Snapshot client: signed download-only pull, staleness, network-audit test | 2.8, 3.1, D26 | Not started |  |  |  | Added 2026-10-17 |
+| 3.10 | IEntitlementService seam with grant-all stub; no prices or store text | 3.1 | Not started |  |  |  | Added 2026-10-17; FR-P9 |
 
 ## P4 · Chart module and shadow mode (R1.5)
 
@@ -92,6 +96,8 @@
 | 4.4 | SignalDefinition and daily SignalLog | 4.3, 3.6 | Not started |  |  |  |  |
 | 4.5 | Pre-open job: hash signals, external anchor, unanchored-day exclusion | 4.4 | Not started |  |  |  | D16 |
 | 4.6 | GRAY-NODATA fallback | 4.5 | Not started |  |  |  |  |
+| 4.7 | On-device personal profile: encrypted birth store, gazetteer, local Kundli | 4.1, 4.2, 3.1, D27 | Not started |  |  |  | Added 2026-10-17; Indu Lagna pending WP-7.4 |
+| 4.8 | Personal shields: Chandrashtama banner (no percentage), Tara Bala category | 4.7 | Not started |  |  |  | Added 2026-10-17; D29, D30 |
 
 ## P5 · Experiment harness and buyer-company overlay (R2)
 
@@ -126,6 +132,15 @@
 | 7.8 | Garbha Dharana tracker and IMD rainfall adapter (FR-A14, FR-D12) | 7.0 | Not started |  |  |  | IMD data terms |
 | 7.9 | PH entries run one at a time through the overlay contract | 7.1-7.8 as needed | Not started |  |  |  |  |
 
+## P11 · Commercialization (after R2; gated by D32)
+
+| WP | Work package | Depends on | Status | Started | Done | Acceptance result | Notes |
+| ------ | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
+| 11.1 | Legal and regulatory review recorded | 5.6, D31 | Not started |  |  |  | D32 gate |
+| 11.2 | commercial_tier_config and store text | 11.1 | Not started |  |  |  | No text before 11.1 |
+| 11.3 | Store-billing IEntitlementService with per-platform verification | 11.1, 3.10, 6.1 | Not started |  |  |  |  |
+| 11.4 | Conversion messaging with evidence tag and null | 11.1, 5.6 | Not started |  |  |  | No hindsight claims |
+
 ---
 
 ## Decisions status (full text in `docs/DECISIONS.md` once created)
@@ -133,6 +148,14 @@
 | # | Decision | Status |
 | ------ | ------ | ------ |
 | D3 | Fill rule | Closed 2026-10-16: next open; MOC for human orders |
+| D31 | Product direction | Closed 2026-10-17: commercial phase P11 after R2 |
+| D32 | Legal review before pricing or store text | Open; mandatory gate for P11 |
+| D33 | Guardrails and Tara scoring | Closed 2026-10-17: separate arms PH-11, PH-12; not baseline |
+| D29 | Chandrashtama banner wording | Closed 2026-10-17: informational, [H], no cash percentage |
+| D30 | Tara Bala direction and display | Closed 2026-10-17, corrected same day: trader to stock; category name only |
+| D26 | Snapshot hosting, signing, redistribution licence | Open until WP-3.9 |
+| D27 | Astro engine on device, year length, gazetteer | Open until WP-4.1 / 4.7 |
+| D28 | Live broker execution | Out of v1; interface only |
 | D4 | Cross-check tolerance | Closed 2026-10-16: 0.5% on close |
 | D6 | Benchmark | Closed 2026-10-16: Nifty 50 TRI + sector index |
 | D7 | Capital and caps | Closed 2026-10-16: Rs 10,00,000; 10% / 2% / 3% |
@@ -169,3 +192,6 @@
 | 2026-10-17 | WP-2.3 Done: provider cross-check, verified on real NSE and Yahoo data |
 | 2026-10-17 | WP-2.6 Done: eligibility rules E1-E7 with frozen hashed thresholds (D25 proposed) |
 | 2026-10-17 | WP-2.5 Done: lifecycle and as-of universe on real merger data (T12) |
+| 2026-10-17 | SSD v0.10 and plan v1.3: owner on-device spec merged after review. Added WP-3.8, 3.9, 4.7, 4.8; D26 to D30; D29 and D30 closed. WP-2.8 still on hold |
+| 2026-10-17 | D30 corrected: Tara Bala counts trader to stock (FR-P7, WP-4.8 test case now Pushya to Mula = Vipat) |
+| 2026-10-17 | SSD v0.11 and plan v1.4: commercial direction recorded without commercial text. Added WP-3.10, phase P11 (WP-11.1 to 11.4), D31 to D33, PH-11 and PH-12 |
