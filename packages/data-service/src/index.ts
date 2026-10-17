@@ -51,3 +51,16 @@ export type {
   SuspensionGap,
   UniverseAsOf,
 } from './universe/lifecycle';
+export { createSnapshot, verifySnapshot } from './snapshot/snapshot';
+export type {
+  DataSnapshot,
+  FrozenSeries,
+  SeriesEntry,
+  SnapshotRequest,
+  SnapshotStatus,
+} from './snapshot/snapshot';
+export { SnapshotStore } from './snapshot/snapshotStore';
+export type { StoredSnapshot } from './snapshot/snapshotStore';
+export { createHandler } from './service/handler';
+export { startServer } from './service/server';
+export type { ProviderHealth, ServiceDeps, ServiceRequest, ServiceResponse } from './service/types';

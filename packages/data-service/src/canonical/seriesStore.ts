@@ -34,6 +34,10 @@ export class SeriesStore {
     );
   }
 
+  corporateActions(instrumentId: string): CorporateAction[] {
+    return (this.actions.get(instrumentId) ?? []).map((a) => ({ ...a }));
+  }
+
   instruments(): string[] {
     return [...this.unadj.keys()].sort();
   }

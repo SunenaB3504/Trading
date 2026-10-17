@@ -13,7 +13,9 @@ interface Entry {
   cache?: { rows: number; first: string; last: string };
 }
 const root = process.cwd();
-const manifest = JSON.parse(readFileSync(join(root, 'research', 'pilot', 'PROVENANCE.json'), 'utf8')) as {
+const manifest = JSON.parse(
+  readFileSync(join(root, 'research', 'pilot', 'PROVENANCE.json'), 'utf8'),
+) as {
   files: Entry[];
 };
 const sha = (path: string): string => createHash('sha256').update(readFileSync(path)).digest('hex');

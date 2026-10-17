@@ -5,7 +5,7 @@
 **Status values:** `Not started` · `In progress` · `Blocked` · `Done`  
 **Done means** the work package's acceptance test (see the plan) has been run and the result is recorded in the *Acceptance result* column. Failures are recorded as failures; a work package with a failing test stays `In progress`.
 
-**Last updated:** 2026-10-17 (WP-0.2 done)
+**Last updated:** 2026-10-17 (WP-2.8 done)
 
 ## Phase summary
 
@@ -14,7 +14,7 @@
 | ------ | ------ | ------ | ------ | ------ | ------ |
 | P0 · Decisions, skeleton and de-risking | 6 | 0 | 0 | 2 | 8 |
 | P1 · Core ledger and simulator | 11 | 0 | 0 | 0 | 11 |
-| P2 · Data service and universe | 5 | 0 | 0 | 4 | 9 |
+| P2 · Data service and universe | 6 | 0 | 0 | 3 | 9 |
 | P3 · Web MVP (R1) | 0 | 0 | 0 | 10 | 10 |
 | P4 · Chart module and shadow mode (R1.5) | 0 | 0 | 0 | 8 | 8 |
 | P5 · Experiment harness and buyer-company overlay (R2) | 0 | 0 | 0 | 7 | 7 |
@@ -23,7 +23,7 @@
 | P11 · Commercialization (after R2; gated by D32) | 0 | 0 | 0 | 4 | 4 |
 <!-- SUMMARY-END -->
 
-**Next work package:** WP-2.7 (objective bucket builder, needs bucket cut-offs), WP-2.8 (on hold), WP-2.4 (band/ASM/GSM, needs a data source), WP-0.4 (Expo web spike); owner to confirm D8/D21, T6, D25, D26, D27, D32  
+**Next work package:** WP-2.7 (objective bucket builder, needs bucket cut-offs), WP-2.4 (band/ASM/GSM, needs a data source), WP-0.4 (Expo web spike); owner to confirm D8/D21, T6, D25, D26, D27, D32  
 **Open blockers:** none
 
 ---
@@ -68,7 +68,7 @@
 | 2.5 | Delisted and merged instruments retained; last-trade date and reason | 2.1 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 381 tests, 11 new. On real NSE bars around two mergers: HDFC's last session is found as 2023-07-12 and linked to the merger when the action is supplied; Mindtree's last session 2022-11-22 is recorded with an honest `unknown` reason when no action is supplied; HDFC is in the universe as of 2023-07-10 although delisted three sessions later, and drops out once it has been silent longer than allowed (the survivorship acceptance test); LTI and LTIM are one stock; long gaps inside a series are listed as suspensions; delisting fields for the instrument record are produced | The reason for a cessation cannot be read from prices (Mindtree traded for days after its merger took effect), so it needs a corporate-action record or a second source (decision T12). Default: ceased after 10 sessions without a bar. The recording is short, so tests use a 3-session threshold. A real delisting list (NSE) is not yet ingested |
 | 2.6 | Eligibility rules E1-E7 with recorded first failure; `time_assumed` flag handling | 2.4, 2.5 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 370 tests, 23 new. Rules E1-E7 evaluated in order, every result reported and the first failure recorded; each threshold tested exactly at the boundary; thresholds frozen in a hashed config (`elig-v1`, changing any value changes the hash and every result carries it); point-in-time facts built from real NSE bars using only data before the window (verified by truncating later bars) and fed through the rules end to end | Done ahead of 2.4 and 2.5 because the rules need only facts the data already gives. Thresholds are PROPOSED (decision D25): Rs 5 crore median daily traded value, 60-session warm-up, at most 5 missing sessions, 98% two-provider coverage. Evidence: on 2025-10-16, 1,000 main-board equities traded at least Rs 5 crore and 494 at least Rs 25 crore. Surveillance and price bands are flagged `not_recorded` until WP-2.4; an instrument with no sourced listing timestamp passes but is flagged `time_assumed`; liquidity is close x volume (an approximation of exchange traded value); E7 fails when coverage is not measured |
 | 2.7 | Objective bucket builder (astro-blind, versioned) | 2.6 | Not started |  |  |  |  |
-| 2.8 | DataSnapshot creation and hashing; service endpoints | 2.3, 2.7 | Not started |  |  |  |  |
+| 2.8 | DataSnapshot creation and hashing; service endpoints | 2.3, 2.7 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 399 tests. Same inputs give the same id regardless of clock, order or build tag; tampering caught; all SSD §9.2 endpoints plus a local HTTP server tested on real NSE bars | Snapshot is point in time (asOf). `/status` gives lifecycle only; surveillance and band stay null with a flag until WP-2.4. Signing and hosting wait for D26 / WP-3.9. WP-2.7 buckets are not in the snapshot yet |
 | 2.9 | Universe pull (hand-traded set and evaluation universe) and disputes list | 2.8, 0.5 | Not started |  |  |  |  |
 
 ## P3 · Web MVP (R1)
@@ -196,3 +196,4 @@
 | 2026-10-17 | D30 corrected: Tara Bala counts trader to stock (FR-P7, WP-4.8 test case now Pushya to Mula = Vipat) |
 | 2026-10-17 | SSD v0.11 and plan v1.4: commercial direction recorded without commercial text. Added WP-3.10, phase P11 (WP-11.1 to 11.4), D31 to D33, PH-11 and PH-12 |
 | 2026-10-17 | WP-0.2 Done: pilot frozen in research/pilot with hashes, data ranges and provenance findings (Appendix A.6) |
+| 2026-10-17 | WP-2.8 Done: snapshot creation and hashing, immutable snapshot store, endpoint handler and local HTTP server |
