@@ -81,6 +81,9 @@ importers:
 
   packages/astro-engine:
     dependencies:
+      '@trading/core':
+        specifier: workspace:*
+        version: link:../core
       astronomy-engine:
         specifier: 2.1.19
         version: 2.1.19

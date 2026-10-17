@@ -5,3 +5,7 @@ export type { Chart, House, Placement, PlanetPlacement } from './chart';
 export { tropicalPositions } from './ephemeris';
 export type { Moment, TropicalPositions } from './ephemeris';
 export type { PlanetKey } from './tables';
+export { makeChart, nameInForce } from './entity';
+export type { ChartEntity, ChartKind } from './entity';
+export { DEFAULT_RULES, freezeConventions, isIntact, requireRules } from './registry';
+export type { FrozenConventions, Rules } from './registry';
