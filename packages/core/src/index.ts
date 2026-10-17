@@ -13,3 +13,4 @@ export * from './ledger';
 export * from './risk';
 export * from './analytics';
 export * from './replay';
+export * from './experiment';

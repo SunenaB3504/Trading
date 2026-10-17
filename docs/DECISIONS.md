@@ -36,6 +36,9 @@
 | T4 | Cost rates are held as parts per billion of turnover (Rs 10 per crore = 1,000 ppb), each line rounded half-up to paise, GST rounded once on the taxable total | Exchange charges are quoted per crore and cannot be exact in ppm; matches the registered rounding rule (FR-T4) | 2026-10-16 |
 | T5 | Cost schedule starts 2020-04-01; NSE exchange charge and IPFT are combined in one line using the first volume slab; BSE before 2022-12-01 falls back to NSE rates, flagged | Account turnover is far below the first slab boundary; BSE early rates not found | 2026-10-16 |
 
+| T6 | In the §11.3 harness, decisions use the non-overlapping t-test, a batch-means test (blocks of 4 x H) and the shifted-signal placebo; the joint block bootstrap (centred p) is reported as a descriptive interval only | Measured on 1,000 null panels: the centred bootstrap p rejects 9-12% of true nulls at a nominal 5% (its spread is about 8% too small); the other three are correctly sized (4.9%, 4.9%, 6.3%). **Needs the owner's confirmation and an amendment to SSD §11.3 step 4** | 2026-10-17 |
+| T7 | The MDE search declares an effect detected when the non-overlapping test AND the batch-means test are significant and the difference is positive (placebo optional, off by default for speed) | Matches the conjunction used for "Supported"; leaving the placebo out makes the MDE optimistic, and production runs should switch it on | 2026-10-17 |
+
 ## Scope decisions
 
 | Decision | Outcome | Date |
