@@ -735,3 +735,5 @@ Pilot instruments and periods may not be used as confirmatory evidence for any P
 2.  Data source, symbols, date range and snapshot hash for each.
 3.  The full list of rule variants and parameter values tried in the pilot (feeds FR-S7 and M in §11.3 step 7).
 4.  Which row of the original A.2 table the +8.40% / t = 3.61 figures belong to.
+
+**Status (WP-0.2, 2026-10-17).**  The frozen copy, hashes and findings are in `research/pilot/` (`PROVENANCE.md`, `PROVENANCE.json`). Items 2 and 3 are recorded as far as the files allow: 22 Yahoo adjusted-close caches ending 2026-10-14, and 499 saved result rows with an unknown number of unrecorded runs. Item 4: the +8.40% / +4.98% / drawdown figures appear in no file; t = 3.61 and p = 0.0003 appear only on the Track 2 Cancer-ingress row of the "Comprehensive" report, and a real-data re-run of that rule gave 19 events, −0.6 points, p = 0.78. Item 1 is only partly met: the scripts behind A.2 and A.3 are not on this machine. The owner is asked to add them if they exist elsewhere.

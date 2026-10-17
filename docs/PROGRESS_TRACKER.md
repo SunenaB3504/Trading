@@ -5,14 +5,14 @@
 **Status values:** `Not started` · `In progress` · `Blocked` · `Done`  
 **Done means** the work package's acceptance test (see the plan) has been run and the result is recorded in the *Acceptance result* column. Failures are recorded as failures; a work package with a failing test stays `In progress`.
 
-**Last updated:** 2026-10-17 (plan v1.4: commercial direction recorded; WP-3.10 and P11 added)
+**Last updated:** 2026-10-17 (WP-0.2 done)
 
 ## Phase summary
 
 <!-- SUMMARY-START -->
 | Phase | Done | In progress | Blocked | Not started | Total |
 | ------ | ------ | ------ | ------ | ------ | ------ |
-| P0 · Decisions, skeleton and de-risking | 5 | 0 | 0 | 3 | 8 |
+| P0 · Decisions, skeleton and de-risking | 6 | 0 | 0 | 2 | 8 |
 | P1 · Core ledger and simulator | 11 | 0 | 0 | 0 | 11 |
 | P2 · Data service and universe | 5 | 0 | 0 | 4 | 9 |
 | P3 · Web MVP (R1) | 0 | 0 | 0 | 10 | 10 |
@@ -23,7 +23,7 @@
 | P11 · Commercialization (after R2; gated by D32) | 0 | 0 | 0 | 4 | 4 |
 <!-- SUMMARY-END -->
 
-**Next work package:** WP-2.7 (objective bucket builder, needs bucket cut-offs), WP-2.8 (snapshot hashing and service endpoints), WP-2.4 (band/ASM/GSM, needs a data source); owner to confirm D8/D21, T6 and D25; WP-0.2, 0.4 also unblocked  
+**Next work package:** WP-2.7 (objective bucket builder, needs bucket cut-offs), WP-2.8 (on hold), WP-2.4 (band/ASM/GSM, needs a data source), WP-0.4 (Expo web spike); owner to confirm D8/D21, T6, D25, D26, D27, D32  
 **Open blockers:** none
 
 ---
@@ -33,7 +33,7 @@
 | WP | Work package | Depends on | Status | Started | Done | Acceptance result | Notes |
 | ------ | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
 | 0.1 | git init; monorepo skeleton; strict TS; lint (size caps, import boundaries, cycles); Vitest; `pnpm verify` | - | Done | 2026-10-16 | 2026-10-16 | `pnpm verify` green twice: typecheck, lint, size, cycles, 11 tests (incl. core cannot import fs/react/Math.random/Date.now; 501-line file fails; core-to-app import and cycles flagged) | Committed and pushed as 32dbc9a |
-| 0.2 | Freeze pilot code and data into research/pilot with provenance file | 0.1 | Not started |  |  |  |  |
+| 0.2 | Freeze pilot code and data into research/pilot with provenance file | 0.1 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 384 tests. 80 files hashed, 50 copied read-only; `tools/pilotProvenance.test.ts` fails on any change | The A.2 script and the A.3/A.4 re-evaluation script are not on this machine; +8.40% figures cannot be traced; t = 3.61 belongs to the Track 2 Cancer-ingress row (real-data re-run p = 0.78). Owner: add the scripts if they exist elsewhere |
 | 0.3 | Decision log (docs/DECISIONS.md): D3, D4, D6, D7, D23 and audit answers | - | Done | 2026-10-16 | 2026-10-16 | docs/DECISIONS.md created with closed, scope and open decisions | |
 | 0.4 | Web spike: Expo web vs plain React; dense table, chart, Store on IndexedDB and SQLite-WASM | 0.1 | Not started |  |  |  | Decides D1 |
 | 0.5 | Power note: expected non-overlapping n and MDE for universe sizes 20/50/100/200 | 0.6 | Done | 2026-10-17 | 2026-10-17 | docs/POWER_NOTE.md produced from a reproducible simulation (tools/powerNote.ts, 40 cells). Company-specific signals: MDE 1.0% (100 names, 4 years) and 0.7% (8 years) over a 20-session hold; 2.3% over 60 sessions at 8 years; 50 to 100 names cuts the MDE by 39%, 100 to 200 by 27%. Market-wide signals: about 3.5% at 8 years whatever the number of names; a 60-session market-wide rule gives no verdict until about 16 years | Recommendation (awaiting owner confirmation): about 100 names and at least 8 years of history for the evaluation universe; hand-traded set stays 15-20. Synthetic prices, independent noise and equal volatility, so real MDEs will be larger. The PH register has no numeric claimed effects yet, so no rule can be judged adequately powered |
@@ -195,3 +195,4 @@
 | 2026-10-17 | SSD v0.10 and plan v1.3: owner on-device spec merged after review. Added WP-3.8, 3.9, 4.7, 4.8; D26 to D30; D29 and D30 closed. WP-2.8 still on hold |
 | 2026-10-17 | D30 corrected: Tara Bala counts trader to stock (FR-P7, WP-4.8 test case now Pushya to Mula = Vipat) |
 | 2026-10-17 | SSD v0.11 and plan v1.4: commercial direction recorded without commercial text. Added WP-3.10, phase P11 (WP-11.1 to 11.4), D31 to D33, PH-11 and PH-12 |
+| 2026-10-17 | WP-0.2 Done: pilot frozen in research/pilot with hashes, data ranges and provenance findings (Appendix A.6) |

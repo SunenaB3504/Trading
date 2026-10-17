@@ -1,0 +1,778 @@
+{
+ "source": "Study-docs/research",
+ "sourceLastCommit": "60a7bd2fc506a7cf548d6c24b0031912241b0dab",
+ "frozenOn": "2026-10-17",
+ "note": "Files with copied=false were hashed but not copied (git-ignored data or a public ephemeris file).",
+ "files": [
+  {
+   "path": "archive/CLASSICAL_SOURCES_RESEARCH_REPORT.md",
+   "bytes": 14605,
+   "sha256": "ecfe7979dc0e693a92bea954bc7ce432f3a7dfa3c612f210488f55c73b0d5e45",
+   "copied": false
+  },
+  {
+   "path": "archive/e2e_testing_framework_v2_ORIGINAL_synthetic.py",
+   "bytes": 12258,
+   "sha256": "3b5fa7db6a1ca6fc9dae039018efbe3120bfce4c81a3e2ddf814bebae5066984",
+   "copied": true
+  },
+  {
+   "path": "archive/PROMPT_event_exposure_and_selection.md",
+   "bytes": 5699,
+   "sha256": "e04d269f0a674f220ce802ecc3a5562f395660e5c7c16c21deacc0c149e16184",
+   "copied": false
+  },
+  {
+   "path": "archive/RUN1_Brihat_Samhita_T1-T7.md",
+   "bytes": 79160,
+   "sha256": "5fac67038b45cae92d57b5e82f7ce2c012b39d69230684194427cbf86308a43a",
+   "copied": false
+  },
+  {
+   "path": "archive/RUN2_Chakras_SBC_Kota_Latta.md",
+   "bytes": 51865,
+   "sha256": "2c8ce2f181ffe19af8475f5284d8c8db29fb6fbea6e0c4b75c50af29af05483a",
+   "copied": false
+  },
+  {
+   "path": "archive/RUN3_IndLagna_Hora_Choghadiya_Svarodaya.md",
+   "bytes": 55018,
+   "sha256": "28ca28aaf5d97be1fba78c61d7098aa22f680f1f66756ae0ae021ee491fa364e",
+   "copied": false
+  },
+  {
+   "path": "bphs_nature_backtest_engine.py",
+   "bytes": 8158,
+   "sha256": "2ec17d7b87417693ddee1cdb351e570754600632ce968a527ca11761b63aed03",
+   "copied": true
+  },
+  {
+   "path": "de421.bsp",
+   "bytes": 16788480,
+   "sha256": "a20a7139da04cbc462454634918e9a9ca69127044e2cc9d4f9c16e238d2deedc",
+   "copied": false
+  },
+  {
+   "path": "e2e_POLYCAB.json",
+   "bytes": 7189,
+   "sha256": "0ce48f1178acb8a85f91b15f67aae518fc39108753ae06e5553e2c371c0c3297",
+   "copied": true
+  },
+  {
+   "path": "e2e_TCS.json",
+   "bytes": 5847,
+   "sha256": "d733067f7851a3609658246cadb25eb5ef29184d0fe80e36237a3b124ed2ff80",
+   "copied": true
+  },
+  {
+   "path": "e2e_testing_framework_v2.py",
+   "bytes": 15599,
+   "sha256": "6114f7ea0d8bbd13cdc4852826d73ebd43ef3de39e558b7ec500a7dd2b38a582",
+   "copied": true
+  },
+  {
+   "path": "hg_run.log",
+   "bytes": 1069,
+   "sha256": "9dca6dd6aa57a2f187efb942560b5d07fe9e397a9691158854720dfe67c99176",
+   "copied": true
+  },
+  {
+   "path": "hg_run2.log",
+   "bytes": 1070,
+   "sha256": "98ddb29105498f9a7b6a9cd727f1205950ce9c15f34a8b491eac55de125d4529",
+   "copied": true
+  },
+  {
+   "path": "hg_run3.log",
+   "bytes": 1070,
+   "sha256": "98ddb29105498f9a7b6a9cd727f1205950ce9c15f34a8b491eac55de125d4529",
+   "copied": true
+  },
+  {
+   "path": "hg_run4.log",
+   "bytes": 1070,
+   "sha256": "98ddb29105498f9a7b6a9cd727f1205950ce9c15f34a8b491eac55de125d4529",
+   "copied": true
+  },
+  {
+   "path": "HIGH_GROWTH_E2E_REPORT.md",
+   "bytes": 30468,
+   "sha256": "d3d0c7d1d45187f8947324456d4653cda8f7005adb86f06c50dc8bd14898f151",
+   "copied": true
+  },
+  {
+   "path": "high_growth_e2e_results.csv",
+   "bytes": 14835,
+   "sha256": "574b6ffd9ddfc7fc3e0bd58e82b9511f90f7fef5358e0f64c324153f01c83291",
+   "copied": true
+  },
+  {
+   "path": "master_stock_groupings_and_sample_universe.md",
+   "bytes": 11602,
+   "sha256": "c4e45a392e59188c43809100fa2d364ddb7e95d2ba26ca4653726524bf5ef9bb",
+   "copied": true
+  },
+  {
+   "path": "medhini-jyotisham-financial-rules.md",
+   "bytes": 11649,
+   "sha256": "eefdb923c3449811ea365803d0ca64aba405e79bcdcd4e3d133a8e65801b777a",
+   "copied": true
+  },
+  {
+   "path": "mundane-astrology-quant-rules.md",
+   "bytes": 8644,
+   "sha256": "d930bf7f0a53a6ff5997f3c2aa6452478293303557ede8012186e6a8859829be",
+   "copied": true
+  },
+  {
+   "path": "mundane_geopolitical_backtest_engine.py",
+   "bytes": 8910,
+   "sha256": "8a07f610bf39cc2fd1769b6b8489c0b798c16973b7db46f4f0df3768798173a9",
+   "copied": true
+  },
+  {
+   "path": "mundane_jyotisham_geopolitical_universe.md",
+   "bytes": 9214,
+   "sha256": "3184ff38daaf057b97b883a835c4604644edcd11ec57ef3780c17e9812d89f59",
+   "copied": true
+  },
+  {
+   "path": "nature_impacted_stock_universe.md",
+   "bytes": 5027,
+   "sha256": "1c636720ded549789389f3fc15c38c7e70a64c0a916bbfec1dec33d2ea4e91c2",
+   "copied": true
+  },
+  {
+   "path": "price_cache_ALOKINDS.csv",
+   "bytes": 418733,
+   "sha256": "139bc4b931d446822abda0028e7727616c82e368e033f569cadfbc12b7ef4228",
+   "copied": false,
+   "cache": {
+    "header": [
+     "Date",
+     "Close",
+     "High",
+     "Low",
+     "Bench"
+    ],
+    "rows": 5530,
+    "first": "2004-06-01",
+    "last": "2026-10-14"
+   }
+  },
+  {
+   "path": "price_cache_CARTRADE.csv",
+   "bytes": 187433,
+   "sha256": "93cb52a7698d2c972bbdad6bb52b01d13a37fbfbc8cebb50bd0d25d70ba13792",
+   "copied": false,
+   "cache": {
+    "header": [
+     "Date",
+     "Close",
+     "High",
+     "Low",
+     "Bench"
+    ],
+    "rows": 4681,
+    "first": "2007-09-17",
+    "last": "2026-10-14"
+   }
+  },
+  {
+   "path": "price_cache_DELHIVERY.csv",
+   "bytes": 183702,
+   "sha256": "a3e4986c30a6ba43771d6a7ec7b97e5f29670358efdc9515e532075c7134dba2",
+   "copied": false,
+   "cache": {
+    "header": [
+     "Date",
+     "Close",
+     "High",
+     "Low",
+     "Bench"
+    ],
+    "rows": 4681,
+    "first": "2007-09-17",
+    "last": "2026-10-14"
+   }
+  },
+  {
+   "path": "price_cache_DIXON.csv",
+   "bytes": 250370,
+   "sha256": "f862fd31a040237958580967b18fef0e104ca9a51fd6a8c97945c52e9eed8b47",
+   "copied": false,
+   "cache": {
+    "header": [
+     "Date",
+     "Close",
+     "High",
+     "Low",
+     "Bench"
+    ],
+    "rows": 4685,
+    "first": "2007-09-17",
+    "last": "2026-10-14"
+   }
+  },
+  {
+   "path": "price_cache_EASEMYTRIP.csv",
+   "bytes": 207859,
+   "sha256": "4f5e1957d4dcb7c53e4e222b8ec02a8c544c27f723e8b8d729669395b925ecec",
+   "copied": false,
+   "cache": {
+    "header": [
+     "Date",
+     "Close",
+     "High",
+     "Low",
+     "Bench"
+    ],
+    "rows": 4681,
+    "first": "2007-09-17",
+    "last": "2026-10-14"
+   }
+  },
+  {
+   "path": "price_cache_ETERNAL.csv",
+   "bytes": 192895,
+   "sha256": "15eb67663ecdd50f0331bfd45e9119343364579fafe78e4a6dd1d82bde16da7d",
+   "copied": false,
+   "cache": {
+    "header": [
+     "Date",
+     "Close",
+     "High",
+     "Low",
+     "Bench"
+    ],
+    "rows": 4681,
+    "first": "2007-09-17",
+    "last": "2026-10-14"
+   }
+  },
+  {
+   "path": "price_cache_HUDCO.csv",
+   "bytes": 259416,
+   "sha256": "c852f1734c23d67704efbb614ef0cc67aa1f46c5dfc4b549f35c239b97cfcdc8",
+   "copied": false,
+   "cache": {
+    "header": [
+     "Date",
+     "Close",
+     "High",
+     "Low",
+     "Bench"
+    ],
+    "rows": 4685,
+    "first": "2007-09-17",
+    "last": "2026-10-14"
+   }
+  },
+  {
+   "path": "price_cache_IRFC.csv",
+   "bytes": 211287,
+   "sha256": "4e51ef844efaa366ec46d2e1219016158299cfa2a515e9c707d124c1111a2c84",
+   "copied": false,
+   "cache": {
+    "header": [
+     "Date",
+     "Close",
+     "High",
+     "Low",
+     "Bench"
+    ],
+    "rows": 4681,
+    "first": "2007-09-17",
+    "last": "2026-10-14"
+   }
+  },
+  {
+   "path": "price_cache_JPPOWER.csv",
+   "bytes": 391817,
+   "sha256": "a88860757212a0e218cf83c8200978bd9f5afaececdf9307b6d73889d963e17b",
+   "copied": false,
+   "cache": {
+    "header": [
+     "Date",
+     "Close",
+     "High",
+     "Low",
+     "Bench"
+    ],
+    "rows": 5306,
+    "first": "2005-04-18",
+    "last": "2026-10-14"
+   }
+  },
+  {
+   "path": "price_cache_KTKBANK.csv",
+   "bytes": 436806,
+   "sha256": "4b5077114914a39764d2cc1368760fee58a928c9ccfcfd3bca3679b146df086e",
+   "copied": false,
+   "cache": {
+    "header": [
+     "Date",
+     "Close",
+     "High",
+     "Low",
+     "Bench"
+    ],
+    "rows": 5530,
+    "first": "2004-06-01",
+    "last": "2026-10-14"
+   }
+  },
+  {
+   "path": "price_cache_NAZARA.csv",
+   "bytes": 192013,
+   "sha256": "a7c2cc37f6d54bcac427d96e23028f0a9a8df17412a776f394b9f341206a6844",
+   "copied": false,
+   "cache": {
+    "header": [
+     "Date",
+     "Close",
+     "High",
+     "Low",
+     "Bench"
+    ],
+    "rows": 4681,
+    "first": "2007-09-17",
+    "last": "2026-10-14"
+   }
+  },
+  {
+   "path": "price_cache_NYKAA.csv",
+   "bytes": 193102,
+   "sha256": "233e0f5c4c6b108964056517f1e2ec8732474e4ab2eff017a11c69a406746140",
+   "copied": false,
+   "cache": {
+    "header": [
+     "Date",
+     "Close",
+     "High",
+     "Low",
+     "Bench"
+    ],
+    "rows": 4681,
+    "first": "2007-09-17",
+    "last": "2026-10-14"
+   }
+  },
+  {
+   "path": "price_cache_PAYTM.csv",
+   "bytes": 185831,
+   "sha256": "777c9637746a8e82dc211d2833d554aca07f886838f4fdd82c4a62a586834d15",
+   "copied": false,
+   "cache": {
+    "header": [
+     "Date",
+     "Close",
+     "High",
+     "Low",
+     "Bench"
+    ],
+    "rows": 4681,
+    "first": "2007-09-17",
+    "last": "2026-10-14"
+   }
+  },
+  {
+   "path": "price_cache_POLICYBZR.csv",
+   "bytes": 186805,
+   "sha256": "a55c8e8a845fd33a1d0e1c4c44816e28d96aec4aa32256a32ea9c2054517b5a7",
+   "copied": false,
+   "cache": {
+    "header": [
+     "Date",
+     "Close",
+     "High",
+     "Low",
+     "Bench"
+    ],
+    "rows": 4680,
+    "first": "2007-09-17",
+    "last": "2026-10-14"
+   }
+  },
+  {
+   "path": "price_cache_POLYCAB.csv",
+   "bytes": 228418,
+   "sha256": "a27f5b31f3759ecfda6431c75bcaacebacac61e597b1e4a0b5dab6c0d02d2fef",
+   "copied": false,
+   "cache": {
+    "header": [
+     "Date",
+     "Close",
+     "High",
+     "Low",
+     "Bench"
+    ],
+    "rows": 4683,
+    "first": "2007-09-17",
+    "last": "2026-10-14"
+   }
+  },
+  {
+   "path": "price_cache_RTNPOWER.csv",
+   "bytes": 324164,
+   "sha256": "a168988f177360b74cb6ac8c506295b0ca9fbcdb66fa855e3dd157cc72248a23",
+   "copied": false,
+   "cache": {
+    "header": [
+     "Date",
+     "Close",
+     "High",
+     "Low",
+     "Bench"
+    ],
+    "rows": 4701,
+    "first": "2007-09-17",
+    "last": "2026-10-14"
+   }
+  },
+  {
+   "path": "price_cache_RVNL.csv",
+   "bytes": 234714,
+   "sha256": "a7dc517a4afa22d64f2df423d5cee69cb7f9b2970e708ec5171524bc4a78ce0b",
+   "copied": false,
+   "cache": {
+    "header": [
+     "Date",
+     "Close",
+     "High",
+     "Low",
+     "Bench"
+    ],
+    "rows": 4683,
+    "first": "2007-09-17",
+    "last": "2026-10-14"
+   }
+  },
+  {
+   "path": "price_cache_SJVN.csv",
+   "bytes": 350082,
+   "sha256": "d994eedfab82953f42b567fc16395357b0ce72b11965cdf659847dba3e47a29d",
+   "copied": false,
+   "cache": {
+    "header": [
+     "Date",
+     "Close",
+     "High",
+     "Low",
+     "Bench"
+    ],
+    "rows": 4701,
+    "first": "2007-09-17",
+    "last": "2026-10-14"
+   }
+  },
+  {
+   "path": "price_cache_SOUTHBANK.csv",
+   "bytes": 441027,
+   "sha256": "70eed028014ec77502f81bedcaea21177bf73182708c9a299728674213185cf9",
+   "copied": false,
+   "cache": {
+    "header": [
+     "Date",
+     "Close",
+     "High",
+     "Low",
+     "Bench"
+    ],
+    "rows": 5530,
+    "first": "2004-06-01",
+    "last": "2026-10-14"
+   }
+  },
+  {
+   "path": "price_cache_SUZLON.csv",
+   "bytes": 408827,
+   "sha256": "8fc67b70f7cbff22abeacc83e4c07a564348a00f7115a0558e9bd06dc94fa749",
+   "copied": false,
+   "cache": {
+    "header": [
+     "Date",
+     "Close",
+     "High",
+     "Low",
+     "Bench"
+    ],
+    "rows": 5177,
+    "first": "2005-10-19",
+    "last": "2026-10-14"
+   }
+  },
+  {
+   "path": "price_cache_TATAELXSI.csv",
+   "bytes": 430509,
+   "sha256": "a8d8f7305f3f8f0fde892117f89832819bccf86be31ffaa89a468fb48abf4ff1",
+   "copied": false,
+   "cache": {
+    "header": [
+     "Date",
+     "Close",
+     "High",
+     "Low",
+     "Bench"
+    ],
+    "rows": 5530,
+    "first": "2004-06-01",
+    "last": "2026-10-14"
+   }
+  },
+  {
+   "path": "price_cache_TCS.csv",
+   "bytes": 436725,
+   "sha256": "ef281883c9e4f954e2a522c2fcef2a5ed4bf280c9f1df57f0450a03ac7a7367e",
+   "copied": false,
+   "cache": {
+    "header": [
+     "Date",
+     "Close",
+     "High",
+     "Low",
+     "Bench"
+    ],
+    "rows": 5530,
+    "first": "2004-06-01",
+    "last": "2026-10-14"
+   }
+  },
+  {
+   "path": "Quantitative Financial Jyothisham - Corrected Cross-Track Analysis.md",
+   "bytes": 6337,
+   "sha256": "75d819e67c2ffe02cee151593a34655df0ddbb366f5b43cb63245a93d6b66ba8",
+   "copied": true
+  },
+  {
+   "path": "Quantitative Financial Jyothisham_ Comprehensive Cross-Track Analysis.md",
+   "bytes": 36154,
+   "sha256": "be9b42704620dbd33149a18685e5219766bf07f0af7c50bd8f74efd984fc9707",
+   "copied": true
+  },
+  {
+   "path": "real_data_harness/cdsl_moon_saturn_pd.png",
+   "bytes": 135006,
+   "sha256": "5a1b576ac1c70fe91d45324e4efc854a1e6c7d1e31ad47f5e7058bc14daea363",
+   "copied": true
+  },
+  {
+   "path": "real_data_harness/polycab_price_since_listing.png",
+   "bytes": 108378,
+   "sha256": "1d1cb933bbdbf3d2dd4d2ab89ded1b7d72b5139b4e9ef652513f737f83aab27a",
+   "copied": true
+  },
+  {
+   "path": "real_data_harness/polycab_sarvatobhadra_2026-10-14.png",
+   "bytes": 130624,
+   "sha256": "2fbd77a153a826930b2157dc2c010d0438e44b641dbcab6d8f2c4a5751945cb5",
+   "copied": true
+  },
+  {
+   "path": "real_data_harness/polycab_shani_dasha_pd.png",
+   "bytes": 122505,
+   "sha256": "07e31a074cb80929d065fb0c8cc3afada35597a392a342af66e80f6a89890a0a",
+   "copied": true
+  },
+  {
+   "path": "real_data_harness/price_cache.csv",
+   "bytes": 7431181,
+   "sha256": "69c8c7d02ff56c98607db2853fc1ac44831773e36332a9a182a45c0e6e6018bd",
+   "copied": false,
+   "cache": {
+    "header": [
+     "Date",
+     "ADANIPORTS",
+     "ALOKINDS",
+     "BALRAMCHIN",
+     "BDL",
+     "BEL"
+    ],
+    "rows": 5531,
+    "first": "2004-06-01",
+    "last": "2026-10-13"
+   }
+  },
+  {
+   "path": "real_data_harness/REPORT.md",
+   "bytes": 5090,
+   "sha256": "38a6e3e0f944b401e685ee022742c8a4453ff2f819e260cecac607c2ff70cb08",
+   "copied": true
+  },
+  {
+   "path": "real_data_harness/REPORT_rule4.md",
+   "bytes": 10188,
+   "sha256": "e749daff7d7ce10f8924849386c1fe3a86646e9c0c796684825bafcc37caf214",
+   "copied": true
+  },
+  {
+   "path": "real_data_harness/REPORT_rule4_seasonality.md",
+   "bytes": 6759,
+   "sha256": "f0ec256053237e20e42909e31f708a8fe04948660f6a294cee6efb124bd19d0b",
+   "copied": true
+  },
+  {
+   "path": "real_data_harness/REPORT_rule4b_rashi.md",
+   "bytes": 21234,
+   "sha256": "066a6a33a280966440d4ac20019ffec22082e0a47c16b4c8546f5578602e969d",
+   "copied": true
+  },
+  {
+   "path": "real_data_harness/REPORT_track1.md",
+   "bytes": 10015,
+   "sha256": "1dc300529f496f3b974b0a9e149964bfc643b5a7187a82dba95d6d5c25fdf218",
+   "copied": true
+  },
+  {
+   "path": "real_data_harness/results.csv",
+   "bytes": 1390,
+   "sha256": "ff408db0d12d5a7f22ee7c1fbbce79aeac5063fe999154a8315b3d964d546df1",
+   "copied": true
+  },
+  {
+   "path": "real_data_harness/results_rule4.csv",
+   "bytes": 4548,
+   "sha256": "907a49870d37fd7ce7687c831082e0f906895fbb5d2c0930f6ff6c723530f7cf",
+   "copied": true
+  },
+  {
+   "path": "real_data_harness/results_rule4_seasonality.csv",
+   "bytes": 3181,
+   "sha256": "7dcfd19533985b9e8488abf7ef7f40d2758edaa29185191cd1577fca807e3909",
+   "copied": true
+  },
+  {
+   "path": "real_data_harness/results_rule4b_rashi.csv",
+   "bytes": 10362,
+   "sha256": "cc2455637edcbccdd647d4b67ef766b64e157d8d59213f621694d281eecd7d96",
+   "copied": true
+  },
+  {
+   "path": "real_data_harness/results_track1.csv",
+   "bytes": 5018,
+   "sha256": "1f14fefaa3d6b7dd2ce4508e1f6f0f9ae70978d8000c4ee5619c35f1ae0ea684",
+   "copied": true
+  },
+  {
+   "path": "real_data_harness/rule4_sbc_test.py",
+   "bytes": 6044,
+   "sha256": "b616bd6a76a56c6e8f5f1c0cfdbc56777e3db35aa4ef27c85b5eec631735149b",
+   "copied": true
+  },
+  {
+   "path": "real_data_harness/rule4_seasonality_control.py",
+   "bytes": 3831,
+   "sha256": "3f69754e9e44a7c0191fafe8f7732f1c56342fac3c3e00572e97dd3cbe46f404",
+   "copied": true
+  },
+  {
+   "path": "real_data_harness/rule4b_rashi_test.py",
+   "bytes": 4854,
+   "sha256": "4d7be41dad597a57a0ee4a142337b063d263eb6c971eedc711f4341ed005114c",
+   "copied": true
+  },
+  {
+   "path": "real_data_harness/rule4b_robustness.py",
+   "bytes": 2194,
+   "sha256": "eb83407829536756e25a0143bfe7fdabe2885b908f9ded4744e687fea6158a63",
+   "copied": true
+  },
+  {
+   "path": "real_data_harness/run_real_data_tests.py",
+   "bytes": 13027,
+   "sha256": "ba8059838d4e3768e370e043a15eb485850325b51532506285771f29bac894cb",
+   "copied": true
+  },
+  {
+   "path": "real_data_harness/sarvatobhadra_engine_v3.py",
+   "bytes": 15112,
+   "sha256": "96120aee69afa0963bc8e75c01b92718d1ebf8a1d22b13aba0f7cf642f95de55",
+   "copied": true
+  },
+  {
+   "path": "real_data_harness/sbc_check.py",
+   "bytes": 3061,
+   "sha256": "a240d468d17db96ed8919a274ab0cba8fd022ab27d763943c4f2a90aee0c7dc1",
+   "copied": true
+  },
+  {
+   "path": "real_data_harness/track1_cache.csv",
+   "bytes": 7654274,
+   "sha256": "451ab16ad2880ea154a4e54902696c332052da24f162f4ad3b33aaea9da00e9b",
+   "copied": false,
+   "cache": {
+    "header": [
+     "Date",
+     "ALOKINDS",
+     "ASTRAL",
+     "BHARTIARTL",
+     "BSE",
+     "CARTRADE"
+    ],
+    "rows": 5530,
+    "first": "2004-06-01",
+    "last": "2026-10-13"
+   }
+  },
+  {
+   "path": "real_data_harness/track1_tier_tests.py",
+   "bytes": 8822,
+   "sha256": "64face0d452a5a1444cd87e0e4d4a516ba0ff790ecba2f850cda031daf137f7e",
+   "copied": true
+  },
+  {
+   "path": "run_high_growth_e2e.py",
+   "bytes": 7751,
+   "sha256": "284d13f44635623cdcaef2f5a43fc45311fc606f60cd8c8196dcd2667798457a",
+   "copied": true
+  },
+  {
+   "path": "run_smallcap_e2e.py",
+   "bytes": 7628,
+   "sha256": "6bb679368106166a0e5131a7f41006807dcad4dda404e9987ded548a09bd8e7e",
+   "copied": true
+  },
+  {
+   "path": "SBC_Market_Application_Research_REVIEW.md",
+   "bytes": 4304,
+   "sha256": "c7c8f3f80ad23e5f4bfc5c6d559d3f6f826e8427228fb0ef6b04d1f396b96183",
+   "copied": true
+  },
+  {
+   "path": "sc_run.log",
+   "bytes": 959,
+   "sha256": "bc1cef6154d55fa5f16f3efb61d024ee94db0330c98b284bdab26904bfb89ec8",
+   "copied": true
+  },
+  {
+   "path": "sc_run2.log",
+   "bytes": 959,
+   "sha256": "bc1cef6154d55fa5f16f3efb61d024ee94db0330c98b284bdab26904bfb89ec8",
+   "copied": true
+  },
+  {
+   "path": "SMALLCAP_E2E_REPORT.md",
+   "bytes": 29263,
+   "sha256": "0cf78de4e44f975656a889a9b4f37c6c2633fa7c61855bff483a3ea34455aa50",
+   "copied": true
+  },
+  {
+   "path": "smallcap_e2e_results.csv",
+   "bytes": 14551,
+   "sha256": "6f39787093ea287285fbcd9102bd04854b36623e1d4cf8aa695ec865da4c1809",
+   "copied": true
+  },
+  {
+   "path": "Stock_Birth_Details.csv",
+   "bytes": 15172,
+   "sha256": "cb9451ac09227f73049bbeb90a1c6750c5140c47093208ca6779927954a99e0a",
+   "copied": true
+  },
+  {
+   "path": "Stock_Birth_Details.xlsx",
+   "bytes": 11487,
+   "sha256": "32d4899f418f750e3861cebb4acd88ccb8eef798439bf5454402ec1ceacbda48",
+   "copied": true
+  }
+ ]
+}

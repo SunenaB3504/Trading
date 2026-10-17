@@ -1,0 +1,21 @@
+=== SUZLON first trade 2005-10-19 anchor_valid=True
+=== SUZLON: real-data pipeline ===
+=== HUDCO first trade 2017-05-19 anchor_valid=True
+=== HUDCO: real-data pipeline ===
+=== ALOKINDS first trade 2004-06-01 anchor_valid=False
+=== ALOKINDS: real-data pipeline ===
+=== RTNPOWER first trade 2009-10-30 anchor_valid=True
+=== RTNPOWER: real-data pipeline ===
+=== IRFC first trade 2021-01-29 anchor_valid=True
+=== IRFC: real-data pipeline ===
+=== RVNL first trade 2019-04-11 anchor_valid=True
+=== RVNL: real-data pipeline ===
+=== JPPOWER first trade 2005-04-18 anchor_valid=True
+=== JPPOWER: real-data pipeline ===
+=== SJVN first trade 2010-05-20 anchor_valid=True
+=== SJVN: real-data pipeline ===
+=== SOUTHBANK first trade 2004-06-01 anchor_valid=False
+=== SOUTHBANK: real-data pipeline ===
+=== KTKBANK first trade 2004-06-01 anchor_valid=False
+=== KTKBANK: real-data pipeline ===
+DONE 119 tests; raw p<.05: 4 expected 4.5 global Holm<.05: 0
