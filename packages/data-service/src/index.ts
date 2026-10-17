@@ -28,3 +28,11 @@ export type { CanonicalResult, Conflict, RefusedRow } from './canonical/canonica
 export { buildAdjusted, verifyAdjustment } from './canonical/adjusted';
 export type { AdjustmentMismatch } from './canonical/adjusted';
 export { SeriesStore } from './canonical/seriesStore';
+export { DEFAULT_TOLERANCE_BPS, applyDisputes, compareSeries } from './crosscheck/crossCheck';
+export type {
+  CrossCheckReport,
+  Discrepancy,
+  DisputeField,
+  PricePoint,
+  SuspectedAction,
+} from './crosscheck/crossCheck';

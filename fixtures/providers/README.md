@@ -14,6 +14,8 @@ for testing parsers, not a data set. NSE and Yahoo terms of use apply; keep the 
 
 | `events_legacy_subset.csv`, `events_udiff_subset.csv` | NSE bhavcopy archives, sessions around five events | EQ-series rows only, five sessions either side: TATASTEEL (1:10 split 2022-07-28), IRCTC (1:5, 2021-10-28), BAJAJFINSV (1:5 split + 1:1 bonus, 2022-09-13), NESTLEIND (1:10, 2024-01-05), RELIANCE (1:1 bonus, 2024-10-28). 43 rows in all |
 
+| `nse_bhavcopy_udiff_2024-06-03_subset.csv` | `.../BhavCopy_NSE_CM_0_0_0_20240603_F_0000.csv.zip` | the same 9 symbol/series pairs as the legacy file for 2024-06-03, so the two formats can be compared |
+
 Findings from these recordings (2026-10-17):
 
 - Yahoo's open, high, low and close are already adjusted for later splits and bonuses. Around the Reliance bonus the pre-ex closes are halved. Yahoo is therefore a cross-check for split-adjusted prices, never the raw series.
@@ -22,3 +24,5 @@ Findings from these recordings (2026-10-17):
 - At each face-value change the new ISIN starts the session AFTER the ex-date: the ex-date bar is already at the post-split price but still carries the old ISIN.
 - Muhurat sessions produce a bhavcopy row (RELIANCE 2024-11-01, volume 2.1 million).
 - NSE close and volume for RELIANCE 2024-10-24 and 10-25, halved, equal Yahoo's split-adjusted closes to the paisa, which confirms how Yahoo adjusts.
+- Yahoo also adjusts VOLUME for later splits and bonuses: Reliance's pre-bonus volumes are exactly double the NSE share counts. Volume can therefore be compared strictly against our adjusted volume.
+- For 2024-06-03 the legacy and UDiFF files give identical records (prices, previous close, volume, ISIN) for all nine sampled symbol/series pairs.
