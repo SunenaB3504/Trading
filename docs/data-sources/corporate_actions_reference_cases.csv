@@ -1,11 +1,11 @@
-symbol,action,ratio_after_over_before,dividend_inr_per_share,cum_date_claimed,ex_date_claimed,cum_close_inr,ex_close_inr,af_price_claimed,status,review_note
-TATASTEEL,split 1:10,10/1,,2022-07-27,2022-07-28,959.40,100.35,0.100000,arithmetic OK; facts UNVERIFIED,Plausible; confirm ex-date and both closes against the NSE bhavcopy
-IRCTC,split 1:5,5/1,,2021-10-27,2021-10-28,4130.15,913.50,0.200000,arithmetic OK; facts UNVERIFIED,Plausible; confirm against bhavcopy
-NESTLEIND,split 1:10,10/1,,2024-01-04,2024-01-05,27109.90,2716.45,0.100000,arithmetic OK; facts UNVERIFIED,Plausible; confirm against bhavcopy
-RELIANCE,bonus 1:1,2/1,,2024-10-25,2024-10-28,2655.45,1327.90,0.500000,arithmetic OK; facts UNVERIFIED,Plausible; confirm against bhavcopy
-BSE,bonus 2:1,3/1,,2022-03-17,2022-03-21,2835.40,935.20,0.333333,DATE SUSPECT,Reviewer recollection: BSE Ltd's 2:1 bonus was in 2025 and the price levels match 2025 not 2022. Do not use the date
-GAIL,bonus 1:2,3/2,,2022-09-05,2022-09-06,134.60,91.25,0.666667,arithmetic OK; facts UNVERIFIED,Confirm ex-date and closes
-NYKAA,bonus 5:1,6/1,,2022-11-09,2022-11-10,1148.00,195.90,0.166667,DATE SUSPECT,Reviewer recollection: record/ex-date was 2022-11-03. Confirm before use
-BAJAJFINSV,split 1:5 + bonus 1:1 same day,10/1 (5/1 x 2/1),,2022-09-12,2022-09-13,17138.10,1784.75,0.100000,DATE SUSPECT,Reviewer recollection: effective 2022-09-26. Confirm before use
-VEDL,special dividend,,31.50,2022-05-05,2022-05-06,412.35,384.85,0.923608,arithmetic OK; facts UNVERIFIED,Confirm ex-date and amount. The claim that dividends of 2% or more trigger mandatory adjustment is not verified
-HINDZINC,special dividend,,26.00,2023-03-28,2023-03-29,318.55,296.25,0.918380,arithmetic OK; facts UNVERIFIED,Confirm ex-date and amount
+symbol,action,ratio_after_over_before,dividend_inr_per_share,cum_date,ex_date,cum_close_claimed,ex_close_claimed,cum_close_nse_actual,ex_close_nse_actual,status
+TATASTEEL,split 1:10,10/1,,2022-07-27,2022-07-28,959.40,100.35,959.40,100.35,dates and prices confirmed against NSE bhavcopy
+IRCTC,split 1:5,5/1,,2021-10-27,2021-10-28,4130.15,913.50,4130.15,913.50,dates and prices confirmed against NSE bhavcopy
+NESTLEIND,split 1:10,10/1,,2024-01-04,2024-01-05,27109.90,2716.45,27116.40,2666.40,"dates confirmed by the price drop in NSE bhavcopy; the response's prices were wrong, NSE closes used"
+RELIANCE,bonus 1:1,2/1,,2024-10-25,2024-10-28,2655.45,1327.90,2655.70,1334.35,"dates confirmed by the price drop in NSE bhavcopy; the response's prices were wrong, NSE closes used"
+BSE,bonus 2:1,3/1,,2022-03-17,2022-03-21,2835.40,935.20,2826.60,938.05,"dates confirmed by the price drop in NSE bhavcopy; the response's prices were wrong, NSE closes used"
+GAIL,bonus 1:2,3/2,,2022-09-05,2022-09-06,134.60,91.25,136.75,93.05,"dates confirmed by the price drop in NSE bhavcopy; the response's prices were wrong, NSE closes used"
+NYKAA,bonus 5:1,6/1,,2022-11-09,2022-11-10,1148.00,195.90,1060.30,188.25,"dates confirmed by the price drop in NSE bhavcopy; the response's prices were wrong, NSE closes used"
+BAJAJFINSV,split 1:5 + bonus 1:1 same day,10/1 (5/1 x 2/1),,2022-09-12,2022-09-13,17138.10,1784.75,17138.05,1784.75,dates confirmed; prices within 0.10 of NSE bhavcopy
+VEDL,special dividend,,31.50,2022-05-05,2022-05-06,412.35,384.85,405.20,360.40,"NSE closes used; the response's prices were wrong. A dividend ex-date cannot be confirmed from prices alone, and the amount is still unverified"
+HINDZINC,special dividend,,26.00,2023-03-28,2023-03-29,318.55,296.25,328.80,299.00,"NSE closes used; the response's prices were wrong. A dividend ex-date cannot be confirmed from prices alone, and the amount is still unverified"

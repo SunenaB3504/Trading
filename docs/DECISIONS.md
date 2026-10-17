@@ -41,6 +41,9 @@
 
 | T8 | The non-overlapping test is paired within each date when at least 10 non-overlapping dates have both signal-on and signal-off rows; otherwise (a market-wide signal that is on or off for every instrument at once) it compares on-date means with off-date means by Welch's test | A market-wide signal has no within-date contrast, so the paired design cannot run at all; checked correct-size by simulation (5.2% and 4.7% false positives) and against scipy | 2026-10-17 |
 
+| T9 | Yahoo prices are used only to cross-check split-adjusted prices; the raw (unadjusted) series comes from NSE bhavcopy | Recorded Yahoo responses show open/high/low/close already adjusted for later splits and bonuses (pre-bonus Reliance closes are halved), so they cannot be the unadjusted series. The cross-check compares NSE prices adjusted with our own corporate-action table against Yahoo | 2026-10-17 |
+| T10 | Bhavcopy format by date: legacy `cmDDMONYYYYbhav` files to 2024-07-05, UDiFF from 2024-07-08; January to July 2024 exists in both and can be used to cross-check the two parsers | Checked against nsearchives.nseindia.com on 2026-10-17: legacy 404 from 2024-07-08, UDiFF 200 from 2024-01-02 and 404 for 2023 | 2026-10-17 |
+
 ## Scope decisions
 
 | Decision | Outcome | Date |

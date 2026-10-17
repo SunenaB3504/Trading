@@ -5,7 +5,7 @@
 **Status values:** `Not started` · `In progress` · `Blocked` · `Done`  
 **Done means** the work package's acceptance test (see the plan) has been run and the result is recorded in the *Acceptance result* column. Failures are recorded as failures; a work package with a failing test stays `In progress`.
 
-**Last updated:** 2026-10-16 (WP-0.5 done; P1 complete)
+**Last updated:** 2026-10-16 (WP-2.1 done; P1 complete)
 
 ## Phase summary
 
@@ -14,7 +14,7 @@
 | ------ | ------ | ------ | ------ | ------ | ------ |
 | P0 · Decisions, skeleton and de-risking | 5 | 0 | 0 | 3 | 8 |
 | P1 · Core ledger and simulator | 11 | 0 | 0 | 0 | 11 |
-| P2 · Data service and universe | 0 | 0 | 0 | 9 | 9 |
+| P2 · Data service and universe | 1 | 0 | 0 | 8 | 9 |
 | P3 · Web MVP (R1) | 0 | 0 | 0 | 7 | 7 |
 | P4 · Chart module and shadow mode (R1.5) | 0 | 0 | 0 | 6 | 6 |
 | P5 · Experiment harness and buyer-company overlay (R2) | 0 | 0 | 0 | 7 | 7 |
@@ -22,7 +22,7 @@
 | P7 · Jyotisham feature modules and PH entries (R3) | 0 | 0 | 0 | 10 | 10 |
 <!-- SUMMARY-END -->
 
-**Next work package:** owner to confirm D8/D21 (evaluation universe size) from docs/POWER_NOTE.md, then P2 (WP-2.1 data adapters); WP-0.2, 0.4 also unblocked  
+**Next work package:** WP-2.2 (canonical series, needs the instrument master) and WP-2.3 (provider cross-check on split-adjusted prices); owner to confirm D8/D21 and T6; WP-0.2, 0.4 also unblocked  
 **Open blockers:** none
 
 ---
@@ -48,7 +48,7 @@
 | 1.2 | Money and quantity utilities (integer paise, rounding) | 1.1 | Done | 2026-10-16 | 2026-10-16 | `pnpm verify` green: 44 tests; property tests (fast-check) incl. mulDiv vs an exact BigInt oracle for 4 rounding modes, overflow throws, format/parse round-trip | No BigInt in core: exact mulDiv via quotient/remainder split; ppm rates for cost lines |
 | 1.3 | Injected clock, seeded PRNG, SHA-256 hash-chain audit log | 1.1 | Done | 2026-10-16 | 2026-10-16 | `pnpm verify` green: 73 tests; SHA-256 matches NIST vectors and Node crypto on 800 random inputs; PRNG matches an independent Python reference; any edit, deletion or reorder breaks chain verification | Pure-TS SHA-256, UTF-8 and canonical JSON (no TextEncoder/crypto); a lost chain tail is only caught by the external anchor (WP-4.5) |
 | 1.4 | NSE/BSE trading calendar and sessions | 1.1 | Done | 2026-10-16 | 2026-10-16 | `pnpm verify` green: 142 tests; weekday holidays for 2020-2022 and 2024-2026 read from the official NSE annual circulars; weekday names checked by computed weekdays; next-open and next-trading-day queries tested | 2023 list is secondary (circular not found); ad hoc closures, Saturday DR sessions and pre-2025 Muhurat times unverified; BSE assumed equal to NSE; 3 errors in the Prompt A response corrected (see docs/data-sources/calendar_verification_2026-10-16.md). Supported range 2020-01-01 to 2026-12-31; every answer carries a confidence |
-| 1.5 | Corporate actions and price adjustment (idempotent) | 1.1, 1.2 | Done | 2026-10-16 | 2026-10-16 | `pnpm verify` green: 94 tests; hand-worked 5-for-1 split, 1:1 and 1:2 bonus, compounding actions, dividend adjustment; property tests: basis conserved exactly, no shares created, double-apply is a no-op | Ratio = shares after / before. Uneven basis paise kept in new `basisAdjustmentPaise` on lots (domain snapshot updated). Fractions and reverse-split cash-in-lieu reported, posted later by the ledger (WP-1.8). Also reproduces the 10 stated factors of the Prompt C response (docs/data-sources/corporate_actions_reference_cases.csv, incl. a same-day split + bonus), as ARITHMETIC regression only: the response's dates and prices are unverified and 3 dates look wrong (BSE, NYKAA, BAJAJFINSV). Real bhavcopy validation still open |
+| 1.5 | Corporate actions and price adjustment (idempotent) | 1.1, 1.2 | Done | 2026-10-16 | 2026-10-16 | `pnpm verify` green: 94 tests; hand-worked 5-for-1 split, 1:1 and 1:2 bonus, compounding actions, dividend adjustment; property tests: basis conserved exactly, no shares created, double-apply is a no-op | Ratio = shares after / before. Uneven basis paise kept in new `basisAdjustmentPaise` on lots (domain snapshot updated). Fractions and reverse-split cash-in-lieu reported, posted later by the ledger (WP-1.8). Also reproduces the 10 stated factors of the Prompt C response (docs/data-sources/corporate_actions_reference_cases.csv, incl. a same-day split + bonus), and now against the actual NSE bhavcopy closes (fetched 2026-10-17): all 10 events' ex-dates confirmed by the price drop (dividends excepted), the adjustment reproduces the exact factor, and the adjusted ex-day move is ordinary (under 12% for splits and bonuses). The response's prices were exact for TATASTEEL, IRCTC and BAJAJFINSV and wrong for the rest; my own doubts about three dates were mistaken |
 | 1.6 | Cost model (effective-dated rates, DP charges, per-line rounding) | 1.2, 1.4 | Done | 2026-10-16 | 2026-10-16 | `pnpm verify` green: 107 tests; five hand-worked fills (delivery buy 11,874; delivery sell with DP 11,908; intraday sell 8,108; intraday buy 2,108 paise) plus effective-date, BSE fallback and flag tests; property test: total equals sum of lines | Rates from the owner's research file (copied to docs/data-sources/). Open [V]: broker profile is ASSUMED (generic discount, D24); STT inferred before 2024-10; stamp duty before 2020-07-01; CDSL charge before 2024-10; BSE rates before 2022-12 use NSE rates; STT per-trade rupee rounding not modelled; exchange slabs use first tier. Every result carries these as `unverified` flags. Dropped the dependency on WP-1.4 (not needed for rates) |
 | 1.7 | Fill engine (market, limit, stops/targets, circuit rules, rejections) | 1.4, 1.5, 1.6 | Done | 2026-10-16 | 2026-10-16 | `pnpm verify` green: 189 tests; 42 hand-worked scenarios (next-open incl. weekend/holiday skips, limit gap/trade-through/touch, circuit blocks and 0-3 session carry-overs, MOC, rejections) plus 7 stop/target tests (gap-through, stop-first when both hit, lower-circuit block) | D22 trade-through default with touch variant; D19 entries expire, exits carry over (max 20 sessions); band prices from previous close, rounded to a 5-paise tick. Stops/targets are a per-bar evaluator for the arm layer (R2), not order types. Costs are computed separately by WP-1.6; ledger posting is WP-1.8. Case table lives in fills/scenarios.data.ts (344 lines, data only, size warning accepted) |
 | 1.8 | Ledger (FIFO lots, double entry, P&L, reconciliation) | 1.2, 1.7 | Done | 2026-10-16 | 2026-10-16 | `pnpm verify` green: 206 tests; hand-worked buy, partial sell, two-lot FIFO, bonus-then-sell with exact basis, dividend, consolidation write-off; 4 property tests over 300 random order streams each (balanced, cash never negative, holdings = bought - sold, net P&L = realised - fees + unrealised to the paise, trade gross P&L = realised); tampering, missing-fill and wrong-lot cases fail reconciliation and `buildReport` refuses to report | Append-only: every function returns a new state. Costs per fill are posted to a fees account; trade rows allocate entry and exit costs by cumulative rounding so they sum exactly. Not done: cash in lieu for fractional shares (consolidation basis is written off), FR-L4 ledger versions (come with the replay runner, WP-1.11), cash limits beyond non-negative (risk layer, WP-1.9) |
@@ -60,7 +60,7 @@
 
 | WP | Work package | Depends on | Status | Started | Done | Acceptance result | Notes |
 | ------ | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
-| 2.1 | Provider adapters (NSE bhavcopy, Yahoo-compatible, CSV) and raw cache | 1.1 | Not started |  |  |  |  |
+| 2.1 | Provider adapters (NSE bhavcopy, Yahoo-compatible, CSV) and raw cache | 1.1 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 320 tests, 34 of them in data-service. Contract tests against responses recorded from NSE and Yahoo on 2026-10-17 (fixtures/providers): both bhavcopy formats parse every recorded row into exact integer paise (bonds, SME and debt series included), Yahoo and NSE agree field for field on RELIANCE 2025-10-16, 404/malformed/null-gap handling, zip extraction, CSV import. Rate limiter, exponential back-off with seeded jitter, Retry-After, 404-as-not-found, raw responses stored with provider, URL class, parameters, fetch time and SHA-256 (memory and append-only file stores) | Findings: Yahoo open/high/low/close are split-adjusted, so Yahoo is only a cross-check (decision T9); NSE legacy files end 2024-07-05 and UDiFF files start by 2024-01 (T10). The live HTTP client is written but not exercised in tests. Next: WP-2.2 canonical series needs the instrument master (symbol to ISIN history) |
 | 2.2 | Canonical OHLCV; unadjusted and adjusted kept separate | 2.1, 1.5 | Not started |  |  |  |  |
 | 2.3 | Provider cross-check on unadjusted closes; disputed-day flag | 2.2 | Not started |  |  |  | D4 confirmed |
 | 2.4 | Band/ASM/GSM ingestion; point-in-time status; circuit flag | 2.1 | Not started |  |  |  |  |
@@ -164,3 +164,4 @@
 | 2026-10-16 | WP-1.11 Done: replay runner and golden hash. P1 exit check: 244 tests pass; coverage of ledger, fills and analytics is 99.4% statements and lines, 100% functions, 89.8% branches (target 90%); run `pnpm coverage` |
 | 2026-10-17 | WP-0.6 Done: §11.3 evaluation harness. Bootstrap p-value found liberal; decisions use batch-means test (T6) |
 | 2026-10-17 | WP-0.5 Done: power note. Market-wide signal support added to the harness (T8) |
+| 2026-10-17 | WP-2.1 Done: provider adapters on recorded NSE and Yahoo responses. Corporate-action cases now validated against real bhavcopy closes |
