@@ -1,0 +1,87 @@
+{
+ "label": "expo",
+ "cpuThrottle": 4,
+ "results": [
+  {
+   "round": 1,
+   "loadMs": 876,
+   "timings": [
+    {
+     "store": "IndexedDB",
+     "saveMs": 561,
+     "loadMs": 182,
+     "rows": 5000
+    },
+    {
+     "store": "expo-sqlite",
+     "saveMs": 1259,
+     "loadMs": 74,
+     "rows": 5000
+    }
+   ],
+   "bench": {
+    "seconds": 4,
+    "frames": 149,
+    "meanMs": 27,
+    "p95Ms": 50.2,
+    "maxMs": 66.8,
+    "slowPct": 40.9
+   },
+   "errors": []
+  },
+  {
+   "round": 2,
+   "loadMs": 706,
+   "timings": [
+    {
+     "store": "IndexedDB",
+     "saveMs": 648,
+     "loadMs": 126,
+     "rows": 5000
+    },
+    {
+     "store": "expo-sqlite",
+     "saveMs": 1255,
+     "loadMs": 77,
+     "rows": 5000
+    }
+   ],
+   "bench": {
+    "seconds": 4,
+    "frames": 156,
+    "meanMs": 25.6,
+    "p95Ms": 66.6,
+    "maxMs": 116.8,
+    "slowPct": 32.7
+   },
+   "errors": []
+  },
+  {
+   "round": 3,
+   "loadMs": 797,
+   "timings": [
+    {
+     "store": "IndexedDB",
+     "saveMs": 596,
+     "loadMs": 144,
+     "rows": 5000
+    },
+    {
+     "store": "expo-sqlite",
+     "saveMs": 1350,
+     "loadMs": 86,
+     "rows": 5000
+    }
+   ],
+   "bench": {
+    "seconds": 4,
+    "frames": 116,
+    "meanMs": 34.5,
+    "p95Ms": 83.2,
+    "maxMs": 99.9,
+    "slowPct": 47.4
+   },
+   "errors": []
+  }
+ ]
+}

@@ -69,7 +69,7 @@
 | # | Decision | Decided at | Default |
 | ------ | ------ | ------ | ------ |
 | D24 | Broker whose brokerage and DP add-on to simulate | Before relying on cost results | Assumed generic discount broker: delivery free; intraday 0.03% capped at Rs 20; DP add-on Rs 9.50; all results flagged `broker.profile-assumed` |
-| D1 | UI framework | WP-0.4 spike | Expo universal |
+| D1 | UI framework | WP-0.4 spike | Expo universal **Spike result 2026-10-17:** keep Expo universal. Both shells scroll 5,000 rows at 60 fps and reopen a stored bundle from IndexedDB and SQLite; on web Expo uses expo-sqlite (Metro cannot bundle the SQLite-WASM package). Owner to confirm; details in research/spikes/web/VERDICT.md |
 | D9 | Hold-out and forward dates; who holds the lock | Start of P5 | To be set |
 | D10 | Name rule for buyer-company test | P4 / P5 | Legal name in force on decision date, registered nāma-akṣara table |
 | D11 | Intraday data source | Deferred | Daily only |

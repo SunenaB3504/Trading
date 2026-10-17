@@ -5,14 +5,14 @@
 **Status values:** `Not started` · `In progress` · `Blocked` · `Done`  
 **Done means** the work package's acceptance test (see the plan) has been run and the result is recorded in the *Acceptance result* column. Failures are recorded as failures; a work package with a failing test stays `In progress`.
 
-**Last updated:** 2026-10-17 (WP-2.4 done)
+**Last updated:** 2026-10-17 (WP-0.4 done)
 
 ## Phase summary
 
 <!-- SUMMARY-START -->
 | Phase | Done | In progress | Blocked | Not started | Total |
 | ------ | ------ | ------ | ------ | ------ | ------ |
-| P0 · Decisions, skeleton and de-risking | 6 | 0 | 0 | 2 | 8 |
+| P0 · Decisions, skeleton and de-risking | 7 | 0 | 0 | 1 | 8 |
 | P1 · Core ledger and simulator | 11 | 0 | 0 | 0 | 11 |
 | P2 · Data service and universe | 7 | 0 | 0 | 2 | 9 |
 | P3 · Web MVP (R1) | 0 | 0 | 0 | 11 | 11 |
@@ -23,7 +23,7 @@
 | P11 · Commercialization (after R2; gated by D32) | 0 | 0 | 0 | 4 | 4 |
 <!-- SUMMARY-END -->
 
-**Next work package:** WP-2.7 (bucket builder; still needs a market-cap source and a beta index series), WP-0.4 (Expo web spike). WP-2.9 needs a daily ASM recording job. Owner to resolve the three D26 points  
+**Next work package:** WP-2.7 (bucket builder; waiting on the market-cap data the owner is collecting), then P3 (WP-3.1 app shell and web store) once D1 is confirmed. WP-2.9 needs a daily ASM recording job. Owner to resolve the three D26 points  
 **Open blockers:** none
 
 ---
@@ -35,7 +35,7 @@
 | 0.1 | git init; monorepo skeleton; strict TS; lint (size caps, import boundaries, cycles); Vitest; `pnpm verify` | - | Done | 2026-10-16 | 2026-10-16 | `pnpm verify` green twice: typecheck, lint, size, cycles, 11 tests (incl. core cannot import fs/react/Math.random/Date.now; 501-line file fails; core-to-app import and cycles flagged) | Committed and pushed as 32dbc9a |
 | 0.2 | Freeze pilot code and data into research/pilot with provenance file | 0.1 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 384 tests. 80 files hashed, 50 copied read-only; `tools/pilotProvenance.test.ts` fails on any change | The A.2 script and the A.3/A.4 re-evaluation script are not on this machine; +8.40% figures cannot be traced; t = 3.61 belongs to the Track 2 Cancer-ingress row (real-data re-run p = 0.78). Owner: add the scripts if they exist elsewhere |
 | 0.3 | Decision log (docs/DECISIONS.md): D3, D4, D6, D7, D23 and audit answers | - | Done | 2026-10-16 | 2026-10-16 | docs/DECISIONS.md created with closed, scope and open decisions | |
-| 0.4 | Web spike: Expo web vs plain React; dense table, chart, Store on IndexedDB and SQLite-WASM | 0.1 | Not started |  |  |  | Decides D1 |
+| 0.4 | Web spike: Expo web vs plain React; dense table, chart, Store on IndexedDB and SQLite-WASM | 0.1 | Done | 2026-10-17 | 2026-10-17 | Both candidates built and measured (research/spikes/web/VERDICT.md): 60 fps scroll of 5,000 rows at normal CPU, bundle reopened after restart from IndexedDB and SQLite | Recommends keeping Expo (D1); owner to confirm. Headless Chrome, software rendering, one machine; Metro cannot bundle the SQLite-WASM package, so Expo uses expo-sqlite; Expo degrades earlier under 6x CPU throttle |
 | 0.5 | Power note: expected non-overlapping n and MDE for universe sizes 20/50/100/200 | 0.6 | Done | 2026-10-17 | 2026-10-17 | docs/POWER_NOTE.md produced from a reproducible simulation (tools/powerNote.ts, 40 cells). Company-specific signals: MDE 1.0% (100 names, 4 years) and 0.7% (8 years) over a 20-session hold; 2.3% over 60 sessions at 8 years; 50 to 100 names cuts the MDE by 39%, 100 to 200 by 27%. Market-wide signals: about 3.5% at 8 years whatever the number of names; a 60-session market-wide rule gives no verdict until about 16 years | Recommendation (awaiting owner confirmation): about 100 names and at least 8 years of history for the evaluation universe; hand-traded set stays 15-20. Synthetic prices, independent noise and equal volatility, so real MDEs will be larger. The PH register has no numeric claimed effects yet, so no rule can be judged adequately powered |
 | 0.6 | §11.3 evaluation harness with null and positive controls | 0.1 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 281 tests. (a) Null control, 1,000 synthetic panels (10 instruments x 1,000 dates, H = 20): non-overlapping test and batch-means test each reject a true null 4.9% of the time (band 4-6%), their conjunction 1.0%, shifted-signal placebo 6.3% on 300 panels. (b) Planted-effect search finds an MDE of 2.0% on a 20-day return (80.0% power on an independent seed; 0.5% detection at zero effect; 100% at double). (c) TypeScript matches an independent Python/scipy reference to 1e-9 on a fixed 8 x 240 panel (paired design) and a second 4 x 400 market-wide panel (embargo, ESS, non-overlapping t/p, batch-means, BH/BY, placebo shift list, t and incomplete-beta values). (d) Same seed gives byte-identical reports | Finding: the SSD's centred joint-block-bootstrap p-value is too liberal on dependent data (about 9-12% false positives at nominal 5%, bootstrap SD about 8% too small), so decisions use a calibrated batch-means test; the bootstrap stays as a descriptive interval. Needs SSD §11.3 step 4 amendment (decision T6). Detection for the MDE uses non-overlap AND batch-means (placebo optional, which would raise the MDE). Market-wide signals (every instrument on or off together) are supported: the non-overlapping test falls back to Welch across dates (5.2% / 4.7% false positives; scipy parity on a second fixture; decision T8). Not done: B3 calendar control and synthetic buyers (R2), deflated Sharpe / PBO |
 | 0.7 | Fix Python re-evaluation reference (App. A.4 items 1-9) | 0.1 | Not started |  |  |  | The original pilot script is not in the repo. tools/eval_reference.py is a new, independent reference for the §11.3 steps that avoids the A.4 defects; the original pilot scripts still need freezing into research/pilot (WP-0.2) |
@@ -162,7 +162,7 @@
 | D6 | Benchmark | Closed 2026-10-16: Nifty 50 TRI + sector index |
 | D7 | Capital and caps | Closed 2026-10-16: Rs 10,00,000; 10% / 2% / 3% |
 | D23 | Code size and modularity rules | Closed 2026-10-16: 500-line cap (warn at 300), 60-line functions, complexity 10, no cycles; enforced by `pnpm verify` |
-| D1 | UI framework | Open until WP-0.4 spike |
+| D1 | UI framework | Spike done 2026-10-17; recommends keeping Expo universal; awaiting owner confirmation |
 | D21 / D8 | Evaluation-universe size | Closed 2026-10-17: about 100 names, 8 years; 16 years for market-wide rules |
 | D25 | Eligibility thresholds | Closed 2026-10-17: elig-v1 |
 | T6 | Batch-means test decides; bootstrap descriptive | Closed 2026-10-17; SSD section 11.3 step 4 amended |
@@ -205,3 +205,4 @@
 | 2026-10-17 | SSD v0.12 and plan v1.5: gating made precise. Added WP-3.11 (leak tests) and D34; WP-11.4 teaser replaced by a static description |
 | 2026-10-17 | Owner decisions recorded (SSD v0.13, plan v1.6): D8/D21, T6, D25, D27 closed; D32 confirmed as P11 gate; D26 hosting confirmed with three open points; D35 proposed for WP-2.7 and WP-2.4 |
 | 2026-10-17 | WP-2.4 Done: band, trade-for-trade and surveillance from real NSE files, point-in-time status, circuit flags (T13, T14). Findings: band and GSM from 2019-12-31 only; ASM has no archive |
+| 2026-10-17 | WP-0.4 Done: web spike of Expo versus plain React; recommends keeping Expo (D1) |

@@ -1,0 +1,87 @@
+{
+ "label": "vite",
+ "cpuThrottle": 6,
+ "results": [
+  {
+   "round": 1,
+   "loadMs": 863,
+   "timings": [
+    {
+     "store": "IndexedDB",
+     "saveMs": 1043,
+     "loadMs": 113,
+     "rows": 5000
+    },
+    {
+     "store": "SQLite-WASM",
+     "saveMs": 1175,
+     "loadMs": 504,
+     "rows": 5000
+    }
+   ],
+   "bench": {
+    "seconds": 4,
+    "frames": 91,
+    "meanMs": 44.3,
+    "p95Ms": 66.7,
+    "maxMs": 116.6,
+    "slowPct": 93.4
+   },
+   "errors": []
+  },
+  {
+   "round": 2,
+   "loadMs": 685,
+   "timings": [
+    {
+     "store": "IndexedDB",
+     "saveMs": 856,
+     "loadMs": 152,
+     "rows": 5000
+    },
+    {
+     "store": "SQLite-WASM",
+     "saveMs": 1258,
+     "loadMs": 575,
+     "rows": 5000
+    }
+   ],
+   "bench": {
+    "seconds": 4,
+    "frames": 89,
+    "meanMs": 45.1,
+    "p95Ms": 66.7,
+    "maxMs": 83.4,
+    "slowPct": 93.3
+   },
+   "errors": []
+  },
+  {
+   "round": 3,
+   "loadMs": 767,
+   "timings": [
+    {
+     "store": "IndexedDB",
+     "saveMs": 1039,
+     "loadMs": 109,
+     "rows": 5000
+    },
+    {
+     "store": "SQLite-WASM",
+     "saveMs": 1953,
+     "loadMs": 494,
+     "rows": 5000
+    }
+   ],
+   "bench": {
+    "seconds": 4,
+    "frames": 88,
+    "meanMs": 45.6,
+    "p95Ms": 66.7,
+    "maxMs": 83.4,
+    "slowPct": 94.3
+   },
+   "errors": []
+  }
+ ]
+}

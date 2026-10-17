@@ -607,7 +607,7 @@ P0 now carries the web spike, the power note and the evaluation harness because 
 #### 15. Open decisions for the owner
 | # | Decision | Proposed default |
 | ------ | ------ | ------ |
-| D1 | UI framework | Expo universal, with the fallback gate at P3 |
+| D1 | UI framework | Expo universal, with the fallback gate at P3 **Spike result 2026-10-17:** keep Expo universal; owner to confirm (research/spikes/web/VERDICT.md) |
 | D2 | Where the ledger lives | **Confirmed 2026-10-14:**  on each client; data service holds market data only; bundles move data between devices |
 | D3 | Fill rule | Next session open (decision after close); bar close (decision in session) |
 | D4 | Cross-check tolerance between providers | 0.5% on close, and any share-count mismatch |
