@@ -210,14 +210,16 @@ Planned after the R3 entries in hand are reported: nation chart registry and eve
 | D9 | Hold-out and forward dates; lock holder | P5 start | Set at P5 |
 | D14, D15 | Trailing stop, min R:R | WP-5.x | Deferred to P5; SSD defaults (2.0 × ATR14; no minimum) |
 | D16 | Anchor method | WP-4.5 | Deferred to P4; default OpenTimestamps |
-| D21 | Evaluation-universe size | WP-2.9 | Deferred to the power note (WP-0.5) |
-| D26 | Snapshot hosting, signing, redistribution licence | WP-3.9 (and WP-2.8 content) | Open: static host or GCP bucket plus CDN; signing-key holder; may provider prices be published |
-| D27 | Astro engine on device, year length, gazetteer | WP-4.1 / WP-4.7 | Open: pure-TS engine-core if Hermes parity holds; 365.25-day daśā year |
+| D21 | Evaluation-universe size | WP-2.9 | **Confirmed 2026-10-17:** about 100 names, 8 years (16 years for market-wide rules) |
+| D26 | Snapshot hosting, signing, redistribution licence | WP-3.9 (and WP-2.8 content) | Hosting confirmed (GCP bucket and CDN); open: key custody, content versus D34, prices; static host or GCP bucket plus CDN; signing-key holder; may provider prices be published |
+| D27 | Astro engine on device, year length, gazetteer | WP-4.1 / WP-4.7 | **Closed 2026-10-17:** 365.25-day daśā year; offline gazetteer; Hermes parity checked at WP-4.1 |
 | D28 | Live broker execution | n/a | **Out of v1**; interface only |
 | D29 | Chandrāṣṭama banner wording | WP-4.8 | **Closed 2026-10-17:** informational, [H], no percentage |
 | D31 | Product direction | n/a | **Closed 2026-10-17:** commercial phase P11 after R2 |
-| D32 | Legal review before pricing or store text | WP-11.1 | **Open, mandatory gate** |
+| D32 | Legal review before pricing or store text | WP-11.1 | **Confirmed gate 2026-10-17:** review right after the R2 report |
 | D34 | How the paid astro layer is gated | WP-3.10, 3.11 | **Closed 2026-10-17:** soft client-side gate; no astro data in the public snapshot; research pipeline never gated |
+| D25 | Eligibility thresholds | WP-2.9 | **Confirmed 2026-10-17:** config `elig-v1` |
+| D35 | Bucket cut-offs and surveillance sources | WP-2.7, WP-2.4 | Proposed; open points listed in DECISIONS.md |
 | D33 | Guardrails and Tara scoring | n/a | **Closed 2026-10-17:** separate pre-registered arms PH-11, PH-12; not baseline |
 | D30 | Tara Bala direction and display | WP-4.8 | **Closed 2026-10-17, corrected same day:** trader to stock; category name only, no boost |
 
@@ -282,6 +284,7 @@ Planned after the R3 entries in hand are reported: nation chart registry and eve
 | 1.3 | 2026-10-17 | Owner on-device spec merged (SSD v0.10): WP-3.8 execution adapter, WP-3.9 snapshot client, WP-4.7 personal profile, WP-4.8 personal shields; D26 to D30 |
 | 1.4 | 2026-10-17 | Commercial direction recorded (SSD v0.11): P11 added after R2; WP-3.10 entitlement seam; D31 to D33; PH-11 and PH-12 |
 | 1.5 | 2026-10-17 | Gating made precise (SSD v0.12): WP-3.11 leak tests; WP-11.4 teaser replaced by a static description; D34 |
+| 1.6 | 2026-10-17 | Owner decisions recorded (SSD v0.13): D8/D21, T6, D25, D27 closed; D32 confirmed gate; D26 partly; D35 proposed |
 
 ---
 

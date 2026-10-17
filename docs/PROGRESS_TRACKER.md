@@ -5,7 +5,7 @@
 **Status values:** `Not started` · `In progress` · `Blocked` · `Done`  
 **Done means** the work package's acceptance test (see the plan) has been run and the result is recorded in the *Acceptance result* column. Failures are recorded as failures; a work package with a failing test stays `In progress`.
 
-**Last updated:** 2026-10-17 (plan v1.5: gating made precise; WP-3.11 added)
+**Last updated:** 2026-10-17 (plan v1.6: owner decisions recorded)
 
 ## Phase summary
 
@@ -23,7 +23,7 @@
 | P11 · Commercialization (after R2; gated by D32) | 0 | 0 | 0 | 4 | 4 |
 <!-- SUMMARY-END -->
 
-**Next work package:** WP-2.7 (objective bucket builder, needs bucket cut-offs), WP-2.4 (band/ASM/GSM, needs a data source), WP-0.4 (Expo web spike); owner to confirm D8/D21, T6, D25, D26, D27, D32  
+**Next work package:** WP-2.7 and WP-2.4 (cut-offs and sources proposed as D35; open points need checking against real files first), WP-0.4 (Expo web spike). Owner to resolve the three D26 points  
 **Open blockers:** none
 
 ---
@@ -64,10 +64,10 @@
 | 2.1 | Provider adapters (NSE bhavcopy, Yahoo-compatible, CSV) and raw cache | 1.1 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 320 tests, 34 of them in data-service. Contract tests against responses recorded from NSE and Yahoo on 2026-10-17 (fixtures/providers): both bhavcopy formats parse every recorded row into exact integer paise (bonds, SME and debt series included), Yahoo and NSE agree field for field on RELIANCE 2025-10-16, 404/malformed/null-gap handling, zip extraction, CSV import. Rate limiter, exponential back-off with seeded jitter, Retry-After, 404-as-not-found, raw responses stored with provider, URL class, parameters, fetch time and SHA-256 (memory and append-only file stores) | Findings: Yahoo open/high/low/close are split-adjusted, so Yahoo is only a cross-check (decision T9); NSE legacy files end 2024-07-05 and UDiFF files start by 2024-01 (T10). The live HTTP client is written but not exercised in tests. Next: WP-2.2 canonical series needs the instrument master (symbol to ISIN history) |
 | 2.2 | Canonical OHLCV; unadjusted and adjusted kept separate | 2.1, 1.5 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 338 tests, 18 new. On 43 real NSE bars around five events (TATASTEEL, IRCTC, NESTLEIND, RELIANCE, BAJAJFINSV incl. a same-day split + bonus): adjusted = unadjusted x factor, confirmed by an independent recomputation (verifyAdjustment) that also catches a tampered bar; history continuous after adjustment while the unadjusted series keeps the cliff; stored unadjusted bars unchanged by adjusting; our adjusted RELIANCE closes agree with Yahoo's on all 6 shared sessions to within 1 paisa. Yahoo rows are refused for the unadjusted series; provider disagreement is flagged disputed with the exchange file preferred | Instrument identity joins the old and new ISIN after a face-value change and renames, from the data itself (decision T11). Real quirk found: the new ISIN begins the session after the ex-date. Circuit flags stay `none` until WP-2.4; the instrument master is built from bhavcopy history only (no external source) |
 | 2.3 | Provider cross-check on unadjusted closes; disputed-day flag | 2.2 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 347 tests, 9 new. D4 rule (dispute above 0.5% on close, or any share-count difference) implemented and tested at the boundary (50 bps agrees, 51 disputes). Real comparisons: NSE legacy vs NSE UDiFF for 2024-06-03 give identical records for all 9 sampled symbols; NSE (adjusted with our action table) vs Yahoo for RELIANCE agree on close and volume on all 6 shared sessions; an injected 1% close error and a 1-share volume error are both caught; a missing split/bonus is diagnosed as a constant ratio and located between two sessions (checked on real Tata Steel bars); disputed dates can be flagged on the canonical series without mutating it | Cross-check is on a common basis: Yahoo is compared with NSE adjusted by our own table, since Yahoo adjusts price AND volume (T9). Sessions covered by only one provider are listed, not disputed. Needs a fetch loop (WP-2.9) before it runs on a whole universe; thresholds beyond close and volume (open, high, low) are not checked |
-| 2.4 | Band/ASM/GSM ingestion; point-in-time status; circuit flag | 2.1 | Not started |  |  |  |  |
+| 2.4 | Band/ASM/GSM ingestion; point-in-time status; circuit flag | 2.1 | Not started |  |  |  | Sources proposed (D35); first step is recording real sample files to confirm which carry band limits |
 | 2.5 | Delisted and merged instruments retained; last-trade date and reason | 2.1 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 381 tests, 11 new. On real NSE bars around two mergers: HDFC's last session is found as 2023-07-12 and linked to the merger when the action is supplied; Mindtree's last session 2022-11-22 is recorded with an honest `unknown` reason when no action is supplied; HDFC is in the universe as of 2023-07-10 although delisted three sessions later, and drops out once it has been silent longer than allowed (the survivorship acceptance test); LTI and LTIM are one stock; long gaps inside a series are listed as suspensions; delisting fields for the instrument record are produced | The reason for a cessation cannot be read from prices (Mindtree traded for days after its merger took effect), so it needs a corporate-action record or a second source (decision T12). Default: ceased after 10 sessions without a bar. The recording is short, so tests use a 3-session threshold. A real delisting list (NSE) is not yet ingested |
 | 2.6 | Eligibility rules E1-E7 with recorded first failure; `time_assumed` flag handling | 2.4, 2.5 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 370 tests, 23 new. Rules E1-E7 evaluated in order, every result reported and the first failure recorded; each threshold tested exactly at the boundary; thresholds frozen in a hashed config (`elig-v1`, changing any value changes the hash and every result carries it); point-in-time facts built from real NSE bars using only data before the window (verified by truncating later bars) and fed through the rules end to end | Done ahead of 2.4 and 2.5 because the rules need only facts the data already gives. Thresholds are PROPOSED (decision D25): Rs 5 crore median daily traded value, 60-session warm-up, at most 5 missing sessions, 98% two-provider coverage. Evidence: on 2025-10-16, 1,000 main-board equities traded at least Rs 5 crore and 494 at least Rs 25 crore. Surveillance and price bands are flagged `not_recorded` until WP-2.4; an instrument with no sourced listing timestamp passes but is flagged `time_assumed`; liquidity is close x volume (an approximation of exchange traded value); E7 fails when coverage is not measured |
-| 2.7 | Objective bucket builder (astro-blind, versioned) | 2.6 | Not started |  |  |  |  |
+| 2.7 | Objective bucket builder (astro-blind, versioned) | 2.6 | Not started |  |  |  | Cut-offs proposed (D35); needs a market-cap source and a beta index series |
 | 2.8 | DataSnapshot creation and hashing; service endpoints | 2.3, 2.7 | Done | 2026-10-17 | 2026-10-17 | `pnpm verify` green: 399 tests. Same inputs give the same id regardless of clock, order or build tag; tampering caught; all SSD §9.2 endpoints plus a local HTTP server tested on real NSE bars | Snapshot is point in time (asOf). `/status` gives lifecycle only; surveillance and band stay null with a flag until WP-2.4. Signing and hosting wait for D26 / WP-3.9. WP-2.7 buckets are not in the snapshot yet |
 | 2.9 | Universe pull (hand-traded set and evaluation universe) and disputes list | 2.8, 0.5 | Not started |  |  |  |  |
 
@@ -151,19 +151,22 @@
 | D3 | Fill rule | Closed 2026-10-16: next open; MOC for human orders |
 | D34 | How the paid astro layer is gated | Closed 2026-10-17: soft client-side gate; no astro data in public snapshot; research pipeline never gated |
 | D31 | Product direction | Closed 2026-10-17: commercial phase P11 after R2 |
-| D32 | Legal review before pricing or store text | Open; mandatory gate for P11 |
+| D32 | Legal review before pricing or store text | Confirmed gate 2026-10-17; review right after the R2 report |
 | D33 | Guardrails and Tara scoring | Closed 2026-10-17: separate arms PH-11, PH-12; not baseline |
 | D29 | Chandrashtama banner wording | Closed 2026-10-17: informational, [H], no cash percentage |
 | D30 | Tara Bala direction and display | Closed 2026-10-17, corrected same day: trader to stock; category name only |
-| D26 | Snapshot hosting, signing, redistribution licence | Open until WP-3.9 |
-| D27 | Astro engine on device, year length, gazetteer | Open until WP-4.1 / 4.7 |
+| D26 | Snapshot hosting, signing, redistribution licence | Hosting confirmed 2026-10-17 (GCP bucket and CDN); key custody, content versus D34 and prices open |
+| D27 | Astro engine on device, year length, gazetteer | Closed 2026-10-17: 365.25-day year; offline gazetteer; parity checked at WP-4.1 |
 | D28 | Live broker execution | Out of v1; interface only |
 | D4 | Cross-check tolerance | Closed 2026-10-16: 0.5% on close |
 | D6 | Benchmark | Closed 2026-10-16: Nifty 50 TRI + sector index |
 | D7 | Capital and caps | Closed 2026-10-16: Rs 10,00,000; 10% / 2% / 3% |
 | D23 | Code size and modularity rules | Closed 2026-10-16: 500-line cap (warn at 300), 60-line functions, complexity 10, no cycles; enforced by `pnpm verify` |
 | D1 | UI framework | Open until WP-0.4 spike |
-| D21 / D8 | Evaluation-universe size | Open until WP-0.5 power note |
+| D21 / D8 | Evaluation-universe size | Closed 2026-10-17: about 100 names, 8 years; 16 years for market-wide rules |
+| D25 | Eligibility thresholds | Closed 2026-10-17: elig-v1 |
+| T6 | Batch-means test decides; bootstrap descriptive | Closed 2026-10-17; SSD section 11.3 step 4 amended |
+| D35 | Bucket cut-offs and surveillance sources | Proposed 2026-10-17; open points listed in DECISIONS.md |
 | D16 | External anchoring method | Open until P4 (default OpenTimestamps) |
 | D14 / D15 | Trailing stop; minimum reward-to-risk | Open until P5 |
 | D9 | Hold-out and forward dates; lock holder | Open until P5 start |
@@ -200,3 +203,4 @@
 | 2026-10-17 | WP-0.2 Done: pilot frozen in research/pilot with hashes, data ranges and provenance findings (Appendix A.6) |
 | 2026-10-17 | WP-2.8 Done: snapshot creation and hashing, immutable snapshot store, endpoint handler and local HTTP server |
 | 2026-10-17 | SSD v0.12 and plan v1.5: gating made precise. Added WP-3.11 (leak tests) and D34; WP-11.4 teaser replaced by a static description |
+| 2026-10-17 | Owner decisions recorded (SSD v0.13, plan v1.6): D8/D21, T6, D25, D27 closed; D32 confirmed as P11 gate; D26 hosting confirmed with three open points; D35 proposed for WP-2.7 and WP-2.4 |
