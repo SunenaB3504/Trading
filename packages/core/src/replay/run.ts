@@ -25,7 +25,7 @@ import type {
   ReplaySnapshot,
 } from './types';
 
-interface Run {
+export interface Run {
   snapshot: ReplaySnapshot;
   cfg: ReplayConfig;
   state: LedgerState;
@@ -34,11 +34,11 @@ interface Run {
   dpDays: Set<string>;
 }
 
-const byPlacement = (a: ReplayOrder, b: ReplayOrder): number =>
+export const byPlacement = (a: ReplayOrder, b: ReplayOrder): number =>
   a.order.placedAt - b.order.placedAt || (a.order.id < b.order.id ? -1 : 1);
 
 /** Applies every corporate action with an ex-date on or before `date` (idempotent). */
-function applyDue(run: Run, date: string): void {
+export function applyDue(run: Run, date: string): void {
   const due = [...run.cfg.actions]
     .filter((a) => a.exDate <= date)
     .sort((a, b) => (a.exDate < b.exDate ? -1 : 1));
@@ -116,7 +116,7 @@ function buildFill(run: Run, ro: ReplayOrder, rec: FillRecord, quantity: number)
   };
 }
 
-function processOrder(run: Run, ro: ReplayOrder): void {
+export function processOrder(run: Run, ro: ReplayOrder): void {
   const sim = fillOrder(
     ro.order,
     ro.intent,
@@ -155,6 +155,34 @@ function processOrder(run: Run, ro: ReplayOrder): void {
   }
 }
 
+export function newRun(snapshot: ReplaySnapshot, cfg: ReplayConfig): Run {
+  return {
+    snapshot,
+    cfg,
+    state: openLedger(cfg.capitalPaise, cfg.startAt),
+    fills: [],
+    outcomes: [],
+    dpDays: new Set(),
+  };
+}
+
+/** Values the book at `cfg.endDate`, reports and hashes it (NFR-1). */
+export function finishRun(run: Run): ReplayResult {
+  applyDue(run, run.cfg.endDate);
+  const marks = marksAsOf(run.snapshot, run.cfg.actions, run.state, run.cfg.endDate);
+  const report = buildReport(run.state, run.fills, marks);
+  const summary = summarizeTrades(run.state.trades);
+  const base = {
+    snapshotId: run.snapshot.id,
+    state: run.state,
+    fills: run.fills,
+    outcomes: run.outcomes,
+    report,
+    summary,
+  };
+  return { ...base, reportHash: reportHashOf(base) };
+}
+
 /**
  * Replays orders against a frozen snapshot: simulate the fill, apply due corporate actions, cap the
  * size with the risk layer, add costs, post to the ledger, then report and hash (NFR-1). Orders are
@@ -167,26 +195,7 @@ export function runReplay(
   orders: readonly ReplayOrder[],
   cfg: ReplayConfig,
 ): ReplayResult {
-  const run: Run = {
-    snapshot,
-    cfg,
-    state: openLedger(cfg.capitalPaise, cfg.startAt),
-    fills: [],
-    outcomes: [],
-    dpDays: new Set(),
-  };
+  const run = newRun(snapshot, cfg);
   for (const ro of [...orders].sort(byPlacement)) processOrder(run, ro);
-  applyDue(run, cfg.endDate);
-  const marks = marksAsOf(snapshot, cfg.actions, run.state, cfg.endDate);
-  const report = buildReport(run.state, run.fills, marks);
-  const summary = summarizeTrades(run.state.trades);
-  const base = {
-    snapshotId: snapshot.id,
-    state: run.state,
-    fills: run.fills,
-    outcomes: run.outcomes,
-    report,
-    summary,
-  };
-  return { ...base, reportHash: reportHashOf(base) };
+  return finishRun(run);
 }
