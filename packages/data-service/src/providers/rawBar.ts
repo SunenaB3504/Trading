@@ -3,7 +3,7 @@
  * providers or given an instrument id. Prices are integer paise, parsed exactly from text (never
  * through floating point where the source gives text).
  */
-export type ProviderName = 'nse-bhavcopy' | 'nse-status' | 'yahoo' | 'csv';
+export type ProviderName = 'nse-bhavcopy' | 'nse-pr' | 'nse-status' | 'yahoo' | 'csv';
 
 export interface RawBarRow {
   provider: ProviderName;

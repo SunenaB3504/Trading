@@ -12,7 +12,7 @@ export { parseYahooChart, yahooChartUrl } from './providers/yahoo';
 export type { YahooDividend, YahooResult, YahooSplit } from './providers/yahoo';
 export { parseCsvBars } from './providers/csvImport';
 export type { CsvMapping } from './providers/csvImport';
-export { unzipFirst } from './providers/zip';
+export { unzipAll, unzipFirst } from './providers/zip';
 export { RateLimiter } from './http/rateLimiter';
 export { HttpStatusError, backoffDelay, isRetryable, retryWithBackoff } from './http/retry';
 export type { RetryOptions } from './http/retry';
@@ -99,3 +99,21 @@ export {
 export type { RecordOutcome } from './jobs/statusRecorder';
 export { reportDate } from './status/surveillanceReports';
 export type { ReportResult } from './status/surveillanceReports';
+export {
+  EQUITY_SERIES,
+  classify,
+  isoDate,
+  mergeActions,
+  parseActionsFile,
+  toCorporateActions,
+} from './corporate/nseActions';
+export type { ActionsFile, Converted, NseAction, NseActionType } from './corporate/nseActions';
+export {
+  URL_CLASSES,
+  loadActions,
+  loadBars,
+  pullRange,
+  pullSession,
+  weekdays,
+} from './jobs/barPuller';
+export type { SessionPull } from './jobs/barPuller';
