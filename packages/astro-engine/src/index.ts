@@ -15,3 +15,5 @@ export { taraBala, TARA_NAMES } from './tara';
 export type { Tara } from './tara';
 export { GENESIS, SignalLog, defineSignal, logDay, verifyEntries } from './signal';
 export type { LogEntry, SignalDefinition, SignalFn, SignalSpec, SignalValue } from './signal';
+export { classifyDays, lockDay, receiptProblem, signalsHash, verifyLock } from './preopen';
+export type { AnchorReceipt, Anchorer, DayLock, LockStatus } from './preopen';
