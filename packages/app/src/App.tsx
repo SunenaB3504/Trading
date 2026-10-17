@@ -5,6 +5,7 @@ import type { FetchLike } from './dataClient/client';
 import { GrantAllEntitlements } from './entitlement/grantAll';
 import { EntitlementProvider } from './entitlement/react';
 import { useOnline } from './hooks/useOnline';
+import { CompareScreen } from './screens/CompareScreen';
 import { DataScreen } from './screens/DataScreen';
 import { LedgerScreen } from './screens/LedgerScreen';
 import { TradeScreen } from './screens/TradeScreen';
@@ -12,7 +13,7 @@ import { IndexedDbKv } from './store/indexedDbKv';
 import type { KeyValueStore } from './store/kv';
 import { colors } from './ui/Section';
 
-type Tab = 'ledger' | 'trade' | 'data';
+type Tab = 'ledger' | 'trade' | 'compare' | 'data';
 
 /** `fetch` must be called as a plain function; calling it as a method of another object throws "Illegal invocation". */
 const browserFetch: FetchLike = (url, init) => fetch(url, init);
@@ -62,12 +63,16 @@ export default function App() {
           <TabButton id="trade" active={tab} onSelect={setTab}>
             Trade
           </TabButton>
+          <TabButton id="compare" active={tab} onSelect={setTab}>
+            Compare
+          </TabButton>
           <TabButton id="data" active={tab} onSelect={setTab}>
             Data
           </TabButton>
         </View>
         {tab === 'ledger' ? <LedgerScreen kv={kv} now={now} /> : null}
         {tab === 'trade' ? <TradeScreen kv={kv} now={now} /> : null}
+        {tab === 'compare' ? <CompareScreen kv={kv} now={now} /> : null}
         {tab === 'data' ? <DataScreen client={client} kv={kv} now={now} /> : null}
       </SafeAreaView>
     </EntitlementProvider>

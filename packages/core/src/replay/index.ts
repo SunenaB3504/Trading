@@ -10,3 +10,5 @@ export type {
   ReplaySnapshot,
 } from './types';
 export { buildFixtureScenario } from './fixtureScenario';
+export { HOLD_HORIZONS, POST_EXIT_OFFSETS, computeLedgerB } from './ledgerB';
+export type { LedgerB, LedgerBOptions, PortfolioComparators, TradeComparators } from './ledgerB';

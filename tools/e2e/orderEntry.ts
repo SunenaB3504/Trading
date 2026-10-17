@@ -39,6 +39,21 @@ async function place(page: Page): Promise<void> {
   );
 }
 
+async function compare(page: Page): Promise<void> {
+  await page.getByRole('tab', { name: 'Compare' }).click();
+  await page.getByTestId('compare-screen').waitFor({ timeout: 10_000 });
+  const text = await page.getByTestId('compare-screen').innerText();
+  check('the compare tab names the snapshot', /Data snapshot fixture-v1/.test(text));
+  check(
+    'it shows Ledger A and Ledger B side by side for the open position',
+    /LEDGER A \(YOU\)/i.test(text) &&
+      /LEDGER B \(MARKET\)/i.test(text) &&
+      /AAA, 10 shares, since 2026-03-04, open/.test(text),
+  );
+  await page.getByRole('tab', { name: 'Trade' }).click();
+  await page.getByText('New order (virtual money)').waitFor();
+}
+
 async function badInput(page: Page): Promise<void> {
   await page.getByTestId('qty-input').fill('x');
   await page.getByTestId('place-order').click();
@@ -67,6 +82,7 @@ async function main(): Promise<void> {
   try {
     await openTrade(page, url);
     await place(page);
+    await compare(page);
     await badInput(page);
     await afterReload(page, url);
     check('no page errors', errors.length === 0, errors.join(' | '));

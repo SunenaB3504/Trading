@@ -170,3 +170,47 @@ describe('paper session through the execution adapter', () => {
     ]);
   });
 });
+
+describe('Ledger A beside Ledger B (FR-L2, FR-L3)', () => {
+  it('shows an empty book with no portfolio line, tied to the snapshot', async () => {
+    const s = await PaperSession.open(new MemoryKv(), NOW);
+    const c = s.comparison();
+    expect(c).toMatchObject({
+      snapshotId: 'fixture-v1',
+      benchmark: 'none loaded',
+      portfolio: [],
+      trades: [],
+    });
+  });
+
+  it('shows a closed round trip with your return, staying-in returns, timing and the path after the exit', async () => {
+    const s = await PaperSession.open(new MemoryKv(), NOW);
+    await s.place(form({ quantity: '10', date: '2026-03-02' }));
+    await s.place(form({ side: 'sell', quantity: '10', date: '2026-04-01' }));
+    const c = s.comparison();
+    expect(c.trades).toHaveLength(1);
+    const card = c.trades[0];
+    expect(card?.title).toMatch(/^AAA, 10 shares, 2026-03-04 to 2026-04-0\d/);
+    const labels = card?.lines.map((l) => l.label);
+    expect(labels).toEqual([
+      'Net return on cost',
+      'Index over the same windows',
+      'Best and worst during the hold',
+      'After the exit',
+    ]);
+    expect(card?.lines[0]?.market).toMatch(/^staying in: \+5 .*\+20 .*\+60 .* sessions$/);
+    expect(card?.lines[1]?.market).toBe('no benchmark loaded');
+    expect(card?.lines[3]?.market).toMatch(/^\+1 .*, \+5 .*, \+20 /);
+    expect(c.portfolio).toHaveLength(1);
+    expect(c.portfolio[0]?.market).toMatch(/equal-weight buy and hold .*; cash 0\.0%/);
+  });
+
+  it('shows an open position as open, without a post-exit line', async () => {
+    const s = await PaperSession.open(new MemoryKv(), NOW);
+    await s.place(form({ quantity: '5', date: '2026-03-02' }));
+    const card = s.comparison().trades[0];
+    expect(card?.title).toMatch(/since 2026-03-04, open$/);
+    expect(card?.lines.map((l) => l.label)).not.toContain('After the exit');
+    expect(card?.lines[0]?.label).toBe('Return on cost so far');
+  });
+});

@@ -2,12 +2,15 @@ import {
   FixedClock,
   PaperExecutionAdapter,
   buildFixtureScenario,
+  computeLedgerB,
   istToUtcMillis,
 } from '@trading/core';
 import type { OrderRecord, OrderRequest, Position, ReplaySnapshot } from '@trading/core';
 import { formatPaise } from '../format/rupees';
 import { getStamped, putStamped } from '../store/kv';
 import type { KeyValueStore } from '../store/kv';
+import { toComparisonView } from '../viewModels/comparisonView';
+import type { ComparisonView } from '../viewModels/comparisonView';
 import { makeOrderRequest } from './orderRequest';
 import type { OrderForm } from './orderRequest';
 
@@ -97,6 +100,16 @@ export class PaperSession {
     await putStamped(this.kv, REQUESTS_KEY, this.stored, this.now());
     this.adapter = PaperSession.rebuild(this.stored);
     return { ok: true, orderId: result.orderId };
+  }
+
+  /** Ledger A beside Ledger B for this book, from the same snapshot (FR-L3). */
+  comparison(): ComparisonView {
+    const { snapshot } = demoMarket();
+    const cfg = buildFixtureScenario().config;
+    const result = this.adapter.result();
+    return toComparisonView(
+      computeLedgerB(result, snapshot, cfg.actions, cfg.endDate, cfg.capitalPaise),
+    );
   }
 
   async view(): Promise<SessionView> {
