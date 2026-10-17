@@ -18,6 +18,7 @@
 | D30 | Tara Bala direction and display | Count from the trader's janma nakṣatra (count 1) to the stock's; show the category name and its classical group, not a 0 to 100% score, no boost or order downgrade. Corrected the same day: the first draft counted stock to trader, which gives opposite results (Pushya to Mūla is Vipat, not Mitra) | 2026-10-17 | Owner, SSD FR-P7 |
 | D31 | Product direction | Commercial use is allowed as a separate phase P11 after the R2 report; until then the SSD stays a research specification | 2026-10-17 | Owner, SSD §13.1 |
 | D33 | Chandrāṣṭama guardrails and Tara scoring | Kept out of the baseline engine; each becomes a pre-registered overlay arm (PH-11, PH-12) with frozen parameters and a null | 2026-10-17 | Owner, PH register |
+| D34 | How the paid astro layer is gated | Soft client-side gate; astro-derived data is never in the public snapshot; the research pipeline is never gated; free users see no counts, scores or amounts derived from astro output before the R2 report and legal review. Real enforcement would need a server-side check, which conflicts with zero upload | 2026-10-17 | Owner, SSD FR-P10 |
 
 ## Astro-engine audit decisions (plan Appendix A)
 

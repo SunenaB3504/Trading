@@ -126,6 +126,7 @@ Every work package (WP) lists: SSD IDs, deliverable, acceptance test. Order with
 | 3.8 | `IExecutionAdapter` (SSD §9.4) and `PaperExecutionAdapter` over the P1 ledger, risk, cost and fill engine; idempotency keys; UI order entry uses only the interface | FR-P8, §9.4 | Conformance suite: same inputs through the adapter and through direct P1 calls give the golden replay hash; duplicate key returns the same result; `getCashBalance` returns a safe-integer paise value |
 | 3.9 | Snapshot client: signed download-only pull, hash and signature check, staleness from as-of date, GRAY-NODATA fallback, network-audit test | FR-P1–P3, §7.6, D26 | Tampered snapshot refused and the previous one kept; airplane mode keeps trading; test fails if any non-GET request, other origin or user data appears |
 | 3.10 | `IEntitlementService` (SSD §9.5) with a stub that grants every feature; screens ask it, nothing else; no prices, SKUs or store text | FR-P9, §9.5 | Lint/test: no store SDK import outside the future P11 adapter; core and harness do not import it; stub returns all features |
+| 3.11 | Gate leak tests with the astro feature off: no astro module executed, no birth data stored, no astro fields in selectors, snapshot schema, exports, caches and logs, locked placeholders show no counts or scores | FR-P10 | One test per FR-P10 item passes with the gate off; a deliberately leaking change makes the suite fail |
 
 Order entry (WP-3.3) goes through WP-3.8; WP-3.9 waits for WP-2.8 and D26.
 
@@ -188,7 +189,7 @@ Expo build profile, SQLite store adapter, bundle import with snapshots, runbook 
 | 11.1 | Legal and regulatory review recorded (SEBI, data protection, store policies, GST, refunds) | R2 report, D31 | Written outcome stored in `docs/`; D32 closed |
 | 11.2 | `commercial_tier_config` filled and store text written | 11.1 | No text in the SSD or code before 11.1 is Done |
 | 11.3 | Store-billing implementation of `IEntitlementService`, with verification chosen per platform | 11.1, 3.10, 6.1 | Purchase verified on a real device; refund and restore behave correctly; engine output identical with the gate on or off |
-| 11.4 | Conversion messaging, only if it carries an evidence tag and a null distribution | 11.1, R2 report | No hindsight "saved capital" figure without a stated method and untested label |
+| 11.4 | Conversion messaging: a static, non-numeric description of the paid layer. Any figure only after the R2 report and 11.1, with a stated method, a null distribution and an untested label | 11.1, R2 report | No counts, scores or amounts derived from astro output are shown to free users; no hindsight "saved capital" figure without a stated method and untested label |
 
 Not part of P11 and not planned: live broker routing (D28).
 
@@ -216,6 +217,7 @@ Planned after the R3 entries in hand are reported: nation chart registry and eve
 | D29 | Chandrāṣṭama banner wording | WP-4.8 | **Closed 2026-10-17:** informational, [H], no percentage |
 | D31 | Product direction | n/a | **Closed 2026-10-17:** commercial phase P11 after R2 |
 | D32 | Legal review before pricing or store text | WP-11.1 | **Open, mandatory gate** |
+| D34 | How the paid astro layer is gated | WP-3.10, 3.11 | **Closed 2026-10-17:** soft client-side gate; no astro data in the public snapshot; research pipeline never gated |
 | D33 | Guardrails and Tara scoring | n/a | **Closed 2026-10-17:** separate pre-registered arms PH-11, PH-12; not baseline |
 | D30 | Tara Bala direction and display | WP-4.8 | **Closed 2026-10-17, corrected same day:** trader to stock; category name only, no boost |
 
@@ -279,6 +281,7 @@ Planned after the R3 entries in hand are reported: nation chart registry and eve
 | 1.2 | 2026-10-16 | Audit questions closed (Appendix A): JV-try source, engine-core-only copy scope, Lahiri + mean node parameterised, synthetic golden corpus, recompute scripts reusable |
 | 1.3 | 2026-10-17 | Owner on-device spec merged (SSD v0.10): WP-3.8 execution adapter, WP-3.9 snapshot client, WP-4.7 personal profile, WP-4.8 personal shields; D26 to D30 |
 | 1.4 | 2026-10-17 | Commercial direction recorded (SSD v0.11): P11 added after R2; WP-3.10 entitlement seam; D31 to D33; PH-11 and PH-12 |
+| 1.5 | 2026-10-17 | Gating made precise (SSD v0.12): WP-3.11 leak tests; WP-11.4 teaser replaced by a static description; D34 |
 
 ---
 

@@ -5,7 +5,7 @@
 **Status values:** `Not started` · `In progress` · `Blocked` · `Done`  
 **Done means** the work package's acceptance test (see the plan) has been run and the result is recorded in the *Acceptance result* column. Failures are recorded as failures; a work package with a failing test stays `In progress`.
 
-**Last updated:** 2026-10-17 (WP-2.8 done)
+**Last updated:** 2026-10-17 (plan v1.5: gating made precise; WP-3.11 added)
 
 ## Phase summary
 
@@ -15,7 +15,7 @@
 | P0 · Decisions, skeleton and de-risking | 6 | 0 | 0 | 2 | 8 |
 | P1 · Core ledger and simulator | 11 | 0 | 0 | 0 | 11 |
 | P2 · Data service and universe | 6 | 0 | 0 | 3 | 9 |
-| P3 · Web MVP (R1) | 0 | 0 | 0 | 10 | 10 |
+| P3 · Web MVP (R1) | 0 | 0 | 0 | 11 | 11 |
 | P4 · Chart module and shadow mode (R1.5) | 0 | 0 | 0 | 8 | 8 |
 | P5 · Experiment harness and buyer-company overlay (R2) | 0 | 0 | 0 | 7 | 7 |
 | P6 · Android shell (A1) | 0 | 0 | 0 | 1 | 1 |
@@ -85,6 +85,7 @@
 | 3.8 | IExecutionAdapter and PaperExecutionAdapter (Paise balances, idempotency keys) | 1.8, 1.10 | Not started |  |  |  | Added 2026-10-17; 3.3 uses it |
 | 3.9 | Snapshot client: signed download-only pull, staleness, network-audit test | 2.8, 3.1, D26 | Not started |  |  |  | Added 2026-10-17 |
 | 3.10 | IEntitlementService seam with grant-all stub; no prices or store text | 3.1 | Not started |  |  |  | Added 2026-10-17; FR-P9 |
+| 3.11 | Gate leak tests with the astro feature off (FR-P10) | 3.10, 3.6, 3.9 | Not started |  |  |  | Added 2026-10-17 |
 
 ## P4 · Chart module and shadow mode (R1.5)
 
@@ -139,7 +140,7 @@
 | 11.1 | Legal and regulatory review recorded | 5.6, D31 | Not started |  |  |  | D32 gate |
 | 11.2 | commercial_tier_config and store text | 11.1 | Not started |  |  |  | No text before 11.1 |
 | 11.3 | Store-billing IEntitlementService with per-platform verification | 11.1, 3.10, 6.1 | Not started |  |  |  |  |
-| 11.4 | Conversion messaging with evidence tag and null | 11.1, 5.6 | Not started |  |  |  | No hindsight claims |
+| 11.4 | Conversion messaging: static, non-numeric description only before R2 and legal sign-off | 11.1, 5.6 | Not started |  |  |  | No counts, scores or amounts from astro output |
 
 ---
 
@@ -148,6 +149,7 @@
 | # | Decision | Status |
 | ------ | ------ | ------ |
 | D3 | Fill rule | Closed 2026-10-16: next open; MOC for human orders |
+| D34 | How the paid astro layer is gated | Closed 2026-10-17: soft client-side gate; no astro data in public snapshot; research pipeline never gated |
 | D31 | Product direction | Closed 2026-10-17: commercial phase P11 after R2 |
 | D32 | Legal review before pricing or store text | Open; mandatory gate for P11 |
 | D33 | Guardrails and Tara scoring | Closed 2026-10-17: separate arms PH-11, PH-12; not baseline |
@@ -197,3 +199,4 @@
 | 2026-10-17 | SSD v0.11 and plan v1.4: commercial direction recorded without commercial text. Added WP-3.10, phase P11 (WP-11.1 to 11.4), D31 to D33, PH-11 and PH-12 |
 | 2026-10-17 | WP-0.2 Done: pilot frozen in research/pilot with hashes, data ranges and provenance findings (Appendix A.6) |
 | 2026-10-17 | WP-2.8 Done: snapshot creation and hashing, immutable snapshot store, endpoint handler and local HTTP server |
+| 2026-10-17 | SSD v0.12 and plan v1.5: gating made precise. Added WP-3.11 (leak tests) and D34; WP-11.4 teaser replaced by a static description |
