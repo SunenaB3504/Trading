@@ -35,10 +35,10 @@ describe('eligibility rules E1 to E7 (SSD §10.1)', () => {
     ['E6', { missingSessions: 6 }, 'more than five sessions missing'],
     ['E7', { providerCoverage: 0.979 }, 'under 98% two-provider coverage'],
     ['E7', { providerCoverage: null }, 'coverage not measured'],
-  ] as const)('fails %s: %s', (rule, over, _why) => {
+  ] as const)('fails %s: %s', (rule, over, why) => {
     const r = run(over as Partial<InstrumentFacts>);
-    expect(r.eligible).toBe(false);
-    expect(r.firstFailure?.rule).toBe(rule);
+    expect(r.eligible, why).toBe(false);
+    expect(r.firstFailure?.rule, why).toBe(rule);
   });
 
   it('passes exactly at each threshold', () => {
