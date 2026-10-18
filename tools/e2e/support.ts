@@ -13,7 +13,7 @@ const types: Record<string, string> = {
   '.ico': 'image/x-icon',
 };
 
-export function serveStatic(): Promise<Server> {
+export function serveStatic(port = 0): Promise<Server> {
   if (!existsSync(join(dist, 'index.html'))) throw new Error('export the web build first');
   const server = createServer((req, res) => {
     const path = decodeURIComponent(new URL(req.url ?? '/', 'http://x').pathname);
@@ -22,7 +22,9 @@ export function serveStatic(): Promise<Server> {
     res.writeHead(200, { 'content-type': types[extname(file)] ?? 'application/octet-stream' });
     res.end(readFileSync(file));
   });
-  return new Promise((resolveListen) => server.listen(0, '127.0.0.1', () => resolveListen(server)));
+  return new Promise((resolveListen) =>
+    server.listen(port, '127.0.0.1', () => resolveListen(server)),
+  );
 }
 
 export interface Check {
