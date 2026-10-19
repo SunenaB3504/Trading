@@ -92,6 +92,32 @@ describe('cost preview (FR-T7)', () => {
     expect(p?.caveats).toContain('broker.profile-assumed');
   });
 
+  it('gives no preview, and never throws, for a date that is half typed or not a real day', () => {
+    // Backspacing "2026-03-02" passes through every one of these; UAT C5 found it crashed the screen.
+    for (const date of [
+      '2026-03-0',
+      '2026-03-',
+      '2026-03',
+      '2026-0',
+      '2026',
+      '2',
+      '',
+      '2026-3-2',
+      'abc',
+      '2026-13-45',
+      '2099-01-01',
+    ]) {
+      expect(
+        () => previewCosts(snapshot, { instrumentId: 'AAA', side: 'buy', quantity: 10, date }),
+        date,
+      ).not.toThrow();
+      expect(
+        previewCosts(snapshot, { instrumentId: 'AAA', side: 'buy', quantity: 10, date }),
+        date,
+      ).toBeNull();
+    }
+  });
+
   it('charges the DP fee on a sell only, and gives nothing for no quantity or no price history', () => {
     const buy = previewCosts(snapshot, {
       instrumentId: 'AAA',

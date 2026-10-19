@@ -15,6 +15,17 @@ export function lastCloseOnOrBefore(
   return close;
 }
 
+const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+
+/** The next regular session after `date`, or null if the date is not a real day or is outside the calendar. */
+function nextSession(date: string): string | null {
+  try {
+    return nextRegularTradingDay(date);
+  } catch {
+    return null;
+  }
+}
+
 export interface CostPreview {
   estimatedPricePaise: number;
   rows: LedgerRow[];
@@ -30,11 +41,15 @@ export function previewCosts(
   snapshot: ReplaySnapshot,
   args: { instrumentId: string; side: 'buy' | 'sell'; quantity: number; date: string },
 ): CostPreview | null {
+  // The date box is typed into character by character, so a half-typed or impossible date is normal
+  // input and must give "no preview", never an error (found in UAT C5: Backspace crashed the screen).
+  if (!ISO_DATE.test(args.date)) return null;
   const price = lastCloseOnOrBefore(snapshot, args.instrumentId, args.date);
-  if (price === null || args.quantity < 1) return null;
+  const fillDate = nextSession(args.date);
+  if (price === null || fillDate === null || args.quantity < 1) return null;
   const costs = computeCosts(
     {
-      date: nextRegularTradingDay(args.date),
+      date: fillDate,
       exchange: 'NSE',
       side: args.side,
       product: 'delivery',

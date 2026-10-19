@@ -76,6 +76,25 @@ async function badInput(page: Page): Promise<void> {
   check('a bad quantity is explained and nothing is placed', true);
 }
 
+/** The date box is edited by hand: Backspace must work, and a bad date must be explained (UAT C5). */
+async function editDate(page: Page): Promise<void> {
+  const date = page.getByTestId('date-input');
+  await page.getByTestId('qty-input').fill('10');
+  await date.click();
+  for (let i = 0; i < 3; i += 1) await page.keyboard.press('Backspace');
+  check('Backspace shortens the date box', (await date.inputValue()) === '2026-03');
+  check(
+    'the form is still there after editing the date',
+    await page.getByTestId('place-order').isVisible(),
+  );
+  await date.fill('2026-03-07');
+  await page.getByTestId('place-order').click();
+  await page.getByText(/must be a regular trading day/).waitFor({ timeout: 10_000 });
+  check('a Saturday is refused with a clear message', true);
+  await date.fill('2026-03-02');
+  check('the date can be typed again', (await date.inputValue()) === '2026-03-02');
+}
+
 async function afterReload(page: Page, url: string): Promise<void> {
   await openTrade(page, url);
   await page
@@ -100,6 +119,7 @@ async function main(): Promise<void> {
     await compare(page);
     await report(page);
     await badInput(page);
+    await editDate(page);
     await afterReload(page, url);
     check('no page errors', errors.length === 0, errors.join(' | '));
   } finally {
