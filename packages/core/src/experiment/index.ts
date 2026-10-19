@@ -27,3 +27,24 @@ export { evaluateRule } from './evaluate';
 export type { EvalConfig, EvaluationReport } from './evaluate';
 export { syntheticPanel } from './synthetic';
 export type { SyntheticOptions } from './synthetic';
+export {
+  EMPTY_REGISTRY,
+  RegistryError,
+  canRun,
+  freeze,
+  preRegister,
+  specHashOf,
+  verifyRegistry,
+} from './registry';
+export type {
+  AnchorProof,
+  HypothesisSpec,
+  ParamValue,
+  Registration,
+  Registry,
+  RunCheck,
+  TimeAnchorer,
+  Variant,
+} from './registry';
+export { logVariant, multiplicityCount } from './variantLog';
+export type { MultiplicityCount, VariantInput } from './variantLog';
