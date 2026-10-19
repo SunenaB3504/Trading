@@ -48,3 +48,20 @@ export type {
 } from './registry';
 export { logVariant, multiplicityCount } from './variantLog';
 export type { MultiplicityCount, VariantInput } from './variantLog';
+export {
+  baselineArm,
+  calendarControlArm,
+  matchedRandomArm,
+  overlayRun,
+  shuffledEphemerisArm,
+  summarise,
+} from './arms';
+export type {
+  ArmGrid,
+  ArmSummary,
+  CalendarControlResult,
+  MatchedRandomResult,
+  OverlayRun,
+} from './arms';
+export { drawBirth, syntheticBuyerNull } from './syntheticBuyers';
+export type { BirthDraw, BirthRange, SyntheticBuyerResult } from './syntheticBuyers';
