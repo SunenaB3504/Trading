@@ -17,3 +17,14 @@ export { GENESIS, SignalLog, defineSignal, logDay, verifyEntries } from './signa
 export type { LogEntry, SignalDefinition, SignalFn, SignalSpec, SignalValue } from './signal';
 export { classifyDays, lockDay, receiptProblem, signalsHash, verifyLock } from './preopen';
 export type { AnchorReceipt, Anchorer, DayLock, LockStatus } from './preopen';
+export {
+  GRAY_NODATA,
+  GRAY_NOSIGNAL,
+  compute,
+  logDayGuarded,
+  nodataHash,
+  snapshotProblem,
+  tally,
+  usesBaseline,
+} from './nodata';
+export type { GuardedDay, InstrumentHealth, SnapshotHealth, Tally } from './nodata';
