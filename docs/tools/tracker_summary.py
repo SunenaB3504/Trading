@@ -8,6 +8,16 @@ for line in t.split("\n"):
         phases.append(cur)
     elif cur and re.match(r"\| \d+\.\d+ \|", line):
         status = line.split("|")[4].strip()
+        # Qualified statuses count with their base word: "Done (web)", "Part done", "Built; waiting ..."
+        low = status.lower()
+        if low.startswith("done"):
+            status = "Done"
+        elif low.startswith(("part done", "built", "in progress")):
+            status = "In progress"
+        elif low.startswith("blocked"):
+            status = "Blocked"
+        elif low.startswith("not started"):
+            status = "Not started"
         cur["c"][status] = cur["c"].get(status, 0) + 1
     elif line.startswith("## ") and cur and not re.match(r"## P[0-9]", line):
         cur = None
