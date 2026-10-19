@@ -236,3 +236,4 @@
 | 2026-10-19 | UAT defect D-1 verified fixed by the owner (tab row visible on the Universe tab after the reload) |
 | 2026-10-19 | UAT round 1: H1 passed with an observation (tab row gives no cue that more tabs are hidden on a phone; proposed: auto-scroll and fade edge now, bottom tab bar at the Android build); J1 to J3 passed, run by the assistant (678 tests; 56 astro-engine tests; 16 replay tests). 4 cases still to run: C5, E2, F3, I1 |
 | 2026-10-19 | UAT round 1: F3 passed (restore into an empty browser gives the same book; a repeated import does not duplicate orders). 3 cases still to run: C5, E2, I1 |
+| 2026-10-19 | UAT round 1: E2 closed as passed (round trip with no price move loses the charges, Net and Gross views agree). Owner did not show cash and the Compare card; they remain as expected values in the note. Polish: break-even counted as a loss and not defined in the SSD; 'Only 1 closed trades' wording. 2 cases still to run: C5, I1 |
