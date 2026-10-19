@@ -20,6 +20,8 @@ interface Measured {
   unnamed: string[];
   tinyText: string[];
   gutter: number;
+  /** Height of the tab strip itself: a long screen below must not squeeze it away. */
+  tabStrip: number;
 }
 
 function measure(): Measured {
@@ -60,6 +62,7 @@ function measure(): Measured {
     unnamed,
     tinyText: Array.from(new Set(tinyText)),
     gutter,
+    tabStrip: document.querySelector('[role="tablist"]')?.getBoundingClientRect().height ?? 0,
   };
 }
 
@@ -83,6 +86,7 @@ async function checkTab(page: Page, name: string, width: number): Promise<void> 
     m.tinyText.length === 0,
     m.tinyText.slice(0, 4).join('; '),
   );
+  check(`${width}px ${name}: the tab strip is fully visible`, m.tabStrip >= 40, `${m.tabStrip}px`);
   check(`${width}px ${name}: side gutter of at least 16 px`, m.gutter >= 16, `${m.gutter}px`);
 }
 

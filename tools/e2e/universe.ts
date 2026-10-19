@@ -30,6 +30,12 @@ async function main(): Promise<void> {
       /Demo universe/.test(all) && /assumed/.test(all),
     );
     check('it lists 16 instruments', /16 instruments/.test(all));
+    const strip = await page.getByRole('tablist').first().boundingBox();
+    check(
+      'the tab strip stays visible above the long list',
+      strip !== null && strip.height >= 40,
+      JSON.stringify(strip),
+    );
 
     const reliance = await page.getByTestId('row-RELIANCE').innerText();
     check(

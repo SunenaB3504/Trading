@@ -102,11 +102,12 @@ export default function App() {
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.background },
-  header: { flexDirection: 'row', justifyContent: 'space-between', padding: 16 },
+  header: { flexDirection: 'row', justifyContent: 'space-between', padding: 16, flexShrink: 0 },
   brand: { fontSize: 18, fontWeight: '700', color: colors.text },
   online: { color: '#0a7d33', fontWeight: '600' },
   offline: { color: colors.warn, fontWeight: '600' },
-  tabsScroll: { flexGrow: 0, borderBottomWidth: 1, borderBottomColor: colors.line },
+  // flexShrink 0: a long screen below must never squeeze the tab strip to nothing (found in UAT, G1)
+  tabsScroll: { flexGrow: 0, flexShrink: 0, borderBottomWidth: 1, borderBottomColor: colors.line },
   tabs: { flexDirection: 'row' },
   tab: { paddingHorizontal: 20, minHeight: 44, justifyContent: 'center' },
   tabActive: { borderBottomWidth: 2, borderBottomColor: colors.accent },
