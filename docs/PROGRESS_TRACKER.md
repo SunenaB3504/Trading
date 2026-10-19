@@ -17,7 +17,7 @@
 | P2 · Data service and universe | 8 | 1 | 0 | 0 | 9 |
 | P3 · Web MVP (R1) | 11 | 0 | 0 | 1 | 12 |
 | P4 · Chart module and shadow mode (R1.5) | 8 | 4 | 0 | 0 | 12 |
-| P5 · Experiment harness and buyer-company overlay (R2) | 1 | 0 | 0 | 6 | 7 |
+| P5 · Experiment harness and buyer-company overlay (R2) | 2 | 0 | 0 | 5 | 7 |
 | P6 · Android shell (A1) | 0 | 0 | 0 | 1 | 1 |
 | P7 · Jyotisham feature modules and PH entries (R3) | 0 | 0 | 0 | 10 | 10 |
 | P11 · Commercialization (after R2; gated by D32) | 0 | 0 | 0 | 4 | 4 |
@@ -110,7 +110,7 @@
 | WP | Work package | Depends on | Status | Started | Done | Acceptance result | Notes |
 | ------ | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
 | 5.1 | Experiment registry, pre-registration, freeze, multiplicity log | 0.6, 4.4 | Done | 2026-10-19 | 2026-10-19 | `pnpm verify` green: 846 tests (14 new). `core/experiment/registry.ts`: `preRegister` refuses a hypothesis without an H-/PH- id, stated null, claimed effect above zero, horizon, frozen parameters or rule hash, and a repeated id; `freeze` appends to the hash chain and asks an outside time service for a receipt, counting as frozen only if the receipt is for that event's hash (a failing or wrong-digest service leaves it unfrozen with a note); `canRun` refuses a rule that is unregistered, unfrozen, changed since the freeze, or frozen at or after the run started; `verifyRegistry` catches an altered, re-ordered or mismatched record. `variantLog.ts`: append-only multiplicity log (pilot variants counted, synthetic placeholders not), `multiplicityCount` per family gives M, pilot and synthetic counts and the p-values for Benjamini-Hochberg | In memory only (same as WP-4.4): persistence, and the OpenTimestamps adapter behind `TimeAnchorer` (shared with WP-4.5), come later. Registration of the actual hypotheses (PH-11, PH-12, H21) happens with WP-5.4 |
-| 5.2 | Overlay contract and sandboxed evaluator | 5.1 | Not started |  |  |  |  |
+| 5.2 | Overlay contract and sandboxed evaluator | 5.1 | Done | 2026-10-19 | 2026-10-19 | `pnpm verify` green: 851 tests (5 new). `core/overlay`: the contract (candidate and context in; allow, deny or resize with a reason code, optional state code and direction out) and `evaluateOverlay`, which refuses an overlay whose hypothesis is not frozen or whose hash differs from the frozen rule, passes frozen copies of the inputs, runs the overlay twice and requires identical answers, fails (never allows or denies) on a throw, a late/promise answer, a changed input or a malformed answer, limits resize to a factor above 0 and at most 1 by default, and computes the features hash itself | Limit: JavaScript cannot stop an overlay reaching globals; that is held by core's lint and import rules (no time, randomness, files or network). The router (5.5) and PH protocols are implementations of this contract |
 | 5.3 | Arms B0, B1, B2, B3, A; synthetic-buyer placebo | 5.2, 0.6 | Not started |  |  |  |  |
 | 5.4 | T23 buyer-company features; H21 | 4.3 | Not started |  |  |  |  |
 | 5.5 | Signal-state router decision table | 5.2 | Not started |  |  |  |  |
@@ -267,3 +267,4 @@
 | 2026-10-19 | WP-4.12 built (edit birth details). Next: WP-4.11 Hindi, or P5 |
 | 2026-10-19 | WP-4.11 built (Hindi in the Profile switcher, Noto Sans Devanagari). Waiting for the owner's review of the Hindi text. Next: P5 (experiment harness and buyer-company overlay) |
 | 2026-10-19 | WP-5.1 done (experiment registry, freeze with outside time receipt, multiplicity log). Next: WP-5.2 overlay contract and sandboxed evaluator |
+| 2026-10-19 | WP-5.2 done (overlay contract and sandboxed evaluator). Next: WP-5.3 arms B0, B1, B2, B3, A and the synthetic-buyer placebo |
