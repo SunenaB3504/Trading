@@ -51,3 +51,21 @@ export { NAKSHATRA_ALIASES, findStars, starIndex } from './names';
 export type { StarMatch } from './names';
 export { BirthInputError } from './birth';
 export type { ExtraSpellings } from './names';
+export {
+  PROPOSED_NAMA_TABLE_V1,
+  buyerFeatures,
+  buyerFeaturesOn,
+  firstSyllable,
+  makeNamaTable,
+  nameStar,
+} from './buyer';
+export type {
+  Buyer,
+  BuyerFeatures,
+  NamaTable,
+  NameStar,
+  NameStarReason,
+  TableStatus,
+} from './buyer';
+export { H21_ID, H21_VERSION, h21Features, h21Overlay, h21RuleHash, h21Spec } from './h21';
+export type { H21Claim } from './h21';
