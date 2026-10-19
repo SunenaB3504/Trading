@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UAT 2 web app</title>
+<style>
+  :root {
+    --bg: #f6f7f9; --card: #ffffff; --ink: #1b2430; --muted: #5b6676; --line: #dde2ea;
+    --accent: #1f5fbf; --pass: #19803f; --fail: #b3261e; --block: #9a6700; --none: #8a94a3;
+    --pass-bg: #e3f4e9; --fail-bg: #fbe5e3; --block-bg: #fdf0d3; --none-bg: #eceff3;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #12171e; --card: #1b222c; --ink: #e8edf3; --muted: #9aa6b5; --line: #2c3644;
+      --accent: #6aa3ff; --pass: #5fd08a; --fail: #ff8a80; --block: #f0c05a; --none: #8a94a3;
+      --pass-bg: #17321f; --fail-bg: #3a1c1a; --block-bg: #3a2f13; --none-bg: #252d39;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 system-ui, "Segoe UI", sans-serif; }
+  main { max-width: 980px; margin: 0 auto; padding: 24px 16px 64px; }
+  h1 { font-size: 24px; margin: 0 0 4px; }
+  h2 { font-size: 18px; margin: 32px 0 8px; }
+  p, li { color: var(--ink); }
+  .muted { color: var(--muted); }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px; margin: 12px 0; }
+  code, pre { font-family: ui-monospace, Consolas, monospace; font-size: 13px; background: var(--none-bg); border-radius: 5px; }
+  code { padding: 1px 5px; }
+  pre { padding: 10px 12px; overflow-x: auto; margin: 8px 0; }
+  .bar { height: 12px; background: var(--none-bg); border-radius: 6px; overflow: hidden; display: flex; }
+  .bar span { display: block; height: 100%; }
+  .tally { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 10px; }
+  .tally b { font-size: 20px; }
+  .toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; align-items: center; }
+  button, select, input[type=text], textarea {
+    font: inherit; color: var(--ink); background: var(--card); border: 1px solid var(--line);
+    border-radius: 7px; padding: 6px 10px;
+  }
+  button { cursor: pointer; }
+  button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  button:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .case { padding: 14px 16px; }
+  .case header { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: baseline; }
+  .id { font-weight: 700; }
+  .tag { font-size: 12px; padding: 1px 8px; border-radius: 10px; background: var(--none-bg); color: var(--muted); }
+  .auto-pass { background: var(--pass-bg); color: var(--pass); }
+  .title { font-weight: 600; flex: 1 1 260px; }
+  ol { margin: 8px 0 8px 20px; padding: 0; }
+  .expect { border-left: 3px solid var(--accent); padding: 2px 10px; margin: 8px 0; }
+  .status-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-start; margin-top: 8px; }
+  .status-row textarea { flex: 1 1 260px; min-height: 36px; resize: vertical; }
+  .pill { font-weight: 600; border-radius: 12px; padding: 1px 10px; font-size: 13px; }
+  .s-pass { background: var(--pass-bg); color: var(--pass); }
+  .s-fail { background: var(--fail-bg); color: var(--fail); }
+  .s-block { background: var(--block-bg); color: var(--block); }
+  .s-none { background: var(--none-bg); color: var(--none); }
+  table { border-collapse: collapse; width: 100%; }
+  td, th { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .filters button.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+  @media (max-width: 600px) { main { padding: 16px; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>User acceptance test 2: web app, release 1.5 build</h1>
+  <p class="muted">Scope: the changes made after round 1 (the polish list) and the new optional layer (Profile and the two personal shields), using the demo data that exists today. Tester: Sunil, on the local laptop. Prepared 2026-10-19 from commit <code>734ad62</code>. Round 1 is recorded in <code>docs/UAT/UAT-1</code>. Virtual money only.</p>
+
+  <div class="card" id="summary">
+    <div class="bar" id="bar" aria-hidden="true"></div>
+    <div class="tally" id="tally"></div>
+    <p id="verdict" style="margin:10px 0 0"></p>
+  </div>
+
+  <div class="toolbar">
+    <span class="filters" id="filters"></span>
+    <span style="flex:1"></span>
+    <button id="save" class="primary" title="Downloads this page with your current results built in">Save a copy with my results</button>
+    <button id="exportCsv">Export CSV</button>
+    <button id="reset">Reset all results</button>
+  </div>
+  <p class="muted" style="margin-top:0">Your results are remembered in this browser automatically. Use “Save a copy” to keep them inside the file itself (replace this file with the downloaded copy).</p>
+
+  <h2>1. Get ready</h2>
+  <div class="card">
+    <ol>
+      <li>Open a terminal in <code>C:\Users\Admin\Sunil\Trading</code>.</li>
+      <li>The app changed since round 1, so build it again (about a minute): <pre>pnpm --filter @trading/app export:web</pre></li>
+      <li>Start the app and the data service: <pre>pnpm uat:start</pre> Leave the terminal open; Ctrl+C stops both. (Opening <code>http://127.0.0.1:8787</code> shows <code>no such endpoint /</code>; that is normal, the service has no page.)</li>
+      <li>Open <code>http://127.0.0.1:8080</code> in a <b>private window</b> so no earlier data interferes. Use Chrome or Edge.</li>
+      <li><b>Starting clean.</b> Several cases need an empty book. To empty everything: press F12, open <i>Application</i>, choose <i>Storage</i>, press <i>Clear site data</i>, then reload. Do this before section A, and again before B1.</li>
+      <li><b>The optional layer is switched off by default.</b> It appears only after you open the app once at <code>http://127.0.0.1:8080/?layer=on</code>. <code>?layer=off</code> switches it off again. The setting is remembered on this device.</li>
+    </ol>
+    <p class="muted">The demo data is fixed, so the numbers you see should match the expected results below, except where a case says the answer depends on today's date. If a number differs, mark the case Fail and write what you saw in the note.</p>
+  </div>
+
+  <h2>2. Pass bar</h2>
+  <div class="card">
+    <ul>
+      <li>Every case marked <b>Must</b> passes.</li>
+      <li>No open defect that loses or corrupts money or ledger data.</li>
+      <li>A device with the layer switched off shows and stores nothing of it (FR-P10): no Profile tab, no astro word on any screen.</li>
+      <li>Birth details are never readable in storage and are gone, with their key, after Delete.</li>
+      <li>Cases marked <b>Exploratory</b> do not block: record what you see and any surprise.</li>
+    </ul>
+    <p class="muted">The “Automated” tag means the same check already passed in an automated browser run on 2026-10-19 (<code>pnpm e2e:*</code>). You are confirming it with your own eyes. Expected values for the chart facts and the Tara result come from Swiss Ephemeris and the IANA time-zone database, not from the app's own code.</p>
+  </div>
+
+  <h2>3. Cases</h2>
+  <div id="cases"></div>
+
+  <h2>4. Not covered in this round</h2>
+  <div class="card">
+    <ul>
+      <li>The Android build and the Android keystore for the birth-details key (after release 2); Hermes parity of the engine (WP-6.1).</li>
+      <li>The lots popup (WP-3.12) and dividends listed on the Trade screen: planned, not built.</li>
+      <li>Stock first-trade times: the demo universe has none verified, so Tara takes them from you. Nothing is invented.</li>
+      <li>The experiment harness and the buyer-company overlay (phase P5).</li>
+    </ul>
+  </div>
+
+  <h2>5. Defects found</h2>
+  <div class="card">
+    <p class="muted">Write each defect in the note of the case it belongs to, with what you did, what you expected and what happened. A screenshot filename is enough. Send the exported CSV back and I will fix and re-run the failed cases.</p>
+  </div>
+</main>
+
+<script id="state" type="application/json">{}</script>
+<script>
+"use strict";
+const PREPASS = "2026-10-19";
+const CASES = [
+  // [id, group, must, auto, title, steps[], expected]
+
+  // ---- A. The round 1 changes, checked again ----
+  ["A1","A. Round 1 changes re-checked",true,true,"Orders list says what each order was",
+    ["Start clean (section 1, step 5). Open the Trade tab.","Place the default order: AAA, buy, market, quantity 10, date 2026-03-02."],
+    "The Orders list shows one line: <b>buy 10 of 10 AAA, market, decided 2026-03-02 (h-0001)</b>, with the state filled. The order id is now part of the line."],
+  ["A2","A. Round 1 changes re-checked",true,true,"A failed limit order says why, in words",
+    ["Place a buy limit: AAA, quantity 10, limit price 1097.80, date 2026-03-02.","Place a second one with limit price 1097.85, same date."],
+    "The first is listed as <b>buy 10 AAA, limit ₹1,097.80, decided 2026-03-02 (h-0002)</b> and expired, with the reason <b>the price never reached your limit</b>. The second is filled at ₹1,097.85. The two lines differ, so they can be told apart. The word <code>limit_not_reached</code> no longer appears."],
+  ["A3","A. Round 1 changes re-checked",true,true,"An order beyond the data stays pending, and says so",
+    ["Place a buy: AAA, quantity 10, market, date 2026-10-19 (today's date)."],
+    "The message reads <b>placed, but it stays pending: the demo prices end on 2026-06-30, so there is no later session to fill it</b>. The Orders list shows the order as pending. Cash does not change."],
+  ["A4","A. Round 1 changes re-checked",true,true,"All form problems are shown together",
+    ["Set the quantity to the letter x, the date to 2026-03-07 (a Saturday), the type to limit, and leave the limit price empty.","Press Place order."],
+    "One message with three lines: the quantity must be a whole number; the decision date must be a regular trading day; enter the limit price in rupees. You do not have to fix them one press at a time."],
+  ["A5","A. Round 1 changes re-checked",true,true,"The date box can be edited by hand (defect D-2 stays fixed)",
+    ["Click in the Decision date box and press Backspace three times, then type 2026-03-02 again."],
+    "The characters delete and the new date types in. The page does not freeze or go blank. While the date is half typed the Cost preview says to enter a quantity and a valid date."],
+  ["A6","A. Round 1 changes re-checked",true,true,"The Stop price box is gone",
+    ["Look at the Trade form for a buy, then for a sell, then with type limit."],
+    "The form has Instrument, Side, Type, Quantity, Limit price (only for limit) and Decision date. There is no Stop price box in any combination."],
+  ["A7","A. Round 1 changes re-checked",true,true,"A sell with nothing to sell is refused in plain words",
+    ["Start clean. Place a sell: AAA, quantity 10, market, date 2026-03-02."],
+    "The order is listed as rejected with the reason <b>you cannot sell 10 shares: you hold 0</b>. Cash stays ₹10,00,000.00 and no position appears."],
+  ["A8","A. Round 1 changes re-checked",true,true,"Universe rules show rupees, not paise",
+    ["Open the Universe tab. Open the rules of FEL, of ACCENTMIC (under Not eligible) and of RELIANCE."],
+    "FEL: <b>median traded value ₹2.88 lakh is below ₹5.00 crore</b>. ACCENTMIC: <b>₹1.19 crore is below ₹5.00 crore</b> (it also fails E1, series ST). RELIANCE: <b>Pass E5: median traded value ₹1708.46 crore</b>. No figure is written in paise."],
+  ["A9","A. Round 1 changes re-checked",true,true,"Compare says what its percentage excludes",
+    ["Start clean, place the default buy (A1), then open the Compare tab."],
+    "The trade card for AAA has a line labelled <b>Price move so far (before charges and dividends)</b>."],
+  ["A10","A. Round 1 changes re-checked",true,true,"Report wording, and a no-gain trade is a loss",
+    ["Start clean. Place a buy AAA 10 market 2026-03-02, then a sell AAA 10 market 2026-03-02 (the same date, so both fill at the next open).","Open the Report tab: Net of costs, then Gross of costs."],
+    "Net view: 1 closed trade, win rate 0.0%, net profit <b>−₹39.83</b>; the notes say <b>Only 1 closed trade.</b> (singular) and <b>A trade that earns exactly nothing counts as a loss, not a win.</b> Gross view: gross profit ₹0.00 and the note <b>Gross view: before brokerage, taxes and other charges.</b>"],
+  ["A11","A. Round 1 changes re-checked",true,true,"The Ledger says it is a demo",
+    ["Open the Ledger tab."],
+    "Below the totals: <b>This is a fixed demo scenario. The orders you place yourself are on the Trade tab.</b> The report hash is still e0b425cce01d3276c53909e3af23d198a90d49d14f140fafca9a8a2be9b4b3a8."],
+  ["A12","A. Round 1 changes re-checked",true,true,"On a phone width the tab row shows that more tabs are hidden",
+    ["Press F12, then Ctrl+Shift+M and set the width to 390. Press Ctrl+F5.","Look at the right end of the tab row on the Ledger tab.","Tap Data."],
+    "A <b>›</b> marker sits at the right end of the row while tabs are hidden. After you tap Data, the Data tab slides fully into view and the marker disappears."],
+  ["A13","A. Round 1 changes re-checked",true,true,"The tab row stays visible on the long Universe page (defect D-1 stays fixed)",
+    ["At full width and then at 390, open the Universe tab and scroll to the bottom and back."],
+    "The row Ledger, Universe, Trade, … is visible under the title the whole time, and Ledger can always be reached."],
+
+  // ---- B. The optional layer ----
+  ["B1","B. The optional layer: Profile and shields",true,true,"The layer is switched off by default",
+    ["Clear site data (section 1, step 5). Open <code>http://127.0.0.1:8080</code> with nothing after it.","Look at every tab; on each, press Ctrl+F and search for nakshatra, lagna, dasha, rashi, tara, chandra."],
+    "There is no Profile tab. None of those words appears anywhere. Nothing else about the layer is visible."],
+  ["B2","B. The optional layer: Profile and shields",true,true,"The owner switch turns it on, and it is remembered",
+    ["Open <code>http://127.0.0.1:8080/?layer=on</code>.","Reload at the plain address <code>http://127.0.0.1:8080</code>."],
+    "A <b>Profile</b> tab appears at the end of the tab row (you may need to scroll the row at a narrow width). After the plain reload it is still there."],
+  ["B3","B. The optional layer: Profile and shields",true,true,"The protection notice and the data credit are shown",
+    ["Open the Profile tab."],
+    "At the top: <b>Your birth details are encrypted on this device, but on the web the key is kept in this browser</b>, … and that the Android app keeps the key in secure storage. Under the place box: <b>Place names are from GeoNames (geonames.org), licensed CC BY 4.0, and work offline.</b>"],
+  ["B4","B. The optional layer: Profile and shields",true,true,"Bad input is refused with a message and nothing is saved",
+    ["Enter a name, the date 1975-08-15 and the time 10:30, but do not pick a place. Press Save details.","Now type Mumbai in the place box and pick the first suggestion. Change the date to 2020-02-30 and press Save details."],
+    "First: <b>Search for your birth place and pick it from the list.</b> Then: a message that it is <b>not a real date and time</b>. No chart facts appear."],
+  ["B5","B. The optional layer: Profile and shields",true,true,"Chart facts for a made-up birth match Swiss Ephemeris",
+    ["Enter: Name Test Person, date 1975-08-15, time 10:30, place Mumbai (pick Mumbai, IN). Press Save details."],
+    "<b>Rising sign (Lagna): Virgo 26°11′. Moon sign (Rashi): Scorpio. Birth star (Nakshatra): Anuradha, pada 3.</b> Indu Lagna: <b>pending verification</b>. Clock time used: <b>1975-08-15T05:00 UTC, from Asia/Kolkata at +05:30</b>. The running period depends on today's date: from 2026-07-19 to 2027-01-18 it should read <b>Dasha: Sun, 2026-04-01 to 2032-03-31</b> and <b>Bhukti: Moon, 2026-07-19 to 2027-01-18</b>. (The Swiss Ephemeris reference for this birth gives Virgo rising, Scorpio Moon, Anuradha pada 3 and a Saturn period at birth.)"],
+  ["B6","B. The optional layer: Profile and shields",true,false,"The clock of the day is used, with warnings (engine-tested)",
+    ["Delete the details first (B11) or use the Delete button, then enter: London, GB, 2020-10-25, 01:30.","Delete again and enter: Chennai, IN, 1944-06-01, 06:00."],
+    "London: a warning <b>The clocks showed this time twice that day. The first one was used; check your birth time.</b> and the clock line <b>2020-10-25T00:30 UTC, from Europe/London at +01:00</b>; rising sign Leo 1°36′, Moon sign Capricorn, star Dhanishta pada 1. Chennai: <b>1944-05-31T23:30 UTC, from Asia/Kolkata at +06:30</b> (wartime India time), no warning; rising Taurus 6°05′, Moon Virgo, star Uttara Phalguni pada 4."],
+  ["B7","B. The optional layer: Profile and shields",true,true,"The saved details survive a reload and decrypt",
+    ["With details saved, reload the page and open the Profile tab."],
+    "The chart facts are shown again without typing anything."],
+  ["B8","B. The optional layer: Profile and shields",true,true,"The Chandrashtama banner is information only",
+    ["On the Profile tab with the Mumbai 1975 birth saved, read the Chandrashtama section.","Compare with the windows listed in the expected result."],
+    "It says <b>Chandrashtama is running now</b> or <b>is not running now</b>, gives the next window's start and end in IST, is tagged <b>[H] PH-11</b>, and says <b>information only, not advice</b>. No percentage, no buffer, no instruction. For this birth (Moon in Scorpio) the windows, from Swiss Ephemeris, are: 2026-10-29 22:07 to 2026-11-01 00:01 IST; 2026-11-26 07:11 to 2026-11-28 07:23; 2026-12-23 18:26 to 2026-12-25 17:33; 2027-01-20 05:38 to 2027-01-22 05:10; 2027-02-16 14:35 to 2027-02-18 15:43 (a few minutes either way is normal)."],
+  ["B9","B. The optional layer: Profile and shields",true,true,"Tara Bala gives a category name only",
+    ["In Tara Bala for a stock enter first-trade date 1995-11-03 and time 09:15 (IST). Press Check Tara.","Then enter the date 2020-02-30 and press Check Tara.","Go back to 1995-11-03 09:15, tick the box saying the time is assumed and press Check Tara again."],
+    "<b>Parama Mitra (good group)</b>; stock's birth star <b>Purva Bhadrapada, pada 3</b>; count from your star <b>9 (class 9 of 9)</b>; the footnote starts <b>[M] [V] PH-12</b> and says there is no score and no advice. The bad date gives <b>That is not a real date and time.</b> With the box ticked a warning says the stock's star rests on an <b>assumed time and may be wrong</b>."],
+  ["B10","B. The optional layer: Profile and shields",true,true,"Stored birth details cannot be read",
+    ["Press F12, open <i>Application</i>, then <i>IndexedDB</i>.","Open <code>trading-app</code>, then <code>kv</code>, and click the key <code>profile/birth</code>.","Open <code>trading-app-keys</code>, then <code>keys</code>, and click <code>birth</code>."],
+    "The record is only <code>{\"v\":1,\"iv\":\"…\",\"ct\":\"…\"}</code> with long hexadecimal text: no name, date, time or place. The key is shown as a CryptoKey object you cannot read."],
+  ["B11","B. The optional layer: Profile and shields",true,true,"Delete destroys the details and the key",
+    ["On the Profile tab press <i>Delete my birth details</i>; it asks you to press again; press again.","Look at IndexedDB as in B10, then reload."],
+    "The form returns, empty. <code>profile/birth</code> is gone and the <code>birth</code> key is gone. After a reload there are still no details."],
+  ["B12","B. The optional layer: Profile and shields",true,true,"Switching it off removes the tab",
+    ["With no details saved, open <code>http://127.0.0.1:8080/?layer=off</code>, then reload at the plain address."],
+    "The Profile tab is gone and stays gone. (Delete saved details first: switching off hides the tab but does not delete a saved record.)"],
+  ["B13","B. The optional layer: Profile and shields",true,true,"The Profile screen fits a phone",
+    ["Switch the layer on again (<code>?layer=on</code>), set the width to 390 and open the Profile tab. Fill the form and scroll to the end."],
+    "No sideways page scroll, all fields have visible labels, buttons are large enough to tap, text is readable, a margin of about 16 px at the sides."],
+  ["B14","B. The optional layer: Profile and shields",false,false,"Odd inputs (exploratory)",
+    ["Try place names: Bombay, Madras, Calcutta, Thiruvananthapuram, Sydney, a small foreign town, a misspelling. Try 29 February births, midnight 00:00, 23:59, and a date long ago such as 1900-01-01."],
+    "Old Indian names find the right city; a town outside the list finds nothing and you can pick a larger one; unusual dates either work or are refused with a clear message. Nothing freezes, goes blank or shows a raw error. Record anything odd."],
+
+  // ---- C. Command line ----
+  ["C1","C. Command line (back end)",true,false,"Full verification",
+    ["In the terminal run: <pre>pnpm verify</pre>"],
+    "Ends without errors: 777 tests passed at last count (the number grows as work continues), size and architecture checks clean."],
+  ["C2","C. Command line (back end)",true,false,"Every browser check",
+    ["After <code>pnpm --filter @trading/app export:web</code> run each: <pre>pnpm e2e:airplane\npnpm e2e:orders\npnpm e2e:backup\npnpm e2e:universe\npnpm e2e:phone\npnpm e2e:noastro\npnpm e2e:profile</pre>"],
+    "Each exits without a failure. At last count: airplane 9 checks, orders 14, backup 11, universe 9, phone 106, no-astro 24, profile 26."],
+  ["C3","C. Command line (back end)",true,false,"The engine against Swiss Ephemeris",
+    ["Run: <pre>pnpm vitest run packages/astro-engine</pre>"],
+    "All pass: positions and angles, historical time zones, the personal profile for twelve invented births, the Chandrashtama windows and the stock stars, all against Swiss Ephemeris and the IANA time-zone database."]
+];
+
+const STATUSES = [["none","Not run"],["pass","Pass"],["fail","Fail"],["block","Blocked"]];
+const KEY = "uat-2-results-v1";
+let filter = "all";
+let results = {};
+
+function embedded() {
+  try { return JSON.parse(document.getElementById("state").textContent || "{}"); } catch (e) { return {}; }
+}
+function load() {
+  let stored = {};
+  try { stored = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { stored = {}; }
+  const base = embedded();
+  results = Object.assign({}, base, stored);
+}
+function persist() {
+  try { localStorage.setItem(KEY, JSON.stringify(results)); } catch (e) { /* private mode: use Save a copy */ }
+}
+function get(id) { return results[id] || { status: "none", note: "", at: "" }; }
+
+function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
+
+function render() {
+  const box = document.getElementById("cases");
+  box.textContent = "";
+  let group = "";
+  CASES.forEach(function (c) {
+    const [id, g, must, auto, title, steps, expected] = c;
+    const r = get(id);
+    if (filter !== "all" && r.status !== filter) return;
+    if (g !== group) { group = g; const h = document.createElement("h3"); h.textContent = g; h.style.margin = "22px 0 4px"; box.appendChild(h); }
+    const el = document.createElement("section");
+    el.className = "card case";
+    el.innerHTML =
+      '<header><span class="id">' + id + '</span><span class="title">' + esc(title) + '</span>' +
+      '<span class="tag">' + (must ? "Must" : "Exploratory") + '</span>' +
+      (auto ? '<span class="tag auto-pass">Automated: passed ' + PREPASS + '</span>' : '') +
+      '<span class="pill s-' + r.status + '" id="pill-' + id + '">' + STATUSES.find(function (s) { return s[0] === r.status; })[1] + '</span></header>' +
+      '<ol>' + steps.map(function (s) { return "<li>" + s + "</li>"; }).join("") + '</ol>' +
+      '<div class="expect"><b>Expected.</b> ' + expected + '</div>' +
+      '<div class="status-row"><label>Result <select data-id="' + id + '" aria-label="Result for ' + id + '">' +
+      STATUSES.map(function (s) { return '<option value="' + s[0] + '"' + (s[0] === r.status ? " selected" : "") + ">" + s[1] + "</option>"; }).join("") +
+      '</select></label><textarea data-note="' + id + '" placeholder="Note: what you saw, screenshot file name" aria-label="Note for ' + id + '">' + esc(r.note) + '</textarea>' +
+      '<span class="muted" id="at-' + id + '">' + (r.at ? "Updated " + r.at : "") + '</span></div>';
+    box.appendChild(el);
+  });
+  fixCode();
+  summary();
+}
+// the expected text may contain <code> tags written as markup in the data; make them real
+function fixCode() {
+  document.querySelectorAll(".expect").forEach(function (e) { e.innerHTML = e.innerHTML.replace(/&lt;code&gt;(.*?)&lt;\/code&gt;/g, "<code>$1</code>"); });
+}
+
+function counts() {
+  const n = { none: 0, pass: 0, fail: 0, block: 0 };
+  CASES.forEach(function (c) { n[get(c[0]).status]++; });
+  return n;
+}
+function summary() {
+  const n = counts(), total = CASES.length;
+  const colors = { pass: "var(--pass)", fail: "var(--fail)", block: "var(--block)" };
+  document.getElementById("bar").innerHTML = ["pass", "fail", "block"].map(function (k) {
+    return '<span style="width:' + (100 * n[k] / total) + '%;background:' + colors[k] + '"></span>';
+  }).join("");
+  document.getElementById("tally").innerHTML =
+    '<span><b>' + n.pass + '</b> pass</span><span><b>' + n.fail + '</b> fail</span><span><b>' + n.block + '</b> blocked</span><span><b>' + n.none + '</b> not run</span><span class="muted">of ' + total + ' cases</span>';
+  const mustOpen = CASES.filter(function (c) { return c[2] && get(c[0]).status !== "pass"; }).length;
+  const v = document.getElementById("verdict");
+  if (n.fail > 0) v.innerHTML = "<b style='color:var(--fail)'>Not accepted yet:</b> " + n.fail + " failed case(s) to fix and re-run.";
+  else if (mustOpen > 0) v.innerHTML = "<b>In progress:</b> " + mustOpen + " must-pass case(s) still open.";
+  else v.innerHTML = "<b style='color:var(--pass)'>All must-pass cases passed.</b> Record sign-off in the progress tracker.";
+}
+function filters() {
+  const f = document.getElementById("filters");
+  f.innerHTML = [["all", "All"]].concat(STATUSES).map(function (s) {
+    return '<button data-f="' + s[0] + '" class="' + (filter === s[0] ? "on" : "") + '">' + s[1] + "</button> ";
+  }).join("");
+}
+
+document.addEventListener("change", function (e) {
+  const id = e.target.getAttribute && e.target.getAttribute("data-id");
+  if (!id) return;
+  const r = get(id); r.status = e.target.value; r.at = new Date().toLocaleString();
+  results[id] = r; persist();
+  if (filter !== "all") render(); else {
+    const p = document.getElementById("pill-" + id);
+    p.className = "pill s-" + r.status; p.textContent = STATUSES.find(function (s) { return s[0] === r.status; })[1];
+    document.getElementById("at-" + id).textContent = "Updated " + r.at; summary();
+  }
+});
+document.addEventListener("input", function (e) {
+  const id = e.target.getAttribute && e.target.getAttribute("data-note");
+  if (!id) return;
+  const r = get(id); r.note = e.target.value; r.at = new Date().toLocaleString();
+  results[id] = r; persist();
+});
+document.addEventListener("click", function (e) {
+  const f = e.target.getAttribute && e.target.getAttribute("data-f");
+  if (f) { filter = f; filters(); render(); }
+});
+function download(name, text, type) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([text], { type: type }));
+  a.download = name; document.body.appendChild(a); a.click(); a.remove();
+}
+document.getElementById("save").addEventListener("click", function () {
+  const html = "<!doctype html>\n" + document.documentElement.outerHTML;
+  const marker = /(<script id="state" type="application\/json">)[\s\S]*?(<\/script>)/;
+  const json = JSON.stringify(results).replace(/</g, "\\u003c");
+  download("UAT-2.html", html.replace(marker, function (m, a, b) { return a + json + b; }), "text/html");
+});
+document.getElementById("exportCsv").addEventListener("click", function () {
+  const q = function (s) { return '"' + String(s).replace(/"/g, '""') + '"'; };
+  const rows = [["id", "group", "must", "title", "status", "note", "updated"].join(",")].concat(CASES.map(function (c) {
+    const r = get(c[0]); return [c[0], q(c[1]), c[2], q(c[4]), r.status, q(r.note), q(r.at)].join(",");
+  }));
+  download("uat_2_results.csv", rows.join("\n"), "text/csv");
+});
+document.getElementById("reset").addEventListener("click", function () {
+  if (confirm("Clear every result and note?")) { results = {}; try { localStorage.removeItem(KEY); } catch (e) {} render(); }
+});
+
+load(); filters(); render();
+</script>
+</body>
+</html>
