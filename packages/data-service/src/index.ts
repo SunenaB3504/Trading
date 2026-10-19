@@ -123,3 +123,13 @@ export type { DayEvidence, DerivedCalendar, PullOptions, SessionPull } from './j
 export { INDEX_URL_CLASS, loadIndexCloses, pullIndexRange } from './jobs/indexPuller';
 export type { IndexDay } from './jobs/indexPuller';
 export { fetchDay } from './jobs/barPuller';
+export { buildDisputesList, checkSymbol } from './crosscheck/disputes';
+export type { DisputeEntry, DisputesList, SymbolCheck } from './crosscheck/disputes';
+export {
+  YAHOO_URL_CLASS,
+  loadYahoo,
+  pullSymbol,
+  pullSymbols,
+  yahooPoints,
+} from './jobs/yahooPuller';
+export type { SymbolPull } from './jobs/yahooPuller';
