@@ -227,3 +227,4 @@
 | 2026-10-19 | Owner raised during UAT that the Ledger shows no average price or lot detail. Recorded as WP-3.12 (lots popup, next build, out of UAT round 1) and open decision D36 (specific-lot selling). No code changed |
 | 2026-10-19 | UAT round 1: Ledger cases A1 and A2 passed by the owner (hash matches the golden value, sections and figures reconciled); recorded in `docs/UAT_R1.html`. 23 cases still to run |
 | 2026-10-19 | UAT round 1: B1 and B2 passed by the owner (Online badge, Data tab Connected; offline fallback and Ledger hash unchanged), tested in Microsoft Edge. 21 cases still to run |
+| 2026-10-19 | UAT round 1: C1 to C4 passed (order form, cost preview, market order fill and cash reconciliation, bad-quantity message, reload). Owner observations for later polish: Stop price field shown on market orders; dividends not listed on the Trade screen; fill-date wording; Ledger label should say own trades are on the Trade tab. 17 cases still to run |
