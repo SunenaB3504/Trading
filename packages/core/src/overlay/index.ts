@@ -19,3 +19,11 @@ export {
   routerSpec,
 } from './router';
 export type { RouterClaim, RouterConfig, RouterSignal, TableRow } from './router';
+export { TICKET_RULES_PROPOSED, buildTicket, ticketRulesHash } from './ticket';
+export type {
+  ArmAction,
+  Ticket,
+  TicketInput,
+  TicketMarket,
+  TicketRules,
+} from './ticket';
