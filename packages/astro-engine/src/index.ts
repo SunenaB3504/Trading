@@ -28,3 +28,11 @@ export {
   usesBaseline,
 } from './nodata';
 export type { GuardedDay, InstrumentHealth, SnapshotHealth, Tally } from './nodata';
+export { bhuktis, dashaAt } from './bhukti';
+export type { DashaPoint, Period } from './bhukti';
+export { birthMoment } from './birth';
+export type { BirthInput, BirthMoment } from './birth';
+export { GAZETTEER_SOURCE, findPlaces, placeCount } from './gazetteer';
+export type { Place } from './gazetteer';
+export { TZ_SOURCE, hasZone, localToUtc, offsetAt } from './tz';
+export type { LocalResolution, LocalStatus } from './tz';
