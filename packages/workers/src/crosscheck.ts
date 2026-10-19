@@ -36,6 +36,42 @@ async function yahooSymbols(store: FileRawStore): Promise<string[]> {
   return [...new Set(names)].filter((s) => s !== '').sort();
 }
 
+interface Context {
+  yahoo: FileRawStore;
+  bars: ReturnType<typeof canonicalize>['bars'];
+  idOf: (symbol: string) => string | undefined;
+  actions: ReturnType<typeof toCorporateActions>['actions'];
+}
+
+async function checkOne(symbol: string, ctx: Context): Promise<SymbolCheck> {
+  const id = ctx.idOf(symbol);
+  const series = id === undefined ? undefined : ctx.bars.get(id);
+  const theirs = await loadYahoo(ctx.yahoo, symbol);
+  const ours: PricePoint[] =
+    id === undefined || series === undefined
+      ? []
+      : adjustSeries(
+          series,
+          ctx.actions.filter((a) => a.instrumentId === id),
+          { includeDividends: false },
+        ).map((b) => ({ date: b.date, close: b.close, volume: b.volume }));
+  return checkSymbol(symbol, ours, theirs === null ? null : yahooPoints(theirs));
+}
+
+async function contextFor(args: readonly string[], from: string, to: string): Promise<Context> {
+  const nse = new FileRawStore(option(args, '--dir') ?? 'data/raw/nse-bars');
+  const rows = await loadBars(nse, from, to);
+  const identities = buildIdentities(rows);
+  const idOf = (symbol: string): string | undefined =>
+    identities.find((i) => i.listings.some((l) => l.symbol === symbol))?.instrumentId;
+  return {
+    yahoo: new FileRawStore(option(args, '--yahoo') ?? 'data/raw/yahoo'),
+    bars: canonicalize(rows, new IdentityIndex(identities), 'crosscheck').bars,
+    idOf,
+    actions: toCorporateActions(await loadActions(nse), (s) => idOf(s)).actions,
+  };
+}
+
 export async function main(args: readonly string[]): Promise<number> {
   const from = option(args, '--from');
   const to = option(args, '--to');
@@ -43,34 +79,11 @@ export async function main(args: readonly string[]): Promise<number> {
     console.error('Usage: pnpm crosscheck --from YYYY-MM-DD --to YYYY-MM-DD');
     return 2;
   }
-  const yahoo = new FileRawStore(option(args, '--yahoo') ?? 'data/raw/yahoo');
-  const nse = new FileRawStore(option(args, '--dir') ?? 'data/raw/nse-bars');
-  const only = option(args, '--symbols')?.split(',');
-  const symbols = only ?? (await yahooSymbols(yahoo));
-  const rows = await loadBars(nse, from, to);
-  const identities = buildIdentities(rows);
-  const index = new IdentityIndex(identities);
-  const bars = canonicalize(rows, index, 'crosscheck').bars;
-  const idOf = (symbol: string): string | undefined =>
-    identities.find((i) => i.listings.some((l) => l.symbol === symbol))?.instrumentId;
-  const actions = toCorporateActions(await loadActions(nse), (s) => idOf(s)).actions;
+  const ctx = await contextFor(args, from, to);
+  const symbols = option(args, '--symbols')?.split(',') ?? (await yahooSymbols(ctx.yahoo));
   const checks: SymbolCheck[] = [];
-  for (const symbol of symbols) {
-    const id = idOf(symbol);
-    const series = id === undefined ? undefined : bars.get(id);
-    const theirs = await loadYahoo(yahoo, symbol);
-    const ours: PricePoint[] =
-      id === undefined || series === undefined
-        ? []
-        : adjustSeries(
-            series,
-            actions.filter((a) => a.instrumentId === id),
-            { includeDividends: false },
-          ).map((b) => ({ date: b.date, close: b.close, volume: b.volume }));
-    checks.push(checkSymbol(symbol, ours, theirs === null ? null : yahooPoints(theirs)));
-  }
-  const threshold = Number(option(args, '--threshold') ?? '0.98');
-  const list = buildDisputesList(checks, threshold);
+  for (const symbol of symbols) checks.push(await checkOne(symbol, ctx));
+  const list = buildDisputesList(checks, Number(option(args, '--threshold') ?? '0.98'));
   const out = option(args, '--out') ?? 'data/derived/disputes.json';
   mkdirSync(dirname(out), { recursive: true });
   writeFileSync(out, JSON.stringify({ from, to, checks, list }, null, 1));
