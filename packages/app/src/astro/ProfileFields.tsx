@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { Note, colors } from '../ui/Section';
+import { AppInput as TextInput, AppText as Text } from '../ui/typography';
 import type { Engine } from './engine';
 import { ENGLISH, PACKS, allSpellings } from './i18n';
 import type { Lang } from './i18n';

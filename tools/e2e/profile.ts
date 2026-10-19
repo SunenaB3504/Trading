@@ -123,6 +123,14 @@ async function saveAndShow(page: Page): Promise<void> {
     'the chart facts are shown',
     /Rising sign/.test(text) && /Moon sign/.test(text) && /Birth star/.test(text),
   );
+  await page.waitForFunction(() => document.fonts.check('16px NotoSans-Regular'));
+  const en = await page.evaluate(() => {
+    const label = Array.from(document.querySelectorAll('div')).find(
+      (d) => d.textContent === 'Rising sign (Lagna)',
+    );
+    return { family: label === undefined ? '' : getComputedStyle(label).fontFamily };
+  });
+  check('English Profile text is set in Noto Sans', /NotoSans-Regular/.test(en.family), en.family);
   check('Indu Lagna reads pending verification', /Indu Lagna\s*pending verification/.test(text));
   check(
     'a star typed as Anizh is recognised as Anuradha and matches the computed star',
@@ -220,6 +228,18 @@ async function malayalam(page: Page, url: string): Promise<void> {
     'the sentences, the banner and the draft note are in Malayalam',
     ml.includes('ചന്ദ്രാഷ്ടമം') && ml.includes('ഈ പരിഭാഷ ഒരു കരടാണ്') && ml.includes('ഉപദേശമല്ല'),
   );
+  await page.waitForFunction(() => document.fonts.check('16px NotoSansMalayalam-Regular'));
+  const face = await page.evaluate(() => {
+    const label = Array.from(document.querySelectorAll('div')).find(
+      (d) => d.textContent === 'ലഗ്നം',
+    );
+    return label === undefined ? '' : getComputedStyle(label).fontFamily;
+  });
+  check(
+    'Malayalam text is set in Noto Sans Malayalam, shipped with the app',
+    /NotoSansMalayalam/.test(face),
+    face,
+  );
   check(
     'no English sentence is left on the tab',
     !/Rising sign|Your chart facts|Tara Bala for a stock/.test(ml),
@@ -291,9 +311,19 @@ async function lockedDevice(browser: Browser, url: string): Promise<void> {
   const page = await (
     await browser.newContext({ viewport: { width: 1000, height: 800 } })
   ).newPage();
+  const fontFiles: string[] = [];
+  page.on('request', (r) => {
+    if (/\.ttf/.test(r.url())) fontFiles.push(r.url());
+  });
   await page.goto(url);
   await page.getByRole('tab', { name: 'Ledger', exact: true }).waitFor({ timeout: 30_000 });
   await page.waitForTimeout(800);
+  const ledgerFont = await page.evaluate(() => getComputedStyle(document.body).fontFamily);
+  check(
+    'a locked device downloads no font file and the app keeps its own font',
+    fontFiles.length === 0 && !/NotoSans/.test(ledgerFont),
+    `${fontFiles.length} files; ${ledgerFont}`,
+  );
   check(
     'with the layer off there is no Profile tab',
     (await page.getByRole('tab', { name: 'Profile', exact: true }).count()) === 0,

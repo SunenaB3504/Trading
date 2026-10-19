@@ -110,6 +110,10 @@ async function networkChecks(page: Page, requests: string[], served: string[]): 
     served.every((t) => !markers.test(t)),
   );
   check(
+    'no font file was requested',
+    requests.every((u) => !/\.ttf/.test(u)),
+  );
+  check(
     'the layer chunks were never requested',
     requests.every((u) => !u.includes('ProfileScreen')),
   );

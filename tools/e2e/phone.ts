@@ -66,28 +66,32 @@ function measure(): Measured {
   };
 }
 
-async function checkTab(page: Page, name: string, width: number): Promise<void> {
+async function checkTab(page: Page, name: string, width: number, label = name): Promise<void> {
   await page.getByRole('tab', { name, exact: true }).first().click();
   await page.waitForTimeout(400);
   const m = await page.evaluate(measure);
   check(
-    `${width}px ${name}: no horizontal page scroll`,
+    `${width}px ${label}: no horizontal page scroll`,
     m.pageOverflow <= 1,
     `overflow ${m.pageOverflow}px`,
   );
   check(
-    `${name}: every control is at least 44 px`,
+    `${label}: every control is at least 44 px`,
     m.small.length === 0,
     m.small.slice(0, 6).join('; '),
   );
-  check(`${width}px ${name}: every field has a name`, m.unnamed.length === 0, m.unnamed.join(', '));
   check(
-    `${name}: no text under 11.5 px`,
+    `${width}px ${label}: every field has a name`,
+    m.unnamed.length === 0,
+    m.unnamed.join(', '),
+  );
+  check(
+    `${label}: no text under 11.5 px`,
     m.tinyText.length === 0,
     m.tinyText.slice(0, 4).join('; '),
   );
-  check(`${width}px ${name}: the tab strip is fully visible`, m.tabStrip >= 40, `${m.tabStrip}px`);
-  check(`${width}px ${name}: side gutter of at least 16 px`, m.gutter >= 16, `${m.gutter}px`);
+  check(`${width}px ${label}: the tab strip is fully visible`, m.tabStrip >= 40, `${m.tabStrip}px`);
+  check(`${width}px ${label}: side gutter of at least 16 px`, m.gutter >= 16, `${m.gutter}px`);
 }
 
 /** The tab row must hint that more tabs are hidden, and selecting a far tab must slide it fully into view (UAT H1). */
@@ -117,6 +121,10 @@ async function profileTab(page: Page, url: string, width: number): Promise<void>
   await page.goto(`${url}?layer=on`);
   await page.getByRole('tab', { name: 'Profile', exact: true }).waitFor({ timeout: 30_000 });
   await checkTab(page, 'Profile', width);
+  // the same screen in Malayalam: longer words must still fit, with the Malayalam font loaded
+  await page.getByTestId('lang-ml').click();
+  await page.waitForFunction(() => document.fonts.check('16px NotoSansMalayalam-Regular'));
+  await checkTab(page, 'Profile', width, 'Profile in Malayalam');
 }
 
 async function runWidth(url: string, width: number): Promise<string[]> {

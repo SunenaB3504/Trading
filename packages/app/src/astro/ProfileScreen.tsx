@@ -1,13 +1,16 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { ScrollView, StyleSheet, Text } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import type { IEntitlementService } from '../entitlement/types';
 import type { KeyValueStore } from '../store/kv';
 import { Note, Row, Section, colors } from '../ui/Section';
+import { AppText as Text, FontProvider } from '../ui/typography';
+import type { Fonts } from '../ui/typography';
 import { BirthVault, IndexedDbKeyProvider } from './birthVault';
 import type { BirthProfile } from './birthVault';
 import { loadEngine } from './engine';
 import type { Engine } from './engine';
 import { ASTRO_FEATURE } from './feature';
+import { familiesFor, loadFonts } from './fonts';
 import { loadAstroLayer } from './gate';
 import { allSpellings, packFor, readLang, saveLang } from './i18n';
 import type { Lang, Pack, TextKey } from './i18n';
@@ -267,30 +270,55 @@ function Body(props: { p: ReturnType<typeof useProfile>; now: () => number }) {
   );
 }
 
+/** Loads the fonts for the language in use; until they are ready the screen shows in the device's own font. */
+function useFonts(lang: Lang): Fonts | null {
+  const [loaded, setLoaded] = useState<Lang | null>(null);
+  useEffect(() => {
+    let live = true;
+    loadFonts(lang)
+      .then(() => {
+        if (live) setLoaded(lang);
+      })
+      .catch(() => undefined);
+    return () => {
+      live = false;
+    };
+  }, [lang]);
+  return loaded === null ? null : familiesFor(loaded);
+}
+
 export default function ProfileScreen(props: {
   kv: KeyValueStore;
   entitlements: IEntitlementService;
   now: () => number;
 }) {
   const p = useProfile(props.kv, props.entitlements, props.now);
+  const fonts = useFonts(p.lang);
   return (
     <PackProvider pack={p.pack}>
-      <ScrollView contentContainerStyle={styles.page} testID="profile-screen">
-        <LanguageSwitch value={p.lang} onPick={p.setLang} />
-        {p.pack.draft ? <DraftNote /> : null}
-        <Body p={p} now={props.now} />
-      </ScrollView>
+      <FontProvider value={fonts}>
+        <ScrollView contentContainerStyle={styles.page} testID="profile-screen">
+          <LanguageSwitch value={p.lang} onPick={p.setLang} />
+          {p.pack.draft ? <DraftNote /> : null}
+          <Body p={p} now={props.now} />
+        </ScrollView>
+      </FontProvider>
     </PackProvider>
   );
 }
 
 function DraftNote() {
   const t = useT();
-  return <Note>{t('draft.note')}</Note>;
+  return (
+    <View style={styles.draft}>
+      <Note>{t('draft.note')}</Note>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
   page: { padding: 16, maxWidth: 720, width: '100%', alignSelf: 'center' },
+  draft: { marginBottom: 14 },
   message: { marginTop: 8, color: colors.text },
   warning: { color: colors.warn, marginBottom: 8, fontSize: 13 },
 });
