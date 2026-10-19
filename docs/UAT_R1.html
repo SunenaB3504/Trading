@@ -86,7 +86,7 @@
     <ol>
       <li>Open a terminal in <code>C:\Users\Admin\Sunil\Trading</code>.</li>
       <li>Build the web app once (about a minute): <pre>pnpm --filter @trading/app export:web</pre></li>
-      <li>Start the app and the data service: <pre>pnpm uat:start</pre> It prints <code>App: http://127.0.0.1:8080</code> and <code>Service: http://127.0.0.1:8787</code>. Leave the terminal open; Ctrl+C stops both.</li>
+      <li>Start the app and the data service: <pre>pnpm uat:start</pre> It prints <code>App: http://127.0.0.1:8080</code> and <code>Service: http://127.0.0.1:8787</code>. Leave the terminal open; Ctrl+C stops both. The service on 8787 has no web page: opening it shows <code>no such endpoint /</code>, which is normal. To check it is alive open <code>http://127.0.0.1:8787/health</code> and look for <code>"status":"ok"</code>.</li>
       <li>Open <code>http://127.0.0.1:8080</code> in Chrome. Use a fresh profile or a private window for the first run so no earlier data interferes.</li>
     </ol>
     <p class="muted">The demo data is fixed, so the numbers you see should match the expected results below. If a number differs, mark the case Fail and put what you saw in the note.</p>
