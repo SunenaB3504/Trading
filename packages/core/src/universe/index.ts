@@ -9,3 +9,10 @@ export type {
 export { BUCKET_RULES_V1, assignBucket, bucketRulesHash, lowestFraction } from './buckets';
 export type { BucketInputs, BucketResult, BucketRules } from './buckets';
 export { annualisedVolatility, beta, simpleReturns } from './riskMetrics';
+export { BUCKETS, UNIVERSE_V1_DEFAULT, selectUniverse } from './select';
+export type {
+  UniverseCandidate,
+  UniverseConfig,
+  UniverseManifest,
+  UniverseMember,
+} from './select';
