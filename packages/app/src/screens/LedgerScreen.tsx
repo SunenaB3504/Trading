@@ -17,6 +17,10 @@ function useDemoLedger() {
   }, []);
 }
 
+/** “1 lot”, “3 lots”; the popup title adds “open”. */
+const lotsText = (n: number, open: boolean): string =>
+  `${String(n)} ${open ? 'open ' : ''}${n === 1 ? 'lot' : 'lots'}`;
+
 function LotsPopup({ p, onClose }: { p: PositionRow; onClose: () => void }) {
   return (
     <Modal animationType="fade" onRequestClose={onClose} transparent visible>
@@ -25,7 +29,7 @@ function LotsPopup({ p, onClose }: { p: PositionRow; onClose: () => void }) {
           <ScrollView>
             <Text
               style={styles.symbol}
-            >{`${p.instrumentId}: ${String(p.lots.count)} open lots`}</Text>
+            >{`${p.instrumentId}: ${lotsText(p.lots.count, true)}`}</Text>
             <Note>{p.lots.nextSale}</Note>
             {p.lots.groups.map((g) => (
               <View key={g.month}>
@@ -79,7 +83,7 @@ function PositionLine({ p }: { p: PositionRow }) {
         style={styles.link}
         testID={`lots-${p.instrumentId}`}
       >
-        <Text style={styles.linkText}>{`${String(p.lots.count)} lots`}</Text>
+        <Text style={styles.linkText}>{lotsText(p.lots.count, false)}</Text>
       </Pressable>
       {open ? <LotsPopup p={p} onClose={() => setOpen(false)} /> : null}
     </View>
