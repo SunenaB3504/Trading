@@ -22,6 +22,17 @@ const lotsText = (n: number, open: boolean): string =>
   `${String(n)} ${open ? 'open ' : ''}${n === 1 ? 'lot' : 'lots'}`;
 
 function LotsPopup({ p, onClose }: { p: PositionRow; onClose: () => void }) {
+  // On the web the modal only hears Esc while focus is inside it, which it is not after a tap on the link.
+  useEffect(() => {
+    if (typeof document === 'undefined') return undefined;
+    const onKey = (e: KeyboardEvent): void => {
+      if (e.key === 'Escape') onClose();
+    };
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [onClose]);
   return (
     <Modal animationType="fade" onRequestClose={onClose} transparent visible>
       <Pressable accessibilityLabel="Close lots" onPress={onClose} style={styles.backdrop}>
