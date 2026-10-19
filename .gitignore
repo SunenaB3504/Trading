@@ -16,3 +16,7 @@ data/raw/
 # UAT working files: signing keys and exported books from the Backup tests stay local
 docs/UAT/**/key*.txt
 docs/UAT/**/bundle*.txt
+
+# scratch files from local runs
+*.tmp.txt
+*.tmp.ts
