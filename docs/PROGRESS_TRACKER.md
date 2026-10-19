@@ -279,3 +279,4 @@
 | 2026-10-19 | WP-2.9: `pnpm crosscheck` built and run once on real data (RELIANCE across the bonus agrees 10/10); fixed the empty-PR-file defect. After the owner runs the full Yahoo pull, `pnpm crosscheck --from 2018-01-01 --to 2026-10-16` gives the disputes list for review |
 | 2026-10-19 | WP-4.5: OpenTimestamps adapter built and tested against a fake calendar; no live submission yet. Remaining for 4.5: persistence, scheduled job, proof upgrade |
 | 2026-10-19 | WP-4.5: persistence of the signal log, day locks and receipts, and the experiment registry built and tested (tampering refused on load). Remaining for 4.5: the scheduled daily job and proof upgrade |
+| 2026-10-19 | Added docs/OWNER_ACTIONS.md: every open owner decision (D26, D36, D38, D39, D40, D21, T17, D1, stock first-trade registry), the data runs, the reviews and the later gates, each with what it unblocks and a recommendation. All remaining build work waits on it |
