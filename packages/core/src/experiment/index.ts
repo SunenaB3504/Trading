@@ -65,3 +65,5 @@ export type {
 } from './arms';
 export { drawBirth, syntheticBuyerNull } from './syntheticBuyers';
 export type { BirthDraw, BirthRange, SyntheticBuyerResult } from './syntheticBuyers';
+export { runFrozenEvaluation } from './frozenRun';
+export type { FrozenRun, FrozenRunConfig, FrozenRunReport } from './frozenRun';
