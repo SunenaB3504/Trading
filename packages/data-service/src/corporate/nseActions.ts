@@ -139,6 +139,8 @@ export function parseActionsFile(
   text: string,
   series: readonly string[] = EQUITY_SERIES,
 ): ActionsFile {
+  // A day with nothing to announce is published as an empty file.
+  if (text.trim() === '') return { actions: [], ignored: 0, undated: 0 };
   const table = parseCsv(text);
   const head = (table[0] ?? []).map((h) => h.trim().toUpperCase());
   if (HEADER.some((h, i) => head[i] !== h) || head[9] !== 'PURPOSE')
