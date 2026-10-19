@@ -1,5 +1,6 @@
 import type { KeyValueStore } from '../../store/kv';
 import { ENGLISH } from './en';
+import { HINDI } from './hi';
 import { MALAYALAM } from './ml';
 import type { TextKey } from './keys';
 import type { Lang, Pack } from './types';
@@ -9,7 +10,7 @@ export type { TextKey } from './keys';
 export { ENGLISH } from './en';
 
 /** The packs available to the switcher, in the order shown. */
-export const PACKS: readonly Pack[] = [MALAYALAM, ENGLISH];
+export const PACKS: readonly Pack[] = [MALAYALAM, ENGLISH, HINDI];
 
 export const DEFAULT_LANG: Lang = 'en';
 

@@ -1,6 +1,6 @@
 import type { TextKey } from './keys';
 
-export type Lang = 'en' | 'ml';
+export type Lang = 'en' | 'ml' | 'hi';
 
 /** The names of the classical items, indexed the way the engine indexes them (0 = Aries, 0 = Ashwini). */
 export interface Names {

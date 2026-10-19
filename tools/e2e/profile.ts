@@ -241,6 +241,32 @@ async function editDetails(page: Page): Promise<void> {
   await page.getByText('Your chart facts').waitFor({ timeout: 15_000 });
 }
 
+async function hindi(page: Page): Promise<void> {
+  const en = await page.getByTestId('profile-screen').innerText();
+  check(
+    'the switcher offers Malayalam, English and Hindi',
+    /മലയാളം/.test(en) && /English/.test(en) && /हिन्दी/.test(en),
+  );
+  await page.getByTestId('lang-hi').click();
+  await page.getByText('लग्न').first().waitFor({ timeout: 15_000 });
+  await page.waitForFunction(() => document.fonts.check('16px NotoSansDevanagari-Regular'));
+  const hi = await page.getByTestId('profile-screen').innerText();
+  check('the whole tab switches to Hindi', /जन्म नक्षत्र/.test(hi) && /चंद्राष्टम/.test(hi));
+  check(
+    'no English sentence is left on the tab',
+    !/Rising sign|Your chart facts|Tara Bala for a stock/.test(hi),
+  );
+  const face = await page.evaluate(() => {
+    const label = Array.from(document.querySelectorAll('div')).find(
+      (d) => d.textContent === 'लग्न',
+    );
+    return label === undefined ? '' : getComputedStyle(label).fontFamily;
+  });
+  check('the Hindi text is set in Noto Sans Devanagari', /NotoSansDevanagari/.test(face), face);
+  await page.getByTestId('lang-en').click();
+  await page.getByText('Your chart facts').waitFor({ timeout: 15_000 });
+}
+
 async function malayalam(page: Page, url: string): Promise<void> {
   await page.getByTestId('lang-ml').click();
   await page.getByText('ലഗ്നം').first().waitFor({ timeout: 15_000 });
@@ -374,6 +400,7 @@ async function unlockedFlow(page: Page, url: string, requests: string[]): Promis
   await encryption(page);
   await afterReload(page, url);
   await editDetails(page);
+  await hindi(page);
   await malayalam(page, url);
   check(
     'no request carried the details or left this machine',
