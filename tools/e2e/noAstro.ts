@@ -3,16 +3,14 @@
  * No-astro check for the web app (UAT I1, FR-P10). Opens the exported build in Chrome and confirms that
  * nothing astro-derived reaches a user whose paid layer is locked: not in the text, labels or placeholders
  * of any tab (before and after placing an order), not in an exported bundle, not in anything saved on the
- * device, not in any network request, and that the ephemeris library is not in the shipped code.
+ * device, not in any network request, and that the code served to a locked device holds no ephemeris library and none of the layer's words.
  *
  * Usage:  pnpm --filter @trading/app export:web && pnpm tsx tools/e2e/noAstro.ts
  */
-import { readdirSync, readFileSync } from 'node:fs';
 import type { AddressInfo } from 'node:net';
-import { join } from 'node:path';
 import { chromium } from 'playwright-core';
 import type { Page } from 'playwright-core';
-import { checkLog, dist, serveStatic } from './support';
+import { checkLog, serveStatic } from './support';
 
 const { checks, check } = checkLog();
 
@@ -78,12 +76,37 @@ function savedData(page: Page): Promise<string> {
   );
 }
 
-function shippedCode(): string {
-  const files = readdirSync(dist, { recursive: true }) as string[];
-  return files
-    .filter((f) => /\.(js|html)$/.test(f))
-    .map((f) => readFileSync(join(dist, f), 'utf8'))
-    .join('\n');
+/** Proves the detector can fail: without this a pass could mean a broken search. */
+function detectorSelfTest(): void {
+  const known = hits(
+    'Nakshatra Rashi Dasha Tithi Lagna Tara Bala Chandrashtama Jyotisham planets Kundli',
+  );
+  check('the detector catches known astro words', known.length >= 10, known.join(', '));
+  check(
+    'and leaves ordinary words alone',
+    hits('Tata Consultancy Services, Reliance, ACCENTMIC, Total charges, transit of goods')
+      .length === 0,
+  );
+}
+
+async function networkChecks(page: Page, requests: string[], served: string[]): Promise<void> {
+  const web3 = requests.filter((u) => !u.startsWith('http://127.0.0.1'));
+  check('no request leaves this machine', web3.length === 0, web3.join(', '));
+  check(
+    'no request carries an astro word',
+    requests.every((u) => hits(u).length === 0),
+  );
+  await page.waitForTimeout(500);
+  const markers = /nakshatra|lagna|vedha|kundli|jyotish|astronomy-engine|VSOP87|ayanamsa|geonames/i;
+  check(`code served to the locked device: ${served.length} file(s) read`, served.length >= 1);
+  check(
+    'it holds no ephemeris library and none of the layer words',
+    served.every((t) => !markers.test(t)),
+  );
+  check(
+    'the layer chunks were never requested',
+    requests.every((u) => !u.includes('ProfileScreen')),
+  );
 }
 
 async function main(): Promise<void> {
@@ -95,16 +118,12 @@ async function main(): Promise<void> {
   ).newPage();
   const requests: string[] = [];
   page.on('request', (r) => requests.push(r.url()));
+  const served: string[] = [];
+  page.on('response', (r) => {
+    if (r.url().endsWith('.js')) void r.text().then((t) => served.push(t));
+  });
   try {
-    const known = hits(
-      'Nakshatra Rashi Dasha Tithi Lagna Tara Bala Chandrashtama Jyotisham planets Kundli',
-    );
-    check('the detector catches known astro words', known.length >= 10, known.join(', '));
-    check(
-      'and leaves ordinary words alone',
-      hits('Tata Consultancy Services, Reliance, ACCENTMIC, Total charges, transit of goods')
-        .length === 0,
-    );
+    detectorSelfTest();
     await page.goto(url);
     await page.getByRole('tab', { name: 'Ledger' }).waitFor({ timeout: 30_000 });
     await scanTabs(page, 'before an order');
@@ -123,17 +142,7 @@ async function main(): Promise<void> {
     );
     const keys = (JSON.parse(saved) as { keys: string[] }).keys;
     check(`saved items looked at: ${keys.length}`, keys.length >= 2, keys.join(', '));
-    const web3 = requests.filter((u) => !u.startsWith('http://127.0.0.1'));
-    check('no request leaves this machine', web3.length === 0, web3.join(', '));
-    check(
-      'no request carries an astro word',
-      requests.every((u) => hits(u).length === 0),
-    );
-    const code = shippedCode();
-    check(
-      'the ephemeris library is not in the shipped app',
-      !/astronomy-engine|VSOP87/i.test(code),
-    );
+    await networkChecks(page, requests, served);
   } finally {
     await browser.close();
     web.close();

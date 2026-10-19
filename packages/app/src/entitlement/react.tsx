@@ -1,9 +1,9 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
-import { GrantAllEntitlements } from './grantAll';
+import { SwitchedEntitlements } from './switched';
 import type { FeatureId, IEntitlementService } from './types';
 
-const EntitlementContext = createContext<IEntitlementService>(new GrantAllEntitlements());
+const EntitlementContext = createContext<IEntitlementService>(new SwitchedEntitlements(false));
 
 export function EntitlementProvider(props: { service: IEntitlementService; children: ReactNode }) {
   return (
@@ -11,6 +11,11 @@ export function EntitlementProvider(props: { service: IEntitlementService; child
       {props.children}
     </EntitlementContext.Provider>
   );
+}
+
+/** The service itself, for code that has to pass it on (the gated loader). */
+export function useEntitlementService(): IEntitlementService {
+  return useContext(EntitlementContext);
 }
 
 /** True or false once known; null while the service is still answering, so a screen shows nothing locked. */

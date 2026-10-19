@@ -50,6 +50,9 @@ importers:
       '@expo/metro-runtime':
         specifier: ~58.0.14
         version: 58.0.14(@expo/log-box@58.0.12)(expo@58.0.14)(react-dom@19.3.0(react@19.3.0))(react-native@0.88.0(@babel/core@7.29.7)(@types/react@19.3.0)(react@19.3.0))(react@19.3.0)
+      '@trading/astro-engine':
+        specifier: workspace:*
+        version: link:../astro-engine
       '@trading/core':
         specifier: workspace:*
         version: link:../core

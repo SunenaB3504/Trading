@@ -1,0 +1,20 @@
+
+> @trading/app@0.0.0 export:web C:\Users\Admin\Sunil\Trading\packages\app
+> expo export --platform web
+
+Expo Autolinking module resolution enabled
+Starting Metro Bundler
+
+Web Bundled 23768ms packages\app\index.ts (435 modules)
+
+› web bundles (3):
+_expo/static/js/web/index-249183d8ad9af8f7ce150c9b18ce52fb.js (764KB)
+_expo/static/js/web/index-b216c5d296519b5c4620c6100b0370b1.js (1.1MB)
+_expo/static/js/web/ProfileScreen-be4c3d925fe89d357084df70ab903dbf.js (12KB)
+
+› Files (2):
+index.html (1.2KB)
+metadata.json (49B)
+
+Exported: dist
+export exit 0

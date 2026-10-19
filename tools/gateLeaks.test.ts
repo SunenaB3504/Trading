@@ -46,12 +46,40 @@ describe('no astro vocabulary in anything that ships outside the gated folder', 
 });
 
 describe('the astro engine is reachable only through the gated folder', () => {
-  it('is imported by no shipped file outside the gated folder, and is not an app dependency yet', () => {
+  it('is imported by no shipped file outside the gated folder', () => {
     for (const file of shippedSource()) {
       expect(readFileSync(file, 'utf8').includes('astro-engine'), file).toBe(false);
     }
+  });
+
+  it('is an app dependency and no other package uses it except through the app', () => {
     const manifest = readFileSync(join(root, 'packages', 'app', 'package.json'), 'utf8');
-    expect(manifest.includes('astro-engine')).toBe(false);
+    expect(manifest.includes('@trading/astro-engine')).toBe(true);
+    for (const pkg of ['core', 'data-service', 'workers']) {
+      const m = readFileSync(join(root, 'packages', pkg, 'package.json'), 'utf8');
+      expect(m.includes('astro-engine'), pkg).toBe(false);
+    }
+  });
+
+  it('is loaded only by a dynamic import inside the gated folder, never by a static one', () => {
+    const gated = walk(join(root, ASTRO_DIR)).filter((f) => !/\.test\.tsx?$/.test(f));
+    const lines = gated.flatMap((f) =>
+      readFileSync(f, 'utf8')
+        .split(String.fromCharCode(10))
+        .map((l) => [f, l] as const),
+    );
+    const staticValueImports = lines.filter(
+      ([, l]) =>
+        l.startsWith('import ') && !l.startsWith('import type') && l.includes('astro-engine'),
+    );
+    expect(staticValueImports).toEqual([]);
+    expect(lines.some(([, l]) => /import\('@trading\/astro-engine'\)/.test(l))).toBe(true);
+  });
+
+  it('shows the Profile screen to the shell only through a lazy import, so its words stay out of the main bundle', () => {
+    const app = readFileSync(join(root, 'packages', 'app', 'src', 'App.tsx'), 'utf8');
+    expect(/lazy\(\(\) => import\('\.\/astro\/ProfileScreen'\)\)/.test(app)).toBe(true);
+    expect(/^import .*\.\/astro\/ProfileScreen/m.test(app)).toBe(false);
   });
 });
 
