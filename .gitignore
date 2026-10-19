@@ -20,3 +20,4 @@ docs/UAT/**/bundle*.txt
 # scratch files from local runs
 *.tmp.txt
 *.tmp.ts
+data/derived/

@@ -133,3 +133,5 @@ export {
   yahooPoints,
 } from './jobs/yahooPuller';
 export type { SymbolPull } from './jobs/yahooPuller';
+export { shortlist } from './universe/shortlist';
+export type { Shortlisted, ShortlistResult } from './universe/shortlist';
