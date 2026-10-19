@@ -7,9 +7,46 @@
  */
 import type { AddressInfo } from 'node:net';
 import { chromium } from 'playwright-core';
+import type { Page } from 'playwright-core';
 import { checkLog, serveStatic } from './support';
 
 const { checks, check } = checkLog();
+
+async function checkNames(page: Page): Promise<void> {
+  const reliance = await page.getByTestId('row-RELIANCE').innerText();
+  check(
+    'Reliance: eligible, no fixed band, sector bucket',
+    /Eligible/.test(reliance) &&
+      /no fixed price band/.test(reliance) &&
+      /Bucket: mundane/.test(reliance),
+  );
+  const fel = await page.getByTestId('row-FEL').innerText();
+  check(
+    'Future Enterprises: GSM stage 0, trade-for-trade, narrow band, thin trading',
+    /GSM stage 0/.test(fel) &&
+      /trade-for-trade/.test(fel) &&
+      /Bucket: speculative/.test(fel) &&
+      /First failure E5/.test(fel),
+  );
+}
+
+async function checkFilters(page: Page): Promise<void> {
+  await page.getByRole('tab', { name: 'Not eligible' }).click();
+  await page.getByText('10 instruments').waitFor({ timeout: 10_000 });
+  check('the Not eligible filter shows 10 names', true);
+  await page.getByRole('tab', { name: 'Eligible', exact: true }).click();
+  await page.getByText('6 instruments').waitFor({ timeout: 10_000 });
+  check('the Eligible filter shows 6 names', true);
+
+  await page.getByRole('tab', { name: 'Not eligible' }).click();
+  await page.getByTestId('row-ACCENTMIC').getByText('Show the rules').click();
+  await page.getByTestId('row-ACCENTMIC').getByText('Hide the rules').waitFor({ timeout: 10_000 });
+  const rules = await page.getByTestId('row-ACCENTMIC').innerText();
+  check(
+    'opening the rules shows the failed series rule and the assumed ones',
+    /Fail E1: series ST/.test(rules) && /\(assumed, not measured\)/.test(rules),
+  );
+}
 
 async function main(): Promise<void> {
   const web = await serveStatic();
@@ -37,40 +74,8 @@ async function main(): Promise<void> {
       JSON.stringify(strip),
     );
 
-    const reliance = await page.getByTestId('row-RELIANCE').innerText();
-    check(
-      'Reliance: eligible, no fixed band, sector bucket',
-      /Eligible/.test(reliance) &&
-        /no fixed price band/.test(reliance) &&
-        /Bucket: mundane/.test(reliance),
-    );
-    const fel = await page.getByTestId('row-FEL').innerText();
-    check(
-      'Future Enterprises: GSM stage 0, trade-for-trade, narrow band, thin trading',
-      /GSM stage 0/.test(fel) &&
-        /trade-for-trade/.test(fel) &&
-        /Bucket: speculative/.test(fel) &&
-        /First failure E5/.test(fel),
-    );
-
-    await page.getByRole('tab', { name: 'Not eligible' }).click();
-    await page.getByText('10 instruments').waitFor({ timeout: 10_000 });
-    check('the Not eligible filter shows 10 names', true);
-    await page.getByRole('tab', { name: 'Eligible', exact: true }).click();
-    await page.getByText('6 instruments').waitFor({ timeout: 10_000 });
-    check('the Eligible filter shows 6 names', true);
-
-    await page.getByRole('tab', { name: 'Not eligible' }).click();
-    await page.getByTestId('row-ACCENTMIC').getByText('Show the rules').click();
-    await page
-      .getByTestId('row-ACCENTMIC')
-      .getByText('Hide the rules')
-      .waitFor({ timeout: 10_000 });
-    const rules = await page.getByTestId('row-ACCENTMIC').innerText();
-    check(
-      'opening the rules shows the failed series rule and the assumed ones',
-      /Fail E1: series ST/.test(rules) && /\(assumed, not measured\)/.test(rules),
-    );
+    await checkNames(page);
+    await checkFilters(page);
     check('no page errors', errors.length === 0, errors.join(' | '));
   } finally {
     await browser.close();
