@@ -135,3 +135,10 @@ export {
 export type { SymbolPull } from './jobs/yahooPuller';
 export { shortlist } from './universe/shortlist';
 export type { Shortlisted, ShortlistResult } from './universe/shortlist';
+export {
+  DEFAULT_CALENDARS,
+  OpenTimestampsAnchorer,
+  nodeHttpPoster,
+  otsFile,
+} from './anchor/openTimestamps';
+export type { HttpPoster, OtsOptions, OtsProof } from './anchor/openTimestamps';
