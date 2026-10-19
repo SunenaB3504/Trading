@@ -12,3 +12,7 @@ research/spikes/**/dist/
 
 # raw provider responses recorded by the daily job (back this folder up; ASM history exists nowhere else)
 data/raw/
+
+# UAT working files: signing keys and exported books from the Backup tests stay local
+docs/UAT/**/key*.txt
+docs/UAT/**/bundle*.txt

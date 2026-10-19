@@ -64,7 +64,7 @@
 <body>
 <main>
   <h1>User acceptance test: web app, release 1.5 build</h1>
-  <p class="muted">Scope: the web app with the data that exists today (a 16-name demo universe and a demo ledger). Tester: Sunil, on the local laptop. Prepared 2026-10-18. Build: commit <code>0b7e10c</code> plus the UAT launcher. Virtual money only.</p>
+  <p class="muted">Scope: the web app with the data that exists today (a 16-name demo universe and a demo ledger). Tester: Sunil, on the local laptop. Prepared 2026-10-18. Run on 2026-10-19 by the owner in Microsoft Edge on the local laptop (automated checks in Chrome). Build: commit <code>0b7e10c</code> plus the UAT launcher, then the fixes for defects D-1 and D-2 (latest commit <code>c922e50</code>). Virtual money only.</p>
 
   <div class="card" id="summary">
     <div class="bar" id="bar" aria-hidden="true"></div>
@@ -115,9 +115,27 @@
     </ul>
   </div>
 
-  <h2>5. Defects found</h2>
+  <h2>5. Round 1 record</h2>
   <div class="card">
-    <p class="muted">Write each defect in the note of the case it belongs to, with what you did, what you expected and what happened. A screenshot filename is enough. Send the exported CSV back and I will fix and re-run the failed cases.</p>
+    <p><b>Outcome:</b> all 25 cases run, 25 passed, 0 failed. Sign-off by the owner is recorded in the progress tracker when given.</p>
+    <p><b>Defects found by the owner and fixed during the round</b> (each now has an automated check that fails on the old build):</p>
+    <table>
+      <tr><th>ID</th><th>Case</th><th>What happened</th><th>Fix</th></tr>
+      <tr><td>D-1</td><td>G1</td><td>On the Universe tab the tab row was squeezed to about 10 px by the long list, so there was no way back to the Ledger.</td><td>Header and tab row no longer shrink. Browser checks assert the row is at least 40 px on every tab.</td></tr>
+      <tr><td>D-2</td><td>C5</td><td>Backspace in the Decision date box would not edit the date: the cost preview threw an error on a half-typed date and crashed the screen.</td><td>Half-typed or impossible dates give no preview and never throw. Unit test over eleven dates plus a browser check.</td></tr>
+    </table>
+    <p><b>Polish items logged for later builds</b> (none blocks acceptance):</p>
+    <ul>
+      <li>Ledger: show the average price and an "N lots" popup (planned as WP-3.12); say that own trades live on the Trade tab; the demo scenario is separate from the hand-placed book.</li>
+      <li>Tab row on a phone gives no cue that more tabs are hidden (proposed: auto-scroll and a fade edge now, a bottom tab bar at the Android build).</li>
+      <li>Universe rule messages show traded values in paise; they should read in rupees (lakh, crore).</li>
+      <li>Order form shows one error at a time; the Stop price box on a market order is unexplained; the "fills at the next session's open" message is misleading when the data ends and the order stays pending.</li>
+      <li>Orders list shows no date, limit price or order id and shows the code <code>limit_not_reached</code>; a sell without holdings is accepted and only refused on the next session with a technical reason.</li>
+      <li>Trade tab: dividends received are not listed although cash includes them; the next fill session can be days away and the message does not say so.</li>
+      <li>Compare: "Return on cost so far" excludes charges and dividends and does not say so; the benchmark is not loaded yet.</li>
+      <li>Report: a trade with exactly zero gross profit counts as a loss (break-even is not defined in the SSD); wording "Only 1 closed trades" and "on the cost basis alone".</li>
+    </ul>
+    <p class="muted">Cases J1 to J3 and I1 were run by the assistant (command line and scripted browser check); the owner may repeat them. The other cases were run by the owner by hand.</p>
   </div>
 </main>
 

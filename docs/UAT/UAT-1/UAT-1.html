@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UAT R1 web app</title>
+<style>
+  :root {
+    --bg: #f6f7f9; --card: #ffffff; --ink: #1b2430; --muted: #5b6676; --line: #dde2ea;
+    --accent: #1f5fbf; --pass: #19803f; --fail: #b3261e; --block: #9a6700; --none: #8a94a3;
+    --pass-bg: #e3f4e9; --fail-bg: #fbe5e3; --block-bg: #fdf0d3; --none-bg: #eceff3;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #12171e; --card: #1b222c; --ink: #e8edf3; --muted: #9aa6b5; --line: #2c3644;
+      --accent: #6aa3ff; --pass: #5fd08a; --fail: #ff8a80; --block: #f0c05a; --none: #8a94a3;
+      --pass-bg: #17321f; --fail-bg: #3a1c1a; --block-bg: #3a2f13; --none-bg: #252d39;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 system-ui, "Segoe UI", sans-serif; }
+  main { max-width: 980px; margin: 0 auto; padding: 24px 16px 64px; }
+  h1 { font-size: 24px; margin: 0 0 4px; }
+  h2 { font-size: 18px; margin: 32px 0 8px; }
+  p, li { color: var(--ink); }
+  .muted { color: var(--muted); }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px; margin: 12px 0; }
+  code, pre { font-family: ui-monospace, Consolas, monospace; font-size: 13px; background: var(--none-bg); border-radius: 5px; }
+  code { padding: 1px 5px; }
+  pre { padding: 10px 12px; overflow-x: auto; margin: 8px 0; }
+  .bar { height: 12px; background: var(--none-bg); border-radius: 6px; overflow: hidden; display: flex; }
+  .bar span { display: block; height: 100%; }
+  .tally { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 10px; }
+  .tally b { font-size: 20px; }
+  .toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; align-items: center; }
+  button, select, input[type=text], textarea {
+    font: inherit; color: var(--ink); background: var(--card); border: 1px solid var(--line);
+    border-radius: 7px; padding: 6px 10px;
+  }
+  button { cursor: pointer; }
+  button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  button:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .case { padding: 14px 16px; }
+  .case header { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: baseline; }
+  .id { font-weight: 700; }
+  .tag { font-size: 12px; padding: 1px 8px; border-radius: 10px; background: var(--none-bg); color: var(--muted); }
+  .auto-pass { background: var(--pass-bg); color: var(--pass); }
+  .title { font-weight: 600; flex: 1 1 260px; }
+  ol { margin: 8px 0 8px 20px; padding: 0; }
+  .expect { border-left: 3px solid var(--accent); padding: 2px 10px; margin: 8px 0; }
+  .status-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-start; margin-top: 8px; }
+  .status-row textarea { flex: 1 1 260px; min-height: 36px; resize: vertical; }
+  .pill { font-weight: 600; border-radius: 12px; padding: 1px 10px; font-size: 13px; }
+  .s-pass { background: var(--pass-bg); color: var(--pass); }
+  .s-fail { background: var(--fail-bg); color: var(--fail); }
+  .s-block { background: var(--block-bg); color: var(--block); }
+  .s-none { background: var(--none-bg); color: var(--none); }
+  table { border-collapse: collapse; width: 100%; }
+  td, th { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .filters button.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+  @media (max-width: 600px) { main { padding: 16px; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>User acceptance test: web app, release 1.5 build</h1>
+  <p class="muted">Scope: the web app with the data that exists today (a 16-name demo universe and a demo ledger). Tester: Sunil, on the local laptop. Prepared 2026-10-18. Run on 2026-10-19 by the owner in Microsoft Edge on the local laptop (automated checks in Chrome). Build: commit <code>0b7e10c</code> plus the UAT launcher, then the fixes for defects D-1 and D-2 (latest commit <code>c922e50</code>). Virtual money only.</p>
+
+  <div class="card" id="summary">
+    <div class="bar" id="bar" aria-hidden="true"></div>
+    <div class="tally" id="tally"></div>
+    <p id="verdict" style="margin:10px 0 0"></p>
+  </div>
+
+  <div class="toolbar">
+    <span class="filters" id="filters"></span>
+    <span style="flex:1"></span>
+    <button id="save" class="primary" title="Downloads this page with your current results built in">Save a copy with my results</button>
+    <button id="exportCsv">Export CSV</button>
+    <button id="reset">Reset all results</button>
+  </div>
+  <p class="muted" style="margin-top:0">Your results are remembered in this browser automatically. Use “Save a copy” to keep them inside the file itself (replace this file with the downloaded copy).</p>
+
+  <h2>1. Get ready</h2>
+  <div class="card">
+    <ol>
+      <li>Open a terminal in <code>C:\Users\Admin\Sunil\Trading</code>.</li>
+      <li>Build the web app once (about a minute): <pre>pnpm --filter @trading/app export:web</pre></li>
+      <li>Start the app and the data service: <pre>pnpm uat:start</pre> It prints <code>App: http://127.0.0.1:8080</code> and <code>Service: http://127.0.0.1:8787</code>. Leave the terminal open; Ctrl+C stops both. The service on 8787 has no web page: opening it shows <code>no such endpoint /</code>, which is normal. To check it is alive open <code>http://127.0.0.1:8787/health</code> and look for <code>"status":"ok"</code>.</li>
+      <li>Open <code>http://127.0.0.1:8080</code> in Chrome. Use a fresh profile or a private window for the first run so no earlier data interferes.</li>
+    </ol>
+    <p class="muted">The demo data is fixed, so the numbers you see should match the expected results below. If a number differs, mark the case Fail and put what you saw in the note.</p>
+  </div>
+
+  <h2>2. Pass bar</h2>
+  <div class="card">
+    <ul>
+      <li>Every case marked <b>Must</b> passes.</li>
+      <li>No open defect that loses or corrupts money or ledger data.</li>
+      <li>No astro-derived value visible anywhere to a locked user (FR-P10).</li>
+      <li>Cases marked <b>Exploratory</b> do not block: record what you see and any surprise.</li>
+    </ul>
+    <p class="muted">The “Automated” tag means the same check already passed in an automated browser run on 2026-10-18 (<code>pnpm e2e:*</code>). You are confirming it with your own eyes and on your own laptop.</p>
+  </div>
+
+  <h2>3. Cases</h2>
+  <div id="cases"></div>
+
+  <h2>4. Not covered in this round</h2>
+  <div class="card">
+    <ul>
+      <li>Android build (after release 2), the paid layer and store text (blocked by the legal review, D32).</li>
+      <li>The market-data pipeline against live NSE (pulls still running; 2018–2019 calendar step open). The app’s Data tab shows a demo service only.</li>
+      <li>The astro engine, signal log and pre-open lock (WP-4.1 to 4.5) have no screen by design (shadow mode). Section J runs their checks from the command line instead.</li>
+    </ul>
+  </div>
+
+  <h2>5. Round 1 record</h2>
+  <div class="card">
+    <p><b>Outcome:</b> all 25 cases run, 25 passed, 0 failed. Sign-off by the owner is recorded in the progress tracker when given.</p>
+    <p><b>Defects found by the owner and fixed during the round</b> (each now has an automated check that fails on the old build):</p>
+    <table>
+      <tr><th>ID</th><th>Case</th><th>What happened</th><th>Fix</th></tr>
+      <tr><td>D-1</td><td>G1</td><td>On the Universe tab the tab row was squeezed to about 10 px by the long list, so there was no way back to the Ledger.</td><td>Header and tab row no longer shrink. Browser checks assert the row is at least 40 px on every tab.</td></tr>
+      <tr><td>D-2</td><td>C5</td><td>Backspace in the Decision date box would not edit the date: the cost preview threw an error on a half-typed date and crashed the screen.</td><td>Half-typed or impossible dates give no preview and never throw. Unit test over eleven dates plus a browser check.</td></tr>
+    </table>
+    <p><b>Polish items logged for later builds</b> (none blocks acceptance):</p>
+    <ul>
+      <li>Ledger: show the average price and an "N lots" popup (planned as WP-3.12); say that own trades live on the Trade tab; the demo scenario is separate from the hand-placed book.</li>
+      <li>Tab row on a phone gives no cue that more tabs are hidden (proposed: auto-scroll and a fade edge now, a bottom tab bar at the Android build).</li>
+      <li>Universe rule messages show traded values in paise; they should read in rupees (lakh, crore).</li>
+      <li>Order form shows one error at a time; the Stop price box on a market order is unexplained; the "fills at the next session's open" message is misleading when the data ends and the order stays pending.</li>
+      <li>Orders list shows no date, limit price or order id and shows the code <code>limit_not_reached</code>; a sell without holdings is accepted and only refused on the next session with a technical reason.</li>
+      <li>Trade tab: dividends received are not listed although cash includes them; the next fill session can be days away and the message does not say so.</li>
+      <li>Compare: "Return on cost so far" excludes charges and dividends and does not say so; the benchmark is not loaded yet.</li>
+      <li>Report: a trade with exactly zero gross profit counts as a loss (break-even is not defined in the SSD); wording "Only 1 closed trades" and "on the cost basis alone".</li>
+    </ul>
+    <p class="muted">Cases J1 to J3 and I1 were run by the assistant (command line and scripted browser check); the owner may repeat them. The other cases were run by the owner by hand.</p>
+  </div>
+</main>
+
+<script id="state" type="application/json">{"A1": {"status": "pass", "note": "Report hash matches the golden value; seen on screen 2026-10-19", "at": "19/10/2026"}, "A2": {"status": "pass", "note": "Own trades, Open positions, Orders and Closed trades all present; figures reconciled. Raised: no average price or lot detail on the Ledger (now WP-3.12, next build)", "at": "19/10/2026"}, "B1": {"status": "pass", "note": "Badge Online; Data tab Connected, last checked just now, 0 instruments and 0 snapshots (demo service). Tested in Microsoft Edge", "at": "19/10/2026"}, "B2": {"status": "pass", "note": "Offline: badge Offline; Check again shows 'Offline, showing last saved'; Ledger opens with the same hash. Tested in Edge with device emulation at 400 px", "at": "19/10/2026"}, "C1": {"status": "pass", "note": "Form defaults and cost preview correct; charges arithmetic checked (total 13.01). Observation: a Stop price field is shown on a market order although stops are release 2 (FR-T1, FR-T12)", "at": "19/10/2026"}, "C2": {"status": "pass", "note": "Order h-0001 filled at the next session open (2026-03-04, 1,100.65). Cash 9,89,030.43 = 10,00,000 - 11,006.50 - 13.07 charges + 50.00 AAA dividend. Observations: the dividend is not listed on the Trade screen; the message does not say the next session can be days away", "at": "19/10/2026"}, "C3": {"status": "pass", "note": "'Quantity must be a whole number of shares, at least 1.'; nothing placed; cost preview cleared", "at": "19/10/2026"}, "C4": {"status": "pass", "note": "After reload the order, the AAA position and cash are unchanged; the app lands on the Ledger tab", "at": "19/10/2026"}, "D1": {"status": "pass", "note": "Snapshot fixture-v1; Ledger A beside Ledger B; AAA 10 shares since 2026-03-04 open. Figures re-computed from demo prices (return -0.8%, best +10.3%, worst -2.1%, entry timing 83.3%, exit timing 10.1%). Observations: 'Return on cost so far' excludes charges and the dividend and the label does not say so; benchmark not loaded yet (expected, Nifty 50 not wired in)", "at": "19/10/2026"}, "E1": {"status": "pass", "note": "Net view and Gross view both say 'No closed trades yet'; all ratios shown as dashes. Observation: gross footnote 'on the cost basis alone' is unclear wording", "at": "19/10/2026"}, "F1": {"status": "pass", "note": "Reminder shown before export ('Export your book now'); export gives bundle text, 64-character signing key (not in the bundle; keyId is only a fingerprint) and 'Last export 0 days ago'", "at": "19/10/2026"}, "F2": {"status": "pass", "note": "Edited bundle refused: 'The file was changed after it was made, so it was not imported.' Refused even with the key box empty (checksum and order chain catch edits on their own)", "at": "19/10/2026"}, "F4": {"status": "pass", "note": "Import with the key: 'Imported 1 orders. The signature was checked.' (same file without the key said the signature could not be checked)", "at": "19/10/2026"}, "G1": {"status": "pass", "note": "Demo universe note explains real and assumed facts; '16 instruments'. DEFECT found by the owner: on the Universe tab the tab strip was squeezed to about 10 px and could not be seen, so there was no way back to the Ledger. Fixed 2026-10-19 (tab strip no longer shrinks); fix verified by the owner on 2026-10-19 (tab row visible on the Universe tab)", "at": "19/10/2026"}, "G2": {"status": "pass", "note": "RELIANCE: Eligible, no fixed price band, bucket mundane. FEL: not eligible, first failure E5, series BZ, price band 2%, trade-for-trade, GSM stage 0, bucket speculative. Observation: traded values in rule messages are in paise (28800000 against 5000000000) and should read in rupees (lakh, crore)", "at": "19/10/2026"}, "G3": {"status": "pass", "note": "Not eligible 10 instruments (screenshot); Eligible 6 and All 16 confirmed by the owner", "at": "19/10/2026"}, "G4": {"status": "pass", "note": "ACCENTMIC: Fail E1 series ST (not main board); also fails E5 (median traded value 1.19 crore against 5 crore); assumed facts labelled; Show/Hide the rules works", "at": "19/10/2026"}, "H1": {"status": "pass", "note": "390 px in Edge: content fits, no sideways page scroll; dragging the tab row reveals Trade, Compare, Report, Backup, Data. Observation: nothing signals that more tabs are hidden (options: auto-scroll plus a fade edge now, bottom tab bar when the Android build starts)", "at": "19/10/2026"}, "J1": {"status": "pass", "note": "Run by the assistant on 2026-10-19: pnpm verify passed, 63 test files and 678 tests, size check 0 errors", "at": "19/10/2026"}, "J2": {"status": "pass", "note": "Run by the assistant: 7 astro-engine files, 56 tests passed (ephemeris against Swiss Ephemeris, chart, features, signal log, pre-open lock, conventions, entity)", "at": "19/10/2026"}, "J3": {"status": "pass", "note": "Run by the assistant: 2 replay files, 16 tests passed; the golden hash e0b425cc...b3a8 is asserted in packages/core/src/replay/replay.test.ts and in the app test", "at": "19/10/2026"}, "F3": {"status": "pass", "note": "Browser database deleted: Trade showed 'No orders yet.' and cash 10,00,000. Import without the key: 'Imported 1 orders. The signature could not be checked without the key; the file was checked for changes.' After the restore and a second import: one order, AAA 10 shares basis 11,006.50, cash 9,89,030.43 (an import replaces the book, it does not add to it). Observation: 'Last export' goes back to 'never' after the browser data is cleared", "at": "19/10/2026"}, "E2": {"status": "pass", "note": "Sell placed with the default decision date 2026-03-02 (not 03-10), so it filled at the 2026-03-04 open, the same price as the buy: 1 closed trade, gross profit 0.00, net profit -39.83 (charges 13.07 + 26.76), win rate 0.0%, Net and Gross views agree. Cost preview for the sell shows DP charge 13.00 and no stamp duty. Cash and the Compare card were not shown to the assistant before closing (expected cash 9,99,960.17; card AAA 2026-03-04 to 2026-03-04, about -0.4%). Observations: a trade with exactly zero gross profit counts as a loss (the SSD does not define break-even); 'Only 1 closed trades' wording", "at": "19/10/2026"}, "C5": {"status": "pass", "note": "Exploratory, closed by the owner. Defect D-2 found and fixed (date box could not be edited with Backspace). Verified in the engine: bad quantity, date, limit and stop entries are refused with a message (one message at a time); a buy limit fails when it is at or below the session low and fills at the limit or at the open otherwise (AAA 2026-03-02 decision: 1097.80 expires, 1097.85 fills at 1097.85, 1100 fills at 1100.00, 1105 and 1350 fill at the open 1100.65); a limit order dated after the data (2026-06-30) stays pending; a sell with no shares, or more than held, is rejected at fill time and cash is untouched. Observations (polish, none blocking): (1) only the first form error is shown; (2) the placed message says it fills at the next open even when the data ends and the order stays pending; (3) the Orders list shows no date, limit price or order id, so identical lines cannot be told apart, and shows the code limit_not_reached; (4) a sell without holdings is accepted at placement and only rejected on the next session, with a technical reason; (5) the Stop price box on a market order is still unexplained (Part 3 not run)", "at": "19/10/2026"}, "I1": {"status": "pass", "note": "Scripted (pnpm e2e:noastro, 22 checks, none failed), run by the assistant. All seven tabs read before and after placing an order and exporting (text, labels, placeholders, titles and field values); the exported bundle; everything saved in the browser (4 items); every network request (none leaves this machine, none carries an astro word); and the shipped code (no ephemeris library). The detector was shown to catch ten known astro words and to ignore ordinary text. Word list: nakshatra, rashi, dasha, tithi, lagna, tara, chandra, jyotish, planet, vedha, kota, kundli, janma, horoscope, zodiac, panchang, astro, ephemeris, ayanamsa. Owner spot-check by hand optional", "at": "19/10/2026"}}</script>
+<script>
+"use strict";
+const CASES = [
+  // [id, group, must, auto, title, steps[], expected]
+  ["A1","A. Ledger",true,true,"Ledger opens with the demo scenario",
+    ["Open the app. The first tab is Ledger."],
+    "Title “Own trades (Ledger A), demo scenario”. A report hash is shown and equals e0b425cce01d3276c53909e3af23d198a90d49d14f140fafca9a8a2be9b4b3a8. Amounts are in rupees like ₹1,00,000.00."],
+  ["A2","A. Ledger",true,false,"Ledger has all four sections",
+    ["Scroll the Ledger tab."],
+    "Sections Own trades, Open positions, Orders and Closed trades are all present and none is blank or shows an error."],
+  ["B1","B. Offline",true,true,"Online badge and data service",
+    ["Look at the badge at the top of the app.","Open the Data tab."],
+    "Badge says Online. The Data tab says Connected."],
+  ["B2","B. Offline",true,true,"Works with the network cut",
+    ["In Chrome press F12, open Network, set the throttling box to Offline.","Wait a few seconds: the badge should change.","On the Data tab press “Check again”.","Open the Ledger tab again."],
+    "Badge says Offline. The Data tab says “Offline, showing last saved”. The Ledger still opens and shows the same report hash. Set the throttling back to No throttling afterwards."],
+  ["C1","C. Trade",true,true,"Order form and cost preview",
+    ["Open the Trade tab."],
+    "The form shows “New order (virtual money)” with instrument AAA, buy, market, quantity 10, date 2026-03-02. A Cost preview lists Total charges and the assumed broker (broker.profile-assumed). Opening cash is ₹10,00,000.00."],
+  ["C2","C. Trade",true,true,"Place a market order",
+    ["Press the place-order button with the default form."],
+    "Message “Order h-0001 placed”. The order list shows “buy 10 of 10 AAA” as filled (at the next open). Cash is now below ₹10,00,000.00 and a position “AAA, 10 shares” appears."],
+  ["C3","C. Trade",true,true,"Bad quantity is refused",
+    ["Clear the quantity box and type the letter x.","Press place order."],
+    "A message says “Quantity must be a whole number”. No new order is added."],
+  ["C4","C. Trade",true,true,"Book survives a reload",
+    ["After C2, reload the page (F5).","Open the Trade tab."],
+    "The filled order and the AAA position are still there. Briefly you may see “Loading the book”."],
+  ["C5","C. Trade",false,false,"Other order types (exploratory)",
+    ["Try a limit order and a stop order with sensible and silly prices, a sell, a different date, and a quantity of 0 or a huge number."],
+    "Each attempt either places an order or gives a clear, plain-language reason. Nothing freezes, shows a blank page or goes negative without a message. Record anything odd."],
+  ["D1","D. Compare",true,true,"Ledger A against Ledger B",
+    ["After C2 open the Compare tab."],
+    "It names “Data snapshot fixture-v1” and shows LEDGER A (YOU) beside LEDGER B (MARKET) with “AAA, 10 shares, since 2026-03-04, open”."],
+  ["E1","E. Report",true,true,"Report before any closed trade",
+    ["Open the Report tab."],
+    "“No closed trades yet” and “Net view: after all costs”. Pressing “Gross of costs” switches to “Gross view: before brokerage”."],
+  ["E2","E. Report",false,false,"Close the trade and read the report (exploratory)",
+    ["On Trade choose AAA, <b>sell</b>, market, quantity 10, decision date 2026-03-10, and place the order.","Check the Trade tab, then the Report tab (Net and Gross), then Compare. The Ledger tab is a fixed demo and will not change."],
+    "The sell fills at the next session open, 2026-03-11, at about ₹1,148.25. Cash becomes ₹10,00,435.69 and the AAA position disappears. Report: 1 closed trade, 1 win, net profit ₹435.69, gross profit ₹476.00 (net = gross less ₹40.31 of charges). Compare shows AAA 2026-03-04 to 2026-03-11 with net return about 4.0%. The earlier ₹50 dividend is no longer credited because the shares were sold before the ex-date."],
+  ["F1","F. Backup",true,true,"Export reminder and signed export",
+    ["Open the Backup tab.","Note the “Export your book now” reminder.","Press “Export my book”."],
+    "A bundle text box appears. A signing key of 64 hexadecimal characters is shown and the key is not inside the bundle text. “Last export” reads 0 days ago. Copy the bundle text and the key into Notepad for F2 to F4."],
+  ["F2","F. Backup",true,true,"A tampered bundle is refused",
+    ["In Notepad change <code>\"quantity\":10</code> to <code>\"quantity\":11</code> in your copy of the bundle.","Paste it into the import box and the key into the key box.","Press the import button, then press it again when asked to confirm."],
+    "The app says the bundle was “changed after it was made” and refuses. Your book on the Trade tab is unchanged."],
+  ["F3","F. Backup",true,true,"Restore into an empty browser",
+    ["In Chrome press F12, open Application, IndexedDB, delete the database named trading-app. Reload.","Open Trade: it should say “No orders yet.”","On Backup paste the original (untouched) bundle, leave the key box empty, import and confirm."],
+    "“Imported 1 orders”, with a note that the signature “could not be checked without the key”. The Trade tab shows the filled order again."],
+  ["F4","F. Backup",true,true,"Restore with the key checks the signature",
+    ["Import the same bundle again, this time with the key in the key box."],
+    "The message says the signature was checked."],
+  ["G1","G. Universe",true,true,"Demo universe and what is real",
+    ["Open the Universe tab."],
+    "The page says it is a Demo universe and says which facts are assumed. The list header says 16 instruments."],
+  ["G2","G. Universe",true,true,"Reliance and Future Enterprises",
+    ["Find RELIANCE and FEL (Future Enterprises)."],
+    "RELIANCE: Eligible, “no fixed price band”, Bucket: mundane. FEL: GSM stage 0, trade-for-trade, narrow band, Bucket: speculative, “First failure E5”."],
+  ["G3","G. Universe",true,true,"Filters",
+    ["Press “Not eligible”, then “Eligible”."],
+    "Not eligible shows 10 instruments; Eligible shows 6 instruments."],
+  ["G4","G. Universe",true,true,"Show the rules",
+    ["Under Not eligible open ACCENTMIC and press “Show the rules”."],
+    "A failed rule “Fail E1: series ST” is listed, and any rule using an assumed fact says “(assumed, not measured)”. The link now reads “Hide the rules”."],
+  ["H1","H. Phone width",true,true,"Narrow screen",
+    ["In Chrome press F12 then Ctrl+Shift+M and choose a phone size, or set the width to 390.","Visit every tab."],
+    "The tab strip scrolls sideways, the page itself does not scroll sideways, text is not cut off, and there is a margin of at least 16 px at the sides."],
+  ["I1","I. Astro stays hidden",true,false,"No astro terms anywhere",
+    ["On every tab press Ctrl+F and search for: nakshatra, rashi, dasha, tithi, lagna, tara, chandra, jyotish, planet."],
+    "None of these words appears in any tab. (The app has no unlocked astro layer on this device; FR-P10.)"],
+  ["J1","J. Command line (back end)",true,false,"Full verification",
+    ["In the terminal run: <pre>pnpm verify</pre>"],
+    "Ends without errors and reports all tests passed (678 at last count; the number grows as work continues)."],
+  ["J2","J. Command line (back end)",true,false,"Ephemeris against Swiss Ephemeris",
+    ["Run: <pre>pnpm vitest run packages/astro-engine</pre>"],
+    "All astro-engine tests pass, including the 12-case Swiss Ephemeris comparison, the signal log and the pre-open lock."],
+  ["J3","J. Command line (back end)",true,false,"Replay is reproducible",
+    ["Run: <pre>pnpm vitest run packages/core/src/replay</pre>"],
+    "All replay tests pass; the golden report hash is the same one shown on the Ledger tab (A1)."]
+];
+
+const STATUSES = [["none","Not run"],["pass","Pass"],["fail","Fail"],["block","Blocked"]];
+const KEY = "uat-r1-results-v1";
+let filter = "all";
+let results = {};
+
+function embedded() {
+  try { return JSON.parse(document.getElementById("state").textContent || "{}"); } catch (e) { return {}; }
+}
+function load() {
+  let stored = {};
+  try { stored = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { stored = {}; }
+  const base = embedded();
+  results = Object.assign({}, base, stored);
+}
+function persist() {
+  try { localStorage.setItem(KEY, JSON.stringify(results)); } catch (e) { /* private mode: use Save a copy */ }
+}
+function get(id) { return results[id] || { status: "none", note: "", at: "" }; }
+
+function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
+
+function render() {
+  const box = document.getElementById("cases");
+  box.textContent = "";
+  let group = "";
+  CASES.forEach(function (c) {
+    const [id, g, must, auto, title, steps, expected] = c;
+    const r = get(id);
+    if (filter !== "all" && r.status !== filter) return;
+    if (g !== group) { group = g; const h = document.createElement("h3"); h.textContent = g; h.style.margin = "22px 0 4px"; box.appendChild(h); }
+    const el = document.createElement("section");
+    el.className = "card case";
+    el.innerHTML =
+      '<header><span class="id">' + id + '</span><span class="title">' + esc(title) + '</span>' +
+      '<span class="tag">' + (must ? "Must" : "Exploratory") + '</span>' +
+      (auto ? '<span class="tag auto-pass">Automated: passed 2026-10-18</span>' : '') +
+      '<span class="pill s-' + r.status + '" id="pill-' + id + '">' + STATUSES.find(function (s) { return s[0] === r.status; })[1] + '</span></header>' +
+      '<ol>' + steps.map(function (s) { return "<li>" + s + "</li>"; }).join("") + '</ol>' +
+      '<div class="expect"><b>Expected.</b> ' + esc(expected).replace(/&lt;code&gt;/g, "<code>") + '</div>' +
+      '<div class="status-row"><label>Result <select data-id="' + id + '" aria-label="Result for ' + id + '">' +
+      STATUSES.map(function (s) { return '<option value="' + s[0] + '"' + (s[0] === r.status ? " selected" : "") + ">" + s[1] + "</option>"; }).join("") +
+      '</select></label><textarea data-note="' + id + '" placeholder="Note: what you saw, screenshot file name" aria-label="Note for ' + id + '">' + esc(r.note) + '</textarea>' +
+      '<span class="muted" id="at-' + id + '">' + (r.at ? "Updated " + r.at : "") + '</span></div>';
+    box.appendChild(el);
+  });
+  fixCode();
+  summary();
+}
+// the expected text may contain <code> tags written as markup in the data; make them real
+function fixCode() {
+  document.querySelectorAll(".expect").forEach(function (e) { e.innerHTML = e.innerHTML.replace(/&lt;code&gt;(.*?)&lt;\/code&gt;/g, "<code>$1</code>"); });
+}
+
+function counts() {
+  const n = { none: 0, pass: 0, fail: 0, block: 0 };
+  CASES.forEach(function (c) { n[get(c[0]).status]++; });
+  return n;
+}
+function summary() {
+  const n = counts(), total = CASES.length;
+  const colors = { pass: "var(--pass)", fail: "var(--fail)", block: "var(--block)" };
+  document.getElementById("bar").innerHTML = ["pass", "fail", "block"].map(function (k) {
+    return '<span style="width:' + (100 * n[k] / total) + '%;background:' + colors[k] + '"></span>';
+  }).join("");
+  document.getElementById("tally").innerHTML =
+    '<span><b>' + n.pass + '</b> pass</span><span><b>' + n.fail + '</b> fail</span><span><b>' + n.block + '</b> blocked</span><span><b>' + n.none + '</b> not run</span><span class="muted">of ' + total + ' cases</span>';
+  const mustOpen = CASES.filter(function (c) { return c[2] && get(c[0]).status !== "pass"; }).length;
+  const v = document.getElementById("verdict");
+  if (n.fail > 0) v.innerHTML = "<b style='color:var(--fail)'>Not accepted yet:</b> " + n.fail + " failed case(s) to fix and re-run.";
+  else if (mustOpen > 0) v.innerHTML = "<b>In progress:</b> " + mustOpen + " must-pass case(s) still open.";
+  else v.innerHTML = "<b style='color:var(--pass)'>All must-pass cases passed.</b> Record sign-off in the progress tracker.";
+}
+function filters() {
+  const f = document.getElementById("filters");
+  f.innerHTML = [["all", "All"]].concat(STATUSES).map(function (s) {
+    return '<button data-f="' + s[0] + '" class="' + (filter === s[0] ? "on" : "") + '">' + s[1] + "</button> ";
+  }).join("");
+}
+
+document.addEventListener("change", function (e) {
+  const id = e.target.getAttribute && e.target.getAttribute("data-id");
+  if (!id) return;
+  const r = get(id); r.status = e.target.value; r.at = new Date().toLocaleString();
+  results[id] = r; persist();
+  if (filter !== "all") render(); else {
+    const p = document.getElementById("pill-" + id);
+    p.className = "pill s-" + r.status; p.textContent = STATUSES.find(function (s) { return s[0] === r.status; })[1];
+    document.getElementById("at-" + id).textContent = "Updated " + r.at; summary();
+  }
+});
+document.addEventListener("input", function (e) {
+  const id = e.target.getAttribute && e.target.getAttribute("data-note");
+  if (!id) return;
+  const r = get(id); r.note = e.target.value; r.at = new Date().toLocaleString();
+  results[id] = r; persist();
+});
+document.addEventListener("click", function (e) {
+  const f = e.target.getAttribute && e.target.getAttribute("data-f");
+  if (f) { filter = f; filters(); render(); }
+});
+function download(name, text, type) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([text], { type: type }));
+  a.download = name; document.body.appendChild(a); a.click(); a.remove();
+}
+document.getElementById("save").addEventListener("click", function () {
+  const html = "<!doctype html>\n" + document.documentElement.outerHTML;
+  const marker = /(<script id="state" type="application\/json">)[\s\S]*?(<\/script>)/;
+  const json = JSON.stringify(results).replace(/</g, "\\u003c");
+  download("UAT_R1.html", html.replace(marker, function (m, a, b) { return a + json + b; }), "text/html");
+});
+document.getElementById("exportCsv").addEventListener("click", function () {
+  const q = function (s) { return '"' + String(s).replace(/"/g, '""') + '"'; };
+  const rows = [["id", "group", "must", "title", "status", "note", "updated"].join(",")].concat(CASES.map(function (c) {
+    const r = get(c[0]); return [c[0], q(c[1]), c[2], q(c[4]), r.status, q(r.note), q(r.at)].join(",");
+  }));
+  download("uat_r1_results.csv", rows.join("\n"), "text/csv");
+});
+document.getElementById("reset").addEventListener("click", function () {
+  if (confirm("Clear every result and note?")) { results = {}; try { localStorage.removeItem(KEY); } catch (e) {} render(); }
+});
+
+load(); filters(); render();
+</script>
+</body>
+</html>
