@@ -36,11 +36,19 @@ interface Msg {
 type Screen =
   | { kind: 'loading' }
   | { kind: 'locked' }
-  | { kind: 'form'; engine: Engine; notice: Msg | null }
+  | { kind: 'form'; engine: Engine; notice: Msg | null; initial?: BirthProfile }
   | { kind: 'ready'; engine: Engine; profile: BirthProfile }
   | { kind: 'unreadable'; reason: string };
 
 const CONVENTIONS_VERSION = 1;
+const EMPTY_PROFILE: BirthProfile = {
+  name: '',
+  date: '',
+  time: '',
+  place: '',
+  gender: '',
+  star: '',
+};
 
 /** Something wrong with what was typed, carrying the sentence that explains it. */
 class FormProblem extends Error {
@@ -120,6 +128,12 @@ function useProfile(kv: KeyValueStore, entitlements: IEntitlementService, now: (
     }
   };
 
+  const edit = (engine: Engine, profile: BirthProfile) =>
+    setScreen({ kind: 'form', engine, notice: null, initial: profile });
+
+  const cancelEdit = (engine: Engine, profile: BirthProfile) =>
+    setScreen({ kind: 'ready', engine, profile });
+
   const remove = async () => {
     await vault.remove();
     const engine = await loadAstroLayer(entitlements, ASTRO_FEATURE, loadEngine);
@@ -131,21 +145,24 @@ function useProfile(kv: KeyValueStore, entitlements: IEntitlementService, now: (
     void saveLang(kv, next);
   };
 
-  return { screen, lang, pack, setLang, save, remove, today };
+  return { screen, lang, pack, setLang, save, edit, cancelEdit, remove, today };
 }
 
 function BirthForm(props: {
   engine: Engine;
   notice: Msg | null;
+  initial?: BirthProfile;
   onSave: (p: BirthProfile) => Promise<Msg | null>;
+  onCancel?: () => void;
 }) {
   const t = useT();
-  const [name, setName] = useState('');
-  const [date, setDate] = useState('');
-  const [time, setTime] = useState('');
-  const [place, setPlace] = useState('');
-  const [gender, setGender] = useState('');
-  const [star, setStar] = useState('');
+  const start = props.initial ?? EMPTY_PROFILE;
+  const [name, setName] = useState(start.name);
+  const [date, setDate] = useState(start.date);
+  const [time, setTime] = useState(start.time);
+  const [place, setPlace] = useState(start.place);
+  const [gender, setGender] = useState(start.gender);
+  const [star, setStar] = useState(start.star);
   const [message, setMessage] = useState<Msg | null>(props.notice);
   const submit = async () => {
     if (place === '') return setMessage({ key: 'form.needPlace' });
@@ -169,6 +186,9 @@ function BirthForm(props: {
       <GenderPicker value={gender} onPick={setGender} />
       <StarPicker engine={props.engine} value={star} onPick={setStar} />
       <Button label={t('form.save')} onPress={() => void submit()} testID="profile-save" />
+      {props.onCancel !== undefined ? (
+        <Button label={t('edit.cancel')} onPress={props.onCancel} quiet testID="profile-cancel" />
+      ) : null}
       {message !== null ? (
         <Text style={styles.message} testID="profile-message">
           {t(message.key, message.vars)}
@@ -184,6 +204,7 @@ function ProfileCard(props: {
   today: string;
   pack: Pack;
   now: () => number;
+  onEdit: () => void;
   onDelete: () => Promise<void>;
 }) {
   const t = useT();
@@ -216,6 +237,7 @@ function ProfileCard(props: {
         now={props.now}
       />
       <Section title={t('delete.title')}>
+        <Button label={t('edit.button')} onPress={props.onEdit} quiet testID="profile-edit" />
         <Button
           label={sure ? t('delete.confirm') : t('delete.button')}
           onPress={() => (sure ? void props.onDelete() : setSure(true))}
@@ -230,7 +252,7 @@ function ProfileCard(props: {
 
 function Body(props: { p: ReturnType<typeof useProfile>; now: () => number }) {
   const t = useT();
-  const { screen, save, remove, pack, today } = props.p;
+  const { screen, save, edit, cancelEdit, remove, pack, today } = props.p;
   return (
     <>
       <Section title={t('protection.title')}>
@@ -242,7 +264,11 @@ function Body(props: { p: ReturnType<typeof useProfile>; now: () => number }) {
         <BirthForm
           engine={screen.engine}
           notice={screen.notice}
+          {...(screen.initial !== undefined ? { initial: screen.initial } : {})}
           onSave={(prof) => save(screen.engine, prof)}
+          {...(screen.initial !== undefined
+            ? { onCancel: () => cancelEdit(screen.engine, screen.initial as BirthProfile) }
+            : {})}
         />
       ) : null}
       {screen.kind === 'ready' ? (
@@ -252,6 +278,7 @@ function Body(props: { p: ReturnType<typeof useProfile>; now: () => number }) {
           today={today}
           pack={pack}
           now={props.now}
+          onEdit={() => edit(screen.engine, screen.profile)}
           onDelete={remove}
         />
       ) : null}

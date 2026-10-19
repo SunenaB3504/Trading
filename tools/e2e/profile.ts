@@ -216,6 +216,31 @@ async function afterReload(page: Page, url: string): Promise<void> {
 }
 
 /** The whole Profile tab in Malayalam: facts, remembered choice, typing the star in Malayalam script. */
+async function editDetails(page: Page): Promise<void> {
+  await page.getByTestId('profile-edit').click();
+  await page.getByTestId('birth-date').waitFor({ timeout: 10_000 });
+  check(
+    'editing opens the form filled with the saved details',
+    (await page.getByTestId('birth-date').inputValue()) === goldenBirth.date &&
+      (await page.getByTestId('birth-time').inputValue()) === goldenBirth.time &&
+      (await page.getByTestId('birth-name').inputValue()) === 'Test Person' &&
+      (await page.getByTestId('place-input').inputValue()).startsWith('Mumbai'),
+  );
+  await page.getByTestId('profile-cancel').click();
+  await page.getByText('Your chart facts').waitFor({ timeout: 10_000 });
+  check('cancel returns to the chart facts without changing anything', true);
+  await page.getByTestId('profile-edit').click();
+  await page.getByTestId('birth-time').fill('11:45');
+  await page.getByTestId('profile-save').click();
+  await page.getByText('Your chart facts').waitFor({ timeout: 15_000 });
+  const text = await page.getByTestId('profile-screen').innerText();
+  check('a saved edit is recomputed and shown', /06:15 UTC/.test(text), text.slice(0, 300));
+  await page.getByTestId('profile-edit').click();
+  await page.getByTestId('birth-time').fill(goldenBirth.time);
+  await page.getByTestId('profile-save').click();
+  await page.getByText('Your chart facts').waitFor({ timeout: 15_000 });
+}
+
 async function malayalam(page: Page, url: string): Promise<void> {
   await page.getByTestId('lang-ml').click();
   await page.getByText('ലഗ്നം').first().waitFor({ timeout: 15_000 });
@@ -348,6 +373,7 @@ async function unlockedFlow(page: Page, url: string, requests: string[]): Promis
   await shields(page);
   await encryption(page);
   await afterReload(page, url);
+  await editDetails(page);
   await malayalam(page, url);
   check(
     'no request carried the details or left this machine',

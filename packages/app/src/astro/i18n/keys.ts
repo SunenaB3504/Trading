@@ -20,6 +20,8 @@ export const EN = {
   'form.date': 'Birth date (YYYY-MM-DD)',
   'form.time': 'Birth time, local clock (HH:MM, 24-hour)',
   'form.save': 'Save details',
+  'edit.button': 'Edit my birth details',
+  'edit.cancel': 'Cancel',
   'form.needPlace': 'Search for your birth place and pick it from the list.',
   'form.placeMissing': 'That place is not in the offline list. Search again.',
   'form.error': 'Something went wrong.',
