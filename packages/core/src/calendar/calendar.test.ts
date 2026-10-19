@@ -157,8 +157,41 @@ describe('queries', () => {
   });
 
   it('refuses dates outside the supported range', () => {
-    expect(() => sessionOn('2019-12-31')).toThrow(CalendarRangeError);
+    expect(() => sessionOn('2017-12-31')).toThrow(CalendarRangeError);
     expect(() => sessionOn('2027-01-01')).toThrow(CalendarRangeError);
+  });
+
+  it('covers 2018 and 2019 from the exchange archive (15 and 17 weekday closures, found from the files NSE published)', () => {
+    const days = (y: string): number => tradingDaysBetween(`${y}-01-01`, `${y}-12-31`).length;
+    // 2018: 365 days, 104 weekend days, 15 weekday closures (the Diwali evening session replaces no extra day)
+    expect(days('2018')).toBe(365 - 104 - 15);
+    // 2019: 365 days, 104 weekend days, 17 weekday closures, plus the Sunday Diwali evening session
+    expect(days('2019')).toBe(365 - 104 - 17 + 1);
+  });
+
+  it('knows named 2018 and 2019 holidays and an ordinary 2018 day', () => {
+    // includes the two 2019 election-day closures (29 April and 21 October) that no fixed holiday list would carry
+    for (const d of [
+      '2018-01-26',
+      '2018-08-15',
+      '2019-04-19',
+      '2019-04-29',
+      '2019-10-21',
+      '2019-12-25',
+    ]) {
+      expect(sessionOn(d), d).toMatchObject({
+        isTradingDay: false,
+        kind: 'closed',
+        confidence: 'archive',
+      });
+    }
+    expect(sessionOn('2018-01-02')).toMatchObject({ isTradingDay: true, kind: 'regular' });
+  });
+
+  it('has the two Diwali evening sessions: the Sunday from the archive, the Wednesday recalled', () => {
+    expect(sessionOn('2019-10-27')).toMatchObject({ isTradingDay: true, kind: 'muhurat' });
+    expect(sessionOn('2019-10-27').confidence).toBe('recalled'); // the date is proven, the evening hours are recalled
+    expect(sessionOn('2018-11-07')).toMatchObject({ isTradingDay: true, kind: 'muhurat' });
   });
 
   it('never lists a closed day as a trading day (property)', () => {

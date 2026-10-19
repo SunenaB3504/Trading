@@ -47,7 +47,8 @@ function render(from: string, to: string, cal: ReturnType<typeof deriveCalendar>
       date,
       kind: MUHURAT[date] === undefined ? 'dr' : 'muhurat',
       windows: MUHURAT[date] === undefined ? DR_WINDOWS : [MUHURAT_WINDOW],
-      dateConfidence: 'archive',
+      // A weekend bhavcopy proves the session; on a weekday the archive only shows that some session was held.
+      dateConfidence: cal.weekendSessions.includes(date) ? 'archive' : 'recalled',
       timesConfidence: 'recalled',
       source: MUHURAT[date] ?? 'weekend bhavcopy exists (special or disaster-recovery session)',
     }));
