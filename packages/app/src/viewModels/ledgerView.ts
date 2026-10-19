@@ -1,4 +1,4 @@
-import type { ReplayResult } from '@trading/core';
+import type { Lot, ReplayResult } from '@trading/core';
 import { formatPaise, formatPercent } from '../format/rupees';
 
 export interface LedgerRow {
@@ -13,6 +13,30 @@ export interface PositionRow {
   mark: string;
   value: string;
   unrealised: string;
+  average: string;
+  lots: LotsView;
+}
+
+export interface LotRow {
+  openedOn: string;
+  shares: string;
+  price: string;
+  basis: string;
+}
+
+export interface SoldRow {
+  closedOn: string;
+  shares: string;
+  proceeds: string;
+  net: string;
+}
+
+/** What the lots popup shows for one holding: open lots oldest first in month groups, then what was sold. */
+export interface LotsView {
+  count: number;
+  groups: Array<{ month: string; lots: LotRow[] }>;
+  nextSale: string;
+  sold: SoldRow[];
 }
 
 /** Everything the ledger screen shows, already formatted, so rendering needs no logic and no network. */
@@ -27,6 +51,57 @@ export interface LedgerView {
 
 function countOf(result: ReplayResult, status: string): string {
   return String(result.outcomes.filter((o) => o.status === status).length);
+}
+
+const lotBasis = (l: Lot): number => l.unitCostPaise * l.quantityRemaining + l.basisAdjustmentPaise;
+
+/** Open lots of one holding in the order a sale uses them (FR-T5): oldest first, ties in booking order. */
+function openLots(result: ReplayResult, id: string): Lot[] {
+  return result.state.lots
+    .map((lot, index) => ({ lot, index }))
+    .filter((x) => x.lot.instrumentId === id && x.lot.quantityRemaining > 0)
+    .sort((a, b) =>
+      a.lot.openedOn === b.lot.openedOn
+        ? a.index - b.index
+        : a.lot.openedOn < b.lot.openedOn
+          ? -1
+          : 1,
+    )
+    .map((x) => x.lot);
+}
+
+function lotsView(result: ReplayResult, id: string): LotsView {
+  const open = openLots(result, id);
+  const groups: LotsView['groups'] = [];
+  for (const l of open) {
+    const month = l.openedOn.slice(0, 7);
+    const row = {
+      openedOn: l.openedOn,
+      shares: String(l.quantityRemaining),
+      price: formatPaise(l.unitCostPaise),
+      basis: formatPaise(lotBasis(l)),
+    };
+    const last = groups[groups.length - 1];
+    if (last?.month === month) last.lots.push(row);
+    else groups.push({ month, lots: [row] });
+  }
+  const first = open[0];
+  return {
+    count: open.length,
+    groups,
+    nextSale:
+      first === undefined
+        ? 'Nothing to sell.'
+        : `A sale takes the oldest lot first: ${String(first.quantityRemaining)} shares bought ${first.openedOn} at ${formatPaise(first.unitCostPaise)}.`,
+    sold: result.state.trades
+      .filter((t) => t.instrumentId === id && t.exitFillId !== null)
+      .map((t) => ({
+        closedOn: t.closedOn ?? '',
+        shares: String(t.quantity),
+        proceeds: formatPaise(t.proceedsPaise),
+        net: t.netPnlPaise === null ? '–' : formatPaise(t.netPnlPaise),
+      })),
+  };
 }
 
 export function toLedgerView(result: ReplayResult): LedgerView {
@@ -50,6 +125,8 @@ export function toLedgerView(result: ReplayResult): LedgerView {
       mark: formatPaise(p.markPaise),
       value: formatPaise(p.marketValuePaise),
       unrealised: formatPaise(p.unrealisedPaise),
+      average: formatPaise(Math.round(p.basisPaise / p.quantity)),
+      lots: lotsView(result, p.instrumentId),
     })),
     outcomes: [
       { label: 'Orders filled', value: countOf(result, 'filled') },

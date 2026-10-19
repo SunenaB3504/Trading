@@ -59,6 +59,22 @@ describe('ledger view model', () => {
   });
 });
 
+describe('lots in the ledger view (WP-3.12)', () => {
+  const s = buildFixtureScenario();
+  const result = runReplay(s.snapshot, s.orders, s.config);
+  const view = toLedgerView(result);
+
+  it('has lot shares and basis that add up to the position, oldest lot first', () => {
+    for (const p of view.positions) {
+      const lots = p.lots.groups.flatMap((g) => g.lots);
+      expect(lots).toHaveLength(p.lots.count);
+      expect(lots.reduce((n, l) => n + Number(l.shares), 0)).toBe(Number(p.quantity));
+      const dates = lots.map((l) => l.openedOn);
+      expect([...dates].sort()).toEqual(dates);
+    }
+  });
+});
+
 describe('key-value store and stamped values', () => {
   it('stores, lists, deletes and reads back stamped JSON', async () => {
     const kv = new MemoryKv();
