@@ -5,25 +5,25 @@
 **Status values:** `Not started` · `In progress` · `Blocked` · `Done`  
 **Done means** the work package's acceptance test (see the plan) has been run and the result is recorded in the *Acceptance result* column. Failures are recorded as failures; a work package with a failing test stays `In progress`.
 
-**Last updated:** 2026-10-17 (WP-2.9 in progress: archive calendar machinery built)
+**Last updated:** 2026-10-19 (WP-3.12 lots popup and WP-4.12 edit birth details built; UAT round 3 closed early, 15 of 23 passed, 8 skipped)
 
 ## Phase summary
 
 <!-- SUMMARY-START -->
 | Phase | Done | In progress | Blocked | Not started | Total |
 | ------ | ------ | ------ | ------ | ------ | ------ |
-| P0 · Decisions, skeleton and de-risking | 7 | 0 | 0 | 1 | 8 |
+| P0 · Decisions, skeleton and de-risking | 7 | 0 | 0 | 0 | 8 |
 | P1 · Core ledger and simulator | 11 | 0 | 0 | 0 | 11 |
 | P2 · Data service and universe | 8 | 1 | 0 | 0 | 9 |
-| P3 · Web MVP (R1) | 10 | 0 | 0 | 1 | 11 |
-| P4 · Chart module and shadow mode (R1.5) | 0 | 0 | 0 | 8 | 8 |
+| P3 · Web MVP (R1) | 10 | 0 | 0 | 1 | 12 |
+| P4 · Chart module and shadow mode (R1.5) | 4 | 1 | 0 | 1 | 12 |
 | P5 · Experiment harness and buyer-company overlay (R2) | 0 | 0 | 0 | 7 | 7 |
 | P6 · Android shell (A1) | 0 | 0 | 0 | 1 | 1 |
 | P7 · Jyotisham feature modules and PH entries (R3) | 0 | 0 | 0 | 10 | 10 |
 | P11 · Commercialization (after R2; gated by D32) | 0 | 0 | 0 | 4 | 4 |
 <!-- SUMMARY-END -->
 
-**Next work package:** WP-2.9 remaining part (calendar before 2020 derived from the archive, Yahoo cross-check and disputes list, universe selection, frozen buckets), WP-3.9 (snapshot client; waits on D26). Owner to schedule the daily recording job, back up `data/raw`, and confirm D1, the sector table (T17) and the three D26 points  
+**Next work package:** WP-4.11 Hindi, or P5 (experiment harness and buyer-company overlay); then WP-2.9 remaining part (pre-2020 calendar from the archive, Yahoo cross-check and disputes list, universe selection, frozen buckets) and WP-3.9 (snapshot client; waits on D26). Owner: the 8 skipped UAT-3 cases and the Malayalam text review are still open; stock first-trade registry and dual-listing rule (e.g. Reliance) need a decision; schedule the daily recording job; back up `data/raw`; confirm D1, T17 and the three D26 points  
 **Open blockers:** none
 
 ---
