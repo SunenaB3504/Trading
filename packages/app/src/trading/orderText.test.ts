@@ -95,3 +95,27 @@ describe('form errors are reported together', () => {
     expect(r.ok ? '' : r.error).toBe('Quantity must be a whole number of shares, at least 1.');
   });
 });
+
+describe('a refused sell does not use up the day’s depository charge (found in UAT-2, A10)', () => {
+  const roundTrip = async (refusedFirst: boolean) => {
+    const s = await PaperSession.open(new MemoryKv(), () => 1);
+    if (refusedFirst) await s.place(form({ side: 'sell' })); // nothing held: refused at the fill
+    await s.place(form());
+    await s.place(form({ side: 'sell' }));
+    return s;
+  };
+
+  it('charges the same on the real sell whether or not a refused sell came first', async () => {
+    const clean = await roundTrip(false);
+    const withRefused = await roundTrip(true);
+    expect((await withRefused.view()).cash).toBe((await clean.view()).cash);
+    const net = (x: PaperSession) => x.report().net.totalPnlPaise;
+    expect(net(withRefused)).toBe(net(clean));
+    expect(net(clean)).toBe(-3983); // buy charges 13.07 plus sell charges 26.76, no price move
+  });
+
+  it('lists the refused sell as rejected and the real sell as filled', async () => {
+    const orders = (await (await roundTrip(true)).view()).orders;
+    expect(orders.map((o) => o.state)).toEqual(['filled', 'filled', 'rejected']);
+  });
+});

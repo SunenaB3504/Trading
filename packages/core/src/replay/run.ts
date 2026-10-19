@@ -87,9 +87,20 @@ function outcome(ro: ReplayOrder, over: Partial<OrderOutcome>): OrderOutcome {
   };
 }
 
-function buildFill(run: Run, ro: ReplayOrder, rec: FillRecord, quantity: number): Fill {
+/**
+ * The fill for an order, and the key of the day's depository charge if this sell is the first of its day
+ * for the instrument. The key is recorded only after the ledger accepts the sell: a refused sell must not
+ * use up the day's charge, or a later real sell the same day would escape it (found in UAT-2, A10).
+ */
+function buildFill(
+  run: Run,
+  ro: ReplayOrder,
+  rec: FillRecord,
+  quantity: number,
+): { fill: Fill; dpKey: string | null } {
   const o = ro.order;
-  const dpFirst = o.side === 'sell' && !run.dpDays.has(`${o.instrumentId}|${rec.tradingDate}`);
+  const dayKey = `${o.instrumentId}|${rec.tradingDate}`;
+  const dpFirst = o.side === 'sell' && !run.dpDays.has(dayKey);
   const costs = computeCosts(
     {
       date: rec.tradingDate,
@@ -101,18 +112,20 @@ function buildFill(run: Run, ro: ReplayOrder, rec: FillRecord, quantity: number)
     },
     run.cfg.broker ?? GENERIC_DISCOUNT_BROKER,
   );
-  if (dpFirst) run.dpDays.add(`${o.instrumentId}|${rec.tradingDate}`);
   return {
-    id: `f:${o.id}`,
-    orderId: o.id,
-    instrumentId: o.instrumentId,
-    side: o.side,
-    quantity,
-    pricePaise: rec.pricePaise,
-    costsPaise: costs.total,
-    fillRuleId: o.fillRuleId,
-    filledAt: rec.filledAt,
-    tradingDate: rec.tradingDate,
+    dpKey: dpFirst ? dayKey : null,
+    fill: {
+      id: `f:${o.id}`,
+      orderId: o.id,
+      instrumentId: o.instrumentId,
+      side: o.side,
+      quantity,
+      pricePaise: rec.pricePaise,
+      costsPaise: costs.total,
+      fillRuleId: o.fillRuleId,
+      filledAt: rec.filledAt,
+      tradingDate: rec.tradingDate,
+    },
   };
 }
 
@@ -144,9 +157,10 @@ export function processOrder(run: Run, ro: ReplayOrder): void {
     run.outcomes.push(outcome(ro, { ...base, reason: 'risk' }));
     return;
   }
-  const fill = buildFill(run, ro, sim.fill, quantity);
+  const { fill, dpKey } = buildFill(run, ro, sim.fill, quantity);
   try {
     run.state = applyFill(run.state, { fill, meta: ro.meta });
+    if (dpKey !== null) run.dpDays.add(dpKey);
     run.fills.push(fill);
     run.outcomes.push(outcome(ro, { ...base, status: 'filled', filledQuantity: quantity }));
   } catch (e) {
