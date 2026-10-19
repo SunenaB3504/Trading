@@ -147,7 +147,17 @@ export interface StarMatch {
   name: string;
 }
 
-const squash = (s: string): string => s.toLowerCase().replace(/[^a-z]/g, '');
+/**
+ * Makes two spellings comparable: composed form, lower case, and without spaces, digits, punctuation or the
+ * invisible joiners some keyboards insert. Letters of any script are kept (Malayalam, Devanagari, Latin).
+ */
+const squash = (s: string): string => {
+  const composed = typeof s.normalize === 'function' ? s.normalize('NFC') : s;
+  return composed.toLowerCase().replace(/[\s.,'\u2019`"\-_()0-9\u200b-\u200f\u2060]/g, '');
+};
+
+/** Spellings in another script supplied by the caller: [spelling, star index]. */
+export type ExtraSpellings = ReadonlyArray<readonly [string, number]>;
 
 /** Every spelling we know for each star, squashed: its English name and its regional spellings. */
 const SPELLINGS: Array<[string, number]> = [
@@ -155,20 +165,27 @@ const SPELLINGS: Array<[string, number]> = [
   ...Object.entries(NAKSHATRA_ALIASES).map(([k, i]): [string, number] => [squash(k), i]),
 ];
 
-/** The star a typed name means, if it is exactly one of the known spellings; null otherwise. */
-export function starIndex(text: string): number | null {
+const withExtra = (extra: ExtraSpellings): Array<readonly [string, number]> => [
+  ...SPELLINGS,
+  ...extra.map(([s, i]): readonly [string, number] => [squash(s), i]),
+];
+
+/** The star a typed name means, if it is exactly one of the known spellings (or one of `extra`); null otherwise. */
+export function starIndex(text: string, extra: ExtraSpellings = []): number | null {
   const q = squash(text);
-  return q === '' ? null : (SPELLINGS.find(([s]) => s === q)?.[1] ?? null);
+  return q === '' ? null : (withExtra(extra).find(([s]) => s === q)?.[1] ?? null);
 }
 
 /** Stars whose name or regional spelling starts with, or contains, what was typed; the English name is shown. */
-export function findStars(text: string, limit = 8): StarMatch[] {
+export function findStars(text: string, limit = 8, extra: ExtraSpellings = []): StarMatch[] {
   const q = squash(text);
   if (q.length < 2) return [];
-  const scored = SPELLINGS.filter(([s]) => s.includes(q)).map(([s, i]) => ({
-    i,
-    rank: s.startsWith(q) ? 0 : 1,
-  }));
+  const scored = withExtra(extra)
+    .filter(([s]) => s.includes(q))
+    .map(([s, i]) => ({
+      i,
+      rank: s.startsWith(q) ? 0 : 1,
+    }));
   const best = new Map<number, number>();
   for (const { i, rank } of scored) best.set(i, Math.min(best.get(i) ?? 9, rank));
   return [...best.entries()]

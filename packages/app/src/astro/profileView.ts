@@ -1,4 +1,6 @@
 import type { PersonalProfile } from '@trading/astro-engine';
+import { ENGLISH, tr } from './i18n';
+import type { Pack } from './i18n';
 
 export interface ProfileRow {
   label: string;
@@ -20,8 +22,6 @@ export interface ProfileView {
   moonNakshatra: number;
 }
 
-const cap = (s: string): string => s.charAt(0).toUpperCase() + s.slice(1);
-
 /** 12.5 degrees as 12°30′. */
 export function degreesText(deg: number): string {
   const whole = Math.floor(deg);
@@ -37,98 +37,104 @@ function offsetText(seconds: number): string {
   return `${sign}${h}:${m}`;
 }
 
-function periods(p: PersonalProfile): ProfileRow[] {
+const starName = (pack: Pack, index: number): string => pack.names.stars[index] ?? '';
+
+function periods(p: PersonalProfile, pack: Pack): ProfileRow[] {
   const d = p.dasha;
   if (d === null) {
-    return [
-      {
-        label: 'Running period',
-        value: 'none on this date (before birth or past the 120-year cycle)',
-      },
-    ];
+    return [{ label: tr(pack, 'row.noPeriod'), value: tr(pack, 'val.noPeriod') }];
   }
+  const line = (x: { lord: string; startDate: string; endDate: string }): string =>
+    tr(pack, 'val.period', {
+      lord: pack.names.planets[x.lord] ?? x.lord,
+      start: x.startDate,
+      end: x.endDate,
+    });
   return [
-    {
-      label: 'Running period (Dasha)',
-      value: `${cap(d.mahadasha.lord)}, ${d.mahadasha.startDate} to ${d.mahadasha.endDate}`,
-    },
-    {
-      label: 'Sub-period (Bhukti)',
-      value: `${cap(d.bhukti.lord)}, ${d.bhukti.startDate} to ${d.bhukti.endDate}`,
-    },
+    { label: tr(pack, 'row.dasha'), value: line(d.mahadasha) },
+    { label: tr(pack, 'row.bhukti'), value: line(d.bhukti) },
   ];
 }
 
 function starCheck(
   p: PersonalProfile,
   typed: TypedStar | null,
+  pack: Pack,
 ): { row: ProfileRow[]; warning: string[] } {
   if (typed === null || typed.text.trim() === '') return { row: [], warning: [] };
+  const label = tr(pack, 'row.typedStar');
   if (typed.index === null) {
     return {
-      row: [{ label: 'Typed-in birth star', value: `${typed.text} (not recognised)` }],
-      warning: [
-        `We could not recognise "${typed.text}" as a birth star, so it was not compared. Pick a name from the suggestions.`,
-      ],
+      row: [{ label, value: tr(pack, 'val.typedUnknown', { name: typed.text }) }],
+      warning: [tr(pack, 'warn.starUnknown', { typed: typed.text })],
     };
   }
+  const computed = starName(pack, p.moon.nakshatra);
   if (typed.index === p.moon.nakshatra) {
     return {
-      row: [{ label: 'Typed-in birth star', value: `${p.moon.nakshatraName} (matches)` }],
+      row: [{ label, value: tr(pack, 'val.typedMatches', { name: computed }) }],
       warning: [],
     };
   }
+  const given = starName(pack, typed.index);
   return {
-    row: [{ label: 'Typed-in birth star', value: `${typed.text} (differs)` }],
-    warning: [
-      `You gave ${typed.text} as your birth star, but these birth details give ${p.moon.nakshatraName}. The birth time or place may be off; check them.`,
-    ],
+    row: [{ label, value: tr(pack, 'val.typedDiffers', { name: given }) }],
+    warning: [tr(pack, 'warn.starDiffers', { typed: given, computed })],
   };
 }
 
-function warningsOf(p: PersonalProfile): string[] {
+function warningsOf(p: PersonalProfile, pack: Pack): string[] {
   const out: string[] = [];
-  if (p.birth.clock === 'ambiguous') {
-    out.push(
-      'The clocks showed this time twice that day. The first one was used; check your birth time.',
-    );
-  }
-  if (p.birth.clock === 'nonexistent') {
-    out.push('The clocks skipped this time that day. Check your birth time.');
-  }
-  if (p.fragile) {
-    out.push(
-      'The ascendant or Moon is very close to a sign boundary, so a small error in the birth time could change the sign.',
-    );
-  }
+  if (p.birth.clock === 'ambiguous') out.push(tr(pack, 'warn.twice'));
+  if (p.birth.clock === 'nonexistent') out.push(tr(pack, 'warn.skipped'));
+  if (p.fragile) out.push(tr(pack, 'warn.fragile'));
   return out;
 }
 
-/** The profile as labelled rows, ready to draw. All wording lives here so the screen has no logic. */
-export function toProfileView(p: PersonalProfile, typed: TypedStar | null = null): ProfileView {
+/** The profile as labelled rows in the chosen language, ready to draw. All wording lives here so the screen has no logic. */
+export function toProfileView(
+  p: PersonalProfile,
+  typed: TypedStar | null = null,
+  pack: Pack = ENGLISH,
+): ProfileView {
   const b = p.birth;
-  const check = starCheck(p, typed);
+  const check = starCheck(p, typed, pack);
   return {
-    warnings: [...warningsOf(p), ...check.warning],
+    warnings: [...warningsOf(p, pack), ...check.warning],
     moonSign: p.moon.sign,
     moonNakshatra: p.moon.nakshatra,
     rows: [
       {
-        label: 'Rising sign (Lagna)',
-        value: `${p.lagna.signName} ${degreesText(p.lagna.degreesInSign)}`,
+        label: tr(pack, 'row.lagna'),
+        value: `${pack.names.signs[p.lagna.sign] ?? ''} ${degreesText(p.lagna.degreesInSign)}`,
       },
-      { label: 'Moon sign (Rashi)', value: p.moon.signName },
-      { label: 'Birth star (Nakshatra)', value: `${p.moon.nakshatraName}, pada ${p.moon.pada}` },
+      { label: tr(pack, 'row.moon'), value: pack.names.signs[p.moon.sign] ?? '' },
+      {
+        label: tr(pack, 'row.star'),
+        value: tr(pack, 'val.starPada', {
+          name: starName(pack, p.moon.nakshatra),
+          pada: p.moon.pada,
+        }),
+      },
       ...check.row,
-      ...periods(p),
-      { label: 'Indu Lagna', value: p.induLagna },
+      ...periods(p, pack),
+      { label: tr(pack, 'row.indu'), value: tr(pack, 'val.indu') },
       {
-        label: 'Birth place used',
-        value: `${p.place.name}, ${p.place.country} (${p.place.lat.toFixed(2)}°, ${p.place.lon.toFixed(2)}°)`,
+        label: tr(pack, 'row.place'),
+        value: tr(pack, 'val.place', {
+          name: p.place.name,
+          country: p.place.country,
+          lat: p.place.lat.toFixed(2),
+          lon: p.place.lon.toFixed(2),
+        }),
       },
       {
-        label: 'Clock time used',
-        value: `${b.utc} UTC, from ${b.zone} at ${offsetText(b.offsetSeconds)}`,
+        label: tr(pack, 'row.clock'),
+        value: tr(pack, 'val.clock', {
+          utc: b.utc,
+          zone: b.zone,
+          offset: offsetText(b.offsetSeconds),
+        }),
       },
     ],
   };

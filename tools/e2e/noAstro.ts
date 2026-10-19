@@ -20,9 +20,14 @@ const TABS = ['Ledger', 'Universe', 'Trade', 'Compare', 'Report', 'Backup', 'Dat
 const ASTRO =
   /\b(nakshatra|naksatra|nakṣatra|rashi|rasi|rāśi|dasha|daśā|dosha|tithi|lagna|tara|chandra\w*|chandrashtama|jyotish\w*|jyotisham|planet\w*|vedha|kota|kundli|janma|horoscope|zodiac|panchang|astro\w*|ephemeris|ayanamsa|ayanāṃśa)\b/i;
 
+/** The same words in Malayalam and Hindi script (no word boundary exists for these letters). */
+const NATIVE =
+  /(നക്ഷത്ര|ലഗ്നം|ചന്ദ്രാഷ്ടമം|താരാബലം|ജാതകം|ജ്യോതിഷം|नक्षत्र|लग्न|कुंडली|कुण्डली|ज्योतिष|चंद्राष्टम|चन्द्राष्टम|तारा बल)/g;
+
 const hits = (text: string): string[] => {
   const found = new Set<string>();
   for (const m of text.matchAll(new RegExp(ASTRO.source, 'gi'))) found.add(m[0].toLowerCase());
+  for (const m of text.matchAll(NATIVE)) found.add(m[0]);
   return [...found];
 };
 
@@ -97,7 +102,8 @@ async function networkChecks(page: Page, requests: string[], served: string[]): 
     requests.every((u) => hits(u).length === 0),
   );
   await page.waitForTimeout(500);
-  const markers = /nakshatra|lagna|vedha|kundli|jyotish|astronomy-engine|VSOP87|ayanamsa|geonames/i;
+  const markers =
+    /nakshatra|lagna|vedha|kundli|jyotish|astronomy-engine|VSOP87|ayanamsa|geonames|നക്ഷത്ര|ലഗ്നം|ജാതകം|नक्षत्र|लग्न|ज्योतिष|NotoSansMalayalam|NotoSansDevanagari/i;
   check(`code served to the locked device: ${served.length} file(s) read`, served.length >= 1);
   check(
     'it holds no ephemeris library and none of the layer words',

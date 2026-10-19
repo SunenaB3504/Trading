@@ -49,3 +49,5 @@ export {
 export type { Banner, StockStar, StockTara, Window } from './shields';
 export { NAKSHATRA_ALIASES, findStars, starIndex } from './names';
 export type { StarMatch } from './names';
+export { BirthInputError } from './birth';
+export type { ExtraSpellings } from './names';

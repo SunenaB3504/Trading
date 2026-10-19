@@ -207,6 +207,54 @@ async function afterReload(page: Page, url: string): Promise<void> {
   check('after a reload the layer is still on and the details decrypt', true);
 }
 
+/** The whole Profile tab in Malayalam: facts, remembered choice, typing the star in Malayalam script. */
+async function malayalam(page: Page, url: string): Promise<void> {
+  await page.getByTestId('lang-ml').click();
+  await page.getByText('ലഗ്നം').first().waitFor({ timeout: 15_000 });
+  const ml = await page.getByTestId('profile-screen').innerText();
+  check(
+    'in Malayalam the facts use the Malayalam names, with dates and degrees in Latin digits',
+    ml.includes('കന്നി 26°11′') && ml.includes('വൃശ്ചികം') && ml.includes('അനിഴം, പാദം 3'),
+  );
+  check(
+    'the sentences, the banner and the draft note are in Malayalam',
+    ml.includes('ചന്ദ്രാഷ്ടമം') && ml.includes('ഈ പരിഭാഷ ഒരു കരടാണ്') && ml.includes('ഉപദേശമല്ല'),
+  );
+  check(
+    'no English sentence is left on the tab',
+    !/Rising sign|Your chart facts|Tara Bala for a stock/.test(ml),
+  );
+  await openProfile(page, url);
+  await page.getByText('ലഗ്നം').first().waitFor({ timeout: 15_000 });
+  check('after a reload Malayalam is still the chosen language', true);
+  await page.getByTestId('profile-delete').click();
+  await page.getByTestId('profile-delete').click();
+  await page.getByText('നിങ്ങളുടെ ജനന വിവരങ്ങൾ', { exact: true }).waitFor({ timeout: 15_000 });
+  await fillForm(page, goldenBirth.date);
+  await pickMumbai(page);
+  await page.getByTestId('gender-female').click();
+  await page.getByTestId('star-input').fill('അനി');
+  check(
+    'typing അനി in Malayalam suggests the star',
+    (await page.getByTestId('star-0').innerText()) === 'അനിഴം',
+  );
+  await page.getByTestId('star-0').click();
+  await page.getByTestId('profile-save').click();
+  await page.getByText('നിങ്ങളുടെ ജാതക വിവരങ്ങൾ').waitFor({ timeout: 15_000 });
+  const saved = await page.getByTestId('profile-screen').innerText();
+  check(
+    'a star typed in Malayalam is compared and found to match',
+    saved.includes('അനിഴം (ഒത്തുവരുന്നു)'),
+  );
+  await page.getByTestId('lang-en').click();
+  await page.getByText('Your chart facts').waitFor({ timeout: 15_000 });
+  const en = await page.getByTestId('profile-screen').innerText();
+  check(
+    'switching back to English shows the same star by its English name',
+    /Typed-in birth star\s*Anuradha \(matches\)/.test(en) && en.includes('Virgo 26°11′'),
+  );
+}
+
 /** A star that does not fit the birth details raises the check-your-birth-time warning, end to end. */
 async function wrongStar(page: Page): Promise<void> {
   await page.getByTestId('profile-delete').click();
@@ -254,7 +302,10 @@ async function lockedDevice(browser: Browser, url: string): Promise<void> {
   const keyCount = (await idb(page, 'trading-app-keys', 'keys')).length;
   check(
     'and nothing was written for the layer: no record, no switch, no key',
-    !saved.includes('profile/birth') && !saved.includes('settings/layer') && keyCount === 0,
+    !saved.includes('profile/birth') &&
+      !saved.includes('settings/layer') &&
+      !saved.includes('settings/profile-language') &&
+      keyCount === 0,
     saved.join(', '),
   );
   await page.close();
@@ -267,6 +318,7 @@ async function unlockedFlow(page: Page, url: string, requests: string[]): Promis
   await shields(page);
   await encryption(page);
   await afterReload(page, url);
+  await malayalam(page, url);
   check(
     'no request carried the details or left this machine',
     requests.every(

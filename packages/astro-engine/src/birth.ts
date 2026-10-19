@@ -26,10 +26,22 @@ export interface BirthMoment {
 
 const two = (n: number): string => String(n).padStart(2, '0');
 
+/** A birth date or time the person typed that cannot be used. The code lets a screen show it in the person's language. */
+export class BirthInputError extends Error {
+  constructor(
+    readonly code: 'format' | 'not-real',
+    message: string,
+  ) {
+    super(message);
+    this.name = 'BirthInputError';
+  }
+}
+
 function parse(input: BirthInput): number {
   const d = /^(\d{4})-(\d{2})-(\d{2})$/.exec(input.date);
   const t = /^(\d{2}):(\d{2})$/.exec(input.time);
-  if (d === null || t === null) throw new Error('Birth date must be YYYY-MM-DD and time HH:MM');
+  if (d === null || t === null)
+    throw new BirthInputError('format', 'Birth date must be YYYY-MM-DD and time HH:MM');
   const [y, mo, da] = [Number(d[1]), Number(d[2]), Number(d[3])];
   const [h, mi] = [Number(t[1]), Number(t[2])];
   const ms = Date.UTC(y, mo - 1, da, h, mi);
@@ -41,7 +53,7 @@ function parse(input: BirthInput): number {
     h > 23 ||
     mi > 59
   ) {
-    throw new Error(`Not a real date and time: ${input.date} ${input.time}`);
+    throw new BirthInputError('not-real', `Not a real date and time: ${input.date} ${input.time}`);
   }
   return ms / 1000;
 }

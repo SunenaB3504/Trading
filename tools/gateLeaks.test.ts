@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { FixedClock } from '../packages/core/src/index';
 import { createSnapshot } from '../packages/data-service/src/index';
 import { buildFixture } from '../packages/data-service/src/snapshot/testFixture';
-import { ASTRO_WORDS, findAstroKeys, findAstroWords } from '../packages/app/src/astro/leaks';
+import { findAstroKeys, findAstroWords, hasAstroWords } from '../packages/app/src/astro/leaks';
 
 // WP-3.11 (FR-P10): repository-wide checks that astro-derived content cannot reach a locked user.
 // The per-feature checks live in packages/app/src/astro/gate.test.ts.
@@ -29,7 +29,7 @@ const shippedSource = (): string[] =>
     .filter((f) => !f.includes(ASTRO_DIR));
 
 /** Lines of a source text that mention astro vocabulary. */
-const astroLines = (text: string): string[] => text.split('\n').filter((l) => ASTRO_WORDS.test(l));
+const astroLines = (text: string): string[] => text.split('\n').filter((l) => hasAstroWords(l));
 
 describe('no astro vocabulary in anything that ships outside the gated folder', () => {
   it('finds none in the app, core, data service or workers sources', () => {
@@ -42,6 +42,11 @@ describe('no astro vocabulary in anything that ships outside the gated folder', 
     expect(astroLines('const banner = "Chandrashtama day 1";')).toHaveLength(1);
     expect(astroLines('title: "Kundli onboarding"')).toHaveLength(1);
     expect(astroLines('const tradingDate = 1;')).toEqual([]);
+    // the same words in Malayalam and Hindi script are caught too
+    expect(astroLines('title: "ജാതകം"')).toHaveLength(1);
+    expect(astroLines('label: "നക്ഷത്രം"')).toHaveLength(1);
+    expect(astroLines('label: "नक्षत्र"')).toHaveLength(1);
+    expect(astroLines('label: "मेष राशि की सूची"')).toEqual([]);
   });
 });
 
