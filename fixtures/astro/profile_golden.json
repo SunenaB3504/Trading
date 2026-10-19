@@ -1,0 +1,245 @@
+{
+ "source": "pyswisseph 2.10.03, Lahiri, IANA tzdata via zoneinfo",
+ "cases": [
+  {
+   "name": "Mumbai",
+   "country": "IN",
+   "date": "1975-08-15",
+   "time": "10:30",
+   "zone": "Asia/Kolkata",
+   "utc": "1975-08-15T05:00",
+   "offsetSeconds": 19800,
+   "lagnaSign": 5,
+   "moonSign": 7,
+   "nakshatra": 16,
+   "pada": 3,
+   "dashaLord": "saturn",
+   "margins": {
+    "lagnaSign": 3.818202313342624,
+    "moonSign": 12.011001361007573,
+    "nakshatra": 4.655665305659104,
+    "pada": 1.3223319723257707
+   }
+  },
+  {
+   "name": "Chennai",
+   "country": "IN",
+   "date": "1944-06-01",
+   "time": "06:00",
+   "zone": "Asia/Kolkata",
+   "utc": "1944-05-31T23:30",
+   "offsetSeconds": 23400,
+   "lagnaSign": 1,
+   "moonSign": 5,
+   "nakshatra": 11,
+   "pada": 4,
+   "dashaLord": "sun",
+   "margins": {
+    "lagnaSign": 6.096275612674802,
+    "moonSign": 8.859886385864456,
+    "nakshatra": 1.1401136141355508,
+    "pada": 1.1401136141355508
+   }
+  },
+  {
+   "name": "Kolkata",
+   "country": "IN",
+   "date": "1962-02-05",
+   "time": "23:50",
+   "zone": "Asia/Kolkata",
+   "utc": "1962-02-05T18:20",
+   "offsetSeconds": 19800,
+   "lagnaSign": 6,
+   "moonSign": 10,
+   "nakshatra": 22,
+   "pada": 4,
+   "dashaLord": "mars",
+   "margins": {
+    "lagnaSign": 8.990905500442324,
+    "moonSign": 3.812645354357471,
+    "nakshatra": 2.854021312309209,
+    "pada": 0.4793120210241244
+   }
+  },
+  {
+   "name": "New Delhi",
+   "country": "IN",
+   "date": "1999-12-31",
+   "time": "04:10",
+   "zone": "Asia/Kolkata",
+   "utc": "1999-12-30T22:40",
+   "offsetSeconds": 19800,
+   "lagnaSign": 7,
+   "moonSign": 6,
+   "nakshatra": 13,
+   "pada": 3,
+   "dashaLord": "mars",
+   "margins": {
+    "lagnaSign": 3.3986445876152516,
+    "moonSign": 0.5517725551835042,
+    "nakshatra": 6.114894111483171,
+    "pada": 0.5517725551834962
+   }
+  },
+  {
+   "name": "London",
+   "country": "GB",
+   "date": "2008-07-01",
+   "time": "14:00",
+   "zone": "Europe/London",
+   "utc": "2008-07-01T13:00",
+   "offsetSeconds": 3600,
+   "lagnaSign": 5,
+   "moonSign": 1,
+   "nakshatra": 4,
+   "pada": 1,
+   "dashaLord": "mars",
+   "margins": {
+    "lagnaSign": 6.493247542704921,
+    "moonSign": 5.85043000623449,
+    "nakshatra": 0.8162366604321747,
+    "pada": 0.8162366604321747
+   }
+  },
+  {
+   "name": "New York City",
+   "country": "US",
+   "date": "1984-12-03",
+   "time": "18:45",
+   "zone": "America/New_York",
+   "utc": "1984-12-03T23:45",
+   "offsetSeconds": -18000,
+   "lagnaSign": 2,
+   "moonSign": 11,
+   "nakshatra": 26,
+   "pada": 4,
+   "dashaLord": "mercury",
+   "margins": {
+    "lagnaSign": 8.699058970640891,
+    "moonSign": 1.8926263209301055,
+    "nakshatra": 1.8926263209301215,
+    "pada": 1.440707012403212
+   }
+  },
+  {
+   "name": "Thiruvananthapuram",
+   "country": "IN",
+   "date": "2001-05-21",
+   "time": "06:10",
+   "zone": "Asia/Kolkata",
+   "utc": "2001-05-21T00:40",
+   "offsetSeconds": 19800,
+   "lagnaSign": 1,
+   "moonSign": 0,
+   "nakshatra": 0,
+   "pada": 4,
+   "dashaLord": "ketu",
+   "margins": {
+    "lagnaSign": 7.118354585328909,
+    "moonSign": 10.04565455798258,
+    "nakshatra": 3.287678775350754,
+    "pada": 0.04565455798257956
+   }
+  },
+  {
+   "name": "Bengaluru",
+   "country": "IN",
+   "date": "1991-05-21",
+   "time": "06:10",
+   "zone": "Asia/Kolkata",
+   "utc": "1991-05-21T00:40",
+   "offsetSeconds": 19800,
+   "lagnaSign": 1,
+   "moonSign": 4,
+   "nakshatra": 9,
+   "pada": 3,
+   "dashaLord": "ketu",
+   "margins": {
+    "lagnaSign": 9.07451954967199,
+    "moonSign": 8.336700254104557,
+    "nakshatra": 4.996633079228783,
+    "pada": 1.6632997458954493
+   }
+  },
+  {
+   "name": "Hyderabad",
+   "country": "IN",
+   "date": "2013-03-15",
+   "time": "21:40",
+   "zone": "Asia/Kolkata",
+   "utc": "2013-03-15T16:10",
+   "offsetSeconds": 19800,
+   "lagnaSign": 6,
+   "moonSign": 0,
+   "nakshatra": 1,
+   "pada": 2,
+   "dashaLord": "venus",
+   "margins": {
+    "lagnaSign": 12.17025813875415,
+    "moonSign": 13.185949353687576,
+    "nakshatra": 3.48071731297909,
+    "pada": 0.14738397964575656
+   }
+  },
+  {
+   "name": "Pune",
+   "country": "IN",
+   "date": "1980-01-01",
+   "time": "00:30",
+   "zone": "Asia/Kolkata",
+   "utc": "1979-12-31T19:00",
+   "offsetSeconds": 19800,
+   "lagnaSign": 5,
+   "moonSign": 1,
+   "nakshatra": 4,
+   "pada": 2,
+   "dashaLord": "mars",
+   "margins": {
+    "lagnaSign": 14.47224557571542,
+    "moonSign": 3.1762296590628836,
+    "nakshatra": 3.4904370076037807,
+    "pada": 0.15710367427044725
+   }
+  },
+  {
+   "name": "Tokyo",
+   "country": "JP",
+   "date": "2035-04-09",
+   "time": "02:25",
+   "zone": "Asia/Tokyo",
+   "utc": "2035-04-08T17:25",
+   "offsetSeconds": 32400,
+   "lagnaSign": 9,
+   "moonSign": 11,
+   "nakshatra": 26,
+   "pada": 4,
+   "dashaLord": "mercury",
+   "margins": {
+    "lagnaSign": 11.772033194523885,
+    "moonSign": 2.0389048616521563,
+    "nakshatra": 2.0389048616521723,
+    "pada": 1.2944284716811612
+   }
+  },
+  {
+   "name": "Sydney",
+   "country": "AU",
+   "date": "1977-11-20",
+   "time": "09:05",
+   "zone": "Australia/Sydney",
+   "utc": "1977-11-19T22:05",
+   "offsetSeconds": 39600,
+   "lagnaSign": 8,
+   "moonSign": 10,
+   "nakshatra": 24,
+   "pada": 3,
+   "dashaLord": "jupiter",
+   "margins": {
+    "lagnaSign": 7.512522000725937,
+    "moonSign": 1.602879946472683,
+    "nakshatra": 4.936213279806031,
+    "pada": 1.6028799464726977
+   }
+  }
+ ]
+}

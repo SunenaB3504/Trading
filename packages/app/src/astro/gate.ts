@@ -1,5 +1,5 @@
 import type { FeatureId, IEntitlementService } from '../entitlement/types';
-import type { KeyValueStore } from '../store/kv';
+import type { BirthProfile, BirthVault } from './birthVault';
 
 /**
  * The only door to anything astro-derived on the device (FR-P10). Every caller goes through here, so the
@@ -19,26 +19,22 @@ export async function loadAstroLayer<T>(
   return load();
 }
 
-export const BIRTH_KEY = 'profile/birth';
-
-/** What the owner types on the birth-details screen (FR-P4). Stored only on the device, and only when granted. */
-export interface BirthProfile {
-  name: string;
-  date: string;
-  time: string;
-  place: string;
-}
+export { BIRTH_KEY } from './birthVault';
+export type { BirthProfile } from './birthVault';
 
 export type SaveResult = { saved: true } | { saved: false; reason: 'locked' };
 
-/** Saves birth details, or does nothing at all when the feature is not granted. */
+/**
+ * Saves birth details, encrypted, or does nothing at all when the feature is not granted: not even the
+ * encryption key is made (FR-P10 b).
+ */
 export async function saveBirthProfile(
-  kv: KeyValueStore,
+  vault: BirthVault,
   entitlements: IEntitlementService,
   feature: FeatureId,
   profile: BirthProfile,
 ): Promise<SaveResult> {
   if (!(await entitlements.hasFeatureAccess(feature))) return { saved: false, reason: 'locked' };
-  await kv.set(BIRTH_KEY, JSON.stringify(profile));
+  await vault.save(profile);
   return { saved: true };
 }

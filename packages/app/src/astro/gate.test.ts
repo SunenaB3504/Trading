@@ -10,6 +10,7 @@ import { toLedgerView } from '../viewModels/ledgerView';
 import { toWinLossView } from '../viewModels/winLossView';
 import { seedEntries } from '../universe/seed';
 import { toUniverseRows } from '../universe/universeView';
+import { BirthVault, MemoryKeyProvider } from './birthVault';
 import { BIRTH_KEY, loadAstroLayer, saveBirthProfile } from './gate';
 import { findAstroKeys, findAstroWords, withoutAstro } from './leaks';
 import { LOCKED_TEXT, LOCKED_TITLE, lockedNotice } from './locked';
@@ -56,21 +57,28 @@ describe('(a) nothing astro runs on the device when the gate is off', () => {
 });
 
 describe('(b) no birth data is stored when the gate is off', () => {
-  it('writes nothing at all for a locked user', async () => {
+  it('writes nothing at all for a locked user, and does not even make an encryption key', async () => {
     const kv = new MemoryKv();
-    expect(await saveBirthProfile(kv, denyAll, FEATURE, PROFILE)).toEqual({
+    const keys = new MemoryKeyProvider();
+    const made = vi.spyOn(keys, 'getKey');
+    expect(await saveBirthProfile(new BirthVault(kv, keys), denyAll, FEATURE, PROFILE)).toEqual({
       saved: false,
       reason: 'locked',
     });
     expect(await kv.keys()).toEqual([]);
+    expect(made).not.toHaveBeenCalled();
   });
 
-  it('stores the details on the device when the feature is granted', async () => {
+  it('stores the details on the device, encrypted, when the feature is granted', async () => {
     const kv = new MemoryKv();
-    expect(await saveBirthProfile(kv, new GrantAllEntitlements(), FEATURE, PROFILE)).toEqual({
+    const vault = new BirthVault(kv, new MemoryKeyProvider());
+    expect(await saveBirthProfile(vault, new GrantAllEntitlements(), FEATURE, PROFILE)).toEqual({
       saved: true,
     });
-    expect(JSON.parse((await kv.get(BIRTH_KEY)) ?? 'null')).toEqual(PROFILE);
+    const stored = (await kv.get(BIRTH_KEY)) ?? '';
+    for (const word of ['A Person', '1990-01-01', '06:30', 'Chennai'])
+      expect(stored).not.toContain(word);
+    expect(await vault.load()).toEqual({ state: 'ok', profile: PROFILE });
   });
 });
 

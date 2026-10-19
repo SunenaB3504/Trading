@@ -36,3 +36,6 @@ export { GAZETTEER_SOURCE, findPlaces, placeCount } from './gazetteer';
 export type { Place } from './gazetteer';
 export { TZ_SOURCE, hasZone, localToUtc, offsetAt } from './tz';
 export type { LocalResolution, LocalStatus } from './tz';
+export { computeProfile } from './profile';
+export type { PersonalProfile } from './profile';
+export { NAKSHATRA_NAMES, SIGN_NAMES } from './names';
