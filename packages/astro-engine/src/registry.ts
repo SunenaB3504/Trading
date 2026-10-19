@@ -16,6 +16,8 @@ export interface Rules {
   nameMapping: 'legal-name-in-force' | 'unregistered';
   /** How a timestamp is turned into the chart moment. */
   timestamp: 'utc-minute';
+  /** Which nakshatra stands for a stock in Tara Bala (FR-P7): the Moon's at its first-trade timestamp (D5). */
+  stockStar: 'first-trade-moon' | 'unregistered';
   kotaAnchor: 'unregistered';
   prashnaMoment: 'unregistered';
 }
@@ -33,6 +35,7 @@ export const DEFAULT_RULES: Rules = {
   dashaYear: 'julian-365.25',
   nameMapping: 'legal-name-in-force',
   timestamp: 'utc-minute',
+  stockStar: 'first-trade-moon',
   kotaAnchor: 'unregistered',
   prashnaMoment: 'unregistered',
 };

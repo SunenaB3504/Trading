@@ -39,3 +39,11 @@ export type { LocalResolution, LocalStatus } from './tz';
 export { computeProfile } from './profile';
 export type { PersonalProfile } from './profile';
 export { NAKSHATRA_NAMES, SIGN_NAMES } from './names';
+export {
+  chandrashtamaBanner,
+  chandrashtamaWindows,
+  siderealMoon,
+  stockStar,
+  taraForStock,
+} from './shields';
+export type { Banner, StockStar, StockTara, Window } from './shields';

@@ -5,20 +5,19 @@ import type { KeyValueStore } from '../store/kv';
 import { Note, Row, Section, colors } from '../ui/Section';
 import { BirthVault, IndexedDbKeyProvider, WEB_PROTECTION_NOTICE } from './birthVault';
 import type { BirthProfile } from './birthVault';
+import { loadEngine } from './engine';
+import type { Engine } from './engine';
 import { ASTRO_FEATURE } from './feature';
 import { loadAstroLayer } from './gate';
 import { toProfileView } from './profileView';
+import { ShieldsSection } from './ShieldsSection';
 import type { ProfileView } from './profileView';
-
-/** The engine is fetched only through the gate, as its own chunk, so a locked device never downloads or runs it. */
-const loadEngine = () => import('@trading/astro-engine');
-type Engine = Awaited<ReturnType<typeof loadEngine>>;
 
 type Screen =
   | { kind: 'loading' }
   | { kind: 'locked' }
   | { kind: 'form'; engine: Engine; notice: string | null }
-  | { kind: 'ready'; profile: BirthProfile; view: ProfileView }
+  | { kind: 'ready'; engine: Engine; profile: BirthProfile; view: ProfileView }
   | { kind: 'unreadable'; reason: string };
 
 const CONVENTIONS_VERSION = 1;
@@ -49,6 +48,7 @@ function useProfile(kv: KeyValueStore, entitlements: IEntitlementService, now: (
       try {
         setScreen({
           kind: 'ready',
+          engine,
           profile: found.profile,
           view: computeView(engine, found.profile, today),
         });
@@ -69,7 +69,7 @@ function useProfile(kv: KeyValueStore, entitlements: IEntitlementService, now: (
     try {
       const view = computeView(engine, profile, today);
       await vault.save(profile);
-      setScreen({ kind: 'ready', profile, view });
+      setScreen({ kind: 'ready', engine, profile, view });
       return null;
     } catch (e) {
       return messageOf(e);
@@ -191,7 +191,12 @@ function BirthForm(props: {
   );
 }
 
-function ProfileCard(props: { view: ProfileView; onDelete: () => Promise<void> }) {
+function ProfileCard(props: {
+  engine: Engine;
+  view: ProfileView;
+  now: () => number;
+  onDelete: () => Promise<void>;
+}) {
   const [sure, setSure] = useState(false);
   return (
     <>
@@ -208,6 +213,12 @@ function ProfileCard(props: { view: ProfileView; onDelete: () => Promise<void> }
           Calculated on this device from your saved birth details. Nothing was sent anywhere.
         </Note>
       </Section>
+      <ShieldsSection
+        engine={props.engine}
+        moonSign={props.view.moonSign}
+        moonNakshatra={props.view.moonNakshatra}
+        now={props.now}
+      />
       <Section title="Delete">
         <Button
           label={
@@ -245,7 +256,9 @@ export default function ProfileScreen(props: {
           onSave={(p) => save(screen.engine, p)}
         />
       ) : null}
-      {screen.kind === 'ready' ? <ProfileCard view={screen.view} onDelete={remove} /> : null}
+      {screen.kind === 'ready' ? (
+        <ProfileCard engine={screen.engine} view={screen.view} now={props.now} onDelete={remove} />
+      ) : null}
       {screen.kind === 'unreadable' ? (
         <Section title="Saved details cannot be read">
           <Note>

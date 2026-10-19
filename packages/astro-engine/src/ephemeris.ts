@@ -60,6 +60,11 @@ function bodyLongitude(body: Astronomy.Body, time: Astronomy.AstroTime): number 
   return norm360(Astronomy.Ecliptic(Astronomy.GeoVector(body, time, true)).elon);
 }
 
+/** Tropical longitude of the Moon alone at a UTC instant (cheap: no other body is computed). */
+export function moonTropical(utcMs: number): number {
+  return bodyLongitude(Astronomy.Body.Moon, new Astronomy.AstroTime(new Date(utcMs)));
+}
+
 /** Retrograde when the longitude falls over half a day either side of the moment. */
 function isRetrograde(body: Astronomy.Body, time: Astronomy.AstroTime): boolean {
   const before = bodyLongitude(body, time.AddDays(-0.5));

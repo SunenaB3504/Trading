@@ -7,12 +7,27 @@
  *
  * Usage:  pnpm --filter @trading/app export:web && pnpm tsx tools/e2e/profile.ts
  */
+import { readFileSync } from 'node:fs';
 import type { AddressInfo } from 'node:net';
+import { join } from 'node:path';
 import { chromium } from 'playwright-core';
 import type { Browser, Page } from 'playwright-core';
+import { taraBala } from '../../packages/astro-engine/src/tara';
 import { checkLog, serveStatic } from './support';
 
 const { checks, check } = checkLog();
+
+// Expected values come from the Swiss Ephemeris golden files, not from the engine under test.
+const fixture = (name: string): unknown =>
+  JSON.parse(readFileSync(join('fixtures', 'astro', name), 'utf8'));
+const goldenBirth = (
+  fixture('profile_golden.json') as {
+    cases: Array<{ name: string; date: string; time: string; nakshatra: number }>;
+  }
+).cases.find((c) => c.name === 'Mumbai') as { date: string; time: string; nakshatra: number };
+const goldenStar = (
+  fixture('shield_golden.json') as { stars: Array<{ firstTradeMs: number; nakshatra: number }> }
+).stars[0] as { firstTradeMs: number; nakshatra: number };
 
 const idb = (page: Page, db: string, store: string): Promise<Array<[string, unknown]>> =>
   page.evaluate(
@@ -60,7 +75,7 @@ async function openProfile(page: Page, url: string): Promise<void> {
 async function fillForm(page: Page, date: string): Promise<void> {
   await page.getByTestId('birth-name').fill('Test Person');
   await page.getByTestId('birth-date').fill(date);
-  await page.getByTestId('birth-time').fill('12:00');
+  await page.getByTestId('birth-time').fill(goldenBirth.time);
 }
 
 async function pickMumbai(page: Page): Promise<void> {
@@ -76,7 +91,7 @@ async function validation(page: Page): Promise<void> {
   const text = await page.getByTestId('profile-screen').innerText();
   check('the weaker web protection is stated up front', /key is kept in this browser/.test(text));
   check('the place data credit is shown', /GeoNames.*CC BY 4\.0/.test(text));
-  await fillForm(page, '1990-01-01');
+  await fillForm(page, goldenBirth.date);
   await page.getByTestId('profile-save').click();
   await page.getByText(/Search for your birth place/).waitFor({ timeout: 10_000 });
   check('saving without a chosen place is refused with a message', true);
@@ -92,7 +107,7 @@ async function validation(page: Page): Promise<void> {
 }
 
 async function saveAndShow(page: Page): Promise<void> {
-  await page.getByTestId('birth-date').fill('1990-01-01');
+  await page.getByTestId('birth-date').fill(goldenBirth.date);
   await page.getByTestId('profile-save').click();
   await page.getByText('Your chart facts').waitFor({ timeout: 15_000 });
   const text = await page.getByTestId('profile-screen').innerText();
@@ -102,9 +117,55 @@ async function saveAndShow(page: Page): Promise<void> {
   );
   check('Indu Lagna reads pending verification', /Indu Lagna\s*pending verification/.test(text));
   check(
-    'the clock time used is Mumbai noon as 06:30 UTC',
-    /1990-01-01T06:30 UTC, from Asia\/Kolkata at \+05:30/.test(text),
+    'the clock time used is Mumbai local time as UTC with the +05:30 offset',
+    /1975-08-15T05:00 UTC, from Asia\/Kolkata at \+05:30/.test(text),
   );
+}
+
+async function shields(page: Page): Promise<void> {
+  await page.getByTestId('banner-headline').waitFor({ timeout: 15_000 });
+  const screen = await page.getByTestId('profile-screen').innerText();
+  check(
+    'the Chandrashtama banner says whether it is running',
+    /Chandrashtama is (not )?running now/.test(screen),
+  );
+  check(
+    'it is tagged a hypothesis and says it is not advice',
+    /\[H\] PH-11/.test(screen) && /not advice/.test(screen),
+  );
+  const shieldText = screen.slice(screen.indexOf('Chandrashtama'), screen.indexOf('Delete'));
+  check(
+    'and carries no percentage or buffer',
+    !/%|percent|buffer/i.test(shieldText),
+    shieldText.slice(0, 80),
+  );
+  await page.getByTestId('tara-date').fill('2020-02-30');
+  await page.getByTestId('tara-time').fill('09:15');
+  await page.getByTestId('tara-run').click();
+  await page.getByText(/not a real date/).waitFor({ timeout: 10_000 });
+  check('a bad first-trade date is refused with a message', true);
+  const ist = new Date(goldenStar.firstTradeMs + 19_800_000).toISOString();
+  await page.getByTestId('tara-date').fill(ist.slice(0, 10));
+  await page.getByTestId('tara-time').fill(ist.slice(11, 16));
+  await page.getByTestId('tara-run').click();
+  await page.getByTestId('tara-result').waitFor({ timeout: 10_000 });
+  const want = taraBala(goldenBirth.nakshatra, goldenStar.nakshatra);
+  const got = await page.getByTestId('tara-headline').innerText();
+  check(
+    'Tara matches the Swiss Ephemeris stars, as a category name and group',
+    got === `${want.name} (${want.group} group)`,
+    `${got} vs ${want.name} (${want.group} group)`,
+  );
+  const result = await page.getByTestId('tara-result').innerText();
+  check(
+    'it is tagged and shows no score',
+    /\[M\] \[V\] PH-12/.test(result) &&
+      !/%|percent|boost/i.test(result.replace('with no score', '')),
+  );
+  await page.getByTestId('tara-assumed').click();
+  await page.getByTestId('tara-run').click();
+  await page.getByText(/assumed time and may be wrong/).waitFor({ timeout: 10_000 });
+  check('an assumed first-trade time is flagged', true);
 }
 
 async function encryption(page: Page): Promise<void> {
@@ -113,7 +174,7 @@ async function encryption(page: Page): Promise<void> {
   check('the saved record is there', raw !== '');
   check(
     'it holds no name, date, time or place',
-    !/Test Person|1990|12:00|Mumbai/.test(raw) && /"v":1/.test(raw),
+    !/Test Person|1975|10:30|Mumbai/.test(raw) && /"v":1/.test(raw),
     raw.slice(0, 60),
   );
   const key = (await idb(page, 'trading-app-keys', 'keys')).find(([k]) => k === 'birth');
@@ -168,6 +229,7 @@ async function unlockedFlow(page: Page, url: string, requests: string[]): Promis
   await openProfile(page, `${url}?layer=on`);
   await validation(page);
   await saveAndShow(page);
+  await shields(page);
   await encryption(page);
   await afterReload(page, url);
   check(
@@ -175,7 +237,7 @@ async function unlockedFlow(page: Page, url: string, requests: string[]): Promis
     requests.every(
       (u) =>
         u.startsWith('http://127.0.0.1') &&
-        !/Test Person|1990-01-01|Mumbai/.test(decodeURIComponent(u)),
+        !/Test Person|1975-08-15|Mumbai/.test(decodeURIComponent(u)),
     ),
   );
   await deleteAll(page);

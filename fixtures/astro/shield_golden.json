@@ -1,0 +1,110 @@
+{
+ "source": "pyswisseph 2.10.03, Lahiri, sidereal Moon",
+ "chandrashtama": [
+  {
+   "natalMoonSign": 0,
+   "fromMs": 1792368000000,
+   "toMs": 1795996800000,
+   "windows": [
+    [
+     1794259108300,
+     1794473359277
+    ]
+   ]
+  },
+  {
+   "natalMoonSign": 3,
+   "fromMs": 1792368000000,
+   "toMs": 1795996800000,
+   "windows": [
+    [
+     1792546232519,
+     1792748046093
+    ],
+    [
+     1794909637792,
+     1795116006738
+    ]
+   ]
+  },
+  {
+   "natalMoonSign": 6,
+   "fromMs": 1792368000000,
+   "toMs": 1795996800000,
+   "windows": [
+    [
+     1793115406933,
+     1793291806933
+    ],
+    [
+     1795485291503,
+     1795657275000
+    ]
+   ]
+  },
+  {
+   "natalMoonSign": 9,
+   "fromMs": 1792368000000,
+   "toMs": 1795996800000,
+   "windows": [
+    [
+     1793657795800,
+     1793851485644
+    ]
+   ]
+  },
+  {
+   "natalMoonSign": 11,
+   "fromMs": 1792368000000,
+   "toMs": 1795996800000,
+   "windows": [
+    [
+     1794051920214,
+     1794259108300
+    ]
+   ]
+  }
+ ],
+ "stars": [
+  {
+   "firstTradeMs": 815370300000,
+   "nakshatra": 24,
+   "margin": 5.66331940343199
+  },
+  {
+   "firstTradeMs": 1055390400000,
+   "nakshatra": 15,
+   "margin": 4.787187744071096
+  },
+  {
+   "firstTradeMs": 1269230100000,
+   "nakshatra": 3,
+   "margin": 2.194387246178252
+  },
+  {
+   "firstTradeMs": 1473221400000,
+   "nakshatra": 15,
+   "margin": 5.446462942115536
+  },
+  {
+   "firstTradeMs": 1627014600000,
+   "nakshatra": 19,
+   "margin": 2.673931947167084
+  },
+  {
+   "firstTradeMs": 569221200000,
+   "nakshatra": 16,
+   "margin": 2.4185537884237647
+  },
+  {
+   "firstTradeMs": 1196826600000,
+   "nakshatra": 13,
+   "margin": 5.459483814886541
+  },
+  {
+   "firstTradeMs": 1554696300000,
+   "nakshatra": 1,
+   "margin": 0.07009243269974874
+  }
+ ]
+}

@@ -9,6 +9,9 @@ export interface ProfileView {
   rows: ProfileRow[];
   /** Plain-language doubts the person should check, shown above the rows. */
   warnings: string[];
+  /** Indices the shields need: the Moon's sign (0 = Aries) and star (0 = Ashwini). */
+  moonSign: number;
+  moonNakshatra: number;
 }
 
 const cap = (s: string): string => s.charAt(0).toUpperCase() + s.slice(1);
@@ -73,6 +76,8 @@ export function toProfileView(p: PersonalProfile): ProfileView {
   const b = p.birth;
   return {
     warnings: warningsOf(p),
+    moonSign: p.moon.sign,
+    moonNakshatra: p.moon.nakshatra,
     rows: [
       {
         label: 'Rising sign (Lagna)',
