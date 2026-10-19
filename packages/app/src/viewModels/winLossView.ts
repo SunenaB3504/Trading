@@ -75,15 +75,16 @@ export function toWinLossView(report: WinLossReport, view: CostView): WinLossVie
     warnings.push('No closed trades yet. Place and close a trade to see this report.');
   else if (s.count < MIN_TRADES)
     warnings.push(
-      `Only ${s.count} closed trades. Intervals this wide, or none, mean a win rate or average from so few trades says little; about ${MIN_TRADES} are needed before reading them.`,
+      `Only ${s.count} closed ${s.count === 1 ? 'trade' : 'trades'}. Intervals this wide, or none, mean a win rate or average from so few trades says little; about ${MIN_TRADES} are needed before reading them.`,
     );
   if (report.intervals === null && s.count > 0)
     warnings.push('At least two closed trades are needed for an interval.');
   warnings.push(
     view === 'gross'
-      ? 'Gross view: before brokerage, taxes and other charges, on the cost basis alone.'
+      ? 'Gross view: before brokerage, taxes and other charges.'
       : 'Net view: after all costs.',
   );
+  warnings.push('A trade that earns exactly nothing counts as a loss, not a win.');
   return {
     view,
     headline: headlineOf(s, report.intervals, view),

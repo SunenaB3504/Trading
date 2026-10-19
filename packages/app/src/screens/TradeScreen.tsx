@@ -99,6 +99,14 @@ function Book({ view }: { view: SessionView }) {
 type Market = ReturnType<typeof demoMarket>;
 type SetField = <K extends keyof OrderForm>(k: K, v: OrderForm[K]) => void;
 
+/** What to tell the person after an order is accepted: the next open, or why it will wait. */
+function placedMessage(r: { orderId: string; state: string; dataEnds: string }): string {
+  if (r.state === 'pending') {
+    return `Order ${r.orderId} placed, but it stays pending: the demo prices end on ${r.dataEnds}, so there is no later session to fill it.`;
+  }
+  return `Order ${r.orderId} placed. It is tried at the next session's open, which can be days away around a holiday or a weekend.`;
+}
+
 function useTrade(kv: KeyValueStore, now: () => number) {
   const [session, setSession] = useState<PaperSession | null>(null);
   const [view, setView] = useState<SessionView | null>(null);
@@ -114,7 +122,7 @@ function useTrade(kv: KeyValueStore, now: () => number) {
   const submit = useCallback(async () => {
     if (session === null) return;
     const r = await session.place(form);
-    setMessage(r.ok ? `Order ${r.orderId} placed. It fills at the next session's open.` : r.error);
+    setMessage(r.ok ? placedMessage(r) : r.error);
     setView(await session.view());
   }, [session, form]);
   return { view, form, message, set, submit };
@@ -158,15 +166,6 @@ function OrderFields(props: { market: Market; form: OrderForm; set: SetField }) 
           value={form.limit}
           onChange={(v) => set('limit', v)}
           testID="limit-input"
-          keyboard="decimal-pad"
-        />
-      ) : null}
-      {form.side === 'buy' ? (
-        <Field
-          label="Stop price (₹, optional)"
-          value={form.stop}
-          onChange={(v) => set('stop', v)}
-          testID="stop-input"
           keyboard="decimal-pad"
         />
       ) : null}

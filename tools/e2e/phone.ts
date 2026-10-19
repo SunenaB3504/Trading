@@ -1,6 +1,6 @@
 /// <reference lib="dom" />
 /**
- * Phone-layout and accessibility check for the web app (WP-3.7, NFR-9). Opens every tab at 360 px wide
+ * Phone-layout and accessibility check for the web app (WP-3.7, NFR-9). Opens every tab (and the Profile tab, switched on) at 360 px and 320 px wide
  * and measures: no horizontal page scroll, every control at least 44 px square, every field named for a
  * screen reader, a 16 px side gutter, tab roles in place, and no text below 12 px.
  *
@@ -90,6 +90,35 @@ async function checkTab(page: Page, name: string, width: number): Promise<void> 
   check(`${width}px ${name}: side gutter of at least 16 px`, m.gutter >= 16, `${m.gutter}px`);
 }
 
+/** The tab row must hint that more tabs are hidden, and selecting a far tab must slide it fully into view (UAT H1). */
+async function tabCue(page: Page, width: number): Promise<void> {
+  await page.getByRole('tab', { name: 'Ledger', exact: true }).first().click();
+  await page.waitForTimeout(500);
+  check(
+    `${width}px: an edge marker shows that more tabs are hidden`,
+    await page.getByTestId('tabs-more').isVisible(),
+  );
+  await page.getByRole('tab', { name: 'Data', exact: true }).first().click();
+  await page.waitForTimeout(900);
+  const box = await page.getByRole('tab', { name: 'Data', exact: true }).first().boundingBox();
+  check(
+    `${width}px: selecting the last tab slides it fully into view`,
+    box !== null && box.x >= 0 && box.x + box.width <= width + 1,
+    JSON.stringify(box),
+  );
+  check(
+    `${width}px: the marker goes away at the end of the row`,
+    (await page.getByTestId('tabs-more').count()) === 0,
+  );
+}
+
+/** The optional Profile tab, switched on, must meet the same size and spacing rules as the others. */
+async function profileTab(page: Page, url: string, width: number): Promise<void> {
+  await page.goto(`${url}?layer=on`);
+  await page.getByRole('tab', { name: 'Profile', exact: true }).waitFor({ timeout: 30_000 });
+  await checkTab(page, 'Profile', width);
+}
+
 async function runWidth(url: string, width: number): Promise<string[]> {
   const browser = await chromium.launch({ channel: 'chrome', headless: true });
   const page = await (await browser.newContext({ viewport: { width, height: 740 } })).newPage();
@@ -103,6 +132,8 @@ async function runWidth(url: string, width: number): Promise<string[]> {
     const roles = await page.getByRole('tab').count();
     check(`${width}px: tabs are exposed with the tab role`, roles >= TABS.length, `${roles} tabs`);
     for (const t of TABS) await checkTab(page, t, width);
+    await tabCue(page, width);
+    await profileTab(page, url, width);
     check(`${width}px: no page errors`, errors.length === 0, errors.join(' | '));
   } finally {
     await browser.close();

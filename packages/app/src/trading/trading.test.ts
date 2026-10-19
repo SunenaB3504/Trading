@@ -147,7 +147,7 @@ describe('paper session through the execution adapter', () => {
     const kv = new MemoryKv();
     const s = await PaperSession.open(kv, NOW);
     const placed = await s.place(form());
-    expect(placed).toEqual({ ok: true, orderId: 'h-0001' });
+    expect(placed).toMatchObject({ ok: true, orderId: 'h-0001', state: 'filled' });
     const view = await s.view();
     expect(view.orders).toEqual([expect.objectContaining({ id: 'h-0001', state: 'filled' })]);
     expect(view.positions).toEqual([
@@ -166,7 +166,7 @@ describe('paper session through the execution adapter', () => {
     await s.place(form({ side: 'sell' }));
     const view = await s.view();
     expect(view.orders[0]).toMatchObject({ state: 'rejected' });
-    expect(view.orders[0]?.reason).toMatch(/ledger/);
+    expect(view.orders[0]?.reason).toMatch(/you hold 0/);
     expect(view.cash).toBe(formatPaise(100_000_000));
   });
 
@@ -238,7 +238,7 @@ describe('Ledger A beside Ledger B (FR-L2, FR-L3)', () => {
     const card = s.comparison().trades[0];
     expect(card?.title).toMatch(/since 2026-03-04, open$/);
     expect(card?.lines.map((l) => l.label)).not.toContain('After the exit');
-    expect(card?.lines[0]?.label).toBe('Return on cost so far');
+    expect(card?.lines[0]?.label).toBe('Price move so far (before charges and dividends)');
   });
 });
 
@@ -253,7 +253,7 @@ describe('win/loss report from the owner book (FR-W1 to FR-W4)', () => {
     const net = toWinLossView(s.report(), 'net');
     const gross = toWinLossView(s.report(), 'gross');
     expect(net.headline[0]).toEqual({ label: 'Closed trades', value: '1' });
-    expect(net.warnings.join(' ')).toMatch(/Only 1 closed trades/);
+    expect(net.warnings.join(' ')).toMatch(/Only 1 closed trade./);
     expect(net.warnings.join(' ')).toMatch(/At least two closed trades/);
     expect(net.warnings.join(' ')).toMatch(/after all costs/);
     expect(gross.warnings.join(' ')).toMatch(/before brokerage/);

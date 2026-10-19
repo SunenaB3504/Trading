@@ -97,15 +97,23 @@ const e3 = (f: InstrumentFacts): RuleResult =>
 const e4 = (): RuleResult =>
   res('E4', true, 'splits, bonuses and renames are allowed (adjusted prices, name history)');
 
+/** A rupee amount in words a person reads: crore above one crore, lakh above one lakh, else rupees. */
+export function rupeesInWords(paise: number): string {
+  const rupees = paise / 100;
+  if (rupees >= 10_000_000) return `₹${(rupees / 10_000_000).toFixed(2)} crore`;
+  if (rupees >= 100_000) return `₹${(rupees / 100_000).toFixed(2)} lakh`;
+  return `₹${rupees.toFixed(2)}`;
+}
+
 function e5(f: InstrumentFacts, c: EligibilityConfig): RuleResult {
   if (f.medianTradedValuePaise === null)
     return res('E5', false, 'too few sessions to measure liquidity');
   return f.medianTradedValuePaise >= c.minMedianTradedValuePaise
-    ? res('E5', true, `median traded value ${String(f.medianTradedValuePaise)} paise`)
+    ? res('E5', true, `median traded value ${rupeesInWords(f.medianTradedValuePaise)}`)
     : res(
         'E5',
         false,
-        `median traded value ${String(f.medianTradedValuePaise)} paise is below ${String(c.minMedianTradedValuePaise)}`,
+        `median traded value ${rupeesInWords(f.medianTradedValuePaise)} is below ${rupeesInWords(c.minMedianTradedValuePaise)}`,
       );
 }
 

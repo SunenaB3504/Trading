@@ -43,6 +43,9 @@ export function LedgerScreen({ kv, now }: { kv: KeyValueStore; now: () => number
           <Row key={r.label} label={r.label} value={r.value} />
         ))}
         <Note>Virtual money. Not investment advice.</Note>
+        <Note>
+          This is a fixed demo scenario. The orders you place yourself are on the Trade tab.
+        </Note>
       </Section>
       <Section title="Open positions">
         {view.positions.length === 0 ? <Note>No open positions.</Note> : null}

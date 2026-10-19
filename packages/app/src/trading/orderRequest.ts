@@ -50,12 +50,17 @@ function priceFields(form: OrderForm): { limit: number | null; stop: number | nu
  */
 export function makeOrderRequest(form: OrderForm, seq: number): Built {
   const quantity = Number(form.quantity.trim());
+  // Every problem is reported together, so the person fixes them in one go instead of one per press.
+  const problems: string[] = [];
   if (!/^\d+$/.test(form.quantity.trim()) || quantity < 1)
-    return { ok: false, error: 'Quantity must be a whole number of shares, at least 1.' };
+    problems.push('Quantity must be a whole number of shares, at least 1.');
   if (!isRegularDay(form.date))
-    return { ok: false, error: 'The decision date must be a regular trading day (YYYY-MM-DD).' };
+    problems.push('The decision date must be a regular trading day (YYYY-MM-DD).');
   const prices = priceFields(form);
-  if (typeof prices === 'string') return { ok: false, error: prices };
+  if (typeof prices === 'string') problems.push(prices);
+  if (problems.length > 0 || typeof prices === 'string') {
+    return { ok: false, error: problems.join(String.fromCharCode(10)) };
+  }
   const id = `h-${String(seq).padStart(4, '0')}`;
   return {
     ok: true,

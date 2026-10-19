@@ -7,13 +7,7 @@ import {
   istToUtcMillis,
   winLossReport,
 } from '@trading/core';
-import type {
-  OrderRecord,
-  OrderRequest,
-  Position,
-  ReplaySnapshot,
-  WinLossReport,
-} from '@trading/core';
+import type { OrderRecord, Position, ReplaySnapshot, WinLossReport } from '@trading/core';
 import { REQUESTS_KEY } from '../backup/backupService';
 import type { StoredOrder } from '../backup/backupService';
 import { formatPaise } from '../format/rupees';
@@ -22,6 +16,7 @@ import type { KeyValueStore } from '../store/kv';
 import { toComparisonView } from '../viewModels/comparisonView';
 import type { ComparisonView } from '../viewModels/comparisonView';
 import { makeOrderRequest } from './orderRequest';
+import { describeOrder, reasonText } from './orderText';
 import type { OrderForm } from './orderRequest';
 
 export { REQUESTS_KEY } from '../backup/backupService';
@@ -35,7 +30,9 @@ export interface SessionView {
   orders: Array<{ id: string; line: string; state: OrderRecord['state']; reason: string | null }>;
 }
 
-export type PlaceOutcome = { ok: true; orderId: string } | { ok: false; error: string };
+export type PlaceOutcome =
+  | { ok: true; orderId: string; state: OrderRecord['state']; dataEnds: string }
+  | { ok: false; error: string };
 
 /** The instruments and prices the demo book trades: the core's frozen demo snapshot. */
 export function demoMarket(): {
@@ -47,16 +44,6 @@ export function demoMarket(): {
   const instruments = Object.keys(s.snapshot.bars).sort();
   const dates = Object.values(s.snapshot.bars).flatMap((b) => b.map((x) => x.date));
   return { snapshot: s.snapshot, instruments, lastDate: dates.reduce((a, b) => (a > b ? a : b)) };
-}
-
-function describeOrder(o: OrderRecord, req: OrderRequest | undefined): string {
-  const side = req?.order.side ?? '';
-  const inst = req?.order.instrumentId ?? '';
-  const filled =
-    o.state === 'filled'
-      ? `${o.filledQuantity} of ${o.requestedQuantity}`
-      : `${o.requestedQuantity}`;
-  return `${side} ${filled} ${inst}`.trim();
 }
 
 /**
@@ -107,7 +94,13 @@ export class PaperSession {
     this.stored.push({ key, request: built.request });
     await putStamped(this.kv, REQUESTS_KEY, this.stored, this.now());
     this.adapter = PaperSession.rebuild(this.stored);
-    return { ok: true, orderId: result.orderId };
+    const placed = (await this.adapter.getOrders()).find((o) => o.orderId === result.orderId);
+    return {
+      ok: true,
+      orderId: result.orderId,
+      state: placed?.state ?? 'pending',
+      dataEnds: demoMarket().lastDate,
+    };
   }
 
   /** Ledger A beside Ledger B for this book, from the same snapshot (FR-L3). */
@@ -144,7 +137,7 @@ export class PaperSession {
           id: o.orderId,
           line: describeOrder(o, byId.get(o.orderId)),
           state: o.state,
-          reason: o.reason,
+          reason: reasonText(o.reason),
         }))
         .reverse(),
     };

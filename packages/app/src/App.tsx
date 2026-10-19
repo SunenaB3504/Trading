@@ -1,5 +1,6 @@
-import { Suspense, lazy, useEffect, useMemo, useState } from 'react';
+import { Suspense, lazy, useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import type { ScrollViewInstance } from 'react-native';
 import { DataServiceClient } from './dataClient/client';
 import type { FetchLike } from './dataClient/client';
 import { ASTRO_FEATURE } from './astro/feature';
@@ -15,6 +16,7 @@ import { UniverseScreen } from './screens/UniverseScreen';
 import { TradeScreen } from './screens/TradeScreen';
 import { IndexedDbKv } from './store/indexedDbKv';
 import type { KeyValueStore } from './store/kv';
+import { MoreHint, useScrollHint } from './ui/ScrollHint';
 import { colors } from './ui/Section';
 
 type Tab = 'ledger' | 'universe' | 'trade' | 'compare' | 'report' | 'backup' | 'data' | 'profile';
@@ -40,10 +42,10 @@ function searchOf(): string {
 }
 
 /** The Profile tab exists only when the entitlement service grants it (FR-P10 b). */
-function ProfileTab(props: { active: Tab; onSelect: (t: Tab) => void }) {
+function ProfileTab(props: { active: Tab; onSelect: (t: Tab) => void; onSpot: Spot }) {
   const allowed = useFeatureAccess(ASTRO_FEATURE) === true;
   return allowed ? (
-    <TabButton id="profile" active={props.active} onSelect={props.onSelect}>
+    <TabButton id="profile" active={props.active} onSelect={props.onSelect} onSpot={props.onSpot}>
       Profile
     </TabButton>
   ) : null;
@@ -60,13 +62,22 @@ function ProfileSlot(props: { kv: KeyValueStore; now: () => number }) {
   );
 }
 
-function TabButton(props: { id: Tab; active: Tab; onSelect: (t: Tab) => void; children: string }) {
+type Spot = (id: Tab, x: number, width: number) => void;
+
+function TabButton(props: {
+  id: Tab;
+  active: Tab;
+  onSelect: (t: Tab) => void;
+  onSpot?: Spot;
+  children: string;
+}) {
   const selected = props.id === props.active;
   return (
     <Pressable
       accessibilityRole="tab"
       accessibilityState={{ selected }}
       onPress={() => props.onSelect(props.id)}
+      onLayout={(e) => props.onSpot?.(props.id, e.nativeEvent.layout.x, e.nativeEvent.layout.width)}
       style={[styles.tab, selected ? styles.tabActive : null]}
     >
       <Text style={selected ? styles.tabTextActive : styles.tabText}>{props.children}</Text>
@@ -85,21 +96,52 @@ const TABS: Array<[Exclude<Tab, 'profile'>, string]> = [
 ];
 
 function TabStrip(props: { active: Tab; onSelect: (t: Tab) => void }) {
+  const ref = useRef<ScrollViewInstance>(null);
+  const spots = useRef<Partial<Record<Tab, { x: number; width: number }>>>({});
+  const hint = useScrollHint();
+  const view = useRef(hint.box);
+  view.current = hint.box;
+  // Selecting a tab that is cut off by the edge slides it fully into view.
+  useEffect(() => {
+    const spot = spots.current[props.active];
+    const b = view.current;
+    if (spot === undefined || b.view === 0) return;
+    if (spot.x < b.x || spot.x + spot.width > b.x + b.view) {
+      ref.current?.scrollTo({ x: Math.max(0, spot.x - 16), animated: true });
+    }
+  }, [props.active]);
+  const onSpot: Spot = (id, x, width) => {
+    spots.current[id] = { x, width };
+  };
   return (
-    <ScrollView
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      style={styles.tabsScroll}
-      contentContainerStyle={styles.tabs}
-      accessibilityRole="tablist"
-    >
-      {TABS.map(([id, label]) => (
-        <TabButton key={id} id={id} active={props.active} onSelect={props.onSelect}>
-          {label}
-        </TabButton>
-      ))}
-      <ProfileTab active={props.active} onSelect={props.onSelect} />
-    </ScrollView>
+    <View style={styles.tabsWrap}>
+      <ScrollView
+        ref={ref}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={styles.tabsScroll}
+        contentContainerStyle={styles.tabs}
+        accessibilityRole="tablist"
+        onLayout={hint.onLayout}
+        onContentSizeChange={hint.onContentSizeChange}
+        onScroll={hint.onScroll}
+        scrollEventThrottle={16}
+      >
+        {TABS.map(([id, label]) => (
+          <TabButton
+            key={id}
+            id={id}
+            active={props.active}
+            onSelect={props.onSelect}
+            onSpot={onSpot}
+          >
+            {label}
+          </TabButton>
+        ))}
+        <ProfileTab active={props.active} onSelect={props.onSelect} onSpot={onSpot} />
+      </ScrollView>
+      <MoreHint show={hint.showMore} />
+    </View>
   );
 }
 
@@ -163,6 +205,7 @@ const styles = StyleSheet.create({
   online: { color: '#0a7d33', fontWeight: '600' },
   offline: { color: colors.warn, fontWeight: '600' },
   // flexShrink 0: a long screen below must never squeeze the tab strip to nothing (found in UAT, G1)
+  tabsWrap: { flexShrink: 0 },
   tabsScroll: { flexGrow: 0, flexShrink: 0, borderBottomWidth: 1, borderBottomColor: colors.line },
   tabs: { flexDirection: 'row' },
   tab: { paddingHorizontal: 20, minHeight: 44, justifyContent: 'center' },

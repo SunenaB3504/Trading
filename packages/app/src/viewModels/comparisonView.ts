@@ -38,7 +38,10 @@ function cardOf(t: TradeComparators): TradeCard {
     t.status === 'closed' ? `${t.entryDate} to ${t.exitDate}` : `since ${t.entryDate}, open`;
   const lines: ComparisonLine[] = [
     {
-      label: t.status === 'closed' ? 'Net return on cost' : 'Return on cost so far',
+      label:
+        t.status === 'closed'
+          ? 'Net return on cost'
+          : 'Price move so far (before charges and dividends)',
       own: formatPercent(t.ownReturn),
       market: `staying in: ${path(t.holdOn, '+')} sessions`,
     },
