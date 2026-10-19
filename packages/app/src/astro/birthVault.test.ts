@@ -2,7 +2,14 @@ import { describe, expect, it, vi } from 'vitest';
 import { MemoryKv } from '../store/kv';
 import { BIRTH_KEY, BirthVault, MemoryKeyProvider, WEB_PROTECTION_NOTICE } from './birthVault';
 
-const PROFILE = { name: 'A Person', date: '1990-01-01', time: '06:30', place: 'Chennai, IN' };
+const PROFILE = {
+  name: 'A Person',
+  date: '1990-01-01',
+  time: '06:30',
+  place: 'Chennai, IN',
+  gender: 'female',
+  star: 'Anizham',
+};
 const make = () => {
   const kv = new MemoryKv();
   const keys = new MemoryKeyProvider();
@@ -22,7 +29,8 @@ describe('encrypted birth store (FR-P4, NFR-4)', () => {
     const { kv, vault } = make();
     await vault.save(PROFILE);
     const stored = (await kv.get(BIRTH_KEY)) ?? '';
-    for (const word of ['A Person', '1990', '06:30', 'Chennai', 'IN']) {
+    // full forms only: a short digit string such as 1990 can occur by chance inside random hexadecimal
+    for (const word of ['A Person', '1990-01-01', '06:30', 'Chennai', 'IN', 'female', 'Anizham']) {
       expect(stored.includes(word), word).toBe(false);
     }
     expect(JSON.parse(stored)).toMatchObject({ v: 1 });
@@ -94,6 +102,55 @@ describe('encrypted birth store (FR-P4, NFR-4)', () => {
     await vault.remove();
     vi.unstubAllGlobals();
     expect(fetchSpy).not.toHaveBeenCalled();
+  });
+
+  it('opens a record saved before gender and star existed, reading them as empty', async () => {
+    const { kv, keys, vault } = make();
+    const key = (await keys.getKey(true)) as CryptoKey;
+    const iv = new Uint8Array(12).fill(7);
+    const old = new TextEncoder().encode(
+      JSON.stringify({ name: 'Old', date: '1980-02-03', time: '04:05', place: 'Chennai, IN' }),
+    );
+    const aad = new TextEncoder().encode('birth-v1');
+    const ct = new Uint8Array(
+      await crypto.subtle.encrypt({ name: 'AES-GCM', iv, additionalData: aad }, key, old),
+    );
+    const hex = (b: Uint8Array) => Array.from(b, (x) => x.toString(16).padStart(2, '0')).join('');
+    await kv.set(BIRTH_KEY, JSON.stringify({ v: 1, iv: hex(iv), ct: hex(ct) }));
+    expect(await vault.load()).toEqual({
+      state: 'ok',
+      profile: {
+        name: 'Old',
+        date: '1980-02-03',
+        time: '04:05',
+        place: 'Chennai, IN',
+        gender: '',
+        star: '',
+      },
+    });
+  });
+
+  it('refuses a record whose gender or star is not text', async () => {
+    const { kv, keys, vault } = make();
+    const key = (await keys.getKey(true)) as CryptoKey;
+    const iv = new Uint8Array(12).fill(9);
+    const bad = new TextEncoder().encode(
+      JSON.stringify({
+        name: 'X',
+        date: '1980-02-03',
+        time: '04:05',
+        place: 'Chennai, IN',
+        gender: 5,
+        star: '',
+      }),
+    );
+    const aad = new TextEncoder().encode('birth-v1');
+    const ct = new Uint8Array(
+      await crypto.subtle.encrypt({ name: 'AES-GCM', iv, additionalData: aad }, key, bad),
+    );
+    const hex = (b: Uint8Array) => Array.from(b, (x) => x.toString(16).padStart(2, '0')).join('');
+    await kv.set(BIRTH_KEY, JSON.stringify({ v: 1, iv: hex(iv), ct: hex(ct) }));
+    expect(await vault.load()).toEqual({ state: 'unreadable', reason: 'corrupt' });
   });
 
   it('tells the web user that browser protection is weaker', () => {

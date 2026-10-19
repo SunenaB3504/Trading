@@ -15,6 +15,10 @@ export interface BirthProfile {
   time: string;
   /** A place from the offline gazetteer, written as "Name, CC". */
   place: string;
+  /** Optional (empty if not given). Stored encrypted; no calculation uses it yet. */
+  gender: string;
+  /** The birth star the person says they have, typed in; empty if not given. Checked against the computed star. */
+  star: string;
 }
 
 /** Shown beside the birth-details form on the web build (FR-P4). */
@@ -51,10 +55,24 @@ const fromHex = (s: string): Uint8Array<ArrayBuffer> => {
   return Uint8Array.from(s.match(/../g) ?? [], (h) => parseInt(h, 16));
 };
 
-function isProfile(x: unknown): x is BirthProfile {
-  if (typeof x !== 'object' || x === null) return false;
+/** Reads a decrypted record. Records saved before gender and star existed lack them and read as empty. */
+function readProfile(x: unknown): BirthProfile | null {
+  if (typeof x !== 'object' || x === null) return null;
   const o = x as Record<string, unknown>;
-  return ['name', 'date', 'time', 'place'].every((k) => typeof o[k] === 'string');
+  if (!['name', 'date', 'time', 'place'].every((k) => typeof o[k] === 'string')) return null;
+  const optional = (k: string): string | null =>
+    o[k] === undefined ? '' : typeof o[k] === 'string' ? o[k] : null;
+  const gender = optional('gender');
+  const star = optional('star');
+  if (gender === null || star === null) return null;
+  return {
+    name: o.name as string,
+    date: o.date as string,
+    time: o.time as string,
+    place: o.place as string,
+    gender,
+    star,
+  };
 }
 
 export class BirthVault {
@@ -95,9 +113,10 @@ export class BirthVault {
         fromHex(sealed.ct),
       );
       const profile: unknown = JSON.parse(new TextDecoder().decode(plain));
-      return isProfile(profile)
-        ? { state: 'ok', profile }
-        : { state: 'unreadable', reason: 'corrupt' };
+      const read = readProfile(profile);
+      return read === null
+        ? { state: 'unreadable', reason: 'corrupt' }
+        : { state: 'ok', profile: read };
     } catch {
       return { state: 'unreadable', reason: 'corrupt' };
     }

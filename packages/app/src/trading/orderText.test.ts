@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { MemoryKv } from '../store/kv';
 import { describeOrder, reasonText } from './orderText';
 import { PaperSession } from './paperSession';
+import { tradeCount } from '../viewModels/winLossView';
 import { makeOrderRequest } from './orderRequest';
 import type { OrderForm } from './orderRequest';
 
@@ -117,5 +118,13 @@ describe('a refused sell does not use up the day’s depository charge (found in
   it('lists the refused sell as rejected and the real sell as filled', async () => {
     const orders = (await (await roundTrip(true)).view()).orders;
     expect(orders.map((o) => o.state)).toEqual(['filled', 'filled', 'rejected']);
+  });
+});
+
+describe('breakdown lines count trades in the right number', () => {
+  it('says 1 trade and 2 trades', () => {
+    expect(tradeCount('1')).toBe('1 trade');
+    expect(tradeCount('2')).toBe('2 trades');
+    expect(tradeCount('0')).toBe('0 trades');
   });
 });

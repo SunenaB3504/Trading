@@ -4,7 +4,7 @@ import type { CostView, WinLossReport } from '@trading/core';
 import type { KeyValueStore } from '../store/kv';
 import { PaperSession } from '../trading/paperSession';
 import { Note, Row, Section, colors } from '../ui/Section';
-import { toWinLossView } from '../viewModels/winLossView';
+import { toWinLossView, tradeCount } from '../viewModels/winLossView';
 import type { BreakdownTable } from '../viewModels/winLossView';
 
 function Table({ t }: { t: BreakdownTable }) {
@@ -15,7 +15,7 @@ function Table({ t }: { t: BreakdownTable }) {
         <View key={r.key} style={styles.group}>
           <Text style={styles.groupKey}>{`${r.key}${r.thin ? ' (few trades)' : ''}`}</Text>
           <Text style={styles.groupText}>
-            {`${r.count} trades, win rate ${r.winRate}, expectancy ${r.expectancy}, profit ${r.pnl}`}
+            {`${tradeCount(r.count)}, win rate ${r.winRate}, expectancy ${r.expectancy}, profit ${r.pnl}`}
           </Text>
         </View>
       ))}

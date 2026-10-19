@@ -49,6 +49,11 @@ function headlineOf(s: ViewSummary, iv: WinLossReport['intervals'], view: CostVi
   ];
 }
 
+/** "1 trade", "2 trades": the count arrives as text. */
+export function tradeCount(count: string): string {
+  return `${count} ${count === '1' ? 'trade' : 'trades'}`;
+}
+
 function tableOf(title: string, groups: readonly GroupRow[], view: CostView): BreakdownTable {
   return {
     title,

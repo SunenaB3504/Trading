@@ -78,6 +78,13 @@ async function fillForm(page: Page, date: string): Promise<void> {
   await page.getByTestId('birth-time').fill(goldenBirth.time);
 }
 
+/** Gender, and a birth star typed the way a Kerala family would write it: "Anizh" suggests Anuradha. */
+async function fillOptional(page: Page, starText: string): Promise<void> {
+  await page.getByTestId('gender-female').click();
+  await page.getByTestId('star-input').fill(starText);
+  await page.getByTestId('star-0').click();
+}
+
 async function pickMumbai(page: Page): Promise<void> {
   await page.getByTestId('place-input').fill('Mumbai');
   await page.getByTestId('place-0').click();
@@ -108,6 +115,7 @@ async function validation(page: Page): Promise<void> {
 
 async function saveAndShow(page: Page): Promise<void> {
   await page.getByTestId('birth-date').fill(goldenBirth.date);
+  await fillOptional(page, 'Anizh');
   await page.getByTestId('profile-save').click();
   await page.getByText('Your chart facts').waitFor({ timeout: 15_000 });
   const text = await page.getByTestId('profile-screen').innerText();
@@ -116,6 +124,14 @@ async function saveAndShow(page: Page): Promise<void> {
     /Rising sign/.test(text) && /Moon sign/.test(text) && /Birth star/.test(text),
   );
   check('Indu Lagna reads pending verification', /Indu Lagna\s*pending verification/.test(text));
+  check(
+    'a star typed as Anizh is recognised as Anuradha and matches the computed star',
+    /Typed-in birth star\s*Anuradha \(matches\)/.test(text),
+  );
+  check(
+    'the place used is named, with its coordinates',
+    /Birth place used\s*Mumbai, IN \(19\.07°, 72\.88°\)/.test(text),
+  );
   check(
     'the clock time used is Mumbai local time as UTC with the +05:30 offset',
     /1975-08-15T05:00 UTC, from Asia\/Kolkata at \+05:30/.test(text),
@@ -174,7 +190,7 @@ async function encryption(page: Page): Promise<void> {
   check('the saved record is there', raw !== '');
   check(
     'it holds no name, date, time or place',
-    !/Test Person|1975|10:30|Mumbai/.test(raw) && /"v":1/.test(raw),
+    !/Test Person|1975-08-15|10:30|Mumbai|female|Anuradha|Anizh/.test(raw) && /"v":1/.test(raw),
     raw.slice(0, 60),
   );
   const key = (await idb(page, 'trading-app-keys', 'keys')).find(([k]) => k === 'birth');
@@ -189,6 +205,25 @@ async function afterReload(page: Page, url: string): Promise<void> {
   await openProfile(page, url);
   await page.getByText('Your chart facts').waitFor({ timeout: 15_000 });
   check('after a reload the layer is still on and the details decrypt', true);
+}
+
+/** A star that does not fit the birth details raises the check-your-birth-time warning, end to end. */
+async function wrongStar(page: Page): Promise<void> {
+  await page.getByTestId('profile-delete').click();
+  await page.getByText(/Press again to delete/).waitFor({ timeout: 10_000 });
+  await page.getByTestId('profile-delete').click();
+  await page.getByText('Your birth details', { exact: true }).waitFor({ timeout: 15_000 });
+  await fillForm(page, goldenBirth.date);
+  await pickMumbai(page);
+  await fillOptional(page, 'Rohini');
+  await page.getByTestId('profile-save').click();
+  await page.getByText('Your chart facts').waitFor({ timeout: 15_000 });
+  const text = await page.getByTestId('profile-screen').innerText();
+  check(
+    'a star that does not fit the birth details raises the check-your-birth-time warning',
+    /You gave Rohini as your birth star, but these birth details give Anuradha/.test(text) &&
+      /birth time or place may be off/.test(text),
+  );
 }
 
 async function deleteAll(page: Page): Promise<void> {
@@ -240,6 +275,7 @@ async function unlockedFlow(page: Page, url: string, requests: string[]): Promis
         !/Test Person|1975-08-15|Mumbai/.test(decodeURIComponent(u)),
     ),
   );
+  await wrongStar(page);
   await deleteAll(page);
 }
 

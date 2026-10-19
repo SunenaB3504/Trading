@@ -5,6 +5,12 @@ export interface ProfileRow {
   value: string;
 }
 
+/** What the person typed as their birth star, already resolved by the engine (null index: not a known spelling). */
+export interface TypedStar {
+  text: string;
+  index: number | null;
+}
+
 export interface ProfileView {
   rows: ProfileRow[];
   /** Plain-language doubts the person should check, shown above the rows. */
@@ -53,6 +59,33 @@ function periods(p: PersonalProfile): ProfileRow[] {
   ];
 }
 
+function starCheck(
+  p: PersonalProfile,
+  typed: TypedStar | null,
+): { row: ProfileRow[]; warning: string[] } {
+  if (typed === null || typed.text.trim() === '') return { row: [], warning: [] };
+  if (typed.index === null) {
+    return {
+      row: [{ label: 'Typed-in birth star', value: `${typed.text} (not recognised)` }],
+      warning: [
+        `We could not recognise "${typed.text}" as a birth star, so it was not compared. Pick a name from the suggestions.`,
+      ],
+    };
+  }
+  if (typed.index === p.moon.nakshatra) {
+    return {
+      row: [{ label: 'Typed-in birth star', value: `${p.moon.nakshatraName} (matches)` }],
+      warning: [],
+    };
+  }
+  return {
+    row: [{ label: 'Typed-in birth star', value: `${typed.text} (differs)` }],
+    warning: [
+      `You gave ${typed.text} as your birth star, but these birth details give ${p.moon.nakshatraName}. The birth time or place may be off; check them.`,
+    ],
+  };
+}
+
 function warningsOf(p: PersonalProfile): string[] {
   const out: string[] = [];
   if (p.birth.clock === 'ambiguous') {
@@ -72,10 +105,11 @@ function warningsOf(p: PersonalProfile): string[] {
 }
 
 /** The profile as labelled rows, ready to draw. All wording lives here so the screen has no logic. */
-export function toProfileView(p: PersonalProfile): ProfileView {
+export function toProfileView(p: PersonalProfile, typed: TypedStar | null = null): ProfileView {
   const b = p.birth;
+  const check = starCheck(p, typed);
   return {
-    warnings: warningsOf(p),
+    warnings: [...warningsOf(p), ...check.warning],
     moonSign: p.moon.sign,
     moonNakshatra: p.moon.nakshatra,
     rows: [
@@ -85,8 +119,13 @@ export function toProfileView(p: PersonalProfile): ProfileView {
       },
       { label: 'Moon sign (Rashi)', value: p.moon.signName },
       { label: 'Birth star (Nakshatra)', value: `${p.moon.nakshatraName}, pada ${p.moon.pada}` },
+      ...check.row,
       ...periods(p),
       { label: 'Indu Lagna', value: p.induLagna },
+      {
+        label: 'Birth place used',
+        value: `${p.place.name}, ${p.place.country} (${p.place.lat.toFixed(2)}°, ${p.place.lon.toFixed(2)}°)`,
+      },
       {
         label: 'Clock time used',
         value: `${b.utc} UTC, from ${b.zone} at ${offsetText(b.offsetSeconds)}`,

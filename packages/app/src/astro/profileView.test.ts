@@ -30,6 +30,7 @@ describe('profile view', () => {
       'Running period (Dasha)',
       'Sub-period (Bhukti)',
       'Indu Lagna',
+      'Birth place used',
       'Clock time used',
     ]);
     expect(v.rows.find((r) => r.label === 'Indu Lagna')?.value).toBe('pending verification');
@@ -64,5 +65,56 @@ describe('profile view', () => {
       ),
     );
     expect(skipped.warnings.join(' ')).toMatch(/skipped/);
+  });
+});
+
+describe('the typed-in birth star is checked against the computed one', () => {
+  const profile = computeProfile(
+    { date: '1975-08-15', time: '10:30', place: place('Mumbai, IN') },
+    conv,
+    '2026-10-19',
+  ); // Anuradha, index 16
+  const row = (v: ReturnType<typeof toProfileView>) =>
+    v.rows.find((r) => r.label === 'Typed-in birth star');
+
+  it('says it matches when the star agrees, and raises no warning', () => {
+    const v = toProfileView(profile, { text: 'Anizham', index: 16 });
+    expect(row(v)?.value).toBe('Anuradha (matches)');
+    expect(v.warnings).toEqual([]);
+  });
+
+  it('warns that the birth time or place may be off when the star differs', () => {
+    const v = toProfileView(profile, { text: 'Rohini', index: 3 });
+    expect(row(v)?.value).toBe('Rohini (differs)');
+    expect(v.warnings.join(' ')).toMatch(
+      /You gave Rohini as your birth star, but these birth details give Anuradha/,
+    );
+    expect(v.warnings.join(' ')).toMatch(/birth time or place may be off/);
+  });
+
+  it('says it could not recognise a name that is not a known spelling', () => {
+    const v = toProfileView(profile, { text: 'Zzz', index: null });
+    expect(row(v)?.value).toBe('Zzz (not recognised)');
+    expect(v.warnings.join(' ')).toMatch(/could not recognise "Zzz"/);
+  });
+
+  it('shows nothing when no star was typed', () => {
+    expect(row(toProfileView(profile, null))).toBeUndefined();
+    expect(row(toProfileView(profile, { text: '  ', index: null }))).toBeUndefined();
+  });
+
+  it('names the place the chart was cast for, with its coordinates', () => {
+    const v = toProfileView(profile);
+    expect(v.rows.find((r) => r.label === 'Birth place used')?.value).toBe(
+      'Mumbai, IN (19.07°, 72.88°)',
+    );
+    const navi = computeProfile(
+      { date: '1975-08-15', time: '10:30', place: place('Navi Mumbai, IN') },
+      conv,
+      '2026-10-19',
+    );
+    expect(toProfileView(navi).rows.find((r) => r.label === 'Birth place used')?.value).toBe(
+      'Navi Mumbai, IN (19.04°, 73.02°)',
+    );
   });
 });

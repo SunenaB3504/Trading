@@ -9,6 +9,7 @@ import { loadEngine } from './engine';
 import type { Engine } from './engine';
 import { ASTRO_FEATURE } from './feature';
 import { loadAstroLayer } from './gate';
+import { GenderPicker, StarPicker } from './ProfileFields';
 import { toProfileView } from './profileView';
 import { ShieldsSection } from './ShieldsSection';
 import type { ProfileView } from './profileView';
@@ -26,8 +27,13 @@ function computeView(engine: Engine, profile: BirthProfile, today: string): Prof
   const place = engine.findPlaces(profile.place, 1)[0];
   if (place === undefined) throw new Error('That place is not in the offline list. Search again.');
   const conventions = engine.freezeConventions(CONVENTIONS_VERSION);
+  const typed =
+    profile.star.trim() === ''
+      ? null
+      : { text: profile.star.trim(), index: engine.starIndex(profile.star) };
   return toProfileView(
     engine.computeProfile({ date: profile.date, time: profile.time, place }, conventions, today),
+    typed,
   );
 }
 
@@ -163,11 +169,20 @@ function BirthForm(props: {
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
   const [place, setPlace] = useState('');
+  const [gender, setGender] = useState('');
+  const [star, setStar] = useState('');
   const [message, setMessage] = useState<string | null>(props.notice);
   const submit = async () => {
     if (place === '') return setMessage('Search for your birth place and pick it from the list.');
     setMessage(
-      await props.onSave({ name: name.trim(), date: date.trim(), time: time.trim(), place }),
+      await props.onSave({
+        name: name.trim(),
+        date: date.trim(),
+        time: time.trim(),
+        place,
+        gender,
+        star: star.trim(),
+      }),
     );
   };
   return (
@@ -181,6 +196,8 @@ function BirthForm(props: {
         testID="birth-time"
       />
       <PlacePicker engine={props.engine} value={place} onPick={setPlace} />
+      <GenderPicker value={gender} onPick={setGender} />
+      <StarPicker engine={props.engine} value={star} onPick={setStar} />
       <Button label="Save details" onPress={() => void submit()} testID="profile-save" />
       {message !== null ? (
         <Text style={styles.message} testID="profile-message">

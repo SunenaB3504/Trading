@@ -145,6 +145,7 @@ Order entry (WP-3.3) goes through WP-3.8; WP-3.9 waits for WP-2.8 and D26.
 | 4.6 | GRAY-NODATA fallback | FR-S11 | Failing ephemeris/snapshot yields NODATA, not a halt |
 | 4.7 | On-device personal profile: encrypted birth-detail store (SQLite and keystore on Android; WebCrypto on web), offline gazetteer with historical timezones, local Lagna, Moon rāśi, janma nakṣatra, Vimshottari daśā/bhukti. Indu Lagna reads "pending verification" until WP-7.4 | FR-P4, FR-P5, NFR-4, D27 | Synthetic charts match the golden corpus on Node and Hermes; stored data is unreadable without the key; delete removes it; no network call in the flow |
 | 4.8 | Personal shields: Chandrāṣṭama window and informational banner (no cash percentage), Tara Bala category trader-to-stock (no score, no boost) | FR-P6, FR-P7 | All 27 stock stars against a fixed trader star match a hand-worked table (Pushya to Mūla = Vipat; the reverse would give Mitra); window start/end match hand-worked Moon ingress cases; banner text has no percentage or advice |
+| 4.9 | Profile iteration from UAT-2: optional gender; typed-in birth star (Nakshatram, with regional spellings) checked against the computed star; the place used shown in the chart facts; plural wording in report breakdowns | FR-P4, FR-P5 | A typed star that differs from the computed one produces a warning; every star name and regional spelling resolves to the right star; old saved records still open; nothing new is readable in storage |
 
 **P4 exit (R1.5):** a row per instrument-day; anchors verifiable; signals hidden in the trader UI.
 

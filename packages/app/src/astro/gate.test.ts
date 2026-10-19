@@ -21,7 +21,14 @@ const denyAll: IEntitlementService = {
   hasFeatureAccess: () => Promise.resolve(false),
   getEntitlements: () => Promise.resolve([]),
 };
-const PROFILE = { name: 'A Person', date: '1990-01-01', time: '06:30', place: 'Chennai' };
+const PROFILE = {
+  name: 'A Person',
+  date: '1990-01-01',
+  time: '06:30',
+  place: 'Chennai',
+  gender: '',
+  star: '',
+};
 const form = (over: Partial<OrderForm> = {}): OrderForm => ({
   instrumentId: 'AAA',
   side: 'buy',

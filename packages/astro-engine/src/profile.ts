@@ -17,6 +17,8 @@ export interface PersonalProfile {
   conventionHash: string;
   /** The UTC moment and time zone the birth time resolved to, and any doubt about the clock time. */
   birth: { utc: string; zone: string; offsetSeconds: number; clock: LocalStatus };
+  /** The place the chart was cast for, so the screen can say which one it was. */
+  place: { name: string; country: string; lat: number; lon: number };
   lagna: { sign: number; signName: string; degreesInSign: number };
   moon: { sign: number; signName: string; nakshatra: number; nakshatraName: string; pada: number };
   /** The running periods on `asOf`, null before birth or after the 120-year cycle. */
@@ -42,6 +44,12 @@ export function computeProfile(
   return {
     conventionHash,
     birth: { utc: b.moment.utc, zone: b.zone, offsetSeconds: b.offsetSeconds, clock: b.status },
+    place: {
+      name: input.place.name,
+      country: input.place.country,
+      lat: input.place.lat,
+      lon: input.place.lon,
+    },
     lagna: {
       sign: chart.lagna.sign,
       signName: SIGN_NAMES[chart.lagna.sign] as string,
