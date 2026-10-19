@@ -20,6 +20,7 @@
     "e2e:backup": "tsx tools/e2e/backup.ts",
     "e2e:universe": "tsx tools/e2e/universe.ts",
     "e2e:phone": "tsx tools/e2e/phone.ts",
+    "e2e:noastro": "tsx tools/e2e/noAstro.ts",
     "record:status": "tsx packages/workers/src/recordStatus.ts",
     "pull:bars": "tsx packages/workers/src/pullBars.ts",
     "uat:start": "tsx tools/uat/start.ts",
