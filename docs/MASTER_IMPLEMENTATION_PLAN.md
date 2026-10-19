@@ -127,6 +127,7 @@ Every work package (WP) lists: SSD IDs, deliverable, acceptance test. Order with
 | 3.9 | Snapshot client: signed download-only pull, hash and signature check, staleness from as-of date, GRAY-NODATA fallback, network-audit test | FR-P1–P3, §7.6, D26 | Tampered snapshot refused and the previous one kept; airplane mode keeps trading; test fails if any non-GET request, other origin or user data appears |
 | 3.10 | `IEntitlementService` (SSD §9.5) with a stub that grants every feature; screens ask it, nothing else; no prices, SKUs or store text | FR-P9, §9.5 | Lint/test: no store SDK import outside the future P11 adapter; core and harness do not import it; stub returns all features |
 | 3.11 | Gate leak tests with the astro feature off: no astro module executed, no birth data stored, no astro fields in selectors, snapshot schema, exports, caches and logs, locked placeholders show no counts or scores | FR-P10 | One test per FR-P10 item passes with the gate off; a deliberately leaking change makes the suite fail |
+| 3.12 | Lots view: average price on each Ledger position and an "N lots" popup (open lots oldest first, month groups, read-only FIFO next-sale preview, sold pieces collapsed); totals tie to the position | FR-T5, FR-L3 | Lot totals equal the position's shares and basis; popup closes by button, Esc, tap outside and Back; passes the phone-width check |
 
 Order entry (WP-3.3) goes through WP-3.8; WP-3.9 waits for WP-2.8 and D26.
 
@@ -220,6 +221,7 @@ Planned after the R3 entries in hand are reported: nation chart registry and eve
 | D34 | How the paid astro layer is gated | WP-3.10, 3.11 | **Closed 2026-10-17:** soft client-side gate; no astro data in the public snapshot; research pipeline never gated |
 | D25 | Eligibility thresholds | WP-2.9 | **Confirmed 2026-10-17:** config `elig-v1` |
 | D35 | Bucket cut-offs and surveillance sources | WP-2.7, WP-2.4 | **Closed 2026-10-17:** config `bucket-v1` (see DECISIONS.md) |
+| D36 | Specific-lot selling instead of FIFO only | After WP-3.12 | **Open 2026-10-19.** FIFO remains; any lot choice needs an owner decision and an SSD change |
 | D33 | Guardrails and Tara scoring | n/a | **Closed 2026-10-17:** separate pre-registered arms PH-11, PH-12; not baseline |
 | D30 | Tara Bala direction and display | WP-4.8 | **Closed 2026-10-17, corrected same day:** trader to stock; category name only, no boost |
 
