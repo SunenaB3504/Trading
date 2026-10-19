@@ -94,6 +94,17 @@ export class SignalLog {
   private readonly rows: LogEntry[] = [];
   private readonly keys = new Set<string>();
 
+  /** Rebuilds a log from rows read back from storage; refuses rows whose chain or timing does not check out. */
+  static fromEntries(rows: readonly LogEntry[]): SignalLog {
+    if (!verifyEntries(rows)) throw new Error('The stored signal log fails its checks');
+    const log = new SignalLog();
+    for (const r of rows) {
+      log.rows.push(Object.freeze({ ...r }));
+      log.keys.add(`${r.instrumentId}|${r.date}|${r.signalId}|${r.signalVersion}`);
+    }
+    return log;
+  }
+
   append(e: NewEntry): LogEntry {
     if (!(e.writtenAt < e.outcomeAvailableAt)) {
       throw new Error(

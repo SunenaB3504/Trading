@@ -142,3 +142,4 @@ export {
   otsFile,
 } from './anchor/openTimestamps';
 export type { HttpPoster, OtsOptions, OtsProof } from './anchor/openTimestamps';
+export { AppendOnlyFile, StoreError, loadRegistry, saveRegistry, writeJsonAtomic } from './store/appendOnlyFile';
