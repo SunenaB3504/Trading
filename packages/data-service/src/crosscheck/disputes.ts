@@ -32,6 +32,7 @@ export function checkSymbol(
   primary: readonly PricePoint[],
   other: readonly PricePoint[] | null,
   toleranceBps?: number,
+  volumeToleranceBps?: number,
 ): SymbolCheck {
   if (other === null || other.length === 0)
     return {
@@ -46,7 +47,7 @@ export function checkSymbol(
       onlyInPrimary: primary.length,
       onlyInOther: 0,
     };
-  const r = compareSeries(primary, other, toleranceBps);
+  const r = compareSeries(primary, other, toleranceBps, volumeToleranceBps);
   return {
     symbol,
     sessions: primary.length,

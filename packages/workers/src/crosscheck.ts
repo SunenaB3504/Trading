@@ -1,6 +1,6 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname } from 'node:path';
-import { adjustSeries } from '@trading/core';
+import { addDays, adjustSeries } from '@trading/core';
 import {
   FileRawStore,
   IdentityIndex,
@@ -23,6 +23,7 @@ import type { PricePoint, SymbolCheck } from '@trading/data-service';
  *
  * Usage:  pnpm crosscheck --from 2018-01-01 --to 2026-10-16 [--yahoo data/raw/yahoo] [--dir data/raw/nse-bars]
  *            [--out data/derived/disputes.json] [--symbols A,B] [--threshold 0.98]
+ *            [--volume-tolerance-bps 50] (0 = volumes must match exactly, as D4 says for unadjusted series)
  */
 function option(args: readonly string[], name: string): string | undefined {
   const i = args.indexOf(name);
@@ -43,7 +44,11 @@ interface Context {
   actions: ReturnType<typeof toCorporateActions>['actions'];
 }
 
-async function checkOne(symbol: string, ctx: Context): Promise<SymbolCheck> {
+async function checkOne(
+  symbol: string,
+  ctx: Context,
+  volumeToleranceBps: number,
+): Promise<SymbolCheck> {
   const id = ctx.idOf(symbol);
   const series = id === undefined ? undefined : ctx.bars.get(id);
   const theirs = await loadYahoo(ctx.yahoo, symbol);
@@ -55,12 +60,36 @@ async function checkOne(symbol: string, ctx: Context): Promise<SymbolCheck> {
           ctx.actions.filter((a) => a.instrumentId === id),
           { includeDividends: false },
         ).map((b) => ({ date: b.date, close: b.close, volume: b.volume }));
-  return checkSymbol(symbol, ours, theirs === null ? null : yahooPoints(theirs));
+  return checkSymbol(
+    symbol,
+    ours,
+    theirs === null ? null : yahooPoints(theirs),
+    undefined,
+    volumeToleranceBps,
+  );
 }
 
-async function contextFor(args: readonly string[], from: string, to: string): Promise<Context> {
+/**
+ * Only the names being checked are kept while the archive is read, day by day: all instruments over eight years
+ * do not fit in memory. A first look at the last weeks finds each name's ISIN, so a company that changed its
+ * symbol is still followed back through its earlier symbols.
+ */
+async function contextFor(
+  args: readonly string[],
+  from: string,
+  to: string,
+  symbols: readonly string[],
+): Promise<Context> {
   const nse = new FileRawStore(option(args, '--dir') ?? 'data/raw/nse-bars');
-  const rows = await loadBars(nse, from, to);
+  const names = new Set(symbols);
+  const recent = await loadBars(nse, addDays(to, -45), to, (r) => names.has(r.symbol));
+  const isins = new Set(recent.flatMap((r) => (r.isin === null ? [] : [r.isin])));
+  const rows = await loadBars(
+    nse,
+    from,
+    to,
+    (r) => names.has(r.symbol) || (r.isin !== null && isins.has(r.isin)),
+  );
   const identities = buildIdentities(rows);
   const idOf = (symbol: string): string | undefined =>
     identities.find((i) => i.listings.some((l) => l.symbol === symbol))?.instrumentId;
@@ -79,20 +108,30 @@ export async function main(args: readonly string[]): Promise<number> {
     console.error('Usage: pnpm crosscheck --from YYYY-MM-DD --to YYYY-MM-DD');
     return 2;
   }
-  const ctx = await contextFor(args, from, to);
-  const symbols = option(args, '--symbols')?.split(',') ?? (await yahooSymbols(ctx.yahoo));
+  const yahoo = new FileRawStore(option(args, '--yahoo') ?? 'data/raw/yahoo');
+  const symbols = option(args, '--symbols')?.split(',') ?? (await yahooSymbols(yahoo));
+  const ctx = await contextFor(args, from, to, symbols);
   const checks: SymbolCheck[] = [];
-  for (const symbol of symbols) checks.push(await checkOne(symbol, ctx));
+  const volumeToleranceBps = Number(option(args, '--volume-tolerance-bps') ?? '50');
+  for (const symbol of symbols) checks.push(await checkOne(symbol, ctx, volumeToleranceBps));
   const list = buildDisputesList(checks, Number(option(args, '--threshold') ?? '0.98'));
   const out = option(args, '--out') ?? 'data/derived/disputes.json';
   mkdirSync(dirname(out), { recursive: true });
-  writeFileSync(out, JSON.stringify({ from, to, checks, list }, null, 1));
+  writeFileSync(out, JSON.stringify({ from, to, volumeToleranceBps, checks, list }, null, 1));
   console.log(
     JSON.stringify({
       symbols: list.symbols,
       belowThreshold: list.belowThreshold.length,
       withoutYahoo: list.withoutSecondProvider.length,
+      volumeToleranceBps,
       suspectedMissingActions: list.suspectedMissingActions.length,
+      suspectedSplitOrBonus: list.suspectedMissingActions.filter((x) =>
+        x.actions.some((a) => a.impliedShareRatio >= 1.4),
+      ).length,
+      suspectedRightsLike: list.suspectedMissingActions.filter((x) =>
+        x.actions.every((a) => a.impliedShareRatio < 1.4),
+      ).length,
+      passingE7: checks.filter((c) => c.coverage !== null && c.coverage >= list.threshold).length,
       disputedEntries: list.entries.length,
       hash: list.hash,
       out,

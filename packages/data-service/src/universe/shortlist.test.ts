@@ -69,6 +69,15 @@ describe('the shortlist for the second-provider check', () => {
     expect(r.instruments).toBe(5);
   });
 
+  it('leaves out an ETF or fund: same series as shares, but an INF ISIN', () => {
+    const r = run([
+      { symbol: 'GOOD', isin: 'INE000000001' },
+      { symbol: 'GOLDETF', isin: 'INF000000009' },
+    ]);
+    expect(r.shortlisted.map((s) => s.symbol)).toEqual(['GOOD']);
+    expect(r.rejectedBy).toEqual({ E1: 1 });
+  });
+
   it('is sorted by symbol and gives the same result whatever the order of the rows', () => {
     const specs: Spec[] = [
       { symbol: 'BBB', isin: 'INE000000012' },

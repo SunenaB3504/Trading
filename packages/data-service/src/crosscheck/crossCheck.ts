@@ -47,12 +47,25 @@ export const DEFAULT_TOLERANCE_BPS = 50;
 
 const bps = (a: number, b: number): number => (Math.abs(b - a) / a) * 10_000;
 
-function compareDay(p: PricePoint, o: PricePoint, toleranceBps: number): Discrepancy[] {
+/**
+ * D4 says volumes must match exactly. That holds for unadjusted series. Once both sides are adjusted for later
+ * splits and bonuses, each provider rounds the adjusted volume its own way, so a small tolerance (in basis points
+ * of our volume) can be allowed there; the default of 0 keeps the strict rule.
+ */
+const volumeDiffers = (ours: number, theirs: number, toleranceBps: number): boolean =>
+  ours === 0 ? theirs !== 0 : bps(ours, theirs) > toleranceBps;
+
+function compareDay(
+  p: PricePoint,
+  o: PricePoint,
+  toleranceBps: number,
+  volumeToleranceBps: number,
+): Discrepancy[] {
   const out: Discrepancy[] = [];
   const diff = bps(p.close, o.close);
   if (diff > toleranceBps)
     out.push({ date: p.date, field: 'close', primary: p.close, other: o.close, relDiffBps: diff });
-  if (p.volume !== o.volume)
+  if (volumeDiffers(p.volume, o.volume, volumeToleranceBps))
     out.push({
       date: p.date,
       field: 'volume',
@@ -105,6 +118,7 @@ export function compareSeries(
   primary: readonly PricePoint[],
   other: readonly PricePoint[],
   toleranceBps: number = DEFAULT_TOLERANCE_BPS,
+  volumeToleranceBps = 0,
 ): CrossCheckReport {
   const theirs = new Map(other.map((o) => [o.date, o]));
   const ours = new Set(primary.map((p) => p.date));
@@ -112,7 +126,9 @@ export function compareSeries(
     const o = theirs.get(p.date);
     return o === undefined ? [] : [{ p, o }];
   });
-  const discrepancies = pairs.flatMap(({ p, o }) => compareDay(p, o, toleranceBps));
+  const discrepancies = pairs.flatMap(({ p, o }) =>
+    compareDay(p, o, toleranceBps, volumeToleranceBps),
+  );
   const disputedDates = [...new Set(discrepancies.map((d) => d.date))].sort();
   const closeDisputes = new Set(
     discrepancies.filter((d) => d.field === 'close').map((d) => d.date),

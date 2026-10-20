@@ -9,7 +9,7 @@ import { buildFacts } from './facts';
 /**
  * The shortlist for the Yahoo cross-check (WP-2.9): every instrument that passes the rules which need only
  * the exchange files (E1 to E6) at the window start. Rule E7 needs the second provider, so it is the last test
- * and is not applied here; the shortlist is what is worth asking Yahoo about. Merger knowledge (E3) comes from
+ * and is not applied here; E1 also requires a company-share ISIN (INE), which leaves out ETFs and funds; the shortlist is what is worth asking Yahoo about. Merger knowledge (E3) comes from
  * the corporate-action table and is not available from the bars alone, so it is assumed absent here and applied
  * in the full eligibility run; the shortlist can therefore only be a superset of the final set.
  */
@@ -50,6 +50,8 @@ function verdictFor(
   const series = ctx.bars.get(identity.instrumentId);
   if (series === undefined || series.length === 0) return undefined;
   const latest = identity.listings.reduce((a, b) => (b.lastSeen > a.lastSeen ? b : a));
+  // Funds, ETFs and liquid schemes trade in the same series as shares but carry an INF ISIN; company shares carry INE.
+  if (!latest.isin.startsWith('INE')) return { symbol: latest.symbol, failed: 'E1' };
   const last = lastBefore(ctx.bySymbol.get(latest.symbol) ?? [], ctx.windowStart);
   const facts = buildFacts(
     {

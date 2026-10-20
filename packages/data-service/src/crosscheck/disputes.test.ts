@@ -35,6 +35,14 @@ describe('checking a symbol against the second provider', () => {
     expect(c.discrepancies).toHaveLength(1);
   });
 
+  it('allows a small volume difference only when a volume tolerance is given (adjusted series round differently)', () => {
+    const other = series(20).map((p, i) => (i % 2 === 0 ? { ...p, volume: p.volume + 1 } : p));
+    expect(checkSymbol('RRR', series(20), other).coverage).toBe(0.5);
+    expect(checkSymbol('RRR', series(20), other, undefined, 200).coverage).toBe(1);
+    const far = series(20).map((p) => ({ ...p, volume: p.volume * 2 }));
+    expect(checkSymbol('RRR', series(20), far, undefined, 200).coverage).toBe(0);
+  });
+
   it('reports a missing second provider as unmeasured, not as zero or full', () => {
     const c = checkSymbol('CCC', series(5), null);
     expect(c).toMatchObject({ otherMissing: true, coverage: null, compared: 0 });

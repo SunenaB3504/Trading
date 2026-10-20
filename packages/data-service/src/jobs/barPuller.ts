@@ -156,7 +156,13 @@ export async function pullRange(
 const decoder = new TextDecoder();
 
 /** Every price row stored in the archive for sessions in the range, oldest session first. */
-export async function loadBars(store: RawStore, from: string, to: string): Promise<RawBarRow[]> {
+export async function loadBars(
+  store: RawStore,
+  from: string,
+  to: string,
+  /** Keeps a row only if this says so; applied day by day so a long range never holds every instrument in memory. */
+  keep: (row: RawBarRow) => boolean = () => true,
+): Promise<RawBarRow[]> {
   const rows: RawBarRow[] = [];
   const records = (await store.list())
     .filter((r) => r.status === 200)
@@ -170,12 +176,10 @@ export async function loadBars(store: RawStore, from: string, to: string): Promi
     if (body === null) continue;
     done.add(date);
     const text = decoder.decode(unzipFirst(body).data);
-    rows.push(
-      ...(rec.urlClass === URL_CLASSES.bhavLegacy
-        ? parseBhavcopyLegacy(text)
-        : parseBhavcopyUdiff(text)
-      ).rows,
-    );
+    const day = (
+      rec.urlClass === URL_CLASSES.bhavLegacy ? parseBhavcopyLegacy(text) : parseBhavcopyUdiff(text)
+    ).rows;
+    for (const r of day) if (keep(r)) rows.push(r);
   }
   return rows;
 }
