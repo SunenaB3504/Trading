@@ -13,12 +13,12 @@ import type { Bucket, UniverseCandidate, UniverseConfig } from '@trading/core';
  *            [--exclude-file data/pilot_symbols.txt] [--disputes data/derived/disputes.json]
  *            [--allow-single-provider] (keep names with no second-provider series, flagged; the default drops them) [--out data/derived/universe_draft.json]
  */
-function option(args: readonly string[], name: string): string | undefined {
+export function option(args: readonly string[], name: string): string | undefined {
   const i = args.indexOf(name);
   return i >= 0 ? args[i + 1] : undefined;
 }
 
-function sharesFrom(text: string | undefined): UniverseConfig['shares'] {
+export function sharesFrom(text: string | undefined): UniverseConfig['shares'] {
   if (text === undefined) return UNIVERSE_V1_DEFAULT.shares;
   const out: Record<string, number> = { ...UNIVERSE_V1_DEFAULT.shares };
   for (const part of text.split(',')) {
@@ -30,19 +30,19 @@ function sharesFrom(text: string | undefined): UniverseConfig['shares'] {
   return out as UniverseConfig['shares'];
 }
 
-interface DisputesFile {
+export interface DisputesFile {
   list: { threshold: number };
   checks: Array<{ symbol: string; returnCoverage: number | null }>;
 }
 
-interface BucketFile {
+export interface BucketFile {
   asOf: string;
   /** Every exchange symbol an instrument has traded under. */
   aliases?: Record<string, string[]>;
   results: Array<{ instrumentId: string; bucket: Bucket | null }>;
 }
 
-type E7 = 'pass' | 'single-provider' | 'fail';
+export type E7 = 'pass' | 'single-provider' | 'fail';
 
 /**
  * Rule E7 (SSD §10.1): a name needs two providers whose day-to-day returns agree on at least the threshold share of
@@ -50,7 +50,7 @@ type E7 = 'pass' | 'single-provider' | 'fail';
  * (mostly names delisted or merged since: Yahoo drops them) is 'single-provider': it fails unless the owner allows
  * it, in which case it stays in, flagged. A name with a second provider whose returns disagree always fails.
  */
-function e7Filter(
+export function e7Filter(
   file: string | undefined,
   aliases: Record<string, string[]>,
 ): (instrumentId: string) => E7 {
@@ -65,7 +65,7 @@ function e7Filter(
 }
 
 /** The instruments that ever traded under one of the listed exchange symbols (the pilot stocks). */
-function pilotInstruments(file: string | undefined, data: BucketFile): string[] {
+export function pilotInstruments(file: string | undefined, data: BucketFile): string[] {
   if (file === undefined) return [];
   const names = readFileSync(file, 'utf8')
     .split(/\r?\n/)
