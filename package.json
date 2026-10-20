@@ -28,6 +28,7 @@
     "pull:yahoo": "tsx packages/workers/src/pullYahoo.ts",
     "shortlist": "tsx packages/workers/src/shortlist.ts",
     "crosscheck": "tsx packages/workers/src/crosscheck.ts",
+    "buckets": "tsx packages/workers/src/buckets.ts",
     "ots:probe": "tsx packages/workers/src/otsProbe.ts",
     "uat:start": "tsx tools/uat/start.ts",
     "verify": "pnpm typecheck && pnpm lint && pnpm size && pnpm cycles && pnpm test"
