@@ -1,5 +1,5 @@
 import { canonicalJson, sha256Hex } from '@trading/core';
-import { compareSeries } from './crossCheck';
+import { compareReturns, compareSeries } from './crossCheck';
 import type { Discrepancy, PricePoint, SuspectedAction } from './crossCheck';
 
 /**
@@ -18,8 +18,16 @@ export interface SymbolCheck {
   agreeing: number;
   /** The second provider had no usable series at all. */
   otherMissing: boolean;
-  /** agreeing / sessions: the figure rule E7 tests against the threshold; null if the other provider is missing. */
+  /** Price levels: agreeing / sessions; null if the other provider is missing. Shows missing or extra adjustments. */
   coverage: number | null;
+  /**
+   * Day-to-day returns: agreeing / (sessions - 1). This is the figure rule E7 tests against the threshold: it says
+   * whether the two providers saw the same price moves, whatever adjustments one of them applied. Null if the
+   * other provider is missing.
+   */
+  returnCoverage: number | null;
+  /** The days on which the returns differ: these are leaving out of the evidence as disputed. */
+  returnDisputedDates: string[];
   discrepancies: Discrepancy[];
   suspectedActions: SuspectedAction[];
   onlyInPrimary: number;
@@ -42,12 +50,15 @@ export function checkSymbol(
       agreeing: 0,
       otherMissing: true,
       coverage: null,
+      returnCoverage: null,
+      returnDisputedDates: [],
       discrepancies: [],
       suspectedActions: [],
       onlyInPrimary: primary.length,
       onlyInOther: 0,
     };
   const r = compareSeries(primary, other, toleranceBps, volumeToleranceBps);
+  const ret = compareReturns(primary, other, toleranceBps);
   return {
     symbol,
     sessions: primary.length,
@@ -55,6 +66,8 @@ export function checkSymbol(
     agreeing: r.agreeing,
     otherMissing: false,
     coverage: primary.length === 0 ? 0 : r.agreeing / primary.length,
+    returnCoverage: primary.length < 2 ? 0 : ret.agreeing / (primary.length - 1),
+    returnDisputedDates: ret.disputedDates,
     discrepancies: r.discrepancies,
     suspectedActions: r.suspectedActions,
     onlyInPrimary: r.onlyInPrimary.length,
@@ -70,7 +83,9 @@ export interface DisputesList {
   symbols: number;
   withoutSecondProvider: string[];
   /** Symbols below the E7 threshold, with their coverage. */
-  belowThreshold: Array<{ symbol: string; coverage: number | null }>;
+  belowThreshold: Array<{ symbol: string; coverage: number | null; returnCoverage: number | null }>;
+  /** Symbols that would fail on price levels alone but pass on returns: an adjustment differs, the moves agree. */
+  levelOnlyDifferences: string[];
   /** Symbols whose disputes look like a missing split or bonus in our corporate-action table. */
   suspectedMissingActions: Array<{ symbol: string; actions: SuspectedAction[] }>;
   entries: DisputeEntry[];
@@ -94,8 +109,17 @@ export function buildDisputesList(checks: readonly SymbolCheck[], threshold: num
     symbols: sorted.length,
     withoutSecondProvider: sorted.filter((c) => c.otherMissing).map((c) => c.symbol),
     belowThreshold: sorted
-      .filter((c) => c.coverage === null || c.coverage < threshold)
-      .map((c) => ({ symbol: c.symbol, coverage: c.coverage })),
+      .filter((c) => c.returnCoverage === null || c.returnCoverage < threshold)
+      .map((c) => ({ symbol: c.symbol, coverage: c.coverage, returnCoverage: c.returnCoverage })),
+    levelOnlyDifferences: sorted
+      .filter(
+        (c) =>
+          c.coverage !== null &&
+          c.coverage < threshold &&
+          c.returnCoverage !== null &&
+          c.returnCoverage >= threshold,
+      )
+      .map((c) => c.symbol),
     suspectedMissingActions: sorted
       .filter((c) => c.suspectedActions.length > 0)
       .map((c) => ({ symbol: c.symbol, actions: c.suspectedActions })),

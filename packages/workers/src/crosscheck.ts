@@ -131,7 +131,12 @@ export async function main(args: readonly string[]): Promise<number> {
       suspectedRightsLike: list.suspectedMissingActions.filter((x) =>
         x.actions.every((a) => a.impliedShareRatio < 1.4),
       ).length,
-      passingE7: checks.filter((c) => c.coverage !== null && c.coverage >= list.threshold).length,
+      passingE7: checks.filter(
+        (c) => c.returnCoverage !== null && c.returnCoverage >= list.threshold,
+      ).length,
+      passingOnLevelsToo: checks.filter((c) => c.coverage !== null && c.coverage >= list.threshold)
+        .length,
+      levelOnlyDifferences: list.levelOnlyDifferences.length,
       disputedEntries: list.entries.length,
       hash: list.hash,
       out,

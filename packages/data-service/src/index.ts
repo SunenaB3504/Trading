@@ -28,7 +28,13 @@ export type { CanonicalResult, Conflict, RefusedRow } from './canonical/canonica
 export { buildAdjusted, verifyAdjustment } from './canonical/adjusted';
 export type { AdjustmentMismatch } from './canonical/adjusted';
 export { SeriesStore } from './canonical/seriesStore';
-export { DEFAULT_TOLERANCE_BPS, applyDisputes, compareSeries } from './crosscheck/crossCheck';
+export {
+  DEFAULT_TOLERANCE_BPS,
+  applyDisputes,
+  compareReturns,
+  compareSeries,
+} from './crosscheck/crossCheck';
+export type { ReturnCheck } from './crosscheck/crossCheck';
 export type {
   CrossCheckReport,
   Discrepancy,
@@ -142,4 +148,10 @@ export {
   otsFile,
 } from './anchor/openTimestamps';
 export type { HttpPoster, OtsOptions, OtsProof } from './anchor/openTimestamps';
-export { AppendOnlyFile, StoreError, loadRegistry, saveRegistry, writeJsonAtomic } from './store/appendOnlyFile';
+export {
+  AppendOnlyFile,
+  StoreError,
+  loadRegistry,
+  saveRegistry,
+  writeJsonAtomic,
+} from './store/appendOnlyFile';

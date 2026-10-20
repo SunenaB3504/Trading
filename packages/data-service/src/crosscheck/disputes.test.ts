@@ -43,6 +43,23 @@ describe('checking a symbol against the second provider', () => {
     expect(checkSymbol('RRR', series(20), far, undefined, 200).coverage).toBe(0);
   });
 
+  it('judges E7 on returns: a constant offset from an unmodelled adjustment costs one disputed day, not all', () => {
+    const other = series(30, (i) => (i < 10 ? 0.5 : 1));
+    const c = checkSymbol('OFF', series(30), other);
+    expect(c.coverage).toBeCloseTo(20 / 30, 12);
+    expect(c.returnCoverage).toBeCloseTo(28 / 29, 12);
+    expect(c.returnDisputedDates).toEqual([day(10)]);
+  });
+
+  it('counts a one-day price error as two disputed returns (in and out)', () => {
+    const c = checkSymbol(
+      'ONE',
+      series(20),
+      series(20, (i) => (i === 4 ? 1.02 : 1)),
+    );
+    expect(c.returnDisputedDates).toEqual([day(4), day(5)]);
+  });
+
   it('reports a missing second provider as unmeasured, not as zero or full', () => {
     const c = checkSymbol('CCC', series(5), null);
     expect(c).toMatchObject({ otherMissing: true, coverage: null, compared: 0 });
@@ -78,6 +95,7 @@ describe('the disputes list', () => {
     expect(list.symbols).toBe(4);
     expect(list.withoutSecondProvider).toEqual(['NNN']);
     expect(list.belowThreshold.map((b) => b.symbol)).toEqual(['BBB', 'DDD', 'NNN']);
+    expect(list.levelOnlyDifferences).toEqual([]);
     expect(list.suspectedMissingActions.map((s) => s.symbol)).toEqual(['DDD']);
     expect(list.entries.filter((e) => e.symbol === 'BBB')).toHaveLength(2);
   });

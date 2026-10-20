@@ -144,6 +144,39 @@ export function compareSeries(
   };
 }
 
+export interface ReturnCheck {
+  /** Consecutive-session pairs both providers cover. */
+  compared: number;
+  agreeing: number;
+  /** The later date of each pair whose day-to-day return differs by more than the tolerance. */
+  disputedDates: string[];
+}
+
+/**
+ * Compares day-to-day returns instead of price levels. A rights issue, a demerger or a factor only one provider
+ * applies shifts every earlier price by the same ratio, which makes every level disagree, but it changes the
+ * return on one day only. Agreement of returns therefore says the two providers saw the same price moves;
+ * the single day on which they differ is the event and is the one to leave out of the evidence.
+ */
+export function compareReturns(
+  primary: readonly PricePoint[],
+  other: readonly PricePoint[],
+  toleranceBps: number = DEFAULT_TOLERANCE_BPS,
+): ReturnCheck {
+  const theirs = new Map(other.map((o) => [o.date, o]));
+  const out: ReturnCheck = { compared: 0, agreeing: 0, disputedDates: [] };
+  for (let i = 1; i < primary.length; i += 1) {
+    const [a0, a1] = [primary[i - 1] as PricePoint, primary[i] as PricePoint];
+    const [b0, b1] = [theirs.get(a0.date), theirs.get(a1.date)];
+    if (b0 === undefined || b1 === undefined || a0.close === 0 || b0.close === 0) continue;
+    out.compared += 1;
+    const diff = Math.abs(a1.close / a0.close - b1.close / b0.close) * 10_000;
+    if (diff > toleranceBps) out.disputedDates.push(a1.date);
+    else out.agreeing += 1;
+  }
+  return out;
+}
+
 /** Marks the disputed dates on a canonical series; returns new bars and leaves the input alone. */
 export function applyDisputes(bars: readonly BarUnadj[], report: CrossCheckReport): BarUnadj[] {
   const flagged = new Set(report.disputedDates);
