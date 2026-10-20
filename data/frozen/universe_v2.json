@@ -1,0 +1,3281 @@
+{
+ "version": "universe-v2",
+ "supersedes": "universe-v1",
+ "asOf": "2018-10-01",
+ "frozenAt": "2026-10-20T09:39:18.800Z",
+ "inputs": {
+  "eligibilityConfigHash": "91e8dd8e5549b33e823b459175a8280daf0cb0879be722317700d40a23d06889",
+  "bucketRulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+  "sectorsHash": "9dc69412e31c96cb0bd1f2ce692b7add0c6d2b5599d227e5b9a1052adcdef8d4",
+  "bucketsFile": "buckets_2018-10-01_v2.json",
+  "bucketsFileHash": "84ec6ba7c3fdd11de517829b2ff95fb62ab4dfe188dc4f717411d94d7c52f24b",
+  "pilotSymbolsHash": "1a3bd51d87ab014d67566dd5f3a34032cfd4777f04f7bcbc83845aa1bfd16918",
+  "disputesListHash": "e6e8b8169470a700146a5d7ea5c5b9e9b81f4ece63a7e62671c625d7543654f2",
+  "crossCheckRange": [
+   "2018-01-01",
+   "2026-10-16"
+  ],
+  "volumeToleranceBps": 50,
+  "e7": "day-to-day returns agree on at least 0.98 of sessions; names with no second-provider series are kept and flagged single_provider"
+ },
+ "config": {
+  "version": "universe-v1",
+  "size": 100,
+  "shares": {
+   "steady": 0.27,
+   "underdogs": 0.27,
+   "speculative": 0.28,
+   "cyclicals": 0.05,
+   "mundane": 0.13
+  },
+  "seed": "universe-v2 frozen 2026-10-20",
+  "excluded": [
+   "ADANIPORTS:INE742F01042",
+   "BALRAMCHIN:INE119A01028",
+   "BEL:INE263A01024",
+   "BHARTIARTL:INE397D01024",
+   "BPCL:INE029A01011",
+   "BSE:INE118H01025",
+   "CDSL:INE736A01011",
+   "COALINDIA:INE522F01014",
+   "CONCOR:INE111A01017",
+   "HDFCBANK:INE040A01026",
+   "HINDALCO:INE038A01020",
+   "HINDCOPPER:INE531E01026",
+   "HINDUNILVR:INE030A01027",
+   "ICICIBANK:INE090A01021",
+   "INFY:INE009A01021",
+   "ITC:INE154A01025",
+   "KTKBANK:INE614B01018",
+   "LT:INE018A01030",
+   "MARICO:INE196A01026",
+   "NMDC:INE584A01023",
+   "ONGC:INE213A01029",
+   "PERSISTENT:INE262H01013",
+   "PIIND:INE603J01030",
+   "RELIANCE:INE002A01018",
+   "SBIN:INE062A01020",
+   "SOUTHBANK:INE683A01023",
+   "SUZLON:INE040H01021",
+   "TATAELXSI:INE670A01012",
+   "TCS:INE467B01029",
+   "UPL:INE628A01036",
+   "VEDL:INE205A01025"
+  ]
+ },
+ "candidates": [
+  {
+   "instrumentId": "ABAN:INE421A01028",
+   "symbol": "ABAN",
+   "bucket": "mundane",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "ABB:INE117A01022",
+   "symbol": "ABB",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "ABBOTINDIA:INE358A01014",
+   "symbol": "ABBOTINDIA",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "ABFRL:INE647O01011",
+   "symbol": "ABFRL",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "ACC:INE012A01025",
+   "symbol": "ACC",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "ADANIENT:INE423A01024",
+   "symbol": "ADANIENT",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "ADANIPORTS:INE742F01042",
+   "symbol": "ADANIPORTS",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "ADANIPOWER:INE814H01011",
+   "symbol": "ADANIPOWER",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "ADANITRANS:INE931S01010",
+   "symbol": "ADANITRANS",
+   "bucket": "speculative",
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "AIFL:INE428O01016",
+   "symbol": "AIFL",
+   "bucket": "underdogs",
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "AJANTPHARM:INE031B01049",
+   "symbol": "AJANTPHARM",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "ALBK:INE428A01015",
+   "symbol": "ALBK",
+   "bucket": "speculative",
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "ALKEM:INE540L01014",
+   "symbol": "ALKEM",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "AMARAJABAT:INE885A01032",
+   "symbol": "AMARAJABAT",
+   "bucket": null,
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "AMBUJACEM:INE079A01024",
+   "symbol": "AMBUJACEM",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "ANDHRABANK:INE434A01013",
+   "symbol": "ANDHRABANK",
+   "bucket": "speculative",
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "APOLLOHOSP:INE437A01024",
+   "symbol": "APOLLOHOSP",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "APOLLOTYRE:INE438A01022",
+   "symbol": "APOLLOTYRE",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "APTECHT:INE266F01018",
+   "symbol": "APTECHT",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "ARVIND:INE034A01011",
+   "symbol": "ARVIND",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "ASHOKLEY:INE208A01029",
+   "symbol": "ASHOKLEY",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "ASIANPAINT:INE021A01026",
+   "symbol": "ASIANPAINT",
+   "bucket": "steady",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "AUBANK:INE949L01017",
+   "symbol": "AUBANK",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "AUROPHARMA:INE406A01037",
+   "symbol": "AUROPHARMA",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "AVANTIFEED:INE871C01020",
+   "symbol": "AVANTIFEED",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "AXISBANK:INE238A01034",
+   "symbol": "AXISBANK",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "BAJAJ-AUTO:INE917I01010",
+   "symbol": "BAJAJ-AUTO",
+   "bucket": "steady",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "BAJAJELEC:INE193E01025",
+   "symbol": "BAJAJELEC",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "BAJAJFINSV:INE918I01018",
+   "symbol": "BAJAJFINSV",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "BAJFINANCE:INE296A01024",
+   "symbol": "BAJFINANCE",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "BALKRISIND:INE787D01026",
+   "symbol": "BALKRISIND",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "BALRAMCHIN:INE119A01028",
+   "symbol": "BALRAMCHIN",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "BANKBARODA:INE028A01039",
+   "symbol": "BANKBARODA",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "BANKINDIA:INE084A01016",
+   "symbol": "BANKINDIA",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "BATAINDIA:INE176A01028",
+   "symbol": "BATAINDIA",
+   "bucket": "underdogs",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "BBTC:INE050A01025",
+   "symbol": "BBTC",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "BEL:INE263A01024",
+   "symbol": "BEL",
+   "bucket": "mundane",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "BEML:INE258A01016",
+   "symbol": "BEML",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "BEPL:INE922A01025",
+   "symbol": "BEPL",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "BERGEPAINT:INE463A01038",
+   "symbol": "BERGEPAINT",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "BFUTILITIE:INE243D01012",
+   "symbol": "BFUTILITIE",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "BHARATFIN:INE180K01011",
+   "symbol": "BHARATFIN",
+   "bucket": null,
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "BHARATFORG:INE465A01025",
+   "symbol": "BHARATFORG",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "BHARTIARTL:INE397D01024",
+   "symbol": "BHARTIARTL",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "BHEL:INE257A01026",
+   "symbol": "BHEL",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "BIOCON:INE376G01013",
+   "symbol": "BIOCON",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "BOMDYEING:INE032A01023",
+   "symbol": "BOMDYEING",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "BOSCHLTD:INE323A01026",
+   "symbol": "BOSCHLTD",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "BPCL:INE029A01011",
+   "symbol": "BPCL",
+   "bucket": "mundane",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "BRITANNIA:INE216A01022",
+   "symbol": "BRITANNIA",
+   "bucket": "steady",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "BSE:INE118H01025",
+   "symbol": "BSE",
+   "bucket": "underdogs",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "CADILAHC:INE010B01027",
+   "symbol": "CADILAHC",
+   "bucket": null,
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "CANBK:INE476A01014",
+   "symbol": "CANBK",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "CANFINHOME:INE477A01012",
+   "symbol": "CANFINHOME",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "CAPF:INE688I01017",
+   "symbol": "CAPF",
+   "bucket": "underdogs",
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "CASTROLIND:INE172A01027",
+   "symbol": "CASTROLIND",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "CDSL:INE736A01011",
+   "symbol": "CDSL",
+   "bucket": "underdogs",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "CEATLTD:INE482A01020",
+   "symbol": "CEATLTD",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "CENTURYTEX:INE055A01016",
+   "symbol": "CENTURYTEX",
+   "bucket": "speculative",
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "CESC:INE486A01013",
+   "symbol": "CESC",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "CGPOWER:INE067A01029",
+   "symbol": "CGPOWER",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "CHAMBLFERT:INE085A01013",
+   "symbol": "CHAMBLFERT",
+   "bucket": "cyclicals",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "CHENNPETRO:INE178A01016",
+   "symbol": "CHENNPETRO",
+   "bucket": "mundane",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "CHOLAFIN:INE121A01016",
+   "symbol": "CHOLAFIN",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "CIPLA:INE059A01026",
+   "symbol": "CIPLA",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "COALINDIA:INE522F01014",
+   "symbol": "COALINDIA",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "COLPAL:INE259A01022",
+   "symbol": "COLPAL",
+   "bucket": "steady",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "CONCOR:INE111A01017",
+   "symbol": "CONCOR",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "CROMPTON:INE299U01018",
+   "symbol": "CROMPTON",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "CUB:INE491A01021",
+   "symbol": "CUB",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "CUMMINSIND:INE298A01020",
+   "symbol": "CUMMINSIND",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "CYIENT:INE136B01020",
+   "symbol": "CYIENT",
+   "bucket": "underdogs",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "DABUR:INE016A01026",
+   "symbol": "DABUR",
+   "bucket": "steady",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "DALMIABHA:INE439L01019",
+   "symbol": "DALMIABHA",
+   "bucket": null,
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "DBL:INE917M01012",
+   "symbol": "DBL",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "DCBBANK:INE503A01015",
+   "symbol": "DCBBANK",
+   "bucket": "underdogs",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "DCMSHRIRAM:INE499A01024",
+   "symbol": "DCMSHRIRAM",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "DELTACORP:INE124G01033",
+   "symbol": "DELTACORP",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "DHFL:INE202B01012",
+   "symbol": "DHFL",
+   "bucket": "speculative",
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "DISHTV:INE836F01026",
+   "symbol": "DISHTV",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "DIVISLAB:INE361B01024",
+   "symbol": "DIVISLAB",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "DLF:INE271C01023",
+   "symbol": "DLF",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "DMART:INE192R01011",
+   "symbol": "DMART",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "DREDGECORP:INE506A01018",
+   "symbol": "DREDGECORP",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "DRREDDY:INE089A01023",
+   "symbol": "DRREDDY",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "EDELWEISS:INE532F01054",
+   "symbol": "EDELWEISS",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "EICHERMOT:INE066A01013",
+   "symbol": "EICHERMOT",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "EMAMILTD:INE548C01032",
+   "symbol": "EMAMILTD",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "ENGINERSIN:INE510A01028",
+   "symbol": "ENGINERSIN",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "EQUITAS:INE988K01017",
+   "symbol": "EQUITAS",
+   "bucket": "underdogs",
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "EROSMEDIA:INE416L01017",
+   "symbol": "EROSMEDIA",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "ESCORTS:INE042A01014",
+   "symbol": "ESCORTS",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "EXIDEIND:INE302A01020",
+   "symbol": "EXIDEIND",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "FCONSUMER:INE220J01025",
+   "symbol": "FCONSUMER",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "FEDERALBNK:INE171A01029",
+   "symbol": "FEDERALBNK",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "FORTIS:INE061F01013",
+   "symbol": "FORTIS",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "FRETAIL:INE752P01024",
+   "symbol": "FRETAIL",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "FSL:INE684F01012",
+   "symbol": "FSL",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "GAIL:INE129A01019",
+   "symbol": "GAIL",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "GATI:INE152B01027",
+   "symbol": "GATI",
+   "bucket": "speculative",
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "GLENMARK:INE935A01035",
+   "symbol": "GLENMARK",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "GMRINFRA:INE776C01039",
+   "symbol": "GMRINFRA",
+   "bucket": "speculative",
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "GNFC:INE113A01013",
+   "symbol": "GNFC",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "GOACARBON:INE426D01013",
+   "symbol": "GOACARBON",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "GODFRYPHLP:INE260B01028",
+   "symbol": "GODFRYPHLP",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "GODREJCP:INE102D01028",
+   "symbol": "GODREJCP",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "GODREJIND:INE233A01035",
+   "symbol": "GODREJIND",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "GODREJPROP:INE484J01027",
+   "symbol": "GODREJPROP",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "GPIL:INE177H01013",
+   "symbol": "GPIL",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "GRANULES:INE101D01020",
+   "symbol": "GRANULES",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "GRAPHITE:INE371A01025",
+   "symbol": "GRAPHITE",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "GRASIM:INE047A01021",
+   "symbol": "GRASIM",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "GREAVESCOT:INE224A01026",
+   "symbol": "GREAVESCOT",
+   "bucket": "underdogs",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "GRUH:INE580B01029",
+   "symbol": "GRUH",
+   "bucket": null,
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "GSFC:INE026A01025",
+   "symbol": "GSFC",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "GSKCONS:INE264A01014",
+   "symbol": "GSKCONS",
+   "bucket": null,
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "GSPL:INE246F01010",
+   "symbol": "GSPL",
+   "bucket": null,
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "GUJALKALI:INE186A01019",
+   "symbol": "GUJALKALI",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "HAVELLS:INE176B01034",
+   "symbol": "HAVELLS",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "HCC:INE549A01026",
+   "symbol": "HCC",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "HCLTECH:INE860A01027",
+   "symbol": "HCLTECH",
+   "bucket": "steady",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "HDFC:INE001A01036",
+   "symbol": "HDFC",
+   "bucket": "steady",
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "HDFCBANK:INE040A01026",
+   "symbol": "HDFCBANK",
+   "bucket": "steady",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "HDIL:INE191I01012",
+   "symbol": "HDIL",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "HEG:INE545A01016",
+   "symbol": "HEG",
+   "bucket": null,
+   "e7": "fail",
+   "eligible": false
+  },
+  {
+   "instrumentId": "HEROMOTOCO:INE158A01026",
+   "symbol": "HEROMOTOCO",
+   "bucket": "steady",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "HEXAWARE:INE093A01033",
+   "symbol": "HEXAWARE",
+   "bucket": null,
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "HFCL:INE548A01028",
+   "symbol": "HFCL",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "HINDALCO:INE038A01020",
+   "symbol": "HINDALCO",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "HINDCOPPER:INE531E01026",
+   "symbol": "HINDCOPPER",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "HINDOILEXP:INE345A01011",
+   "symbol": "HINDOILEXP",
+   "bucket": "mundane",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "HINDPETRO:INE094A01015",
+   "symbol": "HINDPETRO",
+   "bucket": "mundane",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "HINDUNILVR:INE030A01027",
+   "symbol": "HINDUNILVR",
+   "bucket": "steady",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "HINDZINC:INE267A01025",
+   "symbol": "HINDZINC",
+   "bucket": "mundane",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "HSCL:INE019C01026",
+   "symbol": "HSCL",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "IBREALEST:INE069I01010",
+   "symbol": "IBREALEST",
+   "bucket": "speculative",
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "IBULHSGFIN:INE148I01020",
+   "symbol": "IBULHSGFIN",
+   "bucket": "speculative",
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "IBVENTURES:INE274G01010",
+   "symbol": "IBVENTURES",
+   "bucket": "speculative",
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "ICICIBANK:INE090A01021",
+   "symbol": "ICICIBANK",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "ICICIPRULI:INE726G01019",
+   "symbol": "ICICIPRULI",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "IDBI:INE008A01015",
+   "symbol": "IDBI",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "IDEA:INE669E01016",
+   "symbol": "IDEA",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "IDFC:INE043D01016",
+   "symbol": "IDFC",
+   "bucket": "speculative",
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "IDFCBANK:INE092T01019",
+   "symbol": "IDFCBANK",
+   "bucket": "speculative",
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "IFCI:INE039A01010",
+   "symbol": "IFCI",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "IGL:INE203G01019",
+   "symbol": "IGL",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "IIFL:INE530B01024",
+   "symbol": "IIFL",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "INDHOTEL:INE053A01029",
+   "symbol": "INDHOTEL",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "INDIACEM:INE383A01012",
+   "symbol": "INDIACEM",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "INDIANB:INE562A01011",
+   "symbol": "INDIANB",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "INDIGO:INE646L01027",
+   "symbol": "INDIGO",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "INDUSINDBK:INE095A01012",
+   "symbol": "INDUSINDBK",
+   "bucket": "steady",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "INFIBEAM:INE483S01012",
+   "symbol": "INFIBEAM",
+   "bucket": null,
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "INFRATEL:INE121J01017",
+   "symbol": "INFRATEL",
+   "bucket": null,
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "INFY:INE009A01021",
+   "symbol": "INFY",
+   "bucket": "steady",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "INTELLECT:INE306R01017",
+   "symbol": "INTELLECT",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "IOC:INE242A01010",
+   "symbol": "IOC",
+   "bucket": "mundane",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "IPAPPM:INE435A01028",
+   "symbol": "IPAPPM",
+   "bucket": null,
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "IPCALAB:INE571A01020",
+   "symbol": "IPCALAB",
+   "bucket": "underdogs",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "IRB:INE821I01014",
+   "symbol": "IRB",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "ITC:INE154A01025",
+   "symbol": "ITC",
+   "bucket": "steady",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "ITI:INE248A01017",
+   "symbol": "ITI",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "JAICORPLTD:INE070D01027",
+   "symbol": "JAICORPLTD",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "JAMNAAUTO:INE039C01024",
+   "symbol": "JAMNAAUTO",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "JETAIRWAYS:INE802G01018",
+   "symbol": "JETAIRWAYS",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "JINDALSAW:INE324A01024",
+   "symbol": "JINDALSAW",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "JINDALSTEL:INE749A01030",
+   "symbol": "JINDALSTEL",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "JISLJALEQS:INE175A01038",
+   "symbol": "JISLJALEQS",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "JKPAPER:INE789E01012",
+   "symbol": "JKPAPER",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "JKTYRE:INE573A01042",
+   "symbol": "JKTYRE",
+   "bucket": "underdogs",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "JMFINANCIL:INE780C01023",
+   "symbol": "JMFINANCIL",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "JPASSOCIAT:INE455F01025",
+   "symbol": "JPASSOCIAT",
+   "bucket": "speculative",
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "JSWENERGY:INE121E01018",
+   "symbol": "JSWENERGY",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "JSWSTEEL:INE019A01038",
+   "symbol": "JSWSTEEL",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "JUBILANT:INE700A01033",
+   "symbol": "JUBILANT",
+   "bucket": null,
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "JUBLFOOD:INE797F01012",
+   "symbol": "JUBLFOOD",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "JUSTDIAL:INE599M01018",
+   "symbol": "JUSTDIAL",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "KAJARIACER:INE217B01036",
+   "symbol": "KAJARIACER",
+   "bucket": "underdogs",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "KANSAINER:INE531A01024",
+   "symbol": "KANSAINER",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "KARURVYSYA:INE036D01028",
+   "symbol": "KARURVYSYA",
+   "bucket": "underdogs",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "KEC:INE389H01022",
+   "symbol": "KEC",
+   "bucket": "underdogs",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "KEI:INE878B01027",
+   "symbol": "KEI",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "KIRIINDUS:INE415I01015",
+   "symbol": "KIRIINDUS",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "KOTAKBANK:INE237A01028",
+   "symbol": "KOTAKBANK",
+   "bucket": "steady",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "KPIT:INE836A01035",
+   "symbol": "KPIT",
+   "bucket": "underdogs",
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "KSCL:INE455I01029",
+   "symbol": "KSCL",
+   "bucket": "cyclicals",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "KTKBANK:INE614B01018",
+   "symbol": "KTKBANK",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "L&TFH:INE498L01015",
+   "symbol": "L&TFH",
+   "bucket": "speculative",
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "LICHSGFIN:INE115A01026",
+   "symbol": "LICHSGFIN",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "LT:INE018A01030",
+   "symbol": "LT",
+   "bucket": "steady",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "LTI:INE214T01019",
+   "symbol": "LTI",
+   "bucket": null,
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "LTTS:INE010V01017",
+   "symbol": "LTTS",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "LUPIN:INE326A01037",
+   "symbol": "LUPIN",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "LUXIND:INE150G01020",
+   "symbol": "LUXIND",
+   "bucket": "underdogs",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "M&M:INE101A01026",
+   "symbol": "M&M",
+   "bucket": "steady",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "M&MFIN:INE774D01024",
+   "symbol": "M&MFIN",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "MAHINDCIE:INE536H01010",
+   "symbol": "MAHINDCIE",
+   "bucket": null,
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "MANAPPURAM:INE522D01027",
+   "symbol": "MANAPPURAM",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "MANPASAND:INE122R01018",
+   "symbol": "MANPASAND",
+   "bucket": null,
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "MARICO:INE196A01026",
+   "symbol": "MARICO",
+   "bucket": "steady",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "MARKSANS:INE750C01026",
+   "symbol": "MARKSANS",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "MARUTI:INE585B01010",
+   "symbol": "MARUTI",
+   "bucket": "steady",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "MASTEK:INE759A01021",
+   "symbol": "MASTEK",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "MCDOWELL-N:INE854D01016",
+   "symbol": "MCDOWELL-N",
+   "bucket": null,
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "MCX:INE745G01035",
+   "symbol": "MCX",
+   "bucket": "underdogs",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "MEGH:INE974H01013",
+   "symbol": "MEGH",
+   "bucket": "speculative",
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "MERCK:INE199A01012",
+   "symbol": "MERCK",
+   "bucket": null,
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "MFSL:INE180A01020",
+   "symbol": "MFSL",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "MGL:INE002S01010",
+   "symbol": "MGL",
+   "bucket": "underdogs",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "MINDAIND:INE405E01023",
+   "symbol": "MINDAIND",
+   "bucket": null,
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "MINDTREE:INE018I01017",
+   "symbol": "MINDTREE",
+   "bucket": null,
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "MOTHERSUMI:INE775A01035",
+   "symbol": "MOTHERSUMI",
+   "bucket": null,
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "MOTILALOFS:INE338I01027",
+   "symbol": "MOTILALOFS",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "MPHASIS:INE356A01018",
+   "symbol": "MPHASIS",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "MRF:INE883A01011",
+   "symbol": "MRF",
+   "bucket": "steady",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "MRPL:INE103A01014",
+   "symbol": "MRPL",
+   "bucket": "mundane",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "MUTHOOTFIN:INE414G01012",
+   "symbol": "MUTHOOTFIN",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "NATCOPHARM:INE987B01026",
+   "symbol": "NATCOPHARM",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "NATIONALUM:INE139A01034",
+   "symbol": "NATIONALUM",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "NAUKRI:INE663F01024",
+   "symbol": "NAUKRI",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "NBCC:INE095N01023",
+   "symbol": "NBCC",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "NCC:INE868B01028",
+   "symbol": "NCC",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "NESTLEIND:INE239A01016",
+   "symbol": "NESTLEIND",
+   "bucket": "steady",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "NHPC:INE848E01016",
+   "symbol": "NHPC",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "NIITLTD:INE161A01038",
+   "symbol": "NIITLTD",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "NIITTECH:INE591G01017",
+   "symbol": "NIITTECH",
+   "bucket": null,
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "NMDC:INE584A01023",
+   "symbol": "NMDC",
+   "bucket": "mundane",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "NOCIL:INE163A01018",
+   "symbol": "NOCIL",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "NTPC:INE733E01010",
+   "symbol": "NTPC",
+   "bucket": "steady",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "OBEROIRLTY:INE093I01010",
+   "symbol": "OBEROIRLTY",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "OFSS:INE881D01027",
+   "symbol": "OFSS",
+   "bucket": "steady",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "OIL:INE274J01014",
+   "symbol": "OIL",
+   "bucket": "mundane",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "OMAXE:INE800H01010",
+   "symbol": "OMAXE",
+   "bucket": "underdogs",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "ONGC:INE213A01029",
+   "symbol": "ONGC",
+   "bucket": "mundane",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "ORIENTBANK:INE141A01014",
+   "symbol": "ORIENTBANK",
+   "bucket": "speculative",
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "ORIENTPPR:INE592A01026",
+   "symbol": "ORIENTPPR",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "PAGEIND:INE761H01022",
+   "symbol": "PAGEIND",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "PARAGMILK:INE883N01014",
+   "symbol": "PARAGMILK",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "PCJEWELLER:INE785M01013",
+   "symbol": "PCJEWELLER",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "PEL:INE140A01024",
+   "symbol": "PEL",
+   "bucket": "speculative",
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "PERSISTENT:INE262H01013",
+   "symbol": "PERSISTENT",
+   "bucket": "underdogs",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "PETRONET:INE347G01014",
+   "symbol": "PETRONET",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "PFC:INE134E01011",
+   "symbol": "PFC",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "PFIZER:INE182A01018",
+   "symbol": "PFIZER",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "PHILIPCARB:INE602A01015",
+   "symbol": "PHILIPCARB",
+   "bucket": "speculative",
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "PIDILITIND:INE318A01026",
+   "symbol": "PIDILITIND",
+   "bucket": "steady",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "PIIND:INE603J01030",
+   "symbol": "PIIND",
+   "bucket": "cyclicals",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "PNB:INE160A01022",
+   "symbol": "PNB",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "PNBHOUSING:INE572E01012",
+   "symbol": "PNBHOUSING",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "POWERGRID:INE752E01010",
+   "symbol": "POWERGRID",
+   "bucket": "steady",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "PRAKASH:INE603A01013",
+   "symbol": "PRAKASH",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "PTC:INE877F01012",
+   "symbol": "PTC",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "PVR:INE191H01014",
+   "symbol": "PVR",
+   "bucket": "underdogs",
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "QUESS:INE615P01015",
+   "symbol": "QUESS",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "RADICO:INE944F01028",
+   "symbol": "RADICO",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "RAIN:INE855B01025",
+   "symbol": "RAIN",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "RAJESHEXPO:INE343B01030",
+   "symbol": "RAJESHEXPO",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "RAMCOCEM:INE331A01037",
+   "symbol": "RAMCOCEM",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "RAYMOND:INE301A01014",
+   "symbol": "RAYMOND",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "RBLBANK:INE976G01028",
+   "symbol": "RBLBANK",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "RCF:INE027A01015",
+   "symbol": "RCF",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "RCOM:INE330H01018",
+   "symbol": "RCOM",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "RECLTD:INE020B01018",
+   "symbol": "RECLTD",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "RELCAPITAL:INE013A01015",
+   "symbol": "RELCAPITAL",
+   "bucket": "speculative",
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "RELIANCE:INE002A01018",
+   "symbol": "RELIANCE",
+   "bucket": "mundane",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "RELINFRA:INE036A01016",
+   "symbol": "RELINFRA",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "REPCOHOME:INE612J01015",
+   "symbol": "REPCOHOME",
+   "bucket": "underdogs",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "RIIL:INE046A01015",
+   "symbol": "RIIL",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "RPOWER:INE614G01033",
+   "symbol": "RPOWER",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "SAIL:INE114A01011",
+   "symbol": "SAIL",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "SANOFI:INE058A01010",
+   "symbol": "SANOFI",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "SBIN:INE062A01020",
+   "symbol": "SBIN",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "SHANKARA:INE274V01019",
+   "symbol": "SHANKARA",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "SHREECEM:INE070A01015",
+   "symbol": "SHREECEM",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "SIEMENS:INE003A01024",
+   "symbol": "SIEMENS",
+   "bucket": "steady",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "SOBHA:INE671H01015",
+   "symbol": "SOBHA",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "SONATSOFTW:INE269A01021",
+   "symbol": "SONATSOFTW",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "SOUTHBANK:INE683A01023",
+   "symbol": "SOUTHBANK",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "SPARC:INE232I01014",
+   "symbol": "SPARC",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "SREINFRA:INE872A01014",
+   "symbol": "SREINFRA",
+   "bucket": "speculative",
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "SRF:INE647A01010",
+   "symbol": "SRF",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "SRTRANSFIN:INE721A01013",
+   "symbol": "SRTRANSFIN",
+   "bucket": null,
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "STAR:INE939A01011",
+   "symbol": "STAR",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "STRTECH:INE089C01029",
+   "symbol": "STRTECH",
+   "bucket": "speculative",
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "SUNPHARMA:INE044A01036",
+   "symbol": "SUNPHARMA",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "SUNTECK:INE805D01026",
+   "symbol": "SUNTECK",
+   "bucket": "underdogs",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "SUNTV:INE424H01027",
+   "symbol": "SUNTV",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "SUVEN:INE495B01038",
+   "symbol": "SUVEN",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "SUZLON:INE040H01021",
+   "symbol": "SUZLON",
+   "bucket": "cyclicals",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "SYNDIBANK:INE667A01018",
+   "symbol": "SYNDIBANK",
+   "bucket": "speculative",
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "TATACHEM:INE092A01019",
+   "symbol": "TATACHEM",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "TATACOMM:INE151A01013",
+   "symbol": "TATACOMM",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "TATAELXSI:INE670A01012",
+   "symbol": "TATAELXSI",
+   "bucket": "underdogs",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "TATAGLOBAL:INE192A01025",
+   "symbol": "TATAGLOBAL",
+   "bucket": null,
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "TATAMOTORS:INE155A01022",
+   "symbol": "TATAMOTORS",
+   "bucket": null,
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "TATAPOWER:INE245A01021",
+   "symbol": "TATAPOWER",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "TATASPONGE:INE674A01014",
+   "symbol": "TATASPONGE",
+   "bucket": "speculative",
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "TATASTEEL:INE081A01012",
+   "symbol": "TATASTEEL",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "TCS:INE467B01029",
+   "symbol": "TCS",
+   "bucket": "steady",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "TECHM:INE669C01036",
+   "symbol": "TECHM",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "THOMASCOOK:INE332A01027",
+   "symbol": "THOMASCOOK",
+   "bucket": "underdogs",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "TINPLATE:INE422C01014",
+   "symbol": "TINPLATE",
+   "bucket": "speculative",
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "TIRUMALCHM:INE338A01016",
+   "symbol": "TIRUMALCHM",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "TITAN:INE280A01028",
+   "symbol": "TITAN",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "TORNTPHARM:INE685A01028",
+   "symbol": "TORNTPHARM",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "TORNTPOWER:INE813H01021",
+   "symbol": "TORNTPOWER",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "TV18BRDCST:INE886H01027",
+   "symbol": "TV18BRDCST",
+   "bucket": "speculative",
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "TVSMOTOR:INE494B01023",
+   "symbol": "TVSMOTOR",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "UBL:INE686F01025",
+   "symbol": "UBL",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "UJJIVAN:INE334L01012",
+   "symbol": "UJJIVAN",
+   "bucket": "speculative",
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "ULTRACEMCO:INE481G01011",
+   "symbol": "ULTRACEMCO",
+   "bucket": "steady",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "UNIONBANK:INE692A01016",
+   "symbol": "UNIONBANK",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "UPL:INE628A01036",
+   "symbol": "UPL",
+   "bucket": "cyclicals",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "VAKRANGEE:INE051B01021",
+   "symbol": "VAKRANGEE",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "VEDL:INE205A01025",
+   "symbol": "VEDL",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "VENKEYS:INE398A01010",
+   "symbol": "VENKEYS",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "VGUARD:INE951I01027",
+   "symbol": "VGUARD",
+   "bucket": "underdogs",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "VIJAYABANK:INE705A01016",
+   "symbol": "VIJAYABANK",
+   "bucket": "underdogs",
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "VIPIND:INE054A01027",
+   "symbol": "VIPIND",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "VOLTAS:INE226A01021",
+   "symbol": "VOLTAS",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "WELCORP:INE191B01025",
+   "symbol": "WELCORP",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "WELENT:INE625G01013",
+   "symbol": "WELENT",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "WELSPUNIND:INE192B01031",
+   "symbol": "WELSPUNIND",
+   "bucket": null,
+   "e7": "single-provider",
+   "eligible": true
+  },
+  {
+   "instrumentId": "WHIRLPOOL:INE716A01013",
+   "symbol": "WHIRLPOOL",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "WIPRO:INE075A01022",
+   "symbol": "WIPRO",
+   "bucket": "steady",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "WOCKPHARMA:INE049B01025",
+   "symbol": "WOCKPHARMA",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "WSTCSTPAPR:INE976A01021",
+   "symbol": "WSTCSTPAPR",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "YESBANK:INE528G01019",
+   "symbol": "YESBANK",
+   "bucket": "speculative",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "ZEEL:INE256A01028",
+   "symbol": "ZEEL",
+   "bucket": "steady",
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "ABCAPITAL:INE674K01013",
+   "symbol": "ABCAPITAL",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "DCAL:INE385W01011",
+   "symbol": "DCAL",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "ICICIGI:INE765G01017",
+   "symbol": "ICICIGI",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "SBILIFE:INE123W01016",
+   "symbol": "SBILIFE",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "HDFCLIFE:INE795G01014",
+   "symbol": "HDFCLIFE",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "BANDHANBNK:INE545U01014",
+   "symbol": "BANDHANBNK",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  },
+  {
+   "instrumentId": "RITES:INE320J01015",
+   "symbol": "RITES",
+   "bucket": null,
+   "e7": "pass",
+   "eligible": true
+  }
+ ],
+ "buckets": [
+  {
+   "bucket": "steady",
+   "wanted": 27,
+   "available": 22,
+   "chosen": 22
+  },
+  {
+   "bucket": "underdogs",
+   "wanted": 27,
+   "available": 23,
+   "chosen": 23
+  },
+  {
+   "bucket": "speculative",
+   "wanted": 28,
+   "available": 98,
+   "chosen": 28
+  },
+  {
+   "bucket": "cyclicals",
+   "wanted": 5,
+   "available": 2,
+   "chosen": 2
+  },
+  {
+   "bucket": "mundane",
+   "wanted": 13,
+   "available": 8,
+   "chosen": 8
+  }
+ ],
+ "shortfall": 17,
+ "members": [
+  {
+   "instrumentId": "ABAN:INE421A01028",
+   "symbol": "ABAN",
+   "bucket": "mundane",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2024-07-16",
+    "2024-07-18",
+    "2025-05-02",
+    "2025-05-05"
+   ]
+  },
+  {
+   "instrumentId": "ADANITRANS:INE931S01010",
+   "symbol": "ADANITRANS",
+   "bucket": "speculative",
+   "singleProvider": true,
+   "eventDisputedDates": []
+  },
+  {
+   "instrumentId": "AIFL:INE428O01016",
+   "symbol": "AIFL",
+   "bucket": "underdogs",
+   "singleProvider": true,
+   "eventDisputedDates": []
+  },
+  {
+   "instrumentId": "ARVIND:INE034A01011",
+   "symbol": "ARVIND",
+   "bucket": "speculative",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2018-11-07",
+    "2018-11-09",
+    "2018-11-28",
+    "2021-11-04",
+    "2021-11-08",
+    "2022-09-12",
+    "2022-09-13",
+    "2022-10-24",
+    "2022-10-25",
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "ASIANPAINT:INE021A01026",
+   "symbol": "ASIANPAINT",
+   "bucket": "steady",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "BAJAJ-AUTO:INE917I01010",
+   "symbol": "BAJAJ-AUTO",
+   "bucket": "steady",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "BANKBARODA:INE028A01039",
+   "symbol": "BANKBARODA",
+   "bucket": "speculative",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "BATAINDIA:INE176A01028",
+   "symbol": "BATAINDIA",
+   "bucket": "underdogs",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "BEPL:INE922A01025",
+   "symbol": "BEPL",
+   "bucket": "speculative",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "BRITANNIA:INE216A01022",
+   "symbol": "BRITANNIA",
+   "bucket": "steady",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2018-11-07",
+    "2018-11-09",
+    "2021-11-04",
+    "2021-11-08",
+    "2022-09-12",
+    "2022-09-13",
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "CAPF:INE688I01017",
+   "symbol": "CAPF",
+   "bucket": "underdogs",
+   "singleProvider": true,
+   "eventDisputedDates": []
+  },
+  {
+   "instrumentId": "CHAMBLFERT:INE085A01013",
+   "symbol": "CHAMBLFERT",
+   "bucket": "cyclicals",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "CHENNPETRO:INE178A01016",
+   "symbol": "CHENNPETRO",
+   "bucket": "mundane",
+   "singleProvider": false,
+   "eventDisputedDates": []
+  },
+  {
+   "instrumentId": "COLPAL:INE259A01022",
+   "symbol": "COLPAL",
+   "bucket": "steady",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "CYIENT:INE136B01020",
+   "symbol": "CYIENT",
+   "bucket": "underdogs",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "DABUR:INE016A01026",
+   "symbol": "DABUR",
+   "bucket": "steady",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "DCBBANK:INE503A01015",
+   "symbol": "DCBBANK",
+   "bucket": "underdogs",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "DHFL:INE202B01012",
+   "symbol": "DHFL",
+   "bucket": "speculative",
+   "singleProvider": true,
+   "eventDisputedDates": []
+  },
+  {
+   "instrumentId": "DLF:INE271C01023",
+   "symbol": "DLF",
+   "bucket": "speculative",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2019-12-02",
+    "2019-12-03",
+    "2022-09-12",
+    "2022-09-13",
+    "2022-10-24",
+    "2022-10-25",
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "EDELWEISS:INE532F01054",
+   "symbol": "EDELWEISS",
+   "bucket": "speculative",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2023-06-02",
+    "2025-03-18",
+    "2025-03-19",
+    "2025-05-02",
+    "2025-05-05"
+   ]
+  },
+  {
+   "instrumentId": "EQUITAS:INE988K01017",
+   "symbol": "EQUITAS",
+   "bucket": "underdogs",
+   "singleProvider": true,
+   "eventDisputedDates": []
+  },
+  {
+   "instrumentId": "GMRINFRA:INE776C01039",
+   "symbol": "GMRINFRA",
+   "bucket": "speculative",
+   "singleProvider": true,
+   "eventDisputedDates": []
+  },
+  {
+   "instrumentId": "GREAVESCOT:INE224A01026",
+   "symbol": "GREAVESCOT",
+   "bucket": "underdogs",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19",
+    "2025-05-02",
+    "2025-05-05"
+   ]
+  },
+  {
+   "instrumentId": "HCLTECH:INE860A01027",
+   "symbol": "HCLTECH",
+   "bucket": "steady",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "HDFC:INE001A01036",
+   "symbol": "HDFC",
+   "bucket": "steady",
+   "singleProvider": true,
+   "eventDisputedDates": []
+  },
+  {
+   "instrumentId": "HEROMOTOCO:INE158A01026",
+   "symbol": "HEROMOTOCO",
+   "bucket": "steady",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "HINDOILEXP:INE345A01011",
+   "symbol": "HINDOILEXP",
+   "bucket": "mundane",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "HINDPETRO:INE094A01015",
+   "symbol": "HINDPETRO",
+   "bucket": "mundane",
+   "singleProvider": false,
+   "eventDisputedDates": []
+  },
+  {
+   "instrumentId": "HINDZINC:INE267A01025",
+   "symbol": "HINDZINC",
+   "bucket": "mundane",
+   "singleProvider": false,
+   "eventDisputedDates": []
+  },
+  {
+   "instrumentId": "HSCL:INE019C01026",
+   "symbol": "HSCL",
+   "bucket": "speculative",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "IBREALEST:INE069I01010",
+   "symbol": "IBREALEST",
+   "bucket": "speculative",
+   "singleProvider": true,
+   "eventDisputedDates": []
+  },
+  {
+   "instrumentId": "IDBI:INE008A01015",
+   "symbol": "IDBI",
+   "bucket": "speculative",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19",
+    "2025-05-02",
+    "2025-05-05"
+   ]
+  },
+  {
+   "instrumentId": "IDFC:INE043D01016",
+   "symbol": "IDFC",
+   "bucket": "speculative",
+   "singleProvider": true,
+   "eventDisputedDates": []
+  },
+  {
+   "instrumentId": "IFCI:INE039A01010",
+   "symbol": "IFCI",
+   "bucket": "speculative",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "INDUSINDBK:INE095A01012",
+   "symbol": "INDUSINDBK",
+   "bucket": "steady",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "INTELLECT:INE306R01017",
+   "symbol": "INTELLECT",
+   "bucket": "speculative",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "IOC:INE242A01010",
+   "symbol": "IOC",
+   "bucket": "mundane",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "IPCALAB:INE571A01020",
+   "symbol": "IPCALAB",
+   "bucket": "underdogs",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "JISLJALEQS:INE175A01038",
+   "symbol": "JISLJALEQS",
+   "bucket": "speculative",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19",
+    "2025-05-02",
+    "2025-05-05"
+   ]
+  },
+  {
+   "instrumentId": "JKTYRE:INE573A01042",
+   "symbol": "JKTYRE",
+   "bucket": "underdogs",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "KAJARIACER:INE217B01036",
+   "symbol": "KAJARIACER",
+   "bucket": "underdogs",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2019-03-18",
+    "2019-03-19",
+    "2025-03-18",
+    "2025-03-19",
+    "2025-05-02",
+    "2025-05-05"
+   ]
+  },
+  {
+   "instrumentId": "KARURVYSYA:INE036D01028",
+   "symbol": "KARURVYSYA",
+   "bucket": "underdogs",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "KEC:INE389H01022",
+   "symbol": "KEC",
+   "bucket": "underdogs",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "KOTAKBANK:INE237A01028",
+   "symbol": "KOTAKBANK",
+   "bucket": "steady",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "KPIT:INE836A01035",
+   "symbol": "KPIT",
+   "bucket": "underdogs",
+   "singleProvider": true,
+   "eventDisputedDates": []
+  },
+  {
+   "instrumentId": "KSCL:INE455I01029",
+   "symbol": "KSCL",
+   "bucket": "cyclicals",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "L&TFH:INE498L01015",
+   "symbol": "L&TFH",
+   "bucket": "speculative",
+   "singleProvider": true,
+   "eventDisputedDates": []
+  },
+  {
+   "instrumentId": "LUXIND:INE150G01020",
+   "symbol": "LUXIND",
+   "bucket": "underdogs",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "M&M:INE101A01026",
+   "symbol": "M&M",
+   "bucket": "steady",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19",
+    "2025-09-08",
+    "2025-09-09"
+   ]
+  },
+  {
+   "instrumentId": "M&MFIN:INE774D01024",
+   "symbol": "M&MFIN",
+   "bucket": "speculative",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2020-07-22",
+    "2025-03-18",
+    "2025-03-19",
+    "2025-05-05",
+    "2025-05-14",
+    "2025-09-08",
+    "2025-09-09"
+   ]
+  },
+  {
+   "instrumentId": "MARUTI:INE585B01010",
+   "symbol": "MARUTI",
+   "bucket": "steady",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "MCX:INE745G01035",
+   "symbol": "MCX",
+   "bucket": "underdogs",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "MEGH:INE974H01013",
+   "symbol": "MEGH",
+   "bucket": "speculative",
+   "singleProvider": true,
+   "eventDisputedDates": []
+  },
+  {
+   "instrumentId": "MGL:INE002S01010",
+   "symbol": "MGL",
+   "bucket": "underdogs",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "MRF:INE883A01011",
+   "symbol": "MRF",
+   "bucket": "steady",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "MRPL:INE103A01014",
+   "symbol": "MRPL",
+   "bucket": "mundane",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "MUTHOOTFIN:INE414G01012",
+   "symbol": "MUTHOOTFIN",
+   "bucket": "speculative",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2019-03-18",
+    "2019-03-19",
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "NESTLEIND:INE239A01016",
+   "symbol": "NESTLEIND",
+   "bucket": "steady",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "NTPC:INE733E01010",
+   "symbol": "NTPC",
+   "bucket": "steady",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "OFSS:INE881D01027",
+   "symbol": "OFSS",
+   "bucket": "steady",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "OIL:INE274J01014",
+   "symbol": "OIL",
+   "bucket": "mundane",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "OMAXE:INE800H01010",
+   "symbol": "OMAXE",
+   "bucket": "underdogs",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19",
+    "2025-05-02",
+    "2025-05-05"
+   ]
+  },
+  {
+   "instrumentId": "ORIENTBANK:INE141A01014",
+   "symbol": "ORIENTBANK",
+   "bucket": "speculative",
+   "singleProvider": true,
+   "eventDisputedDates": []
+  },
+  {
+   "instrumentId": "PIDILITIND:INE318A01026",
+   "symbol": "PIDILITIND",
+   "bucket": "steady",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "PNB:INE160A01022",
+   "symbol": "PNB",
+   "bucket": "speculative",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "POWERGRID:INE752E01010",
+   "symbol": "POWERGRID",
+   "bucket": "steady",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "PRAKASH:INE603A01013",
+   "symbol": "PRAKASH",
+   "bucket": "speculative",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2019-04-23",
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "PVR:INE191H01014",
+   "symbol": "PVR",
+   "bucket": "underdogs",
+   "singleProvider": true,
+   "eventDisputedDates": []
+  },
+  {
+   "instrumentId": "RAYMOND:INE301A01014",
+   "symbol": "RAYMOND",
+   "bucket": "speculative",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19",
+    "2025-05-02",
+    "2025-05-05"
+   ]
+  },
+  {
+   "instrumentId": "RELCAPITAL:INE013A01015",
+   "symbol": "RELCAPITAL",
+   "bucket": "speculative",
+   "singleProvider": true,
+   "eventDisputedDates": []
+  },
+  {
+   "instrumentId": "REPCOHOME:INE612J01015",
+   "symbol": "REPCOHOME",
+   "bucket": "underdogs",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "RPOWER:INE614G01033",
+   "symbol": "RPOWER",
+   "bucket": "speculative",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "SIEMENS:INE003A01024",
+   "symbol": "SIEMENS",
+   "bucket": "steady",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19",
+    "2025-04-07"
+   ]
+  },
+  {
+   "instrumentId": "SUNTECK:INE805D01026",
+   "symbol": "SUNTECK",
+   "bucket": "underdogs",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "THOMASCOOK:INE332A01027",
+   "symbol": "THOMASCOOK",
+   "bucket": "underdogs",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2019-12-05",
+    "2025-03-18",
+    "2025-03-19",
+    "2025-05-02",
+    "2025-05-05"
+   ]
+  },
+  {
+   "instrumentId": "TINPLATE:INE422C01014",
+   "symbol": "TINPLATE",
+   "bucket": "speculative",
+   "singleProvider": true,
+   "eventDisputedDates": []
+  },
+  {
+   "instrumentId": "TIRUMALCHM:INE338A01016",
+   "symbol": "TIRUMALCHM",
+   "bucket": "speculative",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "ULTRACEMCO:INE481G01011",
+   "symbol": "ULTRACEMCO",
+   "bucket": "steady",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "VGUARD:INE951I01027",
+   "symbol": "VGUARD",
+   "bucket": "underdogs",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "VIJAYABANK:INE705A01016",
+   "symbol": "VIJAYABANK",
+   "bucket": "underdogs",
+   "singleProvider": true,
+   "eventDisputedDates": []
+  },
+  {
+   "instrumentId": "WIPRO:INE075A01022",
+   "symbol": "WIPRO",
+   "bucket": "steady",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "YESBANK:INE528G01019",
+   "symbol": "YESBANK",
+   "bucket": "speculative",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  },
+  {
+   "instrumentId": "ZEEL:INE256A01028",
+   "symbol": "ZEEL",
+   "bucket": "steady",
+   "singleProvider": false,
+   "eventDisputedDates": [
+    "2025-03-18",
+    "2025-03-19"
+   ]
+  }
+ ],
+ "manifestHash": "9913ce7f802bd2924d549b386a06042930284d43af24dc3f88e8f8d2f260ef9d",
+ "fileHash": "3c8a96d9b00170aded015c3750543f6c0d72bf958d6cf25a21cbc3bcf904370d"
+}

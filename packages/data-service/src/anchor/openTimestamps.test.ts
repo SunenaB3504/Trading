@@ -9,9 +9,7 @@ const reply = Uint8Array.from([
   0xf0, 0x10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 0x08, 0xff,
 ]);
 
-function poster(
-  answers: Array<number | Error>,
-): HttpPoster & {
+function poster(answers: Array<number | Error>): HttpPoster & {
   calls: Array<{ url: string; body: Uint8Array; headers?: Record<string, string> }>;
 } {
   const calls: Array<{ url: string; body: Uint8Array; headers?: Record<string, string> }> = [];

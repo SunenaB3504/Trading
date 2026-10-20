@@ -9,8 +9,9 @@ import type { UniverseCandidate, UniverseConfig } from '../packages/core/src/ind
  */
 interface Frozen {
   version: string;
+  supersedes?: string | null;
   asOf: string;
-  inputs: { bucketsFileHash: string; pilotSymbolsHash: string };
+  inputs: { bucketsFile?: string; bucketsFileHash: string; pilotSymbolsHash: string };
   config: UniverseConfig;
   candidates: Array<{
     instrumentId: string;
@@ -32,14 +33,24 @@ interface Frozen {
   fileHash: string;
 }
 
-const text = readFileSync('data/frozen/universe_v1.json', 'utf8');
-const frozen = JSON.parse(text) as Frozen;
+const FILES: Array<[string, string]> = [
+  [
+    'data/frozen/universe_v1.json',
+    'c715774fbf12c2023570f2afb7c9baa500bb522eebad09e99dea2268ea34c898',
+  ],
+  [
+    'data/frozen/universe_v2.json',
+    '3c8a96d9b00170aded015c3750543f6c0d72bf958d6cf25a21cbc3bcf904370d',
+  ],
+];
 
-describe('the frozen universe', () => {
+describe.each(FILES)('the frozen universe %s', (file, stamped) => {
+  const frozen = JSON.parse(readFileSync(file, 'utf8')) as Frozen;
+
   it('still hashes to the value that was stamped', () => {
     const { fileHash, ...body } = frozen;
     expect(sha256Hex(canonicalJson(body))).toBe(fileHash);
-    expect(fileHash).toBe('c715774fbf12c2023570f2afb7c9baa500bb522eebad09e99dea2268ea34c898');
+    expect(fileHash).toBe(stamped);
   });
 
   it('is reproduced by the draw from its own candidates and config', () => {
@@ -58,7 +69,10 @@ describe('the frozen universe', () => {
   });
 
   it('records the buckets file and the pilot list it used, and they still match', () => {
-    const buckets = readFileSync(`data/frozen/buckets_${frozen.asOf}.json`, 'utf8');
+    const buckets = readFileSync(
+      `data/frozen/${frozen.inputs.bucketsFile ?? `buckets_${frozen.asOf}.json`}`,
+      'utf8',
+    );
     expect(sha256Hex(buckets)).toBe(frozen.inputs.bucketsFileHash);
     expect(sha256Hex(readFileSync('data/pilot_symbols.txt', 'utf8'))).toBe(
       frozen.inputs.pilotSymbolsHash,
@@ -93,6 +107,14 @@ describe('the frozen universe', () => {
 
   it('sets the window at 2018-10-01 and the eight-year design (D8)', () => {
     expect(frozen.asOf).toBe('2018-10-01');
-    expect(frozen.version).toBe('universe-v1');
+    expect(['universe-v1', 'universe-v2']).toContain(frozen.version);
+  });
+});
+
+describe('the correction from version 1 to version 2', () => {
+  const v2 = JSON.parse(readFileSync('data/frozen/universe_v2.json', 'utf8')) as Frozen;
+  it('says what it replaces', () => {
+    expect(v2.version).toBe('universe-v2');
+    expect(v2.supersedes).toBe('universe-v1');
   });
 });

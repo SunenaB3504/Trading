@@ -66,6 +66,62 @@ describe('creating and hashing a snapshot (FR-D6)', () => {
   });
 });
 
+describe('known price-event days (WP-2.9)', () => {
+  const day = (i: number): string => (store.unadjusted(TATA)[i] as { date: string }).date;
+
+  it('flags the event day as disputed, counts it as an event, and keeps the snapshot verified', () => {
+    const s = make({ instruments: [TATA], eventDays: new Map([[TATA, [day(3)]]]) });
+    const entry = s.snapshot.series[0];
+    expect(entry?.disputedBars).toBe(1);
+    expect(entry?.eventBars).toBe(1);
+    expect(s.snapshot.status).toBe('verified');
+    const f = s.frozen[0] as FrozenSeries;
+    expect(f.bars.filter((b) => b.disputed).map((b) => b.date)).toEqual([day(3)]);
+    expect(verifySnapshot(s.snapshot, s.frozen)).toEqual([]);
+  });
+
+  it('changes the snapshot id when the event days change', () => {
+    const none = make({ instruments: [TATA] }).snapshot.id;
+    const one = make({ instruments: [TATA], eventDays: new Map([[TATA, [day(3)]]]) }).snapshot.id;
+    const two = make({ instruments: [TATA], eventDays: new Map([[TATA, [day(3), day(4)]]]) })
+      .snapshot.id;
+    expect(new Set([none, one, two]).size).toBe(3);
+  });
+
+  it('still reports a snapshot unverified when another bar is disputed for no known reason', () => {
+    const other = buildFixture().store;
+    const bars = other.unadjusted(TATA);
+    (bars[2] as { disputed: boolean }).disputed = true;
+    other.putUnadjusted(TATA, bars);
+    const s = createSnapshot({
+      store: other,
+      clock: new FixedClock(1),
+      asOf: '2024-12-31',
+      instruments: [TATA],
+      eventDays: new Map([[TATA, [day(3)]]]),
+    });
+    expect(s.snapshot.status).toBe('unverified');
+    expect(s.snapshot.series[0]?.disputedBars).toBe(2);
+    expect(s.snapshot.series[0]?.eventBars).toBe(1);
+  });
+
+  it('ignores an event day outside the series or after the snapshot date', () => {
+    const s = make({
+      instruments: [TATA],
+      asOf: '2022-07-27',
+      eventDays: new Map([[TATA, ['1999-01-04', '2030-01-01']]]),
+    });
+    expect(s.snapshot.series[0]?.disputedBars).toBe(0);
+    expect(s.snapshot.status).toBe('verified');
+  });
+
+  it('catches an edited event-day list when the snapshot is verified', () => {
+    const s = make({ instruments: [TATA], eventDays: new Map([[TATA, [day(3)]]]) });
+    const forged = s.frozen.map((f) => ({ ...f, eventDates: [] as string[] }));
+    expect(verifySnapshot(s.snapshot, forged).length).toBeGreaterThan(0);
+  });
+});
+
 describe('verifying and storing snapshots', () => {
   it('passes an untouched snapshot and catches an edited price, a dropped series or a forged hash', () => {
     const { snapshot, frozen } = make();

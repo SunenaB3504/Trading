@@ -155,3 +155,4 @@ export {
   saveRegistry,
   writeJsonAtomic,
 } from './store/appendOnlyFile';
+export { SHARE_SERIES, isShareRow } from './providers/rawBar';

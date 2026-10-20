@@ -28,6 +28,17 @@ export interface RawBarRow {
   adjusted: boolean;
 }
 
+/**
+ * NSE series that carry a company's shares: main board (EQ, BE, BZ) and the SME platform (SM, ST). Everything else in
+ * the bhavcopy (N-series and similar debt, government securities, ETFs' units in other series) can share the company's
+ * symbol with a different ISIN and a very different price, so it must never be mixed into a share's price history.
+ */
+export const SHARE_SERIES: readonly string[] = ['EQ', 'BE', 'BZ', 'SM', 'ST'];
+
+/** True for a row of a company's shares; rows with no series (other providers) pass. */
+export const isShareRow = (r: Pick<RawBarRow, 'series'>): boolean =>
+  r.series === null || SHARE_SERIES.includes(r.series);
+
 export interface SkippedRow {
   line: number;
   reason: string;

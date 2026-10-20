@@ -3,6 +3,7 @@ import type { BarUnadj, EligibilityConfig, RuleId } from '@trading/core';
 import { IdentityIndex, buildIdentities } from '../canonical/identity';
 import type { InstrumentIdentity } from '../canonical/identity';
 import { canonicalize } from '../canonical/canonicalize';
+import { isShareRow } from '../providers/rawBar';
 import type { RawBarRow } from '../providers/rawBar';
 import { buildFacts } from './facts';
 
@@ -74,10 +75,12 @@ function verdictFor(
 
 /** `rows` should hold the sessions before the window (at least the warm-up and the lookback). */
 export function shortlist(
-  rows: readonly RawBarRow[],
+  allRows: readonly RawBarRow[],
   windowStart: string,
   config: EligibilityConfig = ELIGIBILITY_V1,
 ): ShortlistResult {
+  // Debt series share a company's symbol; only rows of shares describe the company.
+  const rows = allRows.filter(isShareRow);
   const identities = buildIdentities(rows);
   const bySymbol = new Map<string, RawBarRow[]>();
   for (const r of rows) bySymbol.set(r.symbol, [...(bySymbol.get(r.symbol) ?? []), r]);

@@ -234,3 +234,36 @@ describe('adjusted series equals unadjusted times the factor, on real splits and
     expect(store.instruments()).toHaveLength(5);
   });
 });
+
+describe('debt series that share a share symbol (the NTPC and PFC bond lines)', () => {
+  const row = (series: string, isin: string, close: number, date: string): RawBarRow => ({
+    provider: 'nse-bhavcopy',
+    symbol: 'NTPC',
+    series,
+    isin,
+    date,
+    open: close,
+    high: close,
+    low: close,
+    close,
+    prevClose: close,
+    volume: 100,
+    adjusted: false,
+  });
+  const rows = ['2020-06-01', '2020-06-02'].flatMap((d) => [
+    row('EQ', 'INE733E01010', 9790, d),
+    row('N2', 'INE733E07JF7', 125700, d),
+    row('N7', 'INE733E07JP6', 1355, d),
+  ]);
+
+  it('keeps the share as one instrument and its bar is the share price, not a bond price', () => {
+    const identities = buildIdentities(rows);
+    expect(identities).toHaveLength(1);
+    expect(identities[0]?.listings.map((l) => l.isin)).toEqual(['INE733E01010']);
+    const out = canonicalize(rows, new IdentityIndex(identities), 's');
+    const bars = out.bars.get(identities[0]?.instrumentId ?? '') ?? [];
+    expect(bars.map((b) => b.close)).toEqual([9790, 9790]);
+    expect(bars.some((b) => b.disputed)).toBe(false);
+    expect(out.conflicts).toEqual([]);
+  });
+});

@@ -23,7 +23,7 @@ import type { BucketFile, E7 } from './universe';
  *
  * Usage:  pnpm universe:freeze --buckets data/derived/buckets_2018-10-01.json --disputes data/derived/disputes.json
  *            --seed "words" --shares steady=0.27,... --exclude-file data/pilot_symbols.txt
- *            --allow-single-provider [--stamp] [--out data/frozen/universe_v1.json]
+ *            --allow-single-provider [--stamp] [--version universe-v2] [--supersedes universe-v1] [--out data/frozen/universe_v2.json]
  */
 interface DisputesFull {
   from: string;
@@ -86,17 +86,25 @@ function prepare(args: readonly string[]): Prepared | null {
   };
 }
 
-function frozenBody(p: Prepared, manifest: UniverseManifest, bucketsCopy: string) {
+function frozenBody(
+  p: Prepared,
+  manifest: UniverseManifest,
+  bucketsCopy: string,
+  version: string,
+  supersedes: string | null,
+) {
   const aliases = p.data.aliases ?? {};
   const dates = new Map(p.disputes.checks.map((c) => [c.symbol, c.returnDisputedDates]));
   return {
-    version: 'universe-v1',
+    version,
+    supersedes,
     asOf: p.data.asOf,
     frozenAt: new Date().toISOString(),
     inputs: {
       eligibilityConfigHash: configHash(ELIGIBILITY_V1),
       bucketRulesHash: bucketRulesHash(BUCKET_RULES_V1),
       sectorsHash: p.data.sectorsHash,
+      bucketsFile: bucketsCopy.split('/').slice(-1)[0],
       bucketsFileHash: hashFile(bucketsCopy),
       pilotSymbolsHash: hashFile(p.pilotFile),
       disputesListHash: p.disputes.list.hash,
@@ -136,11 +144,13 @@ export async function main(args: readonly string[]): Promise<number> {
     return 2;
   }
   const manifest = selectUniverse(p.candidates, p.config);
-  const out = option(args, '--out') ?? 'data/frozen/universe_v1.json';
-  const bucketsCopy = out.replace(/universe_v1\.json$/, `buckets_${p.data.asOf}.json`);
+  const version = option(args, '--version') ?? 'universe-v1';
+  const tag = version.replace('universe-', '');
+  const out = option(args, '--out') ?? `data/frozen/universe_${tag}.json`;
+  const bucketsCopy = `${dirname(out)}/buckets_${p.data.asOf}${tag === 'v1' ? '' : `_${tag}`}.json`;
   mkdirSync(dirname(out), { recursive: true });
   copyFileSync(option(args, '--buckets') as string, bucketsCopy);
-  const body = frozenBody(p, manifest, bucketsCopy);
+  const body = frozenBody(p, manifest, bucketsCopy, version, option(args, '--supersedes') ?? null);
   const fileHash = sha256Hex(canonicalJson(body));
   writeFileSync(out, JSON.stringify({ ...body, fileHash }, null, 1));
   let stamp = 'not stamped';

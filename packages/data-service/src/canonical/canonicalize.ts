@@ -1,4 +1,5 @@
 import type { BarUnadj } from '@trading/core';
+import { isShareRow } from '../providers/rawBar';
 import type { RawBarRow } from '../providers/rawBar';
 import type { IdentityIndex } from './identity';
 
@@ -68,6 +69,8 @@ export function canonicalize(
   const refused: RefusedRow[] = [];
   const byKey = new Map<string, { id: string; rows: RawBarRow[] }>();
   for (const r of rows) {
+    // Debt and other series share a company's symbol; their prices are not the share's price.
+    if (!isShareRow(r)) continue;
     const refuse = (reason: string): void => {
       refused.push({ symbol: r.symbol, date: r.date, provider: r.provider, reason });
     };

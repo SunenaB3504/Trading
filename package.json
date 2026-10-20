@@ -31,6 +31,7 @@
     "buckets": "tsx packages/workers/src/buckets.ts",
     "universe": "tsx packages/workers/src/universe.ts",
     "universe:freeze": "tsx packages/workers/src/freezeUniverse.ts",
+    "universe:snapshot": "tsx packages/workers/src/universeSnapshot.ts",
     "ots:probe": "tsx packages/workers/src/otsProbe.ts",
     "uat:start": "tsx tools/uat/start.ts",
     "verify": "pnpm typecheck && pnpm lint && pnpm size && pnpm cycles && pnpm test"

@@ -1,0 +1,6136 @@
+{
+ "asOf": "2018-10-01",
+ "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+ "sectorsHash": "9dc69412e31c96cb0bd1f2ce692b7add0c6d2b5599d227e5b9a1052adcdef8d4",
+ "aliases": {
+  "ABAN:INE421A01028": [
+   "ABAN"
+  ],
+  "ABB:INE117A01022": [
+   "ABB"
+  ],
+  "ABBOTINDIA:INE358A01014": [
+   "ABBOTINDIA"
+  ],
+  "ABFRL:INE647O01011": [
+   "ABFRL"
+  ],
+  "ACC:INE012A01025": [
+   "ACC"
+  ],
+  "ADANIENT:INE423A01024": [
+   "ADANIENT"
+  ],
+  "ADANIPORTS:INE742F01042": [
+   "ADANIPORTS"
+  ],
+  "ADANIPOWER:INE814H01011": [
+   "ADANIPOWER"
+  ],
+  "ADANITRANS:INE931S01010": [
+   "ADANITRANS"
+  ],
+  "AIFL:INE428O01016": [
+   "AIFL"
+  ],
+  "AJANTPHARM:INE031B01049": [
+   "AJANTPHARM"
+  ],
+  "ALBK:INE428A01015": [
+   "ALBK"
+  ],
+  "ALKEM:INE540L01014": [
+   "ALKEM"
+  ],
+  "AMARAJABAT:INE885A01032": [
+   "AMARAJABAT"
+  ],
+  "AMBUJACEM:INE079A01024": [
+   "AMBUJACEM"
+  ],
+  "ANDHRABANK:INE434A01013": [
+   "ANDHRABANK"
+  ],
+  "APOLLOHOSP:INE437A01024": [
+   "APOLLOHOSP"
+  ],
+  "APOLLOTYRE:INE438A01022": [
+   "APOLLOTYRE"
+  ],
+  "APTECHT:INE266F01018": [
+   "APTECHT"
+  ],
+  "ARVIND:INE034A01011": [
+   "ARVIND"
+  ],
+  "ASHOKLEY:INE208A01029": [
+   "ASHOKLEY"
+  ],
+  "ASIANPAINT:INE021A01026": [
+   "ASIANPAINT"
+  ],
+  "AUBANK:INE949L01017": [
+   "AUBANK"
+  ],
+  "AUROPHARMA:INE406A01037": [
+   "AUROPHARMA"
+  ],
+  "AVANTIFEED:INE871C01020": [
+   "AVANTIFEED",
+   "AVANTIFEED"
+  ],
+  "AXISBANK:INE238A01034": [
+   "AXISBANK"
+  ],
+  "BAJAJ-AUTO:INE917I01010": [
+   "BAJAJ-AUTO"
+  ],
+  "BAJAJELEC:INE193E01025": [
+   "BAJAJELEC"
+  ],
+  "BAJAJFINSV:INE918I01018": [
+   "BAJAJFINSV"
+  ],
+  "BAJFINANCE:INE296A01024": [
+   "BAJFINANCE"
+  ],
+  "BALKRISIND:INE787D01026": [
+   "BALKRISIND"
+  ],
+  "BALRAMCHIN:INE119A01028": [
+   "BALRAMCHIN"
+  ],
+  "BANKBARODA:INE028A01039": [
+   "BANKBARODA"
+  ],
+  "BANKINDIA:INE084A01016": [
+   "BANKINDIA"
+  ],
+  "BATAINDIA:INE176A01028": [
+   "BATAINDIA"
+  ],
+  "BBTC:INE050A01025": [
+   "BBTC"
+  ],
+  "BEL:INE263A01024": [
+   "BEL"
+  ],
+  "BEML:INE258A01016": [
+   "BEML"
+  ],
+  "BEPL:INE922A01025": [
+   "BEPL"
+  ],
+  "BERGEPAINT:INE463A01038": [
+   "BERGEPAINT"
+  ],
+  "BFUTILITIE:INE243D01012": [
+   "BFUTILITIE"
+  ],
+  "BHARATFIN:INE180K01011": [
+   "BHARATFIN"
+  ],
+  "BHARATFORG:INE465A01025": [
+   "BHARATFORG"
+  ],
+  "BHARTIARTL:INE397D01024": [
+   "BHARTIARTL"
+  ],
+  "BHEL:INE257A01026": [
+   "BHEL"
+  ],
+  "BIOCON:INE376G01013": [
+   "BIOCON"
+  ],
+  "BOMDYEING:INE032A01023": [
+   "BOMDYEING"
+  ],
+  "BOSCHLTD:INE323A01026": [
+   "BOSCHLTD"
+  ],
+  "BPCL:INE029A01011": [
+   "BPCL"
+  ],
+  "BRITANNIA:INE216A01022": [
+   "BRITANNIA"
+  ],
+  "BSE:INE118H01025": [
+   "BSE"
+  ],
+  "CADILAHC:INE010B01027": [
+   "CADILAHC"
+  ],
+  "CANBK:INE476A01014": [
+   "CANBK"
+  ],
+  "CANFINHOME:INE477A01012": [
+   "CANFINHOME",
+   "CANFINHOME"
+  ],
+  "CAPF:INE688I01017": [
+   "CAPF"
+  ],
+  "CASTROLIND:INE172A01027": [
+   "CASTROLIND"
+  ],
+  "CDSL:INE736A01011": [
+   "CDSL"
+  ],
+  "CEATLTD:INE482A01020": [
+   "CEATLTD"
+  ],
+  "CENTURYTEX:INE055A01016": [
+   "CENTURYTEX"
+  ],
+  "CESC:INE486A01013": [
+   "CESC"
+  ],
+  "CGPOWER:INE067A01029": [
+   "CGPOWER"
+  ],
+  "CHAMBLFERT:INE085A01013": [
+   "CHAMBLFERT"
+  ],
+  "CHENNPETRO:INE178A01016": [
+   "CHENNPETRO"
+  ],
+  "CHOLAFIN:INE121A01016": [
+   "CHOLAFIN"
+  ],
+  "CIPLA:INE059A01026": [
+   "CIPLA"
+  ],
+  "COALINDIA:INE522F01014": [
+   "COALINDIA"
+  ],
+  "COLPAL:INE259A01022": [
+   "COLPAL"
+  ],
+  "CONCOR:INE111A01017": [
+   "CONCOR",
+   "CONCOR"
+  ],
+  "CROMPTON:INE299U01018": [
+   "CROMPTON"
+  ],
+  "CUB:INE491A01021": [
+   "CUB"
+  ],
+  "CUMMINSIND:INE298A01020": [
+   "CUMMINSIND"
+  ],
+  "CYIENT:INE136B01020": [
+   "CYIENT"
+  ],
+  "DABUR:INE016A01026": [
+   "DABUR"
+  ],
+  "DALMIABHA:INE439L01019": [
+   "DALMIABHA"
+  ],
+  "DBL:INE917M01012": [
+   "DBL"
+  ],
+  "DCBBANK:INE503A01015": [
+   "DCBBANK"
+  ],
+  "DCMSHRIRAM:INE499A01024": [
+   "DCMSHRIRAM"
+  ],
+  "DELTACORP:INE124G01033": [
+   "DELTACORP"
+  ],
+  "DHFL:INE202B01012": [
+   "DHFL"
+  ],
+  "DISHTV:INE836F01026": [
+   "DISHTV"
+  ],
+  "DIVISLAB:INE361B01024": [
+   "DIVISLAB"
+  ],
+  "DLF:INE271C01023": [
+   "DLF"
+  ],
+  "DMART:INE192R01011": [
+   "DMART"
+  ],
+  "DREDGECORP:INE506A01018": [
+   "DREDGECORP"
+  ],
+  "DRREDDY:INE089A01023": [
+   "DRREDDY"
+  ],
+  "EDELWEISS:INE532F01054": [
+   "EDELWEISS"
+  ],
+  "EICHERMOT:INE066A01013": [
+   "EICHERMOT"
+  ],
+  "EMAMILTD:INE548C01032": [
+   "EMAMILTD"
+  ],
+  "ENGINERSIN:INE510A01028": [
+   "ENGINERSIN"
+  ],
+  "EQUITAS:INE988K01017": [
+   "EQUITAS"
+  ],
+  "EROSMEDIA:INE416L01017": [
+   "EROSMEDIA"
+  ],
+  "ESCORTS:INE042A01014": [
+   "ESCORTS"
+  ],
+  "EXIDEIND:INE302A01020": [
+   "EXIDEIND"
+  ],
+  "FCONSUMER:INE220J01025": [
+   "FCONSUMER"
+  ],
+  "FEDERALBNK:INE171A01029": [
+   "FEDERALBNK"
+  ],
+  "FORTIS:INE061F01013": [
+   "FORTIS"
+  ],
+  "FRETAIL:INE752P01024": [
+   "FRETAIL"
+  ],
+  "FSL:INE684F01012": [
+   "FSL"
+  ],
+  "GAIL:INE129A01019": [
+   "GAIL"
+  ],
+  "GATI:INE152B01027": [
+   "GATI"
+  ],
+  "GLENMARK:INE935A01035": [
+   "GLENMARK"
+  ],
+  "GMRINFRA:INE776C01039": [
+   "GMRINFRA"
+  ],
+  "GNFC:INE113A01013": [
+   "GNFC"
+  ],
+  "GOACARBON:INE426D01013": [
+   "GOACARBON"
+  ],
+  "GODFRYPHLP:INE260B01028": [
+   "GODFRYPHLP"
+  ],
+  "GODREJCP:INE102D01028": [
+   "GODREJCP"
+  ],
+  "GODREJIND:INE233A01035": [
+   "GODREJIND"
+  ],
+  "GODREJPROP:INE484J01027": [
+   "GODREJPROP"
+  ],
+  "GPIL:INE177H01013": [
+   "GPIL"
+  ],
+  "GRANULES:INE101D01020": [
+   "GRANULES"
+  ],
+  "GRAPHITE:INE371A01025": [
+   "GRAPHITE"
+  ],
+  "GRASIM:INE047A01021": [
+   "GRASIM"
+  ],
+  "GREAVESCOT:INE224A01026": [
+   "GREAVESCOT"
+  ],
+  "GRUH:INE580B01029": [
+   "GRUH"
+  ],
+  "GSFC:INE026A01025": [
+   "GSFC"
+  ],
+  "GSKCONS:INE264A01014": [
+   "GSKCONS"
+  ],
+  "GSPL:INE246F01010": [
+   "GSPL"
+  ],
+  "GUJALKALI:INE186A01019": [
+   "GUJALKALI"
+  ],
+  "HAVELLS:INE176B01034": [
+   "HAVELLS"
+  ],
+  "HCC:INE549A01026": [
+   "HCC"
+  ],
+  "HCLTECH:INE860A01027": [
+   "HCLTECH"
+  ],
+  "HDFC:INE001A01036": [
+   "HDFC"
+  ],
+  "HDFCBANK:INE040A01026": [
+   "HDFCBANK"
+  ],
+  "HDIL:INE191I01012": [
+   "HDIL"
+  ],
+  "HEG:INE545A01016": [
+   "HEG"
+  ],
+  "HEROMOTOCO:INE158A01026": [
+   "HEROMOTOCO"
+  ],
+  "HEXAWARE:INE093A01033": [
+   "HEXAWARE"
+  ],
+  "HFCL:INE548A01028": [
+   "HFCL"
+  ],
+  "HINDALCO:INE038A01020": [
+   "HINDALCO"
+  ],
+  "HINDCOPPER:INE531E01026": [
+   "HINDCOPPER"
+  ],
+  "HINDOILEXP:INE345A01011": [
+   "HINDOILEXP"
+  ],
+  "HINDPETRO:INE094A01015": [
+   "HINDPETRO"
+  ],
+  "HINDUNILVR:INE030A01027": [
+   "HINDUNILVR"
+  ],
+  "HINDZINC:INE267A01025": [
+   "HINDZINC"
+  ],
+  "HSCL:INE019C01026": [
+   "HSCL"
+  ],
+  "IBREALEST:INE069I01010": [
+   "IBREALEST"
+  ],
+  "IBULHSGFIN:INE148I01020": [
+   "IBULHSGFIN"
+  ],
+  "IBVENTURES:INE274G01010": [
+   "IBVENTURES"
+  ],
+  "ICICIBANK:INE090A01021": [
+   "ICICIBANK"
+  ],
+  "ICICIPRULI:INE726G01019": [
+   "ICICIPRULI"
+  ],
+  "IDBI:INE008A01015": [
+   "IDBI"
+  ],
+  "IDEA:INE669E01016": [
+   "IDEA"
+  ],
+  "IDFC:INE043D01016": [
+   "IDFC"
+  ],
+  "IDFCBANK:INE092T01019": [
+   "IDFCBANK"
+  ],
+  "IFCI:INE039A01010": [
+   "IFCI"
+  ],
+  "IGL:INE203G01019": [
+   "IGL",
+   "IGL"
+  ],
+  "IIFL:INE530B01024": [
+   "IIFL"
+  ],
+  "INDHOTEL:INE053A01029": [
+   "INDHOTEL"
+  ],
+  "INDIACEM:INE383A01012": [
+   "INDIACEM"
+  ],
+  "INDIANB:INE562A01011": [
+   "INDIANB"
+  ],
+  "INDIGO:INE646L01027": [
+   "INDIGO"
+  ],
+  "INDUSINDBK:INE095A01012": [
+   "INDUSINDBK"
+  ],
+  "INFIBEAM:INE483S01012": [
+   "INFIBEAM",
+   "INFIBEAM"
+  ],
+  "INFRATEL:INE121J01017": [
+   "INFRATEL"
+  ],
+  "INFY:INE009A01021": [
+   "INFY"
+  ],
+  "INTELLECT:INE306R01017": [
+   "INTELLECT"
+  ],
+  "IOC:INE242A01010": [
+   "IOC"
+  ],
+  "IPAPPM:INE435A01028": [
+   "IPAPPM"
+  ],
+  "IPCALAB:INE571A01020": [
+   "IPCALAB"
+  ],
+  "IRB:INE821I01014": [
+   "IRB"
+  ],
+  "ITC:INE154A01025": [
+   "ITC"
+  ],
+  "ITI:INE248A01017": [
+   "ITI"
+  ],
+  "JAICORPLTD:INE070D01027": [
+   "JAICORPLTD"
+  ],
+  "JAMNAAUTO:INE039C01024": [
+   "JAMNAAUTO",
+   "JAMNAAUTO"
+  ],
+  "JETAIRWAYS:INE802G01018": [
+   "JETAIRWAYS"
+  ],
+  "JINDALSAW:INE324A01024": [
+   "JINDALSAW"
+  ],
+  "JINDALSTEL:INE749A01030": [
+   "JINDALSTEL"
+  ],
+  "JISLJALEQS:INE175A01038": [
+   "JISLJALEQS"
+  ],
+  "JKPAPER:INE789E01012": [
+   "JKPAPER"
+  ],
+  "JKTYRE:INE573A01042": [
+   "JKTYRE"
+  ],
+  "JMFINANCIL:INE780C01023": [
+   "JMFINANCIL"
+  ],
+  "JPASSOCIAT:INE455F01025": [
+   "JPASSOCIAT"
+  ],
+  "JSWENERGY:INE121E01018": [
+   "JSWENERGY"
+  ],
+  "JSWSTEEL:INE019A01038": [
+   "JSWSTEEL"
+  ],
+  "JUBILANT:INE700A01033": [
+   "JUBILANT"
+  ],
+  "JUBLFOOD:INE797F01012": [
+   "JUBLFOOD"
+  ],
+  "JUSTDIAL:INE599M01018": [
+   "JUSTDIAL"
+  ],
+  "KAJARIACER:INE217B01036": [
+   "KAJARIACER"
+  ],
+  "KANSAINER:INE531A01024": [
+   "KANSAINER"
+  ],
+  "KARURVYSYA:INE036D01028": [
+   "KARURVYSYA"
+  ],
+  "KEC:INE389H01022": [
+   "KEC"
+  ],
+  "KEI:INE878B01027": [
+   "KEI"
+  ],
+  "KIRIINDUS:INE415I01015": [
+   "KIRIINDUS"
+  ],
+  "KOTAKBANK:INE237A01028": [
+   "KOTAKBANK"
+  ],
+  "KPIT:INE836A01035": [
+   "KPIT"
+  ],
+  "KSCL:INE455I01029": [
+   "KSCL"
+  ],
+  "KTKBANK:INE614B01018": [
+   "KTKBANK"
+  ],
+  "L&TFH:INE498L01015": [
+   "L&TFH"
+  ],
+  "LICHSGFIN:INE115A01026": [
+   "LICHSGFIN"
+  ],
+  "LT:INE018A01030": [
+   "LT"
+  ],
+  "LTI:INE214T01019": [
+   "LTI"
+  ],
+  "LTTS:INE010V01017": [
+   "LTTS"
+  ],
+  "LUPIN:INE326A01037": [
+   "LUPIN"
+  ],
+  "LUXIND:INE150G01020": [
+   "LUXIND"
+  ],
+  "M&M:INE101A01026": [
+   "M&M"
+  ],
+  "M&MFIN:INE774D01024": [
+   "M&MFIN"
+  ],
+  "MAHINDCIE:INE536H01010": [
+   "MAHINDCIE"
+  ],
+  "MANAPPURAM:INE522D01027": [
+   "MANAPPURAM"
+  ],
+  "MANPASAND:INE122R01018": [
+   "MANPASAND"
+  ],
+  "MARICO:INE196A01026": [
+   "MARICO"
+  ],
+  "MARKSANS:INE750C01026": [
+   "MARKSANS"
+  ],
+  "MARUTI:INE585B01010": [
+   "MARUTI"
+  ],
+  "MASTEK:INE759A01021": [
+   "MASTEK"
+  ],
+  "MCDOWELL-N:INE854D01016": [
+   "MCDOWELL-N",
+   "MCDOWELL-N"
+  ],
+  "MCX:INE745G01035": [
+   "MCX"
+  ],
+  "MEGH:INE974H01013": [
+   "MEGH"
+  ],
+  "MERCK:INE199A01012": [
+   "MERCK"
+  ],
+  "MFSL:INE180A01020": [
+   "MFSL"
+  ],
+  "MGL:INE002S01010": [
+   "MGL"
+  ],
+  "MINDAIND:INE405E01023": [
+   "MINDAIND"
+  ],
+  "MINDTREE:INE018I01017": [
+   "MINDTREE"
+  ],
+  "MOTHERSUMI:INE775A01035": [
+   "MOTHERSUMI"
+  ],
+  "MOTILALOFS:INE338I01027": [
+   "MOTILALOFS"
+  ],
+  "MPHASIS:INE356A01018": [
+   "MPHASIS"
+  ],
+  "MRF:INE883A01011": [
+   "MRF"
+  ],
+  "MRPL:INE103A01014": [
+   "MRPL"
+  ],
+  "MUTHOOTFIN:INE414G01012": [
+   "MUTHOOTFIN"
+  ],
+  "NATCOPHARM:INE987B01026": [
+   "NATCOPHARM"
+  ],
+  "NATIONALUM:INE139A01034": [
+   "NATIONALUM"
+  ],
+  "NAUKRI:INE663F01024": [
+   "NAUKRI"
+  ],
+  "NBCC:INE095N01023": [
+   "NBCC",
+   "NBCC"
+  ],
+  "NCC:INE868B01028": [
+   "NCC"
+  ],
+  "NESTLEIND:INE239A01016": [
+   "NESTLEIND"
+  ],
+  "NHPC:INE848E01016": [
+   "NHPC"
+  ],
+  "NIITLTD:INE161A01038": [
+   "NIITLTD"
+  ],
+  "NIITTECH:INE591G01017": [
+   "NIITTECH"
+  ],
+  "NMDC:INE584A01023": [
+   "NMDC"
+  ],
+  "NOCIL:INE163A01018": [
+   "NOCIL"
+  ],
+  "NTPC:INE733E01010": [
+   "NTPC"
+  ],
+  "OBEROIRLTY:INE093I01010": [
+   "OBEROIRLTY"
+  ],
+  "OFSS:INE881D01027": [
+   "OFSS"
+  ],
+  "OIL:INE274J01014": [
+   "OIL"
+  ],
+  "OMAXE:INE800H01010": [
+   "OMAXE"
+  ],
+  "ONGC:INE213A01029": [
+   "ONGC"
+  ],
+  "ORIENTBANK:INE141A01014": [
+   "ORIENTBANK"
+  ],
+  "ORIENTPPR:INE592A01026": [
+   "ORIENTPPR"
+  ],
+  "PAGEIND:INE761H01022": [
+   "PAGEIND"
+  ],
+  "PARAGMILK:INE883N01014": [
+   "PARAGMILK"
+  ],
+  "PCJEWELLER:INE785M01013": [
+   "PCJEWELLER"
+  ],
+  "PEL:INE140A01024": [
+   "PEL"
+  ],
+  "PERSISTENT:INE262H01013": [
+   "PERSISTENT"
+  ],
+  "PETRONET:INE347G01014": [
+   "PETRONET"
+  ],
+  "PFC:INE134E01011": [
+   "PFC"
+  ],
+  "PFIZER:INE182A01018": [
+   "PFIZER"
+  ],
+  "PHILIPCARB:INE602A01015": [
+   "PHILIPCARB",
+   "PHILIPCARB"
+  ],
+  "PIDILITIND:INE318A01026": [
+   "PIDILITIND"
+  ],
+  "PIIND:INE603J01030": [
+   "PIIND"
+  ],
+  "PNB:INE160A01022": [
+   "PNB"
+  ],
+  "PNBHOUSING:INE572E01012": [
+   "PNBHOUSING"
+  ],
+  "POWERGRID:INE752E01010": [
+   "POWERGRID"
+  ],
+  "PRAKASH:INE603A01013": [
+   "PRAKASH"
+  ],
+  "PTC:INE877F01012": [
+   "PTC"
+  ],
+  "PVR:INE191H01014": [
+   "PVR"
+  ],
+  "QUESS:INE615P01015": [
+   "QUESS"
+  ],
+  "RADICO:INE944F01028": [
+   "RADICO"
+  ],
+  "RAIN:INE855B01025": [
+   "RAIN"
+  ],
+  "RAJESHEXPO:INE343B01030": [
+   "RAJESHEXPO"
+  ],
+  "RAMCOCEM:INE331A01037": [
+   "RAMCOCEM"
+  ],
+  "RAYMOND:INE301A01014": [
+   "RAYMOND"
+  ],
+  "RBLBANK:INE976G01028": [
+   "RBLBANK"
+  ],
+  "RCF:INE027A01015": [
+   "RCF"
+  ],
+  "RCOM:INE330H01018": [
+   "RCOM"
+  ],
+  "RECLTD:INE020B01018": [
+   "RECLTD"
+  ],
+  "RELCAPITAL:INE013A01015": [
+   "RELCAPITAL"
+  ],
+  "RELIANCE:INE002A01018": [
+   "RELIANCE"
+  ],
+  "RELINFRA:INE036A01016": [
+   "RELINFRA"
+  ],
+  "REPCOHOME:INE612J01015": [
+   "REPCOHOME"
+  ],
+  "RIIL:INE046A01015": [
+   "RIIL"
+  ],
+  "RPOWER:INE614G01033": [
+   "RPOWER"
+  ],
+  "SAIL:INE114A01011": [
+   "SAIL"
+  ],
+  "SANOFI:INE058A01010": [
+   "SANOFI"
+  ],
+  "SBIN:INE062A01020": [
+   "SBIN"
+  ],
+  "SHANKARA:INE274V01019": [
+   "SHANKARA"
+  ],
+  "SHREECEM:INE070A01015": [
+   "SHREECEM"
+  ],
+  "SIEMENS:INE003A01024": [
+   "SIEMENS"
+  ],
+  "SOBHA:INE671H01015": [
+   "SOBHA"
+  ],
+  "SONATSOFTW:INE269A01021": [
+   "SONATSOFTW"
+  ],
+  "SOUTHBANK:INE683A01023": [
+   "SOUTHBANK"
+  ],
+  "SPARC:INE232I01014": [
+   "SPARC"
+  ],
+  "SREINFRA:INE872A01014": [
+   "SREINFRA"
+  ],
+  "SRF:INE647A01010": [
+   "SRF"
+  ],
+  "SRTRANSFIN:INE721A01013": [
+   "SRTRANSFIN"
+  ],
+  "STAR:INE939A01011": [
+   "STAR"
+  ],
+  "STRTECH:INE089C01029": [
+   "STRTECH"
+  ],
+  "SUNPHARMA:INE044A01036": [
+   "SUNPHARMA"
+  ],
+  "SUNTECK:INE805D01026": [
+   "SUNTECK",
+   "SUNTECK"
+  ],
+  "SUNTV:INE424H01027": [
+   "SUNTV"
+  ],
+  "SUVEN:INE495B01038": [
+   "SUVEN"
+  ],
+  "SUZLON:INE040H01021": [
+   "SUZLON"
+  ],
+  "SYNDIBANK:INE667A01018": [
+   "SYNDIBANK"
+  ],
+  "TATACHEM:INE092A01019": [
+   "TATACHEM"
+  ],
+  "TATACOMM:INE151A01013": [
+   "TATACOMM"
+  ],
+  "TATAELXSI:INE670A01012": [
+   "TATAELXSI"
+  ],
+  "TATAGLOBAL:INE192A01025": [
+   "TATAGLOBAL"
+  ],
+  "TATAMOTORS:INE155A01022": [
+   "TATAMOTORS"
+  ],
+  "TATAPOWER:INE245A01021": [
+   "TATAPOWER"
+  ],
+  "TATASPONGE:INE674A01014": [
+   "TATASPONGE"
+  ],
+  "TATASTEEL:INE081A01012": [
+   "TATASTEEL"
+  ],
+  "TCS:INE467B01029": [
+   "TCS"
+  ],
+  "TECHM:INE669C01036": [
+   "TECHM"
+  ],
+  "THOMASCOOK:INE332A01027": [
+   "THOMASCOOK"
+  ],
+  "TINPLATE:INE422C01014": [
+   "TINPLATE"
+  ],
+  "TIRUMALCHM:INE338A01016": [
+   "TIRUMALCHM",
+   "TIRUMALCHM"
+  ],
+  "TITAN:INE280A01028": [
+   "TITAN"
+  ],
+  "TORNTPHARM:INE685A01028": [
+   "TORNTPHARM"
+  ],
+  "TORNTPOWER:INE813H01021": [
+   "TORNTPOWER"
+  ],
+  "TV18BRDCST:INE886H01027": [
+   "TV18BRDCST"
+  ],
+  "TVSMOTOR:INE494B01023": [
+   "TVSMOTOR"
+  ],
+  "UBL:INE686F01025": [
+   "UBL"
+  ],
+  "UJJIVAN:INE334L01012": [
+   "UJJIVAN"
+  ],
+  "ULTRACEMCO:INE481G01011": [
+   "ULTRACEMCO"
+  ],
+  "UNIONBANK:INE692A01016": [
+   "UNIONBANK"
+  ],
+  "UPL:INE628A01036": [
+   "UPL"
+  ],
+  "VAKRANGEE:INE051B01021": [
+   "VAKRANGEE"
+  ],
+  "VEDL:INE205A01025": [
+   "VEDL"
+  ],
+  "VENKEYS:INE398A01010": [
+   "VENKEYS"
+  ],
+  "VGUARD:INE951I01027": [
+   "VGUARD"
+  ],
+  "VIJAYABANK:INE705A01016": [
+   "VIJAYABANK"
+  ],
+  "VIPIND:INE054A01027": [
+   "VIPIND"
+  ],
+  "VOLTAS:INE226A01021": [
+   "VOLTAS"
+  ],
+  "WELCORP:INE191B01025": [
+   "WELCORP"
+  ],
+  "WELENT:INE625G01013": [
+   "WELENT"
+  ],
+  "WELSPUNIND:INE192B01031": [
+   "WELSPUNIND"
+  ],
+  "WHIRLPOOL:INE716A01013": [
+   "WHIRLPOOL"
+  ],
+  "WIPRO:INE075A01022": [
+   "WIPRO"
+  ],
+  "WOCKPHARMA:INE049B01025": [
+   "WOCKPHARMA"
+  ],
+  "WSTCSTPAPR:INE976A01021": [
+   "WSTCSTPAPR"
+  ],
+  "YESBANK:INE528G01019": [
+   "YESBANK",
+   "YESBANK"
+  ],
+  "ZEEL:INE256A01028": [
+   "ZEEL"
+  ],
+  "ABCAPITAL:INE674K01013": [
+   "ABCAPITAL"
+  ],
+  "DCAL:INE385W01011": [
+   "DCAL"
+  ],
+  "ICICIGI:INE765G01017": [
+   "ICICIGI"
+  ],
+  "SBILIFE:INE123W01016": [
+   "SBILIFE"
+  ],
+  "HDFCLIFE:INE795G01014": [
+   "HDFCLIFE"
+  ],
+  "BANDHANBNK:INE545U01014": [
+   "BANDHANBNK"
+  ],
+  "RITES:INE320J01015": [
+   "RITES"
+  ]
+ },
+ "results": [
+  {
+   "instrumentId": "ABAN:INE421A01028",
+   "asOf": "2018-10-01",
+   "bucket": "mundane",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "1f72efd89057d39887b98630ce4c576bbbc5627f3c7d4986db2c7e1ef432e31e",
+   "reasons": [
+    "sector:oil_gas_upstream_refining"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown"
+   ]
+  },
+  {
+   "instrumentId": "ABB:INE117A01022",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "b6ce9e23033bd6fb12e88005671bba5f10b9cd09f5e6a463a603a6b6634b4295",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "ABBOTINDIA:INE358A01014",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "fec4c0507acf29a4a53e7324dee985e7d5faa184f6a846a6e690314732a4852a",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "ABFRL:INE647O01011",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "33ab4ca33823790c63331dfc7049c119ecc948f8ff88029fd1d9147e5a29eacf",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "ACC:INE012A01025",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "105653daf56ac2894d4c48e36f6ff8326ab903b90af6ce05563b1f796bf0fc5f",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "ADANIENT:INE423A01024",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "14a9bb3ba5303a4357208523a78b0b9c850ed2d4b9aecad18aea582d0477cbd2",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "ADANIPORTS:INE742F01042",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "524b158919c28f83493c3fdadd804621708e575537b61dee57420caf2aecbf66",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "ADANIPOWER:INE814H01011",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "22159d0e74d41e6946098482c8db96e3d12a8009c1b99e621c56ca1dd0b25875",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "ADANITRANS:INE931S01010",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "0961f170b7a12e6664d7da3ee5281edbb2d135d4a4562419bd9e3bed6b922a29",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "AIFL:INE428O01016",
+   "asOf": "2018-10-01",
+   "bucket": "underdogs",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "b80810e5fff456793204b6cbf6d0d804ff9aa785230d5ad8a963c9368c055318",
+   "reasons": [
+    "small_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "AJANTPHARM:INE031B01049",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "f16ad6be351508ef30b5c28817332e61b7330cbba0854f8a603304ab23dd38f8",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "ALBK:INE428A01015",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "e7d20cc83df8a3ad07c311c4360e2350b8e9d660934392e2f4bfbc91b2b29f08",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "ALKEM:INE540L01014",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "81eb0636ff54c754bfbad94aad1267f782d6a6b879f74e023b2778a3f85e844e",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "AMARAJABAT:INE885A01032",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "131f218df27822ff45225b6cf805be7bba1d0301352d232f74441aaba0d3071c",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "AMBUJACEM:INE079A01024",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "1242e716f3dce79fef8640d6aaab226cf4953915563f966a87d7274989e7b2dc",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "ANDHRABANK:INE434A01013",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "39d78f288224af354dab9288b477be83105afb3556890d36b97e14b1900ca7e5",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "APOLLOHOSP:INE437A01024",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "089e7e3b80a2e660b8b9308b233e0a8c343993e20a02b222d8dd66d552c93bc0",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "APOLLOTYRE:INE438A01022",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "fdea4cc10cd55feeb28d2d295ec3d90103d342660e81a3dd99e1fb2061bfa31d",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "APTECHT:INE266F01018",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "55945be3051a8022b2ddc3daaa15307198913f565a80b3629afd015b844c32dd",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "ARVIND:INE034A01011",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "7234ee5c5a1d2637e5494d89a182687f26aa662f4f1b97733ad0bc9e846d4bc7",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "ASHOKLEY:INE208A01029",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "7de856cdae28e43d394e25e24ba3b0c81262ff9bb47f3abdde52c56f5e5393cf",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "ASIANPAINT:INE021A01026",
+   "asOf": "2018-10-01",
+   "bucket": "steady",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "bbc32fa650984b71ab05477d1921bc7cf9c31e234026f7e5bb8c68c1726a72b7",
+   "reasons": [
+    "large_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "AUBANK:INE949L01017",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "791296b6ea326b5480e1abf848ed0663a92ca50e31b4afe4bbe97e93045de8d2",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "AUROPHARMA:INE406A01037",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "80c4c74bf74c29d9d57220631effb690df331a911d2fdfe28004a7a689177a4a",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "AVANTIFEED:INE871C01020",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "8a00fafde3efdc1a601f02feba1a2546536bf654dd9d6023ad998ac1b1e9473c",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "AXISBANK:INE238A01034",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "bc77ca2608f4c08f6ed420b3eb2765b36717a5691294aef689c542be703de12f",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "BAJAJ-AUTO:INE917I01010",
+   "asOf": "2018-10-01",
+   "bucket": "steady",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "ac2e2abffa47feec9b8ae97be4ff89bdaa838ceac978a870a98328b8cf5f6be5",
+   "reasons": [
+    "large_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "BAJAJELEC:INE193E01025",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "f191d7389a6c4aa0432ce764bac3dac9008f26a8b141dc72a30713099f76c224",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "BAJAJFINSV:INE918I01018",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "f226aeb042b1ae5251773168499799779af5c4268ce92891b6fa04ae0bb6b946",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "BAJFINANCE:INE296A01024",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "e90799a609bbe7a539b84bd52bdff3d692ec819fd1dd393d78412a48fc11e0b8",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "BALKRISIND:INE787D01026",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "537a48b207b69aac5e7d937f09f859889389f59b7596d7b87cbcdc752dbfb1e6",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "BALRAMCHIN:INE119A01028",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "b775c1236244b0f56ed8a8e8f52c677effcafdbacadbd81649462c4603dbf1a2",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown"
+   ]
+  },
+  {
+   "instrumentId": "BANKBARODA:INE028A01039",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "fe64b0bb441a3dabaed9d79ef4905bfb59946ccd6abba81def3d7e11a376537d",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "BANKINDIA:INE084A01016",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "41b10524a87b938cd784381c06efdc8f02bc01210f5d0253b8a581723caa0004",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "BATAINDIA:INE176A01028",
+   "asOf": "2018-10-01",
+   "bucket": "underdogs",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "a5410a83a2eb5aa9fe1229a3bfb188c7935d52a4aa7de943b7b21e9551991169",
+   "reasons": [
+    "small_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "BBTC:INE050A01025",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "96ce868c437f743b67b7421475b5c81495161455280bdd74e19a7d29cf057305",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "BEL:INE263A01024",
+   "asOf": "2018-10-01",
+   "bucket": "mundane",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "30434ec67f69e3020c289fc6b715667b810d42ab36287e86a23524b1e5156547",
+   "reasons": [
+    "sector:defence_aerospace"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown"
+   ]
+  },
+  {
+   "instrumentId": "BEML:INE258A01016",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "e6826fc89f41481e0b7505c85f2a68df56b4259c859fdbc04abc0b35df56f201",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown"
+   ]
+  },
+  {
+   "instrumentId": "BEPL:INE922A01025",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "571cf797261088f098f438c610f83420c3fca163376f6453f938d2801d0dfe82",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "BERGEPAINT:INE463A01038",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "1371fd914d4e59b0c487b569f51463712d5e5725c6aa78469555f12f36903896",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "BFUTILITIE:INE243D01012",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "1e7ed2ef629b01c9129b6dc2094379816ef8258a1db0e98ca9d24f2a3b9bc2dd",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "BHARATFIN:INE180K01011",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "52e6b364b6748a805e8daf1ff64457a3f1f7af3057f89b5f329355e87f2f061c",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "BHARATFORG:INE465A01025",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "f4fab0b06e9111748d01a2b85101711d07a60c13f34936304612ec423b321b43",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "BHARTIARTL:INE397D01024",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "a42524d43958df39b0ec4b41b18889381cbc8727aa0499302ba7eb7df425cbbd",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "BHEL:INE257A01026",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "0f1f369fd3df855c8227b48c5393a00a4f6a688a44e792fb7835bceeb6dcc69a",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "BIOCON:INE376G01013",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "f467ac704c46d50b0dd0b5c5f86d135ed5c21cd475cfff2541ec97b9edd9b662",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "BOMDYEING:INE032A01023",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "783e20bf6dc19dd5f6066f628fcb30344a583ab4af6ff4d145c90f4ed2eb611f",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "BOSCHLTD:INE323A01026",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "9c5afcc2d37b0dbf6e8aebcb18f68df217e0a476bab48ed75241c1940a7e9e9a",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "BPCL:INE029A01011",
+   "asOf": "2018-10-01",
+   "bucket": "mundane",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "bdd9d61685c7527e52de8330cdcb8c7db65c8599c429aaf3f6bd56b0f8da7b1b",
+   "reasons": [
+    "sector:oil_gas_upstream_refining"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown"
+   ]
+  },
+  {
+   "instrumentId": "BRITANNIA:INE216A01022",
+   "asOf": "2018-10-01",
+   "bucket": "steady",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "cb2ee3f2a40b8dabc321d2869007ec1cae93939c40a50b729bf780526b144e54",
+   "reasons": [
+    "large_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "BSE:INE118H01025",
+   "asOf": "2018-10-01",
+   "bucket": "underdogs",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "6ba348abb0701d3fe41ea808bc3851b302f129b00ddc825e23da3fb076baaa01",
+   "reasons": [
+    "small_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "CADILAHC:INE010B01027",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "47ad427909e2c6a29c87f559df507afc206df542860e1722ba94aacdb5ebf33d",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "CANBK:INE476A01014",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "2234259fad101a2b0b616809cb06a45c08d70b99e29482c68fffb3577e5429b0",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "CANFINHOME:INE477A01012",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "c9c1f2896f5345a7cdf6fa370fcdd18d51fd4ac70fab74abbcb98ee32163cd56",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "CAPF:INE688I01017",
+   "asOf": "2018-10-01",
+   "bucket": "underdogs",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "ecb20100d782c335635048bb441b96fcfdf732df5b72f006532bf75da3b9c669",
+   "reasons": [
+    "small_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "CASTROLIND:INE172A01027",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "284fb795d45d43188f3e6deb00c47a386506437c62cd8d45f3758be9f57837ce",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "CDSL:INE736A01011",
+   "asOf": "2018-10-01",
+   "bucket": "underdogs",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "4a9efbe3aa7f69330f5a1d54c25f730405ef1708cc3c564e07f1fbfc45d80c43",
+   "reasons": [
+    "small_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "CEATLTD:INE482A01020",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "806c86c57f3e6a26009727b4e762c58d58f04574ae1bc70b2e85d0ed272b2836",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "CENTURYTEX:INE055A01016",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "62cceb5658a54c0229f55bb27c9658499151f8f3bcb40f21b2ed394e606b3f4d",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "CESC:INE486A01013",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "fd3b52bc7b7380ff539e111edba1d24d0d9a30615a7e0d4b463f62455343189c",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "CGPOWER:INE067A01029",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "417db1cd57d8cfa0dde99609d6934a2b7381b29b840362210160ec8f6ab2a925",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "CHAMBLFERT:INE085A01013",
+   "asOf": "2018-10-01",
+   "bucket": "cyclicals",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "f589565dfb63190db065b9c9dc99ebcc90978c46e5727369a5296211f2b21298",
+   "reasons": [
+    "sector:fertilisers"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown"
+   ]
+  },
+  {
+   "instrumentId": "CHENNPETRO:INE178A01016",
+   "asOf": "2018-10-01",
+   "bucket": "mundane",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "61e343d689cf2c295cfb5268f775fe7b4b09b3a78f91cef7d95db031b581ddf9",
+   "reasons": [
+    "sector:oil_gas_upstream_refining"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown"
+   ]
+  },
+  {
+   "instrumentId": "CHOLAFIN:INE121A01016",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "61319c8362f531d399c4049058fa46bba393a610a6224488ea141f7e518c5640",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "CIPLA:INE059A01026",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "babcf5dcc6541292e9f24de4d080c92f9d8fc79a5293e340621124712c1b4e81",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "COALINDIA:INE522F01014",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "4daf4555d3ea75f40cf0213a8cadf67be9cffdfb45278b4747eaaaf7911c8b24",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "COLPAL:INE259A01022",
+   "asOf": "2018-10-01",
+   "bucket": "steady",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "526a6df143fa81b3248f9763f1998d3227e21f2215e09d9685e3fe5d99f7780c",
+   "reasons": [
+    "large_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "CONCOR:INE111A01017",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "68b0c094eb951e9c73027259c0bb54bea13071a6a675e62a323c3f95948f7a61",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "CROMPTON:INE299U01018",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "8fd2c8dda527bb3640a72318e82ffd68946d0acfc4df389f6605e73ba81c2e26",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "CUB:INE491A01021",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "a13929e003134cf38c3c3ca90303e2c4d0bdd70ce3eeee9b08f0bccefaae7b93",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "CUMMINSIND:INE298A01020",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "b24c3883d4101e6f61ef5fcb22996e62068c67ace65dc55fa2cec3588fa8d816",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "CYIENT:INE136B01020",
+   "asOf": "2018-10-01",
+   "bucket": "underdogs",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "d2d282cf29b8435adebaf9ff2a4ee005339a465d44dbce614f06c2a9fd8c3a0a",
+   "reasons": [
+    "small_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "DABUR:INE016A01026",
+   "asOf": "2018-10-01",
+   "bucket": "steady",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "eebd285749ed02119370dacd31c6ea5262d25cde4e3d303667fce957783b9b95",
+   "reasons": [
+    "large_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "DALMIABHA:INE439L01019",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "4ae63c518ed6dc94cfc60cbc6ef1dafced1ac2cbde120c3a3b497c1e2473a28e",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "DBL:INE917M01012",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "8ef595082306bb21b795afc99eaa1b57fc756fb468eae4cc4559d49fde0b2223",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "DCBBANK:INE503A01015",
+   "asOf": "2018-10-01",
+   "bucket": "underdogs",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "81592ec79e73035110fb8c1da221853b9e78ab3dae85564864febdbb9639d626",
+   "reasons": [
+    "small_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "DCMSHRIRAM:INE499A01024",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "df2ced14a0a138c8f8bfa2d3f92ee03d38035804e76acb6ccc6df6d4ca853003",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "DELTACORP:INE124G01033",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "ec2d8cc1ff3334a81e7ab28075c8c88840184f8c80cd8f4de9c7930dacaf8754",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "DHFL:INE202B01012",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "26a7b122e21e72d190c2704f58ecbd29c278e83e45c5d1b7f4874d89f4a991cb",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "DISHTV:INE836F01026",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "87a024a92c8444bd9abc6bc532207293e76521bf8570bd4a649d73a0a70c3311",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "DIVISLAB:INE361B01024",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "77e8341ab359cd1b45af288b6db0997c36605ac1696bb79ff0654554706e414e",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "DLF:INE271C01023",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "cdc6089246265d84c71c982c096963d84673afee8be2b3a1c9824f7de9c97e8c",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "DMART:INE192R01011",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "e8393fe95bf77109c63cc794733e51971f012ff8cddeac9572104cab79a9dc67",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "DREDGECORP:INE506A01018",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "31a1071fefc70d7a6a6e8d6cf887b23c3149f95de3a1aa40a49dd2f415021324",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown"
+   ]
+  },
+  {
+   "instrumentId": "DRREDDY:INE089A01023",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "0c39615dce3085b29f86e6b10de27fc3e6900fcda8f80be11c825e6fb0971c1a",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "EDELWEISS:INE532F01054",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "46e5d5a822106596cd8ef68d615e4f6ce2b38697138f07cfc72cf72142f1f91a",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "EICHERMOT:INE066A01013",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "73e7ee9f57a84339d97cdd6d1ff9b2ede34e55c602de06045b8e9bf556a5efc7",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "EMAMILTD:INE548C01032",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "35108e53edfa819dd6099ed14b9cfd7571d4794db7479239ac2ddde9f6c719ab",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "ENGINERSIN:INE510A01028",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "5e5a4d3ff75b9774f34a46bb96c3e857948fefd13608f1d12eeea5726a25e7f1",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "EQUITAS:INE988K01017",
+   "asOf": "2018-10-01",
+   "bucket": "underdogs",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "dba6c41225ecd4b901b1be9542bae895635cf84d8553e36bd29964b17ce0a75d",
+   "reasons": [
+    "small_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "EROSMEDIA:INE416L01017",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "36ff6a6ad6356b671e1f54e3c50b28b757be1bfb6cb69435ef64e598a03a33f0",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "ESCORTS:INE042A01014",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "f97c04602a224bdf467c6dc9a6156d7d9e56269cf89b335154f86895407033ee",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "EXIDEIND:INE302A01020",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "b9b87b83d5f172ab7e2118ec32d0987fd3b7f7b03bd43fc56121f05587c157bf",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "FCONSUMER:INE220J01025",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "d29a76f18dac18bd7a1e7698ab0e09c2576e69fe751acfd029ad719a6f29fa0d",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "FEDERALBNK:INE171A01029",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "7e1d230b0652f4d9d7cb416553748d238e80fec6418fc319bb3dab8d12343f1c",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "FORTIS:INE061F01013",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "340b8c537ee9876920545c17927c3d603a2f330b374af1d698bafbe425b3573a",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "FRETAIL:INE752P01024",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "9e79e938f21d1a38475a899a88a723d4041d868dad12569661f772b26845128b",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "FSL:INE684F01012",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "8ea1e36f815bd0c4581c186e711a80c8c8dbc8f0f881d75ca787c74c2cefc628",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "GAIL:INE129A01019",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "9120cab78f8ef6fd8d922360904ed5c2ebf28bfc6505b92da3eb876c7dd8b1a5",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "GATI:INE152B01027",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "d0d7dde06b55967aa17f2c5bbc9374d61c774231328c06a79ca5da61df36a0e1",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "GLENMARK:INE935A01035",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "e6b32c727b3133a114c9ba7a9d688fb0598c585fc0013c0568ac586851861c21",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "GMRINFRA:INE776C01039",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "cb203f1f7b7f2a588fe7c9ae791124bde2473dfe1d4bd1658c4bacddaa5a0e84",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "GNFC:INE113A01013",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "d393ba2a94d4237aabb5a4d46974bd2b34be402347ab6defff2603f49ef5754c",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown"
+   ]
+  },
+  {
+   "instrumentId": "GOACARBON:INE426D01013",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "4dea842b74c70af69f209b56329398bcf5cd7fadcbb46b91d8863380c744c7da",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "GODFRYPHLP:INE260B01028",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "9818f0c64ccb90869be65d23539f71c3df9752bd8b38b54270dc2400df8fb8e8",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "GODREJCP:INE102D01028",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "f89c0a76ca11d3e685f3dd479746ca37aaff40d190c8beb45ca1e515d7d3d14b",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "GODREJIND:INE233A01035",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "7c3e15a4071e2d4ea8a5a46fb15727300b72d4c7f842cad1ae34cf91384acddc",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "GODREJPROP:INE484J01027",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "31701b038ba4cc4fa71a945bd7b249b4b4cf15e80c30f20cc7405e690cd76848",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "GPIL:INE177H01013",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "4b0e23eb5ae5f061b2aca8adca717a5e8fe0957c771f0becc4be6765e50b1213",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "GRANULES:INE101D01020",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "d1b2e893e2906a78b97067808b074a49b41da93d0ee23d733728d8c2ba2b705b",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "GRAPHITE:INE371A01025",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "28c2503acbbbc6e40b8d00fcd502b875b86871e4afc677ce389cf5b20baf6178",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "GRASIM:INE047A01021",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "19601d04a0b3ec05f3c722fdbae24bff0bab370f7833e015d9e78a1030225218",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "GREAVESCOT:INE224A01026",
+   "asOf": "2018-10-01",
+   "bucket": "underdogs",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "4278e14ff9a933511705115dd08fd2edb840d4b502cf93a0f79762dc19435936",
+   "reasons": [
+    "small_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "GRUH:INE580B01029",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "a43d96165e1b21ffcf7b1aaaab1063be4ca296ce0cc789b78fbef9366f41e797",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "GSFC:INE026A01025",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "f2a16119935a5759f90429bccab05983aac48cf5ca060cf121d20e5b9c263dde",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown"
+   ]
+  },
+  {
+   "instrumentId": "GSKCONS:INE264A01014",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "c475031028b8afe055a7e52ded628b37f6e1ffa7b68b544b3de00e5b4d0ee866",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "GSPL:INE246F01010",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "a64570fd8464331796a174cfdef8899b4b7b48cf8d7e6203e1772c1e36a7f3e5",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "GUJALKALI:INE186A01019",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "bd7fb6d544bf781736fd72fbcb431f9e4fdccd4dd56cc5f02e7b294a467d0f31",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "HAVELLS:INE176B01034",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "f1c341aa4cdd3b7815f19ebe6ea67126ad9e27f81514e453b5f7c16127d6a402",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "HCC:INE549A01026",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "c4b6d194a0c5795935b350e9e7cab6962f9b49e7087292aa1506497971b4f917",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "HCLTECH:INE860A01027",
+   "asOf": "2018-10-01",
+   "bucket": "steady",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "814b2c17e51c2857fe346e26a992b0ad116529666507921f76d14aa4fec684ec",
+   "reasons": [
+    "large_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "HDFC:INE001A01036",
+   "asOf": "2018-10-01",
+   "bucket": "steady",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "b0f120c637bb2a31e7e39ac330eaee94bcca741c6136a2709dbdceef55e6514b",
+   "reasons": [
+    "large_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "HDFCBANK:INE040A01026",
+   "asOf": "2018-10-01",
+   "bucket": "steady",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "ada369efcb4561cbb0e5a5d404e20e6643f730d673c4af6aea1cda09d40db7c0",
+   "reasons": [
+    "large_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "HDIL:INE191I01012",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "4d701aa1fbeab299548b691925136f9b88d51c4e7f78f0764d0dde5db8532b49",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "HEG:INE545A01016",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "d309616ea8cff7973f402845f20a2551e38d0deea0e4275e6af1f5839b2a6c93",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "HEROMOTOCO:INE158A01026",
+   "asOf": "2018-10-01",
+   "bucket": "steady",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "b2624933a80494c80e6e47477d357628432b0e815811496f6da3defb98f5a402",
+   "reasons": [
+    "large_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "HEXAWARE:INE093A01033",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "0fc91d865391485a7ce14f23bb2d5dcc011c425b185cf632996174d5922a8097",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "HFCL:INE548A01028",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "13ce68f9b1f3fc6466c617a4354538c3b96d75553318eca82b6c688cf82184db",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "HINDALCO:INE038A01020",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "7195377b584ca38f65ab61884f48d72e16b60ada5143eb63f723ea9ab9b6324c",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown"
+   ]
+  },
+  {
+   "instrumentId": "HINDCOPPER:INE531E01026",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "8121a0a6ec17e8abbf11c852497f6831cf4f3e406f249718412d70d76afc506a",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown"
+   ]
+  },
+  {
+   "instrumentId": "HINDOILEXP:INE345A01011",
+   "asOf": "2018-10-01",
+   "bucket": "mundane",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "1ff0b2ba367a540e285f7a9b06b14d923cc84f6b712a233724fd550f95ba7243",
+   "reasons": [
+    "sector:oil_gas_upstream_refining"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown"
+   ]
+  },
+  {
+   "instrumentId": "HINDPETRO:INE094A01015",
+   "asOf": "2018-10-01",
+   "bucket": "mundane",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "badac23413456963def37073d45ad1efacbcc4480ab2fc47c87254d91e312786",
+   "reasons": [
+    "sector:oil_gas_upstream_refining"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown"
+   ]
+  },
+  {
+   "instrumentId": "HINDUNILVR:INE030A01027",
+   "asOf": "2018-10-01",
+   "bucket": "steady",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "91e794299f6b1423d8fad93cccbf5b74de30eda6756bb8df4de3118fd1e13640",
+   "reasons": [
+    "large_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "HINDZINC:INE267A01025",
+   "asOf": "2018-10-01",
+   "bucket": "mundane",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "20793fe18c29f7c267d2c6b7edaecca8b3fd635b16d731fe51d61a99c59f2810",
+   "reasons": [
+    "sector:strategic_metals_mining"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown"
+   ]
+  },
+  {
+   "instrumentId": "HSCL:INE019C01026",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "a42f106ca00ec01f0b1ec1339ff790b94b8b38cc329537dbc18153a73684a048",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "IBREALEST:INE069I01010",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "f2056ece653738485c7e60152e7134604f913c7a5c05bd9b5f35311c495106bc",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "IBULHSGFIN:INE148I01020",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "a48f263a25c7645563644ba64b452a43d179ecec49cc6e41881329c788378c68",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "IBVENTURES:INE274G01010",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "92aab9195e06491ef4379b1493b69acbe595eb059664109e877987bd80c8491f",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "ICICIBANK:INE090A01021",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "e7f0496eee6b241f206f89844339adad1b884dfe48a086af804c9b1f4d2f646a",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "ICICIPRULI:INE726G01019",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "f9abfc0f95c02eb1d5e6118b949abde3bcb623ccbb1bcd3c4aee0ff719a70a6f",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "IDBI:INE008A01015",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "3ab989c0b47a3fc350292c088f6c7887e705e66106ba681a41c3fd0a0bad8356",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "IDEA:INE669E01016",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "2c7cbab54b10ee815a80118e8504d561e7588ffebb5df7906f3c0342463d755c",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "IDFC:INE043D01016",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "8889fdbf7641d3051dcb7c58153b4779a1ad1ca9f89f8c8ee839e952946a97d6",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "IDFCBANK:INE092T01019",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "ed4b6e448a63c392ec37e2c3b4ef4d74e8f1b72ae39616f879771627e8a1fe73",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "IFCI:INE039A01010",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "6a1b4c28321fce7e5eabbdae591323c883ff63a7aaffba375676abc2e0c01bd7",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "IGL:INE203G01019",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "3e2572c7b59e7f10e641914684c291573843c0ddade7726a90df59169065f3f5",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "IIFL:INE530B01024",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "401e17eef342c2736c837d29fd28edb485b10a85e4a63894b5c132cc4e20202c",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "INDHOTEL:INE053A01029",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "63e109e24210e2c2137774201c42fa10dd4d5cf0f5339d4d3ddadcfe3de3dafb",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "INDIACEM:INE383A01012",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "92214e48a817f6fa386070a4c520b68773bd39a61e69fae6b85e940b473637b1",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "INDIANB:INE562A01011",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "ce67541de85efa5486cfa86562a099ae26ed09d038aa3f5ad0ac37443350dfec",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "INDIGO:INE646L01027",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "b9157da5b37557cc893f92091a68b67f5b4bb7b05e700df8b0a007da1b7659f6",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "INDUSINDBK:INE095A01012",
+   "asOf": "2018-10-01",
+   "bucket": "steady",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "3c6b79349621661a09feea0efa8bc48202160da9bee6e1aad9f60d2f9298308a",
+   "reasons": [
+    "large_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "INFIBEAM:INE483S01012",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "c125242e89b3c29377fc802c9649d465227a5c493b59b5a821042f35d6e9fcb3",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "INFRATEL:INE121J01017",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "9833e4fb509777d5103c430476617911773a091dea17588154a09666e9b06c45",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "INFY:INE009A01021",
+   "asOf": "2018-10-01",
+   "bucket": "steady",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "5e0d8d80b48154a0948e2cec6ade6bbb7cb2dbf9ea680fe51874259def25cc34",
+   "reasons": [
+    "large_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "INTELLECT:INE306R01017",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "c77a5e9f646ea133c9bd5d5c90554802b552cbe8f3bf5d30ed192b1de4e23a25",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "IOC:INE242A01010",
+   "asOf": "2018-10-01",
+   "bucket": "mundane",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "aec8c124b0c1ee03c9f1e7894dfd201a1b032bb2841aab9f7cd3f75362890a44",
+   "reasons": [
+    "sector:oil_gas_upstream_refining"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown"
+   ]
+  },
+  {
+   "instrumentId": "IPAPPM:INE435A01028",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "dc852ab5330b176ac2db32220434207af036b05659dcd0cf3b1925bcf9f34395",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "IPCALAB:INE571A01020",
+   "asOf": "2018-10-01",
+   "bucket": "underdogs",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "cf639bd3fb4110d0685b1571affbfcd5a41fa8b8d14d08eb05d36d0559c78916",
+   "reasons": [
+    "small_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "IRB:INE821I01014",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "a9ec2bd610445658300b172429214ccb4e1942a61369a57aea2ded8d1c261eae",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "ITC:INE154A01025",
+   "asOf": "2018-10-01",
+   "bucket": "steady",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "e61d060ea3907f930470b17bdad6bddde06a8d962596ff873e84b41d21179d35",
+   "reasons": [
+    "large_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "ITI:INE248A01017",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "3e7b59db9da6fae4bd01c35af96a55b6248a47b81740dabf5ac155376b54a4b6",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "JAICORPLTD:INE070D01027",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "df83f1cc3c125aee2a5c6a04280e05ca49a9dae88b0851e91988e263e70f3915",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "JAMNAAUTO:INE039C01024",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "24f24e6eb5b3c57950fbfbbcae7af5263600402fbea9313a7b325568709a4692",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "JETAIRWAYS:INE802G01018",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "4aee570d2791c3fe3a3ebfe1a9eaa01f8f82465c49ec61d444be1388cde166d1",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "JINDALSAW:INE324A01024",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "b95efa72f251ab508cea58974cf663065c635239c2fcd22365326fa500f7dbff",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "JINDALSTEL:INE749A01030",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "7adc3532ea4d13bf419e28fdfa7883da253153057eda617c0a231bda147ca9f8",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "JISLJALEQS:INE175A01038",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "9136f8c3d2fe27151bd4785338abb6a6bf1bc4505450408911bf89da36894227",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "JKPAPER:INE789E01012",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "660cc908c623f8015edc43cff6d507fd59a7e88c9d44f9da386a8129a86b2ce2",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "JKTYRE:INE573A01042",
+   "asOf": "2018-10-01",
+   "bucket": "underdogs",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "ae59ccba542640aad476b4c8fd8a91e8fd9acb3c3b8da06979a9efb06424d7ac",
+   "reasons": [
+    "small_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "JMFINANCIL:INE780C01023",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "8309a6cffb0de0c6c336601241ad73365587aa2cb60afce1a8d12ba16b160904",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "JPASSOCIAT:INE455F01025",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "e54641fd5bbb5d6654c95e95b5863d3cef08c4cf4dbab8cd52fd4a72bb14e5eb",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "JSWENERGY:INE121E01018",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "dcdc04fbfdf35183d8ac265a851680a18f8870a985652867e0e228e4dffd84d5",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "JSWSTEEL:INE019A01038",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "6f5b187a5d167daca03faaf64cb1bc03351348c678cb1785f9dda051b82bfa9c",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "JUBILANT:INE700A01033",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "5d2eb1aa9d08e83d0ae23bd48afa2d370e82dede60307ce70ba41dcddd3c0d3b",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "JUBLFOOD:INE797F01012",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "c40ed3d0a5c6266c9bee8b181a2b41a4b204f14f344f6d51d4da2b544ba8c430",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "JUSTDIAL:INE599M01018",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "c3c13b27f0c6fca9b79228b440af3bf4c1e6a300ade1118b251e1f24de74b763",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "KAJARIACER:INE217B01036",
+   "asOf": "2018-10-01",
+   "bucket": "underdogs",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "7e0f363f528594b54750417d1db96db3d9a82c5b968771457c13688b233dda4d",
+   "reasons": [
+    "small_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "KANSAINER:INE531A01024",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "bcd74bb86217c740a986e40bc7580b89973e44d041607fcdfe68f53bb3bc275d",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "KARURVYSYA:INE036D01028",
+   "asOf": "2018-10-01",
+   "bucket": "underdogs",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "ce0bbe80c38bd425d609ec38684bf8479767e3aad14098dcd27e8e60b8d2ecf0",
+   "reasons": [
+    "small_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "KEC:INE389H01022",
+   "asOf": "2018-10-01",
+   "bucket": "underdogs",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "510205751bbafc85daee57a4eabc144a8866f45731bc822655627865d83b30b1",
+   "reasons": [
+    "small_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "KEI:INE878B01027",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "b976bce8661588c312820ef2c7db2b98ebf90b8697c8bbb365f2dfdd2320d6bf",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "KIRIINDUS:INE415I01015",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "f7663c3e0f6a3329153f51a50a59ed1bb4e608acd2966967d07919e7fa8d250b",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "KOTAKBANK:INE237A01028",
+   "asOf": "2018-10-01",
+   "bucket": "steady",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "7d2b68e5871088f14b358c1b8439d71b18c930118c32386b0580b075b7f90f1b",
+   "reasons": [
+    "large_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "KPIT:INE836A01035",
+   "asOf": "2018-10-01",
+   "bucket": "underdogs",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "09390903feb509e1516149aefa64debee439afbbbe355df863080739a9951090",
+   "reasons": [
+    "small_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "KSCL:INE455I01029",
+   "asOf": "2018-10-01",
+   "bucket": "cyclicals",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "a323610a76819229664e73abd5c722c9178909d18756389e83199eb60071388f",
+   "reasons": [
+    "sector:seeds_plantations"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown"
+   ]
+  },
+  {
+   "instrumentId": "KTKBANK:INE614B01018",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "6260d2384c37f8aaaf9e658cda7606103aed55d02cb24c1ca7f699f3560307e7",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "L&TFH:INE498L01015",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "6a1822cc4581d86fba6580a7723daa06ae0384ce9b262b3a71e6b09df89da09b",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "LICHSGFIN:INE115A01026",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "ffec8425edba3f7cc13caf1d0486bc55c522af3f09cd93ae6925230e70bfcb04",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "LT:INE018A01030",
+   "asOf": "2018-10-01",
+   "bucket": "steady",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "05e05eb3f9ebae072fe356f3b2a473235e3767f1b73d68c00d438a120ca90b61",
+   "reasons": [
+    "large_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "LTI:INE214T01019",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "00c68afe4fd997d0c49661fcdf9f1d2bd343e775f7f5b09e8e696fac371ce54e",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "LTTS:INE010V01017",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "8091e16508f6c47b31a3c71dda6e9f6510f8a3de3184de45e664edcd7163fc48",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "LUPIN:INE326A01037",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "67afcccc23db3d707e6c57e07b4461aeccb8f4fcd9ffe6e8678232d73497c511",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "LUXIND:INE150G01020",
+   "asOf": "2018-10-01",
+   "bucket": "underdogs",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "6de6a8960f876780f7812c25d07e37185d8777724d36d205a15ec53473384434",
+   "reasons": [
+    "small_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "M&M:INE101A01026",
+   "asOf": "2018-10-01",
+   "bucket": "steady",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "04fa64b90d8fec2a5617f04a2564166cf133f674d00397e3edf9b9a54fe45714",
+   "reasons": [
+    "large_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "M&MFIN:INE774D01024",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "226b322cdd1321100cd98935810fb40d02f14747bd58e38908e67e42d919b4b7",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "MAHINDCIE:INE536H01010",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "ea8e95cbe4952884f7c616d4ef377480fd9c4545e36834f3f2235513d1db628d",
+   "reasons": [],
+   "partial": [
+    "size_unknown",
+    "volatility_unknown",
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "MANAPPURAM:INE522D01027",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "92e5c6be196a95fecc2ee7b7c467088b6eb7ca81d2603e412ef62ab4e36aae40",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "MANPASAND:INE122R01018",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "ba37302ae7e7bd1749704e0e90bda5ab3c1056db92c45a8a95961594609cd5bd",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "MARICO:INE196A01026",
+   "asOf": "2018-10-01",
+   "bucket": "steady",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "6174fd605f9ac284c69084240d00315a51d4ab6815909624f2914a02ba0df9c0",
+   "reasons": [
+    "large_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "MARKSANS:INE750C01026",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "2edd6b44768af21e585e2fac6bcf7d87e7be87c8d3617c02cde360b60826a8db",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "MARUTI:INE585B01010",
+   "asOf": "2018-10-01",
+   "bucket": "steady",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "151e2e8b99c5af6a244d187c4017eae3593cccf61fb24a3421802aeb381f4fcf",
+   "reasons": [
+    "large_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "MASTEK:INE759A01021",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "0c6b9fec38f5724e3bb2d0399f7df5c9f68752a01ec60aaab87c494b9bd72018",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "MCDOWELL-N:INE854D01016",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "1797256219b70bf172bfca282af5c2bf71e3e64d703e3b7775ef7c565d2dfc0a",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "MCX:INE745G01035",
+   "asOf": "2018-10-01",
+   "bucket": "underdogs",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "8afbcc30080f9a23354c8f999b7c1f4da729b88f3649c3a783d73eade5e2aaf7",
+   "reasons": [
+    "small_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "MEGH:INE974H01013",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "5fa8aa4212318c194df9211f505619c1b4bc39728c6e9a7e85dd6884a4f96682",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "MERCK:INE199A01012",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "fe9fb7ae298d5a08ac46d7b0e3fe020a934a94b2c6d5f70f9ad5a1409c60f052",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "MFSL:INE180A01020",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "58809385e0f9ff50fe95fd5ed2a82a3a4a79fe88731e29424a4320fb1310914f",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "MGL:INE002S01010",
+   "asOf": "2018-10-01",
+   "bucket": "underdogs",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "0f8ce27f79a2d4153e29462cefaea23d469874408632be56f8efe0e4cfdde27c",
+   "reasons": [
+    "small_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "MINDAIND:INE405E01023",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "ec923da8b104f7eb8cc33fbb7751f40b77be5d4037b70e6a27b80412a09a2287",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "MINDTREE:INE018I01017",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "df91e49256c3e57679aea7721f88c2187c0cf2739e0c2a62140089780b94ef70",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "MOTHERSUMI:INE775A01035",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "267e2a1fe450bae683ac18f435bf55f5bbf81dd897b4ee65a5a3dfbd8817f1ea",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "MOTILALOFS:INE338I01027",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "587f97f174829cc668d6ba31df0c6ab9269975b9ad22a409b03bdd9a8d69bde8",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "MPHASIS:INE356A01018",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "bb1f6d7ae75fc9b5dbc2f25eab23cd0949631383b2b01858d6df9fa578d8ac12",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "MRF:INE883A01011",
+   "asOf": "2018-10-01",
+   "bucket": "steady",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "e60f8d29ff3bf8b17d7b1569b3fc94c5ddc7ea61287b84808cdd2e185207c94d",
+   "reasons": [
+    "large_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "MRPL:INE103A01014",
+   "asOf": "2018-10-01",
+   "bucket": "mundane",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "c5877bc96903f291d21f6d0c71e50bc072b5cde4c94c2f5fa376bd680bcfc1e5",
+   "reasons": [
+    "sector:oil_gas_upstream_refining"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown"
+   ]
+  },
+  {
+   "instrumentId": "MUTHOOTFIN:INE414G01012",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "6e4c729d85e3b22abaad817b82d83bd4deac7552293c4b6a1abbd0b4d4552d87",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "NATCOPHARM:INE987B01026",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "0914b53371c9e88061f607d99f50506b47ba1974b1493fdcd2f99209a08137a7",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "NATIONALUM:INE139A01034",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "4b347c9e8c6d79d16a3a0ff2bb4fd478946dd6aba620e44069e850981f8b3836",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "NAUKRI:INE663F01024",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "e933eb724a0139c944546c4d6d4ddf2c9f9bc09d759ca00fc21a5f8eca7d0a9f",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "NBCC:INE095N01023",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "48dc3481f5c7c0aaafb331f99b99b811f31e241ece5b94c00934e2f75fd6c4c3",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "NCC:INE868B01028",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "3af9452e39f3913c0a176fdabe1e9bc8c9172cd0256ca4ea79a122295c63914a",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "NESTLEIND:INE239A01016",
+   "asOf": "2018-10-01",
+   "bucket": "steady",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "4daeeceb9767e11fdc92dd0451700eb6db8f0da8ed56899ce4cf3f0e95ad1183",
+   "reasons": [
+    "large_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "NHPC:INE848E01016",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "a1093e1cfc63febaa9db9f775efbc59fd96de65732bbf5271406526ac11bccac",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "NIITLTD:INE161A01038",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "eddb373ea1f2f6af3062f16f0853e4acef583306a4c24c5f14fcfeba7ff6abbc",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "NIITTECH:INE591G01017",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "19acf325f1baa49cba9ddffbc3f4bfd97ef1e4596ca23a1a3d5ddaf0cab28e48",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "NMDC:INE584A01023",
+   "asOf": "2018-10-01",
+   "bucket": "mundane",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "5a77d0a1394967c64726d2df2781d635b1ad481062a71c90c1d1fea47099bf01",
+   "reasons": [
+    "sector:strategic_metals_mining"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown"
+   ]
+  },
+  {
+   "instrumentId": "NOCIL:INE163A01018",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "6f252458c128164d7f9494b663b80a1cd8cc7feb3af04f4eebec39fd0bf2dd56",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "NTPC:INE733E01010",
+   "asOf": "2018-10-01",
+   "bucket": "steady",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "43a4a2b7f3bc7854a04a74721982bf430642196b99de8834ed35af3ca2c3898f",
+   "reasons": [
+    "large_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "OBEROIRLTY:INE093I01010",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "81afc690ed0f610aa5cdc575a9880de91b8614fb4f1ec995e3327bbc00df2b74",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "OFSS:INE881D01027",
+   "asOf": "2018-10-01",
+   "bucket": "steady",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "f94c33f422254fbeb6a8e8b3d1b8f33626bea9f7c80f8e02441c73733a1618a2",
+   "reasons": [
+    "large_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "OIL:INE274J01014",
+   "asOf": "2018-10-01",
+   "bucket": "mundane",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "ef581bfb3b48c42113a19a21d748af6844bacf3e63f93841b3b6a5dd387c5966",
+   "reasons": [
+    "sector:oil_gas_upstream_refining"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown"
+   ]
+  },
+  {
+   "instrumentId": "OMAXE:INE800H01010",
+   "asOf": "2018-10-01",
+   "bucket": "underdogs",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "59548cf9314a3b704b99afc2586e27cdd376362c4eced706bc28b890d997a853",
+   "reasons": [
+    "small_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "ONGC:INE213A01029",
+   "asOf": "2018-10-01",
+   "bucket": "mundane",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "fc47f33d453550d00e15e22eb59d730c655eb94bda001c38faa6ee7b7c58bfbc",
+   "reasons": [
+    "sector:oil_gas_upstream_refining"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown"
+   ]
+  },
+  {
+   "instrumentId": "ORIENTBANK:INE141A01014",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "41197504df3e2083514e05216c033d773d2d2bdbebfab7f7749d9032f70b15b5",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "ORIENTPPR:INE592A01026",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "dfdc1298be622be50ae3e10049b46dd9f75a5116ce31b005b668c150f2cbc6ec",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "PAGEIND:INE761H01022",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "671ea85b566e0fb687916e225a2f6ca9f714b698c6229f2a045134dc3943ba8a",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "PARAGMILK:INE883N01014",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "7714d68db7e600eb47462c60e1ceb904695625408018d0423b470e469f54be27",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "PCJEWELLER:INE785M01013",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "27b663e6343912c18b0798ead38f49686979a7168ce8d201eab76128f7463340",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "PEL:INE140A01024",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "92ffe074ec9385e0455264c77e68fd29e1d7359c43d716412d291a9c8c3e7d8c",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "PERSISTENT:INE262H01013",
+   "asOf": "2018-10-01",
+   "bucket": "underdogs",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "2efd511811d4fa0f7ec459d25e00c2cd1870d87a505a776e4c5ccb8e6c5bf2bf",
+   "reasons": [
+    "small_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "PETRONET:INE347G01014",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "987ce60ceb70f91af784cce368815791a03ff2e76cb70c74ac16a1d0e9f51c90",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "PFC:INE134E01011",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "844b0eeb6cec687bdaa38b4a6be710eb9e62d79178735c029e8360e37c9864ad",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "PFIZER:INE182A01018",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "01bdaed1c2384415aa83b1d3eda9100eba7901af56fdd0e369e7ae8d446a54ae",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "PHILIPCARB:INE602A01015",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "fe41fd4c45de52ad9c635ad6d40b51505763dfdc795203e0eae8b9b36ddea31b",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "PIDILITIND:INE318A01026",
+   "asOf": "2018-10-01",
+   "bucket": "steady",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "bc2654e05364d8ea907b3ed6316ea39730f684cec1817bbc99ab641f5d828c50",
+   "reasons": [
+    "large_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "PIIND:INE603J01030",
+   "asOf": "2018-10-01",
+   "bucket": "cyclicals",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "4df85e157a328efdf7f85e565e5fb57c248fd6a85604c02fdb51c8bc2a169ad6",
+   "reasons": [
+    "sector:agrochemicals_pesticides"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown"
+   ]
+  },
+  {
+   "instrumentId": "PNB:INE160A01022",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "bec37818270ad39c09714cfbbee48d306b7a70dd59f3b52c312d20f13162dbe7",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "PNBHOUSING:INE572E01012",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "8cd7b88ab6556df02c6d4cf9cb8ec5773d8dd55f3f84093bf282b0f9cd35a8cb",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "POWERGRID:INE752E01010",
+   "asOf": "2018-10-01",
+   "bucket": "steady",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "cb9cad88bc34966fc85c2df5b9ccc8f45718c21489bd478d94dba085a1968373",
+   "reasons": [
+    "large_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "PRAKASH:INE603A01013",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "882972f76b84d7ea85d7aca775d8a96b07a09cf829a0bbc1aa518de6b0544a20",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "PTC:INE877F01012",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "4e7c8fd9e85eb89e66d1bf5af2050cf59d1690c320c2fdce369c70a4cd261eed",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "PVR:INE191H01014",
+   "asOf": "2018-10-01",
+   "bucket": "underdogs",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "270a8d87f5c0719627bda3fbbe771ab594d8e25d70a2388344d26fdb1af00a1b",
+   "reasons": [
+    "small_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "QUESS:INE615P01015",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "a42f8702f9ad518726edf727c5d480dec8dad9cd767831c21e14d7ade44de3d6",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "RADICO:INE944F01028",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "b7035e4c1b5df3be079b003241a35d7e945c88c6cd8e2e1fd5231ff34fe5bc7a",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "RAIN:INE855B01025",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "471ba7961f8bd8aa68be790bf2ec79e0989ba7ebed6953d1c69e2f1e336519cf",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "RAJESHEXPO:INE343B01030",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "39a56978b5b4ea68609be9e04c6adbfae608334c9c112a300d5a2a5ba14f9f89",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "RAMCOCEM:INE331A01037",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "b597b4fc55fd86f90c55adfac44977b7ebff6859a26d83e114bc11282990f6c3",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "RAYMOND:INE301A01014",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "7b494a2972cccdad52c481ec17894d74e889f6279fce3952944279cc19502f0a",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "RBLBANK:INE976G01028",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "a84dabf3cfa4c81bf151e9b5b352cea73a3c76cef3ac4b2cc447cb9dd1383eb3",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "RCF:INE027A01015",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "ee1d0d7c5583ca86ae66bc275a6d93544768efaa94fd955753caedafc6c780c7",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown"
+   ]
+  },
+  {
+   "instrumentId": "RCOM:INE330H01018",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "fe98024a3b8615eec7f10b5e800d87df759d1270144147020e02ecc9704b2034",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "RECLTD:INE020B01018",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "66c293bbfc5ca205658dfb2e90c4e427dceff3062a7b88d646a8689f293560d3",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "RELCAPITAL:INE013A01015",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "1bc0ef2eadd41d52d341252eb411609cbede1d9aacd100f8ae2f999800f6d699",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "RELIANCE:INE002A01018",
+   "asOf": "2018-10-01",
+   "bucket": "mundane",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "8c3928e0500f8520c1e51c53e37165feacaba42a8d128bebf8fdddabb175f235",
+   "reasons": [
+    "sector:oil_gas_upstream_refining"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown"
+   ]
+  },
+  {
+   "instrumentId": "RELINFRA:INE036A01016",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "ad56900a92be27d3a282e75308f087026377af3c2e117aef960feade6269287a",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "REPCOHOME:INE612J01015",
+   "asOf": "2018-10-01",
+   "bucket": "underdogs",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "f080903805fb14a37962e865eae25c2799c40da6efddd1fcfee9bf3aecfca1db",
+   "reasons": [
+    "small_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "RIIL:INE046A01015",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "a511fab088862df1062b7b3ca2928dc07b0f69c55b0ce64670f3ac74377f6074",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "RPOWER:INE614G01033",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "8251cba2e2edc7d193cddc67cda9b4198a3c7742fd9f9805d2b74eb95c74a501",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "SAIL:INE114A01011",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "a728d9c9795f2b4f3e9caffa6bfa91d10ae9ffa7ba8b25df6d0ce0b5b7191542",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "SANOFI:INE058A01010",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "804b2dea6b5164ba581b41405ce1890b2e1ff4ac3a9e9665ffcaf6e22c9ef647",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "SBIN:INE062A01020",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "596e8788853abaa6fcc8429e0fbbb9a09576612656d8f016e38a760758afe367",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "SHANKARA:INE274V01019",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "5d24dd20b6c5b99b001c8bcc9e6782b0a260594173c948563a88ccb0810eaac0",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "SHREECEM:INE070A01015",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "61fc494f762db36f2c811914fe6101f32e9640f860e9e6161915504249256d15",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "SIEMENS:INE003A01024",
+   "asOf": "2018-10-01",
+   "bucket": "steady",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "5721d307322bf02d2d6b9e6c19a712e90103fa2679e0422f073058fc4a828f97",
+   "reasons": [
+    "large_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "SOBHA:INE671H01015",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "b2d268e3557d5a6dbe1509e53b6312b7c616717448ebb988435cb01a68bea910",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "SONATSOFTW:INE269A01021",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "bb6ed7e2e7b7bce129dc97a07de5ed54cada54c7d8fc69767764cdd2c3a6b673",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "SOUTHBANK:INE683A01023",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "b6e88a135feeccdc7c4b490690173f42524d12b3f3cc8bf30ec5ac007d769faa",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "SPARC:INE232I01014",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "1994e07ebcbaf9a98f27ff7ab3ee75019c3a5ba9c5083a7694266ed7e7c8fc19",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "SREINFRA:INE872A01014",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "14c0c922b2fafb1b5e7c1a84ca3fdbb3ac7497a02c5004934eadc57e938164b5",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "SRF:INE647A01010",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "93a056f1c073aa679bda5397b0bdb6f20e29960161b3ea26fbbdf6281ad59e17",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "SRTRANSFIN:INE721A01013",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "32dacef319fa7589973b0b3b3481d97a0e6c5cf1c608d02a624b51be85ff74e6",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "STAR:INE939A01011",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "05973fa6416a8cb13987a86d657956f5ff00c9d852340b5222c21630dcaeba33",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "STRTECH:INE089C01029",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "6c49bda78dd70ca671e044080a5f999f24d4400e8bdd5e313c307631db16c271",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "SUNPHARMA:INE044A01036",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "4f3245efa8fbc09856f561ffcb68c732233eb1ed43dcf7065cbdf23de119c958",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "SUNTECK:INE805D01026",
+   "asOf": "2018-10-01",
+   "bucket": "underdogs",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "eb4e25ff1b3fcb05927078e8763decbc7803245756282df9de38b0ff7c3cc193",
+   "reasons": [
+    "small_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "SUNTV:INE424H01027",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "5cded91a5b513787eb54ff4981f9ce623f0efcb68e2eaf933b95bdc218ca755b",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "SUVEN:INE495B01038",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "2ca98da96bdc2a177c6bde8f3fba696c590c6f46a893cf221e7025fe52671baf",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "SUZLON:INE040H01021",
+   "asOf": "2018-10-01",
+   "bucket": "cyclicals",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "b2f7b10309bee80c4aa4f6be2b37a8d263939e7122de2602a53278a2b77eb7c9",
+   "reasons": [
+    "sector:renewable_energy"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown"
+   ]
+  },
+  {
+   "instrumentId": "SYNDIBANK:INE667A01018",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "fbe8ec96919aa327799ce579a35658cf458a6a61dbd2f5a919ac5449c78242b7",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "TATACHEM:INE092A01019",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "0094ff246e0329686b7f656ff759892cdc9a31210485e16f28abd811ec8aad73",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "TATACOMM:INE151A01013",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "3939b3ff0792a73d003c8c7a95946c6b777cf211bab924e5f0efceaf60b95bd6",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "TATAELXSI:INE670A01012",
+   "asOf": "2018-10-01",
+   "bucket": "underdogs",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "9fdd2906d9f6265a845ba328dae807e1627d303c9a86b63d5b29a7fa26a7edd6",
+   "reasons": [
+    "small_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "TATAGLOBAL:INE192A01025",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "35e462858c6b79bdf44b473ec1d70e1392d784668c16ddf992664cf8a7ceb0b2",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "TATAMOTORS:INE155A01022",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "78ba8591791f4b9ffe9590673afcf8ab806de35772087cb0ac52d0c5be2e6ad5",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "TATAPOWER:INE245A01021",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "1092f00e4e4c6f1e1757a85d334ac4ef39ce48b7131734cc4a30ce976bb0f3e9",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "TATASPONGE:INE674A01014",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "d464b4b9e80309850e51f896eb3a03bd3e8504845a7704da663e49cc5a0ced63",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "TATASTEEL:INE081A01012",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "0e566e6474b99c3eed09c233e5705d1c579e629002c0626ee4836e23ee0a7e3e",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "TCS:INE467B01029",
+   "asOf": "2018-10-01",
+   "bucket": "steady",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "9751986595ee64d5131a4ac0908f4f7c5b7f6aaeb3da252a23a220aa08da2f18",
+   "reasons": [
+    "large_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "TECHM:INE669C01036",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "05383cab8bf259e79f4fe62c9a13fea651a200940f531010af10cdc66315df38",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "THOMASCOOK:INE332A01027",
+   "asOf": "2018-10-01",
+   "bucket": "underdogs",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "4e14aca8e9df48fb9f79719f566567f2710c47e5e146c7d40630ae7483c881b4",
+   "reasons": [
+    "small_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "TINPLATE:INE422C01014",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "bfd2ba6cbcbc4387e0393affdd6fc3beebfc129bb3c5620701472c04b3b0791d",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "TIRUMALCHM:INE338A01016",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "e884ca26c22952b2621ea059a64c0ce14ea67bab44adc0c66aff73ec12436399",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "size_unknown",
+    "volatility_unknown",
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "TITAN:INE280A01028",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "7d14999ab94322806560d5ceef8b40a51bfacdd188b90773d0bb0e6c504a7d6b",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "TORNTPHARM:INE685A01028",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "1cc29c335310cbb643ce40d69684a437cc41199bf75ba0ed3c4899beb0a44aba",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "TORNTPOWER:INE813H01021",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "6a406481ec8e60accb345390d872f51e9e29af0121f026acb5e980a6e38b87f5",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "TV18BRDCST:INE886H01027",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "a52b1583b72f4a36696564d95f09c996240bc40215bea86b1de8f7a37a3f9dec",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "TVSMOTOR:INE494B01023",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "7e5c9f3003021487f305ff5ba41dff900173738ff5f8c5bf9401b579da6f6a91",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "UBL:INE686F01025",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "9f5183e0ef7c1a4f0f474529930062cb6926acd5d958f97f1ca3c55d8acfca1f",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "UJJIVAN:INE334L01012",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "d58199fbf59c7fd0f9067ae62c1917ccec550513e906d46df2ca594897cd0ecd",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "ULTRACEMCO:INE481G01011",
+   "asOf": "2018-10-01",
+   "bucket": "steady",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "c5276ffdf1b74556b2eace431706864473626534aa09a09aeb6a6b59a2290344",
+   "reasons": [
+    "large_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "UNIONBANK:INE692A01016",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "545b4aae8de1811e391e9a5f435cb462d50cdc58ee01e9244b09ed12f8413bd5",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "UPL:INE628A01036",
+   "asOf": "2018-10-01",
+   "bucket": "cyclicals",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "3b5a6ab024715a302c6e1a0fbd256c40de1b6d30bf539212ee476945a560ec78",
+   "reasons": [
+    "sector:agrochemicals_pesticides"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown"
+   ]
+  },
+  {
+   "instrumentId": "VAKRANGEE:INE051B01021",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "056c243bbec80e8ba7ab6381aeeabec3ec7a9e0fb537e57ac424b48290336e9c",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "VEDL:INE205A01025",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "6b86b64e6b83321c9af983b8dbe02cfe67d5053250b67486574035858e04d094",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown"
+   ]
+  },
+  {
+   "instrumentId": "VENKEYS:INE398A01010",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "382434201f06a8c6732ea6045e26a8b272bc56487091d522214b4feb9133291d",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "VGUARD:INE951I01027",
+   "asOf": "2018-10-01",
+   "bucket": "underdogs",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "a4b2050f116ec4d08c54d2476feeff03dd59cb749d79d8b8e393d983b3d5bb03",
+   "reasons": [
+    "small_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "VIJAYABANK:INE705A01016",
+   "asOf": "2018-10-01",
+   "bucket": "underdogs",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "0ef9c959b8189c50a8ea8416c0deb6e224a642bbbe76c11393462eb1c59e38d5",
+   "reasons": [
+    "small_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "VIPIND:INE054A01027",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "d4f663b9b3ff7ebe0c3c6f6bd56283381101f086768d30796c788bc1b6e5b0b9",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "VOLTAS:INE226A01021",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "345bac71fff001c357c8d64f68015149f8199bb3b6da09973f7d5fbf40dc0661",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "WELCORP:INE191B01025",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "e681b7e3fe2a3596f3693e060f0bbf9edf5990feb9b6fdd9b9b216079564ef04",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "WELENT:INE625G01013",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "2066aee4b6aa953e1053f6266ad41839e2035780dfa19bca733d9783aca9027b",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "WELSPUNIND:INE192B01031",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "7a88c8bde2110378730305e6459332fe97a5b3ad90ae91eb0031af4587b07879",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "WHIRLPOOL:INE716A01013",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "1eaacc6500c11fd668ac3dfc91ee998d417cb6fe8d087a18db38ef08d418bcc7",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "WIPRO:INE075A01022",
+   "asOf": "2018-10-01",
+   "bucket": "steady",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "64995e62fe7fa63a20a214fcd2e5da9c3a563feca36f90cab983b64076e6bfab",
+   "reasons": [
+    "large_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "WOCKPHARMA:INE049B01025",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "3e5c0903811235ec149e66c02af8294988151d3ca2ed144e34aa5d4e0c785340",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "WSTCSTPAPR:INE976A01021",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "0878bcc4d04dc606044ed3ac4e82c6bd81057050f3ed938a6d8b5d9b244008d6",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "YESBANK:INE528G01019",
+   "asOf": "2018-10-01",
+   "bucket": "speculative",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "5c218e4ab607ada71ac984e596981d7e5b634625e3ea2c0e923b9734d969d983",
+   "reasons": [
+    "beta"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "ZEEL:INE256A01028",
+   "asOf": "2018-10-01",
+   "bucket": "steady",
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "f5698e6ff5f874a3a4363c3978402c95cbbbebb9e72a88ed0ea26fe19aa50d83",
+   "reasons": [
+    "large_cap",
+    "low_volatility"
+   ],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "ABCAPITAL:INE674K01013",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "4d080ee44c3f6c42d188bf9ac80ebd35450395bbc94ede0e86e4052b83b60337",
+   "reasons": [],
+   "partial": [
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "DCAL:INE385W01011",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "78f0c6f31f8c735dea6298ea03c71b486989a5b55f1db76f9c73f1b545d251ab",
+   "reasons": [],
+   "partial": [
+    "size_unknown",
+    "volatility_unknown",
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "ICICIGI:INE765G01017",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "3be46a69717ceea5a432a98d618e476e8d103fe2e885dce98cb39d2d4cbf2097",
+   "reasons": [],
+   "partial": [
+    "volatility_unknown",
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "SBILIFE:INE123W01016",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "ce92cddffc5820d2dd56ca798cd6762eb56ccc8f21b3aa634b6fe557800a56e8",
+   "reasons": [],
+   "partial": [
+    "volatility_unknown",
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "HDFCLIFE:INE795G01014",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "f32eb9209f7b54a27ce1f8bc548c376b216df5355cadab4f54a208da2bb625a7",
+   "reasons": [],
+   "partial": [
+    "volatility_unknown",
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "BANDHANBNK:INE545U01014",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "a43148275ea37c1f876d88b14cd71905c5f2d786a6088c37a04f5e16f3a19399",
+   "reasons": [],
+   "partial": [
+    "volatility_unknown",
+    "beta_unknown",
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  },
+  {
+   "instrumentId": "RITES:INE320J01015",
+   "asOf": "2018-10-01",
+   "bucket": null,
+   "ruleVersion": "bucket-v1",
+   "rulesHash": "442977650f27ff2ceb5cd08d908ceb0570bcca08766730233f4b939e76abf58e",
+   "inputsHash": "c0f2239b758ccb88edf0706fd6f1d6c38c18b0a6e8c8b0b40f0f7c98020bec02",
+   "reasons": [],
+   "partial": [
+    "size_unknown",
+    "volatility_unknown",
+    "beta_unknown",
+    "band_unknown",
+    "asm_unknown",
+    "sector_unknown"
+   ]
+  }
+ ]
+}

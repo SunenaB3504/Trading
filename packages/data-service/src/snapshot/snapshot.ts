@@ -12,6 +12,13 @@ export interface SeriesEntry {
   lastDate: string;
   bars: number;
   disputedBars: number;
+  /**
+   * Disputed bars that are known price events (a rights issue, a demerger, a factor only one provider applies):
+   * the day is flagged and left out of the evidence, but the series is not unverified because of it.
+   */
+  eventBars: number;
+  /** SHA-256 of the event dates, so a changed list changes the snapshot. */
+  eventDatesHash: string;
   /** SHA-256 of the unadjusted bars, the corporate actions and the adjusted bars (FR-D6). */
   barsHash: string;
   actionsHash: string;
@@ -36,6 +43,8 @@ export interface FrozenSeries {
   bars: BarUnadj[];
   adjusted: BarAdj[];
   actions: CorporateAction[];
+  /** Dates marked as known price events inside this series (sorted); empty if none. */
+  eventDates?: string[];
 }
 
 export interface SnapshotRequest {
@@ -44,6 +53,8 @@ export interface SnapshotRequest {
   asOf: string;
   /** Defaults to every instrument in the store. */
   instruments?: readonly string[];
+  /** Known price-event days per instrument. The bars on those days are flagged disputed in the snapshot. */
+  eventDays?: ReadonlyMap<string, readonly string[]>;
 }
 
 const withoutSnapshotId = <T extends { snapshotId: string }>(items: readonly T[]): unknown[] =>
@@ -56,6 +67,7 @@ const withoutSnapshotId = <T extends { snapshotId: string }>(items: readonly T[]
 const hashOf = (value: unknown): string => sha256Hex(canonicalJson(value));
 
 function entryFor(f: FrozenSeries): SeriesEntry {
+  const events = new Set(f.eventDates ?? []);
   const first = f.bars[0];
   const last = f.bars[f.bars.length - 1];
   return {
@@ -64,6 +76,8 @@ function entryFor(f: FrozenSeries): SeriesEntry {
     lastDate: last?.date ?? '',
     bars: f.bars.length,
     disputedBars: f.bars.filter((b) => b.disputed).length,
+    eventBars: f.bars.filter((b) => b.disputed && events.has(b.date)).length,
+    eventDatesHash: hashOf([...events].sort()),
     barsHash: hashOf(withoutSnapshotId(f.bars)),
     actionsHash: hashOf(f.actions),
     adjustedHash: hashOf(withoutSnapshotId(f.adjusted)),
@@ -77,19 +91,32 @@ function contentOf(
 ): Pick<DataSnapshot, 'asOf' | 'providers' | 'status' | 'series'> {
   const series = frozen.map(entryFor);
   const providers = [...new Set(frozen.flatMap((f) => f.bars.map((b) => b.provider)))].sort();
-  const clean = series.every((e) => e.disputedBars === 0 && e.adjustmentMismatches === 0);
+  const clean = series.every((e) => e.disputedBars === e.eventBars && e.adjustmentMismatches === 0);
   return { asOf, providers, status: clean ? 'verified' : 'unverified', series };
 }
 
 const idOf = (content: ReturnType<typeof contentOf>): string => hashOf(content);
 
-function freezeOne(store: SeriesStore, instrumentId: string, asOf: string): FrozenSeries {
-  const bars = store.unadjusted(instrumentId).filter((b) => b.date <= asOf);
+function freezeOne(
+  store: SeriesStore,
+  instrumentId: string,
+  asOf: string,
+  eventDays: readonly string[] = [],
+): FrozenSeries {
+  const events = new Set(eventDays);
+  const bars = store
+    .unadjusted(instrumentId)
+    .filter((b) => b.date <= asOf)
+    .map((b) => (events.has(b.date) ? { ...b, disputed: true } : b));
+  const eventDates = bars
+    .filter((b) => events.has(b.date))
+    .map((b) => b.date)
+    .sort();
   const actions = store.corporateActions(instrumentId).filter((a) => a.exDate <= asOf);
   const adjusted = store
     .adjusted(instrumentId, { includeDividends: false, asOf })
     .filter((b) => b.date <= asOf);
-  return { instrumentId, bars, adjusted, actions };
+  return { instrumentId, bars, adjusted, actions, eventDates };
 }
 
 function stamp(frozen: FrozenSeries, snapshotId: string): FrozenSeries {
@@ -109,7 +136,9 @@ export function createSnapshot(req: SnapshotRequest): {
   frozen: FrozenSeries[];
 } {
   const ids = [...(req.instruments ?? req.store.instruments())].sort();
-  const raw = ids.map((id) => freezeOne(req.store, id, req.asOf)).filter((f) => f.bars.length > 0);
+  const raw = ids
+    .map((id) => freezeOne(req.store, id, req.asOf, req.eventDays?.get(id)))
+    .filter((f) => f.bars.length > 0);
   const content = contentOf(req.asOf, raw);
   const id = idOf(content);
   return {

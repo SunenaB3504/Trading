@@ -1,4 +1,5 @@
 import { dayNumber } from '@trading/core';
+import { isShareRow } from '../providers/rawBar';
 import type { RawBarRow } from '../providers/rawBar';
 
 /** One (symbol, ISIN) pair and the sessions it was seen on. */
@@ -75,8 +76,8 @@ function collectListings(rows: readonly RawBarRow[]): Listing[] {
  * issues a new ISIN, usually the session after the ex-date). A symbol that reappears after a longer
  * gap is treated as a different instrument. Rows without an ISIN are ignored here.
  */
-export function buildIdentities(rows: readonly RawBarRow[]): InstrumentIdentity[] {
-  const listings = collectListings(rows);
+export function buildIdentities(allRows: readonly RawBarRow[]): InstrumentIdentity[] {
+  const listings = collectListings(allRows.filter(isShareRow));
   const uf = new UnionFind(listings.length);
   listings.forEach((a, i) => {
     listings.forEach((b, j) => {
