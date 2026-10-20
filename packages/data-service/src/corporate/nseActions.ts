@@ -48,9 +48,11 @@ function reduced(numerator: number, denominator: number): Ratio {
 /** `10` and `2.5` to hundredths, so a face value like Rs 2.5 still gives whole numbers. */
 const hundredths = (text: string): number => Math.round(Number(text) * 100);
 
-const BONUS = /BONUS\s*(\d+)\s*:\s*(\d+)/;
+/** `BONUS 1:2`, `BONUS- 1:2` and the abbreviation `BON 1:2`. */
+const BONUS = /\bBON(?:US)?[\s-]*(\d+)\s*:\s*(\d+)/;
+/** `SPLIT FRM RS 10 TO RS 2`, `FVSPLT FRM RS 10 TO RE 1`, `FV SPLT FRM RS 10 TO 1`, `SPLIT RS2 TO RE1`. */
 const SPLIT =
-  /SPL[A-Z]*\s*(?:FRM|FROM)\s*R[SE]\.?\s*([\d.]+)\s*(?:\/-)?\s*TO\s*R[SE]\.?\s*([\d.]+)/;
+  /SPL[A-Z]*\s*(?:(?:FRM|FROM)\s*)?R[SE]\.?\s*([\d.]+)\s*(?:\/-)?\s*TO\s*(?:R[SE]\.?\s*)?([\d.]+)/;
 
 function dividendPaise(purpose: string): number | null {
   const at = purpose.indexOf('DIV');
@@ -59,26 +61,42 @@ function dividendPaise(purpose: string): number | null {
   return Math.round(amounts.reduce((a, b) => a + b, 0) * 100);
 }
 
+function bonusRatioOf(p: string): Ratio | null {
+  const m = BONUS.exec(p);
+  return m === null ? null : reduced(Number(m[1]) + Number(m[2]), Number(m[2]));
+}
+
+/** null: no split in the text; 'unreadable': a split notice whose numbers cannot be used. */
+function splitRatioOf(p: string): Ratio | null | 'unreadable' {
+  const m = SPLIT.exec(p);
+  if (m === null) return null;
+  const from = hundredths(m[1] as string);
+  const to = hundredths(m[2] as string);
+  return from > 0 && to > 0 ? reduced(from, to) : 'unreadable';
+}
+
+/** Bonus and split notices, alone or together; null when the text holds neither. */
+function shareEvent(p: string): { type: 'bonus' | 'split'; ratio: Ratio } | 'unreadable' | null {
+  const bonus = bonusRatioOf(p);
+  const split = splitRatioOf(p);
+  if (split === 'unreadable') return split;
+  if (bonus === null) return split === null ? null : { type: 'split', ratio: split };
+  if (split === null) return { type: 'bonus', ratio: bonus };
+  // One notice can announce both ("BON 1:2/SPLIT RS2 TO RE1"): the shares multiply by both factors.
+  return {
+    type: 'bonus',
+    ratio: reduced(bonus.numerator * split.numerator, bonus.denominator * split.denominator),
+  };
+}
+
 /** Classifies the free-text purpose, or null for anything that does not affect prices or shares. */
 export function classify(
   purposeText: string,
 ): { type: NseActionType; ratio: Ratio | null; dividendPaise: number | null } | null {
   const p = purposeText.toUpperCase().replace(/\s+/g, ' ').trim();
-  const bonus = BONUS.exec(p);
-  if (bonus !== null)
-    return {
-      type: 'bonus',
-      ratio: reduced(Number(bonus[1]) + Number(bonus[2]), Number(bonus[2])),
-      dividendPaise: null,
-    };
-  const split = SPLIT.exec(p);
-  if (split !== null) {
-    const from = hundredths(split[1] as string);
-    const to = hundredths(split[2] as string);
-    return from > 0 && to > 0
-      ? { type: 'split', ratio: reduced(from, to), dividendPaise: null }
-      : null;
-  }
+  const event = shareEvent(p);
+  if (event === 'unreadable') return null;
+  if (event !== null) return { ...event, dividendPaise: null };
   const other: Array<[RegExp, NseActionType]> = [
     [/\bRI?GHTS?\b|\bRGHTS\b/, 'rights'],
     [/\bDEMERGER\b/, 'demerger'],
@@ -112,7 +130,8 @@ export interface ActionsFile {
   undated: number;
 }
 
-export const EQUITY_SERIES: readonly string[] = ['EQ', 'BE', 'BZ'];
+/** Main board plus the SME series: a company that moved from the SME platform keeps its earlier actions. */
+export const EQUITY_SERIES: readonly string[] = ['EQ', 'BE', 'BZ', 'SM', 'ST'];
 
 const HEADER = ['SERIES', 'SYMBOL', 'SECURITY', 'RECORD_DT', 'BC_STRT_DT', 'BC_END_DT', 'EX_DT'];
 

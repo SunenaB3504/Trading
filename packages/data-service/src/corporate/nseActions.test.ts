@@ -61,6 +61,21 @@ describe('reading the purpose text', () => {
     expect(classify(text)).toBeNull();
   });
 
+  it.each([
+    ['BONUS- 1:2', 'bonus', 3, 2],
+    ['BON 1:2/SPLIT RS2 TO RE1', 'bonus', 3, 1],
+    ['FV SPLT FRM RS 10 TO 1', 'split', 10, 1],
+    ['FVSPLT FRM RS 10 TO RS 2', 'split', 5, 1],
+    ['SPLIT RS2 TO RE1', 'split', 2, 1],
+    ['BONUS 4:5', 'bonus', 9, 5],
+  ])('reads the spelling seen in the real files: %s', (text, type, n, d) => {
+    expect(classify(text)).toEqual({
+      type,
+      ratio: { numerator: n, denominator: d },
+      dividendPaise: null,
+    });
+  });
+
   it('reads both date styles NSE has used and refuses blanks', () => {
     expect(isoDate('28/10/2024')).toBe('2024-10-28');
     expect(isoDate('2/3/2020')).toBe('2020-03-02');

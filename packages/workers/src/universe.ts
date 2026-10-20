@@ -10,7 +10,7 @@ import type { Bucket, UniverseCandidate, UniverseConfig } from '@trading/core';
  *
  * Usage:  pnpm universe --buckets data/derived/buckets_2018-10-01.json --seed "words" [--size 100]
  *            [--shares steady=0.27,underdogs=0.27,speculative=0.28,cyclicals=0.05,mundane=0.13]
- *            [--exclude-file symbols.txt] [--out data/derived/universe_draft.json]
+ *            [--exclude-file data/pilot_symbols.txt] [--out data/derived/universe_draft.json]
  */
 function option(args: readonly string[], name: string): string | undefined {
   const i = args.indexOf(name);
@@ -31,6 +31,8 @@ function sharesFrom(text: string | undefined): UniverseConfig['shares'] {
 
 interface BucketFile {
   asOf: string;
+  /** Every exchange symbol an instrument has traded under. */
+  aliases?: Record<string, string[]>;
   results: Array<{ instrumentId: string; bucket: Bucket | null }>;
 }
 
@@ -48,13 +50,17 @@ export function main(args: readonly string[]): number {
     bucket: r.bucket,
   }));
   const excludeFile = option(args, '--exclude-file');
-  const excluded =
+  const names =
     excludeFile === undefined
       ? []
       : readFileSync(excludeFile, 'utf8')
           .split(/\r?\n/)
           .map((s) => s.trim())
           .filter((s) => s !== '');
+  // The file lists exchange symbols (the pilot stocks); an instrument is left out if it ever traded under one.
+  const excluded = data.results
+    .map((r) => r.instrumentId)
+    .filter((id) => (data.aliases?.[id] ?? []).some((a) => names.includes(a)));
   const manifest = selectUniverse(candidates, {
     ...UNIVERSE_V1_DEFAULT,
     seed,
@@ -81,6 +87,7 @@ export function main(args: readonly string[]): number {
       asOf: data.asOf,
       chosen: manifest.members.length,
       shortfall: manifest.shortfall,
+      excludedPilotInstruments: excluded.length,
       buckets: manifest.buckets,
       hash: manifest.manifestHash,
       out,

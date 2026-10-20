@@ -45,7 +45,11 @@ function amfiLists(dir: string): AmfiRanks {
   );
 }
 
-async function loadFeeds(asOf: string, wanted: ReadonlySet<string>): Promise<InstrumentFeed[]> {
+async function loadFeeds(
+  asOf: string,
+  wanted: ReadonlySet<string>,
+  aliases: Record<string, string[]>,
+): Promise<InstrumentFeed[]> {
   const nse = new FileRawStore('data/raw/nse-bars');
   const rows = await loadBars(nse, addDays(asOf, -440), addDays(asOf, -1));
   const identities = buildIdentities(rows);
@@ -63,6 +67,7 @@ async function loadFeeds(asOf: string, wanted: ReadonlySet<string>): Promise<Ins
       actions.filter((a) => a.instrumentId === identity.instrumentId),
       { includeDividends: false },
     );
+    aliases[identity.instrumentId] = identity.listings.map((l) => l.symbol);
     feeds.push({
       instrumentId: identity.instrumentId,
       isin: latest.isin,
@@ -96,7 +101,8 @@ export async function main(args: readonly string[]): Promise<number> {
       .map((s) => s.trim())
       .filter((s) => s !== ''),
   );
-  const feeds = await loadFeeds(asOf, wanted);
+  const aliases: Record<string, string[]> = {};
+  const feeds = await loadFeeds(asOf, wanted, aliases);
   const sectors = parseSectorTable(
     readFileSync(option(args, '--sectors') ?? 'data/sector/sector_tags_v2.csv', 'utf8'),
   );
@@ -120,7 +126,7 @@ export async function main(args: readonly string[]): Promise<number> {
   const rulesHash = bucketRulesHash(BUCKET_RULES_V1);
   writeFileSync(
     out,
-    JSON.stringify({ asOf, rulesHash, sectorsHash: sectors.hash, results }, null, 1),
+    JSON.stringify({ asOf, rulesHash, sectorsHash: sectors.hash, aliases, results }, null, 1),
   );
   console.log(
     JSON.stringify({
