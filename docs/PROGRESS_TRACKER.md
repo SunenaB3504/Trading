@@ -5,7 +5,7 @@
 **Status values:** `Not started` · `In progress` · `Blocked` · `Done`  
 **Done means** the work package's acceptance test (see the plan) has been run and the result is recorded in the *Acceptance result* column. Failures are recorded as failures; a work package with a failing test stays `In progress`.
 
-**Last updated:** 2026-10-19 (WP-3.12 lots popup and WP-4.12 edit birth details built; UAT round 3 closed early, 15 of 23 passed, 8 skipped)
+**Last updated:** 2026-10-20 (P5 code complete and tested on synthetic data; Hindi, lots popup, edit birth details, persistence, OpenTimestamps adapter with one live stamp, Yahoo cross-check and shortlist built; UAT round 4 page prepared; 927 tests)
 
 ## Phase summary
 
@@ -23,7 +23,7 @@
 | P11 · Commercialization (after R2; gated by D32) | 0 | 0 | 0 | 4 | 4 |
 <!-- SUMMARY-END -->
 
-**Next work package:** P5 (experiment harness and buyer-company overlay); then WP-2.9 remaining part (pre-2020 calendar from the archive, Yahoo cross-check and disputes list, universe selection, frozen buckets) and WP-3.9 (snapshot client; waits on D26). Owner: the 8 skipped UAT-3 cases and the Malayalam text review are still open; stock first-trade registry and dual-listing rule (e.g. Reliance) need a decision; schedule the daily recording job; back up `data/raw`; confirm D1, T17 and the three D26 points  
+**Next work package:** none that the assistant can build alone. The real first run (WP-5.6) and the rest of WP-2.9 wait on the owner: decisions D26, D36, D38, D39, D40 and the claimed effect sizes (D21); the Yahoo pull and `pnpm crosscheck`, then the disputes review; UAT round 4 and the Malayalam and Hindi text reviews. Everything is listed with recommendations in `OWNER_ACTIONS.md`. Android (WP-6.1) starts after the R2 report; the commercial phase (P11) after the legal review (D32)  
 **Open blockers:** none
 
 ---
