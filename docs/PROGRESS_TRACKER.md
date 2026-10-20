@@ -28,6 +28,50 @@
 
 ---
 
+## UAT coverage
+
+*Which work packages the owner has accepted by hand, which only in part, and which have not been tried. Updated 2026-10-20. "Owner" means run by Sunil on the local laptop; "assistant" means a script or command run by the assistant (no one has used the screen). Case ids refer to the round's page in `docs/UAT/`.*
+
+**Rounds**
+
+| Round | Page | Scope | Result |
+| ------ | ------ | ------ | ------ |
+| 1 | `UAT_R1.html`, record in `UAT/UAT-1/` | The web app on demo data: Ledger, offline, Trade, Compare, Report, Backup, Universe, phone width, no astro terms | **Signed off.** 25 of 25 passed (J1 to J3 and I1 by the assistant, the other 21 by the owner). Defects D-1, D-2 fixed |
+| 2 | `UAT/UAT-2/` | The round 1 polish, and the optional layer: Profile, chart facts, Chandrashtama, Tara Bala | **Signed off.** 30 of 30 passed. Defect D-3 fixed. Decisions T22 and T23 |
+| 3 | `UAT/UAT-3/` | Profile iteration (gender, typed-in star, place shown) and the Malayalam/English switcher | **Closed early, not signed off.** 15 of 23 passed, 0 failed, 8 skipped by the owner (A7, B1, B4, B6, B7, B10, B12, B13) |
+| 4 | `UAT/UAT-4/` | Lots popup, Edit birth details, Hindi, and the round 3 cases skipped | **Prepared, not run.** 23 cases |
+
+**Per work package**
+
+| WP | What | UAT status | Evidence |
+| ------ | ------ | ------ | ------ |
+| 3.1 | App shell, offline views, saved orders | **Accepted by the owner** | R1 A1, B1, B2, C4 |
+| 3.2 | Universe screen | **Accepted by the owner** | R1 G1 to G4; R2 A8, A13 (defect D-1 fixed) |
+| 3.3 | Order entry, positions, cash | **Accepted by the owner** | R1 C1 to C5; R2 A1 to A7 (defect D-2 fixed) |
+| 3.4 | Ledger A beside Ledger B | **Accepted by the owner** | R1 A1, A2, D1; R2 A11 |
+| 3.5 | Win/loss report | **Accepted by the owner** | R1 E1, E2; R2 A10 (defect D-3 fixed) |
+| 3.6 | Signed export and import | **Accepted by the owner** | R1 F1 to F4 |
+| 3.7 | Phone layout | **Accepted by the owner** | R1 H1; R2 A12, A13, B13 |
+| 3.8 | Paper execution adapter | Accepted through 3.3 (no screen of its own) | Every order case goes through it |
+| 3.10, 3.11 | Entitlement seam and astro gate | **Accepted by the owner** for the locked and unlocked states; no-astro sweep by the assistant | R1 I1 (assistant script); R2 B1, B2, B12 (owner) |
+| 4.2, 4.3 | Chart conventions and features | Accepted through 4.7 (chart facts compared with Swiss Ephemeris) | R2 B5, C3 |
+| 4.7 | Personal profile: encrypted store, gazetteer, local chart | **Accepted by the owner** | R2 B1 to B14 |
+| 4.8 | Chandrashtama banner and Tara Bala | **Accepted by the owner** | R2 B8, B9 |
+| 4.9 | Gender, typed-in star, place shown, plural fix | **Mostly accepted**: A1 to A6 passed; A7 (the "1 trade" wording) skipped | R3 A1 to A6 |
+| 4.10 | Malayalam and English switcher | **Partly accepted**: B2, B3, B5, B8, B9, B11 passed; B1, B4, B6, B7, B10, B12 skipped; Malayalam text review (B13) not done | R3 |
+| 3.12 | Lots popup | **Not yet tried** (automated browser check passes, 17 checks) | R4 A1 to A5 |
+| 4.11 | Hindi | **Not yet tried** (Hindi text review not done) | R4 C1 to C7 |
+| 4.12 | Edit my birth details | **Not yet tried** | R4 B1 to B5 |
+| 1.1 to 1.11 | Core ledger, fills, costs, replay | No separate acceptance; exercised through the Trade, Ledger and Report cases. Backend cases (verify, replay hash) run by the assistant | R1 J1, J3; R2 C1; the owner found simulator defect D-3 this way |
+| 2.1 to 2.9 | Data service and universe | Not user-testable yet (back end). Only the demo data service was shown | R1 B1 |
+| 4.1, 4.4, 4.5, 4.6 | Engine audit, signal log, anchoring, no-data fallback | Not user-testable (no screen); covered by automated tests only | n/a |
+| 5.1 to 5.7 | Experiment registry, overlays, arms, buyer-company features, router, frozen run, ticket | **No UAT yet.** No screen shows them (the ticket card is not wired to a screen); covered by automated tests on synthetic data | n/a |
+| 6.1, 7.x, 11.x | Android, Jyotisham modules, commercial phase | Not started | n/a |
+
+**Outstanding for UAT:** the 8 skipped round 3 cases (they are repeated in round 4 as D1 to D4 plus the Hindi cases), all of round 4, and the Malayalam and Hindi text reviews.
+
+---
+
 ## P0 · Decisions, skeleton and de-risking
 
 | WP | Work package | Depends on | Status | Started | Done | Acceptance result | Notes |
@@ -283,3 +327,4 @@
 | 2026-10-19 | UAT round 4 page prepared (docs/UAT/UAT-4/UAT-4.html, 23 cases, built by tools/makeUat4.py): lots popup (expected values worked from the demo ledger: AAA 47 shares, average Rs 1,108.05, three lots), Edit my birth details, Hindi, and the round 3 cases that were skipped. Not yet run by the owner. Also fixed "1 lots" to "1 lot" |
 | 2026-10-19 | WP-3.12: browser check for the lots popup added (17 checks) and a real defect found and fixed (Esc did not close the popup). UAT-4 case A4 now has an automated pre-check behind it |
 | 2026-10-20 | WP-4.5: live OpenTimestamps stamp of a harmless test digest succeeded (alice calendar, 272-byte pending proof). Only the digest of a fixed test sentence was sent |
+| 2026-10-20 | Added a "UAT coverage" section: the four rounds with their results, and for every work package whether the owner accepted it, accepted it in part, has not tried it, or it cannot be user-tested. Owner-accepted: 3.1 to 3.7, 3.8, 3.10, 3.11, 4.7, 4.8; mostly: 4.9; partly: 4.10; not yet tried: 3.12, 4.11, 4.12 (round 4); no UAT possible yet: 1.x, 2.x, 4.1, 4.4 to 4.6, 5.x |
