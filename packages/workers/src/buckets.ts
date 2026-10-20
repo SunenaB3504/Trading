@@ -29,7 +29,7 @@ import type { InstrumentFeed } from '@trading/data-service';
  * only: adjusted closes from the exchange archive, AMFI size lists, recorded band and surveillance status, the
  * frozen sector table and the Nifty 50 price index for beta. Everything used is dated before the window start.
  *
- * Usage:  pnpm buckets --as-of 2026-01-01 [--shortlist data/derived/shortlist.txt] [--out data/derived/buckets.json]
+ * Usage:  pnpm buckets --as-of 2026-01-01 [--shortlist data/derived/shortlist.txt] [--out data/derived/buckets.json] [--sectors data/sector/sector_tags_v2.csv]
  */
 function option(args: readonly string[], name: string): string | undefined {
   const i = args.indexOf(name);
@@ -97,7 +97,9 @@ export async function main(args: readonly string[]): Promise<number> {
       .filter((s) => s !== ''),
   );
   const feeds = await loadFeeds(asOf, wanted);
-  const sectors = parseSectorTable(readFileSync('data/sector/sector_tags_v1.csv', 'utf8'));
+  const sectors = parseSectorTable(
+    readFileSync(option(args, '--sectors') ?? 'data/sector/sector_tags_v2.csv', 'utf8'),
+  );
   const market = await loadIndexCloses(
     new FileRawStore('data/raw/nse-index'),
     'Nifty 50',
