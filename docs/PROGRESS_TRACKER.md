@@ -39,7 +39,7 @@
 | 1 | `UAT_R1.html`, record in `UAT/UAT-1/` | The web app on demo data: Ledger, offline, Trade, Compare, Report, Backup, Universe, phone width, no astro terms | **Signed off.** 25 of 25 passed (J1 to J3 and I1 by the assistant, the other 21 by the owner). Defects D-1, D-2 fixed |
 | 2 | `UAT/UAT-2/` | The round 1 polish, and the optional layer: Profile, chart facts, Chandrashtama, Tara Bala | **Signed off.** 30 of 30 passed. Defect D-3 fixed. Decisions T22 and T23 |
 | 3 | `UAT/UAT-3/` | Profile iteration (gender, typed-in star, place shown) and the Malayalam/English switcher | **Closed early, not signed off.** 15 of 23 passed, 0 failed, 8 skipped by the owner (A7, B1, B4, B6, B7, B10, B12, B13) |
-| 4 | `UAT/UAT-4/` | Lots popup, Edit birth details, Hindi, and the round 3 cases skipped | **Prepared, not run.** 23 cases |
+| 4 | `UAT/UAT-4/` | Lots popup, Edit birth details, Hindi, and the round 3 cases skipped | **Prepared; 2 of 23 closed.** E1 and E2 (command line) passed on 2026-10-20, run by the assistant at the owner's request: 927 tests; browser checks 9, 14, 11, 9, 118, 25, 46 and 17. The other 21 cases are the owner's |
 
 **Per work package**
 
@@ -328,3 +328,4 @@
 | 2026-10-19 | WP-3.12: browser check for the lots popup added (17 checks) and a real defect found and fixed (Esc did not close the popup). UAT-4 case A4 now has an automated pre-check behind it |
 | 2026-10-20 | WP-4.5: live OpenTimestamps stamp of a harmless test digest succeeded (alice calendar, 272-byte pending proof). Only the digest of a fixed test sentence was sent |
 | 2026-10-20 | Added a "UAT coverage" section: the four rounds with their results, and for every work package whether the owner accepted it, accepted it in part, has not tried it, or it cannot be user-tested. Owner-accepted: 3.1 to 3.7, 3.8, 3.10, 3.11, 4.7, 4.8; mostly: 4.9; partly: 4.10; not yet tried: 3.12, 4.11, 4.12 (round 4); no UAT possible yet: 1.x, 2.x, 4.1, 4.4 to 4.6, 5.x |
+| 2026-10-20 | UAT round 4 command-line cases E1 and E2 run by the assistant at the owner's request and closed as passed (927 tests; airplane 9, orders 14, backup 11, universe 9, phone 118, no-astro 25, profile 46, lots 17; none failed). The 21 cases that need a person are still open |
