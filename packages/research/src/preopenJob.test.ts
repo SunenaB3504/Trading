@@ -11,10 +11,11 @@ import {
   verifyLock,
 } from '@trading/astro-engine';
 import type { Anchorer, LogEntry } from '@trading/astro-engine';
-import { eventHash, sessionOn } from '@trading/core';
-import { AppendOnlyFile } from '@trading/data-service';
+import { eventHash, sessionOn, sha256Bytes } from '@trading/core';
+import { AppendOnlyFile, OpenTimestampsAnchorer } from '@trading/data-service';
+import type { HttpClient } from '@trading/data-service';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { runPreopen } from './preopenJob';
+import { runPreopen, upgradeLockProofs } from './preopenJob';
 import type { PreopenDeps, PreopenInput } from './preopenJob';
 
 const DATE = '2026-10-19';
@@ -183,5 +184,87 @@ describe('the daily pre-open job', () => {
     await expect(runPreopen(deps(), input({ date: '2026-10-18' }))).rejects.toThrow(
       'not a trading day',
     );
+  });
+});
+
+describe('upgrading the proofs of locked days', () => {
+  const ALICE = 'https://alice.btc.calendar.opentimestamps.org';
+  const nonce = Uint8Array.from({ length: 16 }, (_, i) => i + 1);
+  const uri = new TextEncoder().encode(ALICE);
+  const pendingReply = Uint8Array.from([
+    0xf0,
+    16,
+    ...nonce,
+    0x08,
+    0x00,
+    0x83,
+    0xdf,
+    0xe3,
+    0x0d,
+    0x2e,
+    0xf9,
+    0x0c,
+    0x8e,
+    uri.length + 1,
+    uri.length,
+    ...uri,
+  ]);
+  const bitcoin = Uint8Array.from([
+    0x00, 0x05, 0x88, 0x96, 0x0d, 0x73, 0xd7, 0x19, 0x01, 3, 0x80, 0xea, 0x30,
+  ]);
+  const hex = (b: Uint8Array): string =>
+    [...b].map((x) => x.toString(16).padStart(2, '0')).join('');
+
+  async function lockedDay() {
+    const poster = {
+      post: () => Promise.resolve({ status: 200, body: pendingReply, headers: {} }),
+    };
+    const d = deps({ anchorer: new OpenTimestampsAnchorer({ poster, now: () => BEFORE + 1000 }) });
+    const r = await runPreopen(d, input());
+    const commitment = sha256Bytes(Uint8Array.from([...hexBytes(r.lock.event.hash), ...nonce]));
+    return { d, url: `${ALICE}/timestamp/${hex(commitment)}` };
+  }
+  const hexBytes = (h: string): Uint8Array =>
+    Uint8Array.from((h.match(/../g) ?? []).map((x) => parseInt(x, 16)));
+  const calendar = (url: string, ready: boolean): HttpClient => ({
+    get: (u) =>
+      Promise.resolve({
+        status: ready && u === url ? 200 : 404,
+        body: ready ? bitcoin : new Uint8Array(0),
+        headers: {},
+      }),
+  });
+
+  it('stays pending while the calendar has nothing, then records the completed proof once', async () => {
+    const { d, url } = await lockedDay();
+    const proofsFile = join(dir, 'proofs.jsonl');
+    const args = { files: d.files, proofsFile, now: () => 5 };
+    expect(await upgradeLockProofs({ ...args, http: calendar(url, false) })).toEqual({
+      upgraded: [],
+      stillPending: [DATE],
+    });
+    expect(await upgradeLockProofs({ ...args, http: calendar(url, true) })).toEqual({
+      upgraded: [DATE],
+      stillPending: [],
+    });
+    const stored = new AppendOnlyFile<{ bitcoinHeights: number[] }>(proofsFile).readAll();
+    expect(stored).toHaveLength(1);
+    expect(stored[0]?.bitcoinHeights).toEqual([800000]);
+    expect(await upgradeLockProofs({ ...args, http: calendar(url, true) })).toEqual({
+      upgraded: [],
+      stillPending: [],
+    });
+  });
+
+  it('leaves the lock itself unchanged', async () => {
+    const { d, url } = await lockedDay();
+    const before = new AppendOnlyFile(d.files.locks).readAll();
+    await upgradeLockProofs({
+      files: d.files,
+      proofsFile: join(dir, 'p.jsonl'),
+      http: calendar(url, true),
+      now: () => 5,
+    });
+    expect(new AppendOnlyFile(d.files.locks).readAll()).toEqual(before);
   });
 });

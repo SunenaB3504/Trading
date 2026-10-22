@@ -10,7 +10,8 @@ import type {
 } from '@trading/astro-engine';
 import type { FeatureSet } from '@trading/astro-engine';
 import { sessionOn } from '@trading/core';
-import { AppendOnlyFile } from '@trading/data-service';
+import { AppendOnlyFile, upgradeProof } from '@trading/data-service';
+import type { HttpClient } from '@trading/data-service';
 
 /**
  * The daily pre-open job (FR-S9, D16, WP-4.5): write the day's signal rows, then lock them with an outside
@@ -106,3 +107,50 @@ export async function runPreopen(deps: PreopenDeps, input: PreopenInput): Promis
   lockFile.append(lock);
   return { status: 'locked', lock, rowsWritten: written };
 }
+
+/** One upgraded proof for a locked day, kept beside (never inside) the lock, which is never edited. */
+export interface UpgradedProof {
+  date: string;
+  digest: string;
+  proof: string;
+  bitcoinHeights: number[];
+  upgradedAt: number;
+}
+
+/**
+ * Asks the calendars about every anchored day whose proof has not yet reached Bitcoin, and records the completed
+ * proofs in `proofsFile`. Run it some hours after the lock, and again later; a day already upgraded is skipped.
+ */
+export async function upgradeLockProofs(deps: {
+  files: PreopenFiles;
+  proofsFile: string;
+  http: HttpClient;
+  now(): number;
+}): Promise<{ upgraded: string[]; stillPending: string[] }> {
+  const store = new AppendOnlyFile<UpgradedProof>(deps.proofsFile);
+  const done = new Set(store.readAll().map((p) => p.date));
+  const result = { upgraded: [] as string[], stillPending: [] as string[] };
+  for (const lock of new AppendOnlyFile<DayLock>(deps.files.locks).readAll()) {
+    const proof = lock.receipt?.proof;
+    if (lock.status !== 'anchored' || proof === undefined || done.has(lock.date)) continue;
+    const r = await upgradeProof(hexBytes(proof), deps.http);
+    if (r.status !== 'attested') {
+      result.stillPending.push(lock.date);
+      continue;
+    }
+    store.append({
+      date: lock.date,
+      digest: lock.event.hash,
+      proof: bytesHex(r.proof),
+      bitcoinHeights: r.bitcoinHeights,
+      upgradedAt: deps.now(),
+    });
+    result.upgraded.push(lock.date);
+  }
+  return result;
+}
+
+const hexBytes = (h: string): Uint8Array =>
+  Uint8Array.from((h.match(/../g) ?? []).map((x) => parseInt(x, 16)));
+const bytesHex = (b: Uint8Array): string =>
+  [...b].map((x) => x.toString(16).padStart(2, '0')).join('');

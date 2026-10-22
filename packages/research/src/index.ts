@@ -1,2 +1,8 @@
-export { runPreopen } from './preopenJob';
-export type { PreopenDeps, PreopenFiles, PreopenInput, PreopenResult } from './preopenJob';
+export { runPreopen, upgradeLockProofs } from './preopenJob';
+export type {
+  PreopenDeps,
+  PreopenFiles,
+  PreopenInput,
+  PreopenResult,
+  UpgradedProof,
+} from './preopenJob';
