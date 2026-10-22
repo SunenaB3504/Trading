@@ -66,6 +66,15 @@ describe('the astro engine is reachable only through the gated folder', () => {
     }
   });
 
+  it('is used by the research package, which no shipped package depends on (offline research jobs only)', () => {
+    const research = readFileSync(join(root, 'packages', 'research', 'package.json'), 'utf8');
+    expect(research.includes('@trading/astro-engine')).toBe(true);
+    for (const pkg of SHIPPED) {
+      const m = readFileSync(join(root, 'packages', pkg, 'package.json'), 'utf8');
+      expect(m.includes('@trading/research'), pkg).toBe(false);
+    }
+  });
+
   it('is loaded only by a dynamic import inside the gated folder, never by a static one', () => {
     const gated = walk(join(root, ASTRO_DIR)).filter((f) => !/\.test\.tsx?$/.test(f));
     const lines = gated.flatMap((f) =>
