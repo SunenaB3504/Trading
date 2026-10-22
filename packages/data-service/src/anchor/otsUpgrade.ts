@@ -260,3 +260,21 @@ export async function upgradeProof(file: Uint8Array, http: HttpClient): Promise<
     notes,
   };
 }
+
+/** Each Bitcoin attestation with the message it vouches for: the block's Merkle root, in the block header's own byte order. */
+export function bitcoinCommitments(
+  p: ParsedProof,
+): Array<{ height: number; merkleRoot: Uint8Array }> {
+  const out: Array<{ height: number; merkleRoot: Uint8Array }> = [];
+  const walk = (node: Node, msg: Uint8Array): void => {
+    for (const it of node.items) {
+      if ('op' in it) walk(it.op.next, applyOp(it.op.tag, it.op.arg, msg));
+      else {
+        const leaf = leafOf(it.att);
+        if (leaf.kind === 'bitcoin') out.push({ height: leaf.height, merkleRoot: msg });
+      }
+    }
+  };
+  walk(p.root, p.digest);
+  return out;
+}

@@ -34,6 +34,7 @@
     "universe:snapshot": "tsx packages/workers/src/universeSnapshot.ts",
     "ots:probe": "tsx packages/workers/src/otsProbe.ts",
     "ots:upgrade": "tsx packages/workers/src/otsUpgrade.ts",
+    "ots:verify": "tsx packages/workers/src/otsVerify.ts",
     "snapshot:publish": "tsx packages/workers/src/publishSnapshot.ts",
     "snapshot:serve": "tsx packages/workers/src/serveSnapshots.ts",
     "uat:start": "tsx tools/uat/start.ts",

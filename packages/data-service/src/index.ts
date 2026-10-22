@@ -148,8 +148,16 @@ export {
   otsFile,
 } from './anchor/openTimestamps';
 export type { HttpPoster, OtsOptions, OtsProof } from './anchor/openTimestamps';
-export { leaves, parseProof, serializeProof, upgradeProof } from './anchor/otsUpgrade';
+export {
+  bitcoinCommitments,
+  leaves,
+  parseProof,
+  serializeProof,
+  upgradeProof,
+} from './anchor/otsUpgrade';
 export type { Leaf, ProofStatus, UpgradeResult } from './anchor/otsUpgrade';
+export { verifyBitcoinAttestations } from './anchor/otsVerify';
+export type { BitcoinCheck, BlockSource } from './anchor/otsVerify';
 export {
   AppendOnlyFile,
   StoreError,
