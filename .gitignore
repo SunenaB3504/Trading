@@ -21,3 +21,4 @@ docs/UAT/**/bundle*.txt
 *.tmp.txt
 *.tmp.ts
 data/derived/
+data/publish/
