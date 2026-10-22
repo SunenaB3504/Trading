@@ -5,3 +5,4 @@ research/pilot/PROVENANCE.json -text
 # The frozen universe is hashed byte for byte, so git must not change its line endings.
 data/frozen/** -text
 data/pilot_symbols.txt -text
+data/registry/** -text
