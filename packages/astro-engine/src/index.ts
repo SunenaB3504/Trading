@@ -56,6 +56,7 @@ export {
   buyerFeatures,
   buyerFeaturesOn,
   firstSyllable,
+  APPROVED_NAMA_TABLE_V1,
   makeNamaTable,
   nameStar,
 } from './buyer';

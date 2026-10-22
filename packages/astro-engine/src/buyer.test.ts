@@ -2,6 +2,7 @@ import { EMPTY_REGISTRY, evaluateOverlay, freeze, preRegister } from '@trading/c
 import type { InstrumentName } from '@trading/core';
 import { describe, expect, it } from 'vitest';
 import {
+  APPROVED_NAMA_TABLE_V1,
   PROPOSED_NAMA_TABLE_V1 as TABLE,
   buyerFeatures,
   buyerFeaturesOn,
@@ -153,5 +154,33 @@ describe('H-21 as an overlay', () => {
     const none = ask('Tata Motors', quiet);
     expect(none.ok && none.result.stateCode).toBe('GRAY-NOSIGNAL');
     expect(none.ok && none.result.decision).toBe('allow');
+  });
+});
+
+const PROPOSED_NAMA_TABLE_V1 = TABLE;
+
+describe('the table the owner approved (D38)', () => {
+  const claim = { effectSizePct: 0.5, horizonSessions: 20, excludedInstruments: [] };
+
+  it('is the printed list as it is, now approved, with the same hash (approval does not change what is frozen)', () => {
+    expect(APPROVED_NAMA_TABLE_V1.status).toBe('approved');
+    expect(APPROVED_NAMA_TABLE_V1.syllables).toEqual(PROPOSED_NAMA_TABLE_V1.syllables);
+    expect(APPROVED_NAMA_TABLE_V1.hash).toBe(PROPOSED_NAMA_TABLE_V1.hash);
+  });
+
+  it('lets H-21 be specified, which the proposed table was not', () => {
+    expect(() => h21Spec(APPROVED_NAMA_TABLE_V1, claim)).not.toThrow();
+    expect(() => h21Spec(PROPOSED_NAMA_TABLE_V1, claim)).toThrow('only proposed');
+  });
+
+  it('gives no signal for a syllable that belongs to two stars (nothing is guessed)', () => {
+    const ambiguous = Object.entries(APPROVED_NAMA_TABLE_V1.syllables).filter(
+      ([, stars]) => stars.length > 1,
+    );
+    expect(ambiguous).toHaveLength(13);
+    expect(nameStar('Tata Steel', APPROVED_NAMA_TABLE_V1)).toMatchObject({
+      star: null,
+      reason: 'ambiguous',
+    });
   });
 });

@@ -96,6 +96,17 @@ export const PROPOSED_NAMA_TABLE_V1: NamaTable = makeNamaTable(
   COMMON_LIST.flatMap((row, star) => row.map((s): [string, number] => [s, star])),
 );
 
+/**
+ * The same list, APPROVED by the owner on 2026-10-22 as decision D38: the printed list as it is, and a syllable that
+ * belongs to two stars gives no signal (nothing is guessed). This is the table H-21 may be registered with.
+ */
+export const APPROVED_NAMA_TABLE_V1: NamaTable = makeNamaTable(
+  'common-printed-list',
+  1,
+  'approved',
+  COMMON_LIST.flatMap((row, star) => row.map((s): [string, number] => [s, star])),
+);
+
 /** Lowercase Latin letters only: accents and diacritics folded, spaces and punctuation dropped. */
 const letters = (name: string): string =>
   name
