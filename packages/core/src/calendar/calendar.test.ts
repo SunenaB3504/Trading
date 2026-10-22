@@ -157,7 +157,7 @@ describe('queries', () => {
   });
 
   it('refuses dates outside the supported range', () => {
-    expect(() => sessionOn('2017-12-31')).toThrow(CalendarRangeError);
+    expect(() => sessionOn('2009-12-31')).toThrow(CalendarRangeError);
     expect(() => sessionOn('2027-01-01')).toThrow(CalendarRangeError);
   });
 
