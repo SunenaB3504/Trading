@@ -22,7 +22,7 @@ import {
   parseSectorTable,
   toCorporateActions,
 } from '@trading/data-service';
-import type { InstrumentFeed } from '@trading/data-service';
+import type { DatedClose, InstrumentFeed } from '@trading/data-service';
 
 /**
  * Assigns the objective buckets (SSD §10.2, D35) to the shortlisted names at a window start, from real files
@@ -88,6 +88,17 @@ function tally(results: readonly { bucket: string | null; partial: readonly stri
   return { counts, partial };
 }
 
+/** The Nifty 50 closes before the asOf date. NSE named the same index "S&P CNX Nifty", then "CNX Nifty", before "Nifty 50" (Nov 2015). */
+async function niftyCloses(asOf: string): Promise<DatedClose[]> {
+  const store = new FileRawStore('data/raw/nse-index');
+  const from = addDays(asOf, -440);
+  const to = addDays(asOf, -1);
+  const both = [];
+  for (const name of ['S&P CNX Nifty', 'CNX Nifty', 'Nifty 50'])
+    both.push(...(await loadIndexCloses(store, name, from, to)));
+  return both.sort((a, b) => (a.date < b.date ? -1 : 1));
+}
+
 export async function main(args: readonly string[]): Promise<number> {
   const asOf = option(args, '--as-of');
   if (asOf === undefined) {
@@ -106,12 +117,7 @@ export async function main(args: readonly string[]): Promise<number> {
   const sectors = parseSectorTable(
     readFileSync(option(args, '--sectors') ?? 'data/sector/sector_tags_v2.csv', 'utf8'),
   );
-  const market = await loadIndexCloses(
-    new FileRawStore('data/raw/nse-index'),
-    'Nifty 50',
-    addDays(asOf, -440),
-    addDays(asOf, -1),
-  );
+  const market = await niftyCloses(asOf);
   const inputs = buildBucketInputs(feeds, {
     asOf,
     market,
