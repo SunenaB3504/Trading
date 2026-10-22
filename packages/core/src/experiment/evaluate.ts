@@ -50,7 +50,8 @@ export function evaluateRule(p: Panel, cfg: EvalConfig, rng: Rng): EvaluationRep
   return {
     rawNOn,
     rawNOff: kept - rawNOn,
-    embargoDropped: p.on.length - kept,
+    embargoDropped:
+      (p.valid === undefined ? p.on.length : p.valid.reduce((n, v) => n + v, 0)) - kept,
     ess: effectiveSampleSize(onReturnSeries(agg), p.horizon),
     nonOverlap: nonOverlappingTest(p, agg, cfg.offset),
     bootstrap: jointBlockBootstrap(agg, rng.fork('bootstrap'), {

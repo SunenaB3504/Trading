@@ -160,6 +160,20 @@ function verdictFor(
   });
 }
 
+/** A cell with no usable return can neither be taken nor denied: it leaves arm A as it leaves every other arm. */
+function dropInvalid(
+  run: { mask: Uint8Array; weights: Float64Array },
+  valid: Uint8Array | undefined,
+): void {
+  if (valid === undefined) return;
+  valid.forEach((v, k) => {
+    if (v === 0) {
+      run.mask[k] = 0;
+      run.weights[k] = 0;
+    }
+  });
+}
+
 export function runFrozenEvaluation(
   registry: Registry,
   spec: HypothesisSpec,
@@ -169,6 +183,7 @@ export function runFrozenEvaluation(
 ): FrozenRun {
   const run = overlayRun(registry, spec, overlay, grid, cfg.runStartsAt);
   if (!run.ok) return { ok: false, reason: `row ${String(run.row)}: ${run.reason}` };
+  dropInvalid(run, grid.panel.valid);
   const rng = createRng(cfg.seed);
   const panel = { ...grid.panel, on: run.mask };
   const evaluation = evaluateRule(panel, cfg.eval, rng.fork('evaluate'));

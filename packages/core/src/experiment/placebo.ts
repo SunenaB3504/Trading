@@ -44,7 +44,8 @@ function shifted(p: Panel, k: number): Panel {
   const on = new Uint8Array(p.on.length);
   for (let i = 0; i < p.instruments; i += 1) {
     for (let t = 0; t < p.dates; t += 1) {
-      on[i * p.dates + ((t + k) % p.dates)] = p.on[i * p.dates + t] as number;
+      const to = i * p.dates + ((t + k) % p.dates);
+      on[to] = p.valid?.[to] === 0 ? 0 : (p.on[i * p.dates + t] as number);
     }
   }
   return { ...p, on };

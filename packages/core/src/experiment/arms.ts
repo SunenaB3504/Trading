@@ -87,7 +87,10 @@ export function summarise(panel: Panel, weights: ArrayLike<number>): ArmSummary 
 
 /** B0: the base strategy takes everything at full size. */
 export function baselineArm(panel: Panel): ArmSummary {
-  return summarise(panel, new Float64Array(panel.ret.length).fill(1));
+  return summarise(
+    panel,
+    Float64Array.from(panel.ret, (_, k) => (panel.valid?.[k] === 0 ? 0 : 1)),
+  );
 }
 
 export interface MatchedRandomResult {
@@ -116,7 +119,10 @@ export function matchedRandomArm(
   for (let d = 0; d < draws; d += 1) {
     let sum = 0;
     counts.forEach((c, i) => {
-      const dates = rng.shuffle(Array.from({ length: panel.dates }, (_, t) => t)).slice(0, c);
+      const usable = Array.from({ length: panel.dates }, (_, t) => t).filter(
+        (t) => panel.valid?.[i * panel.dates + t] !== 0,
+      );
+      const dates = rng.shuffle(usable).slice(0, c);
       for (const t of dates) sum += panel.ret[i * panel.dates + t] as number;
     });
     drawMeans.push(total === 0 ? 0 : sum / total);

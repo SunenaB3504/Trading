@@ -87,8 +87,9 @@ export interface MdeResult {
 }
 
 function returnSpread(p: Panel): number {
-  const mean = p.ret.reduce((a, b) => a + b, 0) / p.ret.length;
-  const variance = p.ret.reduce((a, b) => a + (b - mean) * (b - mean), 0) / p.ret.length;
+  const ret = p.valid === undefined ? p.ret : p.ret.filter((_, k) => p.valid?.[k] !== 0);
+  const mean = ret.reduce((a, b) => a + b, 0) / ret.length;
+  const variance = ret.reduce((a, b) => a + (b - mean) * (b - mean), 0) / ret.length;
   return Math.sqrt(variance);
 }
 

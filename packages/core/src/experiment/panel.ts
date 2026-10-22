@@ -13,6 +13,11 @@ export interface Panel {
   ret: Float64Array;
   /** 1 when the signal is on, same indexing. */
   on: Uint8Array;
+  /**
+   * 1 where the cell has a usable return, same indexing; absent means every cell does. A cell is invalid when the
+   * instrument was not trading, or the day is disputed (FR-D4). Invalid cells are never counted anywhere.
+   */
+  valid?: Uint8Array;
 }
 
 export function makePanel(instruments: number, dates: number, horizon: number): Panel {
@@ -25,28 +30,35 @@ export function makePanel(instruments: number, dates: number, horizon: number): 
   };
 }
 
+/** Difference array of the H-day windows (before and including each start) opened by one instrument's usable signal-on rows. */
+function blockedWindows(p: Panel, i: number): Int32Array {
+  const base = i * p.dates;
+  const blocked = new Int32Array(p.dates + 1);
+  for (let t = 0; t < p.dates; t += 1) {
+    if (p.on[base + t] !== 1 || p.valid?.[base + t] === 0) continue;
+    const from = Math.max(0, t - p.horizon + 1);
+    blocked[from] = (blocked[from] as number) + 1;
+    const to = Math.min(p.dates, t + p.horizon);
+    blocked[to] = (blocked[to] as number) - 1;
+  }
+  return blocked;
+}
+
 /**
  * Observations that may enter the comparison (§11.3 step 3): every signal-on row, and every
  * signal-off row whose H-day window does not overlap any signal-on window of the same instrument.
+ * Cells with no usable return never enter.
  */
 export function embargoMask(p: Panel): Uint8Array {
   const use = new Uint8Array(p.on.length);
-  const h = p.horizon;
   for (let i = 0; i < p.instruments; i += 1) {
     const base = i * p.dates;
-    const blocked = new Int32Array(p.dates + 1);
-    for (let t = 0; t < p.dates; t += 1) {
-      if (p.on[base + t] === 1) {
-        const from = Math.max(0, t - h + 1);
-        blocked[from] = (blocked[from] as number) + 1;
-        const to = Math.min(p.dates, t + h);
-        blocked[to] = (blocked[to] as number) - 1;
-      }
-    }
+    const blocked = blockedWindows(p, i);
     let open = 0;
     for (let t = 0; t < p.dates; t += 1) {
       open += blocked[t] as number;
-      use[base + t] = p.on[base + t] === 1 || open === 0 ? 1 : 0;
+      const usable = p.valid?.[base + t] !== 0;
+      use[base + t] = usable && (p.on[base + t] === 1 || open === 0) ? 1 : 0;
     }
   }
   return use;
