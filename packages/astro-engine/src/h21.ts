@@ -34,6 +34,13 @@ function decide(x: Readonly<Record<string, FeatureValue>>): OverlayAnswer {
   return { decision: 'allow', reasonCode: 'H21-NO-NAME-STAR', stateCode: 'GRAY-NOSIGNAL' };
 }
 
+/**
+ * The claim the owner stated on 2026-10-22 (D21), before any result was looked at: stocks in a favourable Tara class
+ * from the buyer's star return 2.0% more than the others over a 20-session hold. The Chandrashtama part is not
+ * claimed separately (it is market-wide, below the detectable size at 8 years; PH-09 covers it).
+ */
+export const H21_OWNER_CLAIM = { effectSizePct: 2.0, horizonSessions: 20 } as const;
+
 export interface H21Frozen {
   table: NamaTable;
 }

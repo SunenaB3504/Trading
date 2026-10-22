@@ -68,5 +68,13 @@ export type {
   NameStarReason,
   TableStatus,
 } from './buyer';
-export { H21_ID, H21_VERSION, h21Features, h21Overlay, h21RuleHash, h21Spec } from './h21';
+export {
+  H21_ID,
+  H21_OWNER_CLAIM,
+  H21_VERSION,
+  h21Features,
+  h21Overlay,
+  h21RuleHash,
+  h21Spec,
+} from './h21';
 export type { H21Claim } from './h21';

@@ -10,7 +10,7 @@ import {
   makeNamaTable,
   nameStar,
 } from './buyer';
-import { h21Features, h21Overlay, h21Spec } from './h21';
+import { H21_OWNER_CLAIM, h21Features, h21Overlay, h21Spec } from './h21';
 import { freezeConventions } from './registry';
 
 const conv = freezeConventions(1);
@@ -182,5 +182,12 @@ describe('the table the owner approved (D38)', () => {
       star: null,
       reason: 'ambiguous',
     });
+  });
+});
+
+describe('the claim the owner stated (D21)', () => {
+  it('is 2.0% over 20 sessions, up, and goes into the H-21 record unchanged', () => {
+    const spec = h21Spec(APPROVED_NAMA_TABLE_V1, { ...H21_OWNER_CLAIM, excludedInstruments: [] });
+    expect(spec.claimed).toEqual({ effectSizePct: 2.0, direction: 'up', horizonSessions: 20 });
   });
 });
