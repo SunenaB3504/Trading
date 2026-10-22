@@ -5,7 +5,7 @@
 **Status values:** `Not started` · `In progress` · `Blocked` · `Done`  
 **Done means** the work package's acceptance test (see the plan) has been run and the result is recorded in the *Acceptance result* column. Failures are recorded as failures; a work package with a failing test stays `In progress`.
 
-**Last updated:** 2026-10-20 (P5 code complete and tested on synthetic data; Hindi, lots popup, edit birth details, persistence, OpenTimestamps adapter with one live stamp, Yahoo cross-check and shortlist built; UAT round 4 page prepared; 927 tests)
+**Last updated:** 2026-10-22 (H-21 registered and frozen; D21, D38, D39, D41 decided; WP-4.5 job, proof upgrade and Bitcoin check built; snapshot publisher, local host and Data tab section built; 16-year window parked; 1,013 tests)
 
 ## Phase summary
 
@@ -23,7 +23,7 @@
 | P11 · Commercialization (after R2; gated by D32) | 0 | 0 | 0 | 4 | 4 |
 <!-- SUMMARY-END -->
 
-**Next work package:** none that the assistant can build alone. The real first run (WP-5.6) and the rest of WP-2.9 wait on the owner: decisions D26, D36, D38, D39, D40 and the claimed effect sizes (D21); the Yahoo pull and `pnpm crosscheck`, then the disputes review; UAT round 4 and the Malayalam and Hindi text reviews. Everything is listed with recommendations in `OWNER_ACTIONS.md`. Android (WP-6.1) starts after the R2 report; the commercial phase (P11) after the legal review (D32)  
+**Next work package:** the first real run (WP-5.6). Decided: D21, D38, D39, D41; H-21 is registered and frozen. To build: company names for the 83 universe names (first syllable depends on the legal name in force), the grid of forward returns and overlay answers from the real snapshot, the worker run, the written R2 report. Waiting on the owner: D26 host and public key, UAT round 4, Malayalam and Hindi text reviews, D4/E7/rights recommendations (see `OWNER_ACTIONS.md`). Android (WP-6.1) starts after the R2 report; the commercial phase (P11) after the legal review (D32)  
 **Open blockers:** none
 
 ---
@@ -351,3 +351,4 @@
 | 2026-10-22 | D38 (printed name-syllable table as it is, ambiguous syllables stay no-signal) approved and D39 (router precedence) confirmed by the owner. `APPROVED_NAMA_TABLE_V1` added with the same hash as the proposed table; H-21 can now be specified with it. Nothing registered yet: H-21 still needs the claimed effect size and horizon (D21), and the router needs one Supported entry first. `pnpm verify` green: 1,009 tests. | Assistant |
 | 2026-10-22 | D21 accepted by the owner before any result: H-21 and PH-12 claim 2.0% over 20 sessions, up; Chandrashtama not claimed separately; PH-11 not testable in R2. `H21_OWNER_CLAIM` added. All decisions that block registering H-21 are now answered; registering is a separate deliberate act. | Assistant |
 | 2026-10-22 | H-21 registered and frozen (owner: yes). Registry `data/registry/experiments.json`: spec hash 5a6c8790aa01…, claim 2.0% over 20 sessions up (D21), approved syllable table (D38), 62 pilot stocks excluded, pre-registration and freeze events in the hash chain, freeze digest stamped with OpenTimestamps through alice (pending until the Bitcoin attestation: run `pnpm ots:upgrade` on the receipt later). Command: `pnpm register:h21`; registering twice is refused; nothing is saved if the time service fails. `pnpm verify` green: 1,013 tests. Next gates for WP-5.6: the router needs one Supported entry; real run needs the frozen universe-v2 and the buyer setup. | Assistant |
+| 2026-10-22 | D41: H-21 is tested for ONE buyer star, drawn from a public seed (Shatabhisha, Moon sign Aquarius); pooling 27 stars was rejected because every name is favourable for the same number of buyer stars. `H21_BUYER` and `H21_BUYER_SEED` added with tests. Header of this file refreshed. | Assistant |

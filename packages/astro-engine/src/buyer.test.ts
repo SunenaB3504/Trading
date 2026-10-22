@@ -1,4 +1,4 @@
-import { EMPTY_REGISTRY, evaluateOverlay, freeze, preRegister } from '@trading/core';
+import { EMPTY_REGISTRY, createRng, evaluateOverlay, freeze, preRegister } from '@trading/core';
 import type { InstrumentName } from '@trading/core';
 import { describe, expect, it } from 'vitest';
 import {
@@ -10,7 +10,14 @@ import {
   makeNamaTable,
   nameStar,
 } from './buyer';
-import { H21_OWNER_CLAIM, h21Features, h21Overlay, h21Spec } from './h21';
+import {
+  H21_BUYER,
+  H21_BUYER_SEED,
+  H21_OWNER_CLAIM,
+  h21Features,
+  h21Overlay,
+  h21Spec,
+} from './h21';
 import { freezeConventions } from './registry';
 
 const conv = freezeConventions(1);
@@ -189,5 +196,21 @@ describe('the claim the owner stated (D21)', () => {
   it('is 2.0% over 20 sessions, up, and goes into the H-21 record unchanged', () => {
     const spec = h21Spec(APPROVED_NAMA_TABLE_V1, { ...H21_OWNER_CLAIM, excludedInstruments: [] });
     expect(spec.claimed).toEqual({ effectSizePct: 2.0, direction: 'up', horizonSessions: 20 });
+  });
+});
+
+describe('the buyer for the first run (D41)', () => {
+  it('is the star the public seed draws, Shatabhisha, wholly in Aquarius', () => {
+    expect(createRng(H21_BUYER_SEED).fork('buyer-star').nextInt(27)).toBe(H21_BUYER.moonNakshatra);
+    expect(H21_BUYER).toEqual({ moonNakshatra: 23, moonSign: 10 });
+  });
+
+  it('sees every name star as favourable for the same number of buyer stars (why pooling cancels)', () => {
+    const goodFor = (name: number) =>
+      Array.from({ length: 27 }, (_, buyer) => buyer).filter(
+        (b) => (((name - b) % 9) + 9) % 9 === 1 || (((name - b) % 9) + 9) % 9 === 3,
+      ).length;
+    const counts = new Set(Array.from({ length: 27 }, (_, n) => goodFor(n)));
+    expect(counts.size).toBe(1);
   });
 });

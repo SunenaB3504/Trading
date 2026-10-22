@@ -41,6 +41,15 @@ function decide(x: Readonly<Record<string, FeatureValue>>): OverlayAnswer {
  */
 export const H21_OWNER_CLAIM = { effectSizePct: 2.0, horizonSessions: 20 } as const;
 
+/**
+ * The buyer for the first frozen run (D41, owner chose a star drawn by a public seed, 2026-10-22). Every company name
+ * is favourable for the same number of buyer stars, so pooling all 27 buyers would cancel the contrast; one buyer is
+ * tested. The star is drawn from the seed text below before any result: `createRng(seed).fork('buyer-star')`.
+ * Shatabhisha (23) lies wholly in Aquarius (Moon sign 10, Aries = 0). No person's chart is involved.
+ */
+export const H21_BUYER_SEED = 'H-21 buyer star, drawn 2026-10-22 before any result';
+export const H21_BUYER = { moonNakshatra: 23, moonSign: 10 } as const;
+
 export interface H21Frozen {
   table: NamaTable;
 }
