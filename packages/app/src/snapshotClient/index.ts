@@ -6,3 +6,7 @@ export { envelopeSchema, manifestBytes, manifestSchema, payloadHashOf } from './
 export type { Envelope, Manifest } from './envelope';
 export { pinnedEd25519 } from './verifier';
 export type { SignatureVerifier } from './verifier';
+export { snapshotStatus } from './status';
+export type { SnapshotStatus } from './status';
+export { SNAPSHOT_CONFIG } from './config';
+export type { SnapshotConfig } from './config';

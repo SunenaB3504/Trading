@@ -4,7 +4,9 @@ import { readThrough } from '../dataClient/readThrough';
 import type { Cached } from '../dataClient/readThrough';
 import type { DataServiceClient, Health } from '../dataClient/client';
 import type { KeyValueStore } from '../store/kv';
+import { SNAPSHOT_CONFIG } from '../snapshotClient';
 import { Note, Row, Section, colors } from '../ui/Section';
+import { SnapshotSection } from './SnapshotSection';
 
 type State =
   | { kind: 'loading' }
@@ -46,6 +48,7 @@ export function DataScreen({
           <Text style={styles.buttonText}>Check again</Text>
         </Pressable>
       </Section>
+      <SnapshotSection config={SNAPSHOT_CONFIG} kv={kv} now={now} />
     </ScrollView>
   );
 }
