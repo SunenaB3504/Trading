@@ -54,6 +54,7 @@ export type { ExtraSpellings } from './names';
 export {
   PROPOSED_NAMA_TABLE_V1,
   buyerFeatures,
+  buyerFeaturesAt,
   buyerFeaturesOn,
   firstSyllable,
   APPROVED_NAMA_TABLE_V1,
@@ -69,6 +70,8 @@ export type {
   TableStatus,
 } from './buyer';
 export {
+  H21_BUYER,
+  H21_BUYER_SEED,
   H21_ID,
   H21_OWNER_CLAIM,
   H21_VERSION,

@@ -170,8 +170,18 @@ export function buyerFeatures(
   conventions: FrozenConventions,
 ): BuyerFeatures {
   requireRules(conventions, ['nameMapping']);
-  const name = nameStar(companyName, table);
   const transitSign = Math.floor(siderealMoon(decisionMs, conventions.calc) / 30);
+  return buyerFeaturesAt(buyer, companyName, transitSign, table);
+}
+
+/** The same features when the transit Moon sign is already known (one Moon calculation can serve many companies). */
+export function buyerFeaturesAt(
+  buyer: Buyer,
+  companyName: string | null,
+  transitSign: number,
+  table: NamaTable,
+): BuyerFeatures {
+  const name = nameStar(companyName, table);
   return {
     name,
     tara: name.star === null ? null : taraBala(buyer.moonNakshatra, name.star),
