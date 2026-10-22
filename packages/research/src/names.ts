@@ -10,31 +10,54 @@ import { parseCsv } from '@trading/data-service';
 const DAY_MS = 86_400_000;
 const dayStart = (iso: string): number => Date.parse(`${iso}T00:00:00Z`);
 
-export function parseNameHistory(csv: string): Map<string, InstrumentName[]> {
-  const [header, ...rows] = parseCsv(csv);
+function columnsOf(header: string[] | undefined): {
+  id: number;
+  name: number;
+  from: number;
+  to: number;
+} {
   const col = (name: string): number => {
     const i = header?.indexOf(name) ?? -1;
     if (i < 0) throw new Error(`name table: missing column "${name}"`);
     return i;
   };
-  const [id, name, from, to] = ['instrumentId', 'legalName', 'effectiveFrom', 'effectiveTo'].map(
-    col,
-  ) as [number, number, number, number];
+  return {
+    id: col('instrumentId'),
+    name: col('legalName'),
+    from: col('effectiveFrom'),
+    to: col('effectiveTo'),
+  };
+}
+
+const orEmpty = (cell: string | undefined): string => (cell ?? '').trim();
+
+function nameOf(
+  instrumentId: string,
+  r: string[],
+  c: ReturnType<typeof columnsOf>,
+): InstrumentName {
+  const from = orEmpty(r[c.from]);
+  const to = orEmpty(r[c.to]);
+  return {
+    instrumentId,
+    legalName: orEmpty(r[c.name]),
+    effectiveFrom: from === '' ? 0 : dayStart(from),
+    effectiveTo: to === '' ? null : dayStart(to) + DAY_MS,
+    source: 'assistant draft 2026-10-22, owner review pending',
+  };
+}
+
+export function parseNameHistory(csv: string): Map<string, InstrumentName[]> {
+  const [header, ...rows] = parseCsv(csv);
+  const c = columnsOf(header);
   const out = new Map<string, InstrumentName[]>();
   for (const r of rows) {
-    const legalName = (r[name] ?? '').trim();
-    const instrumentId = (r[id] ?? '').trim();
+    const instrumentId = orEmpty(r[c.id]);
     if (instrumentId === '') continue;
     const list = out.get(instrumentId) ?? [];
     out.set(instrumentId, list);
-    if (legalName === '') continue;
-    list.push({
-      instrumentId,
-      legalName,
-      effectiveFrom: (r[from] ?? '') === '' ? 0 : dayStart(r[from] as string),
-      effectiveTo: (r[to] ?? '') === '' ? null : dayStart(r[to] as string) + DAY_MS,
-      source: 'assistant draft 2026-10-22, owner review pending',
-    });
+    const entry = nameOf(instrumentId, r, c);
+    if (entry.legalName !== '') list.push(entry);
   }
   return out;
 }
