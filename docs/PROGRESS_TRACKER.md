@@ -15,7 +15,7 @@
 | P0 · Decisions, skeleton and de-risking | 8 | 0 | 0 | 0 | 8 |
 | P1 · Core ledger and simulator | 11 | 0 | 0 | 0 | 11 |
 | P2 · Data service and universe | 8 | 1 | 0 | 0 | 9 |
-| P3 · Web MVP (R1) | 11 | 0 | 0 | 1 | 12 |
+| P3 · Web MVP (R1) | 11 | 1 | 0 | 0 | 12 |
 | P4 · Chart module and shadow mode (R1.5) | 8 | 4 | 0 | 0 | 12 |
 | P5 · Experiment harness and buyer-company overlay (R2) | 6 | 1 | 0 | 0 | 7 |
 | P6 · Android shell (A1) | 0 | 0 | 0 | 1 | 1 |
