@@ -6,3 +6,4 @@ research/pilot/PROVENANCE.json -text
 data/frozen/** -text
 data/pilot_symbols.txt -text
 data/registry/** -text
+data/names/** -text

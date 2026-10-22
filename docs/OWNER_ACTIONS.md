@@ -41,3 +41,5 @@
 * One optional step: stamping one test digest with the OpenTimestamps calendars to prove the adapter live. It publishes a digest, nothing else. Say "go" if you want it.
 
 *2026-10-22: the 16-year window is parked (owner chose the 8-year window). The four missing AMFI lists and the old-name sector tags are needed only if it is revived.*
+
+**Review: company names (new, 2026-10-22).** `data/names/universe_v2_names.csv` is the assistant's DRAFT of the legal name of each of the 83 universe companies, from general knowledge (not a data source). H-21 uses the first syllable of the legal name in force on each date, so a wrong name can change a star. Please check: 2 companies I could not identify (AIFL, MEGH; they stay empty and give no signal), 4 rows marked `check` (KPIT/Birlasoft share one ISIN and the name changed on 2019-01-24; IBREALEST was renamed later; TINPLATE starts with "The", so say whether a leading "The" counts), and the rest are marked `high`. Names that changed later with the same first syllable (for example Adani Transmission to Adani Energy Solutions) have no second row.

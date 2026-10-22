@@ -1,0 +1,85 @@
+instrumentId,legalName,effectiveFrom,effectiveTo,confidence,note
+ABAN:INE421A01028,Aban Offshore Limited,,,high,
+ADANITRANS:INE931S01010,Adani Transmission Limited,,,high,"Renamed Adani Energy Solutions Limited in 2023; same first syllable, so no second row"
+AIFL:INE428O01016,,,,unknown,Company not identified; H-21 gives no signal until a name is supplied
+ARVIND:INE034A01011,Arvind Limited,,,high,
+ASIANPAINT:INE021A01026,Asian Paints Limited,,,high,
+BAJAJ-AUTO:INE917I01010,Bajaj Auto Limited,,,high,
+BANKBARODA:INE028A01039,Bank of Baroda,,,high,
+BATAINDIA:INE176A01028,Bata India Limited,,,high,
+BEPL:INE922A01025,Bhansali Engineering Polymers Limited,,,high,
+BRITANNIA:INE216A01022,Britannia Industries Limited,,,high,
+CAPF:INE688I01017,Capital First Limited,,,high,Merged into IDFC First Bank in December 2018
+CHAMBLFERT:INE085A01013,Chambal Fertilisers and Chemicals Limited,,,high,
+CHENNPETRO:INE178A01016,Chennai Petroleum Corporation Limited,,,high,
+COLPAL:INE259A01022,Colgate-Palmolive (India) Limited,,,high,
+CYIENT:INE136B01020,Cyient Limited,,,high,
+DABUR:INE016A01026,Dabur India Limited,,,high,
+DCBBANK:INE503A01015,DCB Bank Limited,,,high,
+DHFL:INE202B01012,Dewan Housing Finance Corporation Limited,,,high,
+DLF:INE271C01023,DLF Limited,,,high,
+EDELWEISS:INE532F01054,Edelweiss Financial Services Limited,,,high,
+EQUITAS:INE988K01017,Equitas Holdings Limited,,,high,
+GMRINFRA:INE776C01039,GMR Infrastructure Limited,,,high,"Renamed GMR Airports Infrastructure Limited; same first syllable, so no second row"
+GREAVESCOT:INE224A01026,Greaves Cotton Limited,,,high,
+HCLTECH:INE860A01027,HCL Technologies Limited,,,high,
+HDFC:INE001A01036,Housing Development Finance Corporation Limited,,,high,Merged into HDFC Bank in July 2023
+HEROMOTOCO:INE158A01026,Hero MotoCorp Limited,,,high,
+HINDOILEXP:INE345A01011,Hindustan Oil Exploration Company Limited,,,high,
+HINDPETRO:INE094A01015,Hindustan Petroleum Corporation Limited,,,high,
+HINDZINC:INE267A01025,Hindustan Zinc Limited,,,high,
+HSCL:INE019C01026,Himadri Speciality Chemical Limited,,,high,
+IBREALEST:INE069I01010,Indiabulls Real Estate Limited,,,check,"Renamed later; the new name and date are not known to me. If its first syllable differs, add a row"
+IDBI:INE008A01015,IDBI Bank Limited,,,high,
+IDFC:INE043D01016,IDFC Limited,,,high,Later IDFC Financial Holding Company; same first syllable
+IFCI:INE039A01010,IFCI Limited,,,high,
+INDUSINDBK:INE095A01012,IndusInd Bank Limited,,,high,
+INTELLECT:INE306R01017,Intellect Design Arena Limited,,,high,
+IOC:INE242A01010,Indian Oil Corporation Limited,,,high,
+IPCALAB:INE571A01020,Ipca Laboratories Limited,,,high,
+JISLJALEQS:INE175A01038,Jain Irrigation Systems Limited,,,high,
+JKTYRE:INE573A01042,JK Tyre & Industries Limited,,,high,
+KAJARIACER:INE217B01036,Kajaria Ceramics Limited,,,high,
+KARURVYSYA:INE036D01028,Karur Vysya Bank Limited,,,high,
+KEC:INE389H01022,KEC International Limited,,,high,
+KOTAKBANK:INE237A01028,Kotak Mahindra Bank Limited,,,high,
+KPIT:INE836A01035,KPIT Technologies Limited,,2019-01-23,check,"This ISIN (INE836A01035) passed to Birlasoft Limited after the merger; date taken from the price-adjustment day in our data (BSOFT, 2019-01-24)"
+KPIT:INE836A01035,Birlasoft Limited,2019-01-24,,check,See the row above
+KSCL:INE455I01029,Kaveri Seed Company Limited,,,high,
+L&TFH:INE498L01015,L&T Finance Holdings Limited,,,high,Later renamed L&T Finance Limited; same first syllable
+LUXIND:INE150G01020,Lux Industries Limited,,,high,
+M&M:INE101A01026,Mahindra & Mahindra Limited,,,high,
+M&MFIN:INE774D01024,Mahindra & Mahindra Financial Services Limited,,,high,
+MARUTI:INE585B01010,Maruti Suzuki India Limited,,,high,
+MCX:INE745G01035,Multi Commodity Exchange of India Limited,,,high,
+MEGH:INE974H01013,,,,unknown,Company not identified; H-21 gives no signal until a name is supplied
+MGL:INE002S01010,Mahanagar Gas Limited,,,high,
+MRF:INE883A01011,MRF Limited,,,high,
+MRPL:INE103A01014,Mangalore Refinery and Petrochemicals Limited,,,high,
+MUTHOOTFIN:INE414G01012,Muthoot Finance Limited,,,high,
+NESTLEIND:INE239A01016,Nestle India Limited,,,high,
+NTPC:INE733E01010,NTPC Limited,,,high,
+OFSS:INE881D01027,Oracle Financial Services Software Limited,,,high,
+OIL:INE274J01014,Oil India Limited,,,high,
+OMAXE:INE800H01010,Omaxe Limited,,,high,
+ORIENTBANK:INE141A01014,Oriental Bank of Commerce,,,high,Merged into Punjab National Bank in April 2020
+PIDILITIND:INE318A01026,Pidilite Industries Limited,,,high,
+PNB:INE160A01022,Punjab National Bank,,,high,
+POWERGRID:INE752E01010,Power Grid Corporation of India Limited,,,high,
+PRAKASH:INE603A01013,Prakash Industries Limited,,,high,
+PVR:INE191H01014,PVR Limited,,,high,Renamed PVR INOX Limited in 2023; same first syllable
+RAYMOND:INE301A01014,Raymond Limited,,,high,
+RELCAPITAL:INE013A01015,Reliance Capital Limited,,,high,
+REPCOHOME:INE612J01015,Repco Home Finance Limited,,,high,
+RPOWER:INE614G01033,Reliance Power Limited,,,high,
+SIEMENS:INE003A01024,Siemens Limited,,,high,
+SUNTECK:INE805D01026,Sunteck Realty Limited,,,high,
+THOMASCOOK:INE332A01027,Thomas Cook (India) Limited,,,high,
+TINPLATE:INE422C01014,The Tinplate Company of India Limited,,,check,"The legal name starts with ""The"". Decide whether a leading ""The"" counts as the first syllable (the table rule says legal name as written)"
+TIRUMALCHM:INE338A01016,Tirumalai Chemicals Limited,,,high,
+ULTRACEMCO:INE481G01011,UltraTech Cement Limited,,,high,
+VGUARD:INE951I01027,V-Guard Industries Limited,,,high,
+VIJAYABANK:INE705A01016,Vijaya Bank,,,high,Merged into Bank of Baroda in April 2019
+WIPRO:INE075A01022,Wipro Limited,,,high,
+YESBANK:INE528G01019,Yes Bank Limited,,,high,
+ZEEL:INE256A01028,Zee Entertainment Enterprises Limited,,,high,
