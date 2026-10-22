@@ -39,3 +39,5 @@
 * Legal review (D32) after the R2 report, before any price, tier or store text.
 * Android (WP-6.1) starts after the R2 report.
 * One optional step: stamping one test digest with the OpenTimestamps calendars to prove the adapter live. It publishes a digest, nothing else. Say "go" if you want it.
+
+*2026-10-22: the 16-year window is parked (owner chose the 8-year window). The four missing AMFI lists and the old-name sector tags are needed only if it is revived.*
