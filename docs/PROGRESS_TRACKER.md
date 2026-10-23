@@ -40,6 +40,7 @@
 | 2 | `UAT/UAT-2/` | The round 1 polish, and the optional layer: Profile, chart facts, Chandrashtama, Tara Bala | **Signed off.** 30 of 30 passed. Defect D-3 fixed. Decisions T22 and T23 |
 | 3 | `UAT/UAT-3/` | Profile iteration (gender, typed-in star, place shown) and the Malayalam/English switcher | **Closed early, not signed off.** 15 of 23 passed, 0 failed, 8 skipped by the owner (A7, B1, B4, B6, B7, B10, B12, B13) |
 | 4 | `UAT/UAT-4/` | Lots popup, Edit birth details, Hindi, and the round 3 cases skipped | **Prepared; 2 of 23 closed.** E1 and E2 (command line) passed on 2026-10-20, run by the assistant at the owner's request: 927 tests; browser checks 9, 14, 11, 9, 118, 25, 46 and 17. The other 21 cases are the owner's |
+| 5 | `UAT/UAT-5/` | The daily snapshot on the Data tab with the host on the owner's laptop (D26, WP-3.9), and the first frozen H-21 run with its R2 report (WP-5.6) | **Prepared 2026-10-23; not yet run by the owner.** 14 cases (12 must-pass); B2 (grid reproduces the report) and C1 (`pnpm verify`) already pass when run by the assistant |
 
 **Per work package**
 

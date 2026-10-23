@@ -8,7 +8,7 @@ import { join } from 'node:path';
  * cross-origin header a browser needs. Only `base_tickets_YYYYMMDD.json` names are served. The real host (the
  * owner's website) is set up the same way; the app only needs the address changed.
  *
- * Usage:  pnpm snapshot:serve [--dir data/publish] [--port 8787]
+ * Usage:  pnpm snapshot:serve [--dir data/publish] [--port 8788]
  */
 const NAME = /^\/base_tickets_\d{8}\.json$/;
 
@@ -32,7 +32,7 @@ function option(args: readonly string[], name: string): string | undefined {
 
 if (process.argv[1]?.endsWith('serveSnapshots.ts') === true) {
   const args = process.argv.slice(2);
-  const port = Number(option(args, '--port') ?? '8787');
+  const port = Number(option(args, '--port') ?? '8788');
   snapshotServer(option(args, '--dir') ?? 'data/publish').listen(port, '127.0.0.1', () =>
     console.log(`serving snapshots at http://127.0.0.1:${String(port)}/`),
   );

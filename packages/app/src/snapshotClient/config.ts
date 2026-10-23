@@ -10,6 +10,6 @@ export interface SnapshotConfig {
 
 /** D26, owner choice 2026-10-23: the host runs on the owner's own machine (`pnpm snapshot:serve`), signed with a local key. */
 export const SNAPSHOT_CONFIG: SnapshotConfig = {
-  origin: 'http://127.0.0.1:8787',
+  origin: 'http://127.0.0.1:8788',
   keys: { k1: 'f9919706890135b3f515399055288d2cebc5eb084f036c8a753a6131daab989e' },
 };

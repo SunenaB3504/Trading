@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UAT 5 web app</title>
+<style>
+  :root {
+    --bg: #f6f7f9; --card: #ffffff; --ink: #1b2430; --muted: #5b6676; --line: #dde2ea;
+    --accent: #1f5fbf; --pass: #19803f; --fail: #b3261e; --block: #9a6700; --none: #8a94a3;
+    --pass-bg: #e3f4e9; --fail-bg: #fbe5e3; --block-bg: #fdf0d3; --none-bg: #eceff3;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #12171e; --card: #1b222c; --ink: #e8edf3; --muted: #9aa6b5; --line: #2c3644;
+      --accent: #6aa3ff; --pass: #5fd08a; --fail: #ff8a80; --block: #f0c05a; --none: #8a94a3;
+      --pass-bg: #17321f; --fail-bg: #3a1c1a; --block-bg: #3a2f13; --none-bg: #252d39;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 system-ui, "Segoe UI", sans-serif; }
+  main { max-width: 980px; margin: 0 auto; padding: 24px 16px 64px; }
+  h1 { font-size: 24px; margin: 0 0 4px; }
+  h2 { font-size: 18px; margin: 32px 0 8px; }
+  p, li { color: var(--ink); }
+  .muted { color: var(--muted); }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px; margin: 12px 0; }
+  code, pre { font-family: ui-monospace, Consolas, monospace; font-size: 13px; background: var(--none-bg); border-radius: 5px; }
+  code { padding: 1px 5px; }
+  pre { padding: 10px 12px; overflow-x: auto; margin: 8px 0; }
+  .bar { height: 12px; background: var(--none-bg); border-radius: 6px; overflow: hidden; display: flex; }
+  .bar span { display: block; height: 100%; }
+  .tally { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 10px; }
+  .tally b { font-size: 20px; }
+  .toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; align-items: center; }
+  button, select, input[type=text], textarea {
+    font: inherit; color: var(--ink); background: var(--card); border: 1px solid var(--line);
+    border-radius: 7px; padding: 6px 10px;
+  }
+  button { cursor: pointer; }
+  button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  button:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .case { padding: 14px 16px; }
+  .case header { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: baseline; }
+  .id { font-weight: 700; }
+  .tag { font-size: 12px; padding: 1px 8px; border-radius: 10px; background: var(--none-bg); color: var(--muted); }
+  .auto-pass { background: var(--pass-bg); color: var(--pass); }
+  .title { font-weight: 600; flex: 1 1 260px; }
+  ol { margin: 8px 0 8px 20px; padding: 0; }
+  .expect { border-left: 3px solid var(--accent); padding: 2px 10px; margin: 8px 0; }
+  .status-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-start; margin-top: 8px; }
+  .status-row textarea { flex: 1 1 260px; min-height: 36px; resize: vertical; }
+  .pill { font-weight: 600; border-radius: 12px; padding: 1px 10px; font-size: 13px; }
+  .s-pass { background: var(--pass-bg); color: var(--pass); }
+  .s-fail { background: var(--fail-bg); color: var(--fail); }
+  .s-block { background: var(--block-bg); color: var(--block); }
+  .s-none { background: var(--none-bg); color: var(--none); }
+  table { border-collapse: collapse; width: 100%; }
+  td, th { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .filters button.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+  @media (max-width: 600px) { main { padding: 16px; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>User acceptance test 5: daily snapshot and the R2 report</h1>
+  <p class="muted">Scope: the daily snapshot download on the Data tab with the host on your own laptop (WP-3.9, D26) and the first frozen H-21 run with its R2 report (WP-5.6). Tester: Sunil, on the local laptop. Prepared 2026-10-23 against the build of that date. <b>Round 4 is still open</b> (21 of 23 cases: lots popup, Edit birth details, Hindi, and the round 3 cases you skipped); this round does not repeat them.</p>
+
+  <div class="card" id="summary">
+    <div class="bar" id="bar" aria-hidden="true"></div>
+    <div class="tally" id="tally"></div>
+    <p id="verdict" style="margin:10px 0 0"></p>
+  </div>
+
+  <div class="toolbar">
+    <span class="filters" id="filters"></span>
+    <span style="flex:1"></span>
+    <button id="save" class="primary" title="Downloads this page with your current results built in">Save a copy with my results</button>
+    <button id="exportCsv">Export CSV</button>
+    <button id="reset">Reset all results</button>
+  </div>
+  <p class="muted" style="margin-top:0">Your results are remembered in this browser automatically. Use “Save a copy” to keep them inside the file itself (replace this file with the downloaded copy).</p>
+
+  <h2>1. Get ready</h2>
+  <div class="card">
+    <ol>
+      <li>Open a terminal in <code>C:\Users\Admin\Sunil\Trading</code>.</li>
+      <li>The app’s snapshot settings changed (host address and key), so build it once more (about a minute): <pre>pnpm --filter @trading/app export:web</pre></li>
+      <li>Start the app and the market-data service: <pre>pnpm uat:start</pre> Leave this terminal open; Ctrl+C stops both. It uses ports 8080 and 8787.</li>
+      <li>The snapshot host is a <b>second</b> terminal that the cases start and stop themselves (port <b>8788</b>, so it does not clash with 8787). The signing key is the one made for D26: <code>C:\Users\Admin\keys\snapshot_k1.pem</code>. Never open or paste its contents.</li>
+      <li>Use a <b>new private window</b> (Ctrl+Shift+N) at <code>http://127.0.0.1:8080</code> for every Section A case; a private window starts with no stored snapshot. Chrome or Edge.</li>
+      <li>Wherever a case says YYYY-MM-DD use today’s date in India; on a weekend or exchange holiday use the last trading day. YYYYMMDD is the same date without dashes.</li>
+    </ol>
+  </div>
+
+  <h2>2. Pass bar</h2>
+  <div class="card">
+    <ul>
+      <li>Every case marked <b>Must</b> passes.</li>
+      <li>A bad, tampered, older or unreachable snapshot never replaces or removes a good stored one.</li>
+      <li>The only network traffic from the snapshot button is GET requests for <code>base_tickets_YYYYMMDD.json</code> on <code>127.0.0.1:8788</code>: nothing about you or your trades is sent.</li>
+      <li>The public snapshot file has no astro field.</li>
+      <li>B3 and B4 are exploratory: they do not block, and your corrections go into the next draft.</li>
+    </ul>
+    <p class="muted">“Automated” means the same check passed on 2026-10-23 when this page was prepared. You are confirming it with your own eyes.</p>
+  </div>
+
+  <h2>3. Cases</h2>
+  <div id="cases"></div>
+
+  <h2>4. Not covered in this round</h2>
+  <div class="card">
+    <ul><li>Round 4: lots popup, Edit my birth details, Hindi, and the skipped round 3 cases.</li><li>Price bars inside the public snapshot, and a daily automatic publish (today it is one manual command).</li><li>A public https host or cloud signing (KMS): deferred to release; moving would change only the address and the key.</li><li>The Bitcoin confirmation of the H-21 freeze receipt (<code>pnpm ots:upgrade</code>).</li><li>The Android build (WP-6.1) and the legal review (D32).</li></ul>
+  </div>
+
+  <h2>5. Defects found</h2>
+  <div class="card">
+    <p class="muted">Write each defect in the note of the case it belongs to, with what you did, what you expected and what happened. A screenshot filename is enough. Send the exported CSV back and I will fix and re-run the failed cases.</p>
+  </div>
+</main>
+
+<script id="state" type="application/json">{"A1": {"status": "pass", "note": "Run by the assistant at the owner’s request on 2026-10-23, in the built-in browser pane, plain address, Data tab: \"No snapshot has been downloaded yet. Anything that needs it shows GRAY-NODATA.\" with a Download latest button, no Up to or Sent rows.", "at": "23/10/2026"}, "A2": {"status": "pass", "note": "Run by the assistant at the owner’s request on 2026-10-23, in the built-in browser pane, host held only the 2026-10-16 file: note \"kept the previous snapshot: no snapshot is published for the last few sessions\"; four Sent rows, GET base_tickets_20261023, 20261022, 20261021, 20261019 (20 Oct was skipped as a non-session).", "at": "23/10/2026"}, "A3": {"status": "pass", "note": "Run by the assistant at the owner’s request on 2026-10-23, in the built-in browser pane, test snapshot dated 2026-10-23 published into data/publish/uat (the host reads per request, so no restart): headline \"Snapshot up to 2026-10-23.\", Up to 2026-10-23, Sessions behind 0, one Sent row. The section takes about a second to settle after the press.", "at": "23/10/2026"}, "A4": {"status": "pass", "note": "Run by the assistant at the owner’s request on 2026-10-23, in the built-in browser pane, reload with the host up, then host stopped and reload again: headline and both rows unchanged. For a moment after each load the section shows the \"No snapshot\" text before the stored copy appears (observation, see below).", "at": "23/10/2026"}, "A5": {"status": "pass", "note": "Run by the assistant at the owner’s request on 2026-10-23, in the built-in browser pane, host stopped: \"kept the previous snapshot: could not reach the snapshot host (Failed to fetch)\"; Snapshot up to 2026-10-23 still shown. The Ledger and Trade tabs were not re-opened in this run: please glance at them.", "at": "23/10/2026"}, "A6": {"status": "pass", "note": "Run by the assistant at the owner’s request on 2026-10-23, in the built-in browser pane, copy with \"problems\" changed to \"problemz\": \"kept the previous snapshot: the payload does not match its manifest hash\"; Snapshot up to 2026-10-23 unchanged.", "at": "23/10/2026"}, "A7": {"status": "none", "note": "Partly checked by the assistant on 2026-10-23: network log shows only GET http://127.0.0.1:8788/base_tickets_YYYYMMDD.json requests (404 x4, 200, one refused connection, 200), no query string. Request headers, cookies and body were NOT inspected (the tool does not show them): please look at one request in DevTools. The app’s audit test covers them in code.", "at": "23/10/2026"}, "A8": {"status": "pass", "note": "Checked by the assistant on 2026-10-23 in data/publish/uat/base_tickets_20261023.json: top level manifest, payload, signature; payload snapshot, problems, missing; 83 series entries with instrumentId, firstDate, lastDate, bars, disputedBars, eventBars, four hashes and adjustmentMismatches. Zero matches for nakshatra, lagna, dasha, rashi, janma, chandra, tara, moon.", "at": "23/10/2026"}, "B2": {"status": "pass", "note": "Run by the assistant on 2026-10-23 after the name table change: 83 instruments, 1974 dates, 163842 cells, 140843 valid, good 37506 / bad 57246 / mixed 9870 / none 59220, 163 Chandrashtama days, denied 66048, taken 97794, \"Dry run only\".", "at": "23/10/2026"}, "C1": {"status": "pass", "note": "Run by the assistant on 2026-10-23: pnpm verify exit 0; 101 test files, 1,027 tests passed; typecheck, lint, size and architecture checks clean.", "at": "23/10/2026"}, "C2": {"status": "pass", "note": "Run by the assistant on 2026-10-23 after export:web: all eight exited 0 with no failed check (airplane 9 checks, orders 14, backup 11, universe 9, no-astro 25, profile 46, lots 17; phone exited 0, its log has a different format).", "at": "23/10/2026"}}</script>
+<script>
+"use strict";
+const PREPASS = "2026-10-23";
+const CASES = [
+ [
+  "A1",
+  "A. Daily snapshot (Data tab)",
+  true,
+  false,
+  "A new device has no snapshot and says so",
+  [
+   "Open a <b>new private window</b> at the plain address <code>http://127.0.0.1:8080</code> (no <code>?layer=on</code>).",
+   "Open the <b>Data</b> tab and find the section <b>Daily snapshot</b>."
+  ],
+  "The section reads <b>No snapshot has been downloaded yet. Anything that needs it shows GRAY-NODATA.</b> There is a <b>Download latest</b> button. There is no “Up to” row and no “Sent” row."
+ ],
+ [
+  "A2",
+  "A. Daily snapshot (Data tab)",
+  true,
+  false,
+  "A host with nothing recent is handled calmly",
+  [
+   "Open a second terminal in <code>C:\\Users\\Admin\\Sunil\\Trading</code> and start a test snapshot host that only has the old 2026-10-16 file:<pre>New-Item -ItemType Directory -Force data\\publish\\uat | Out-Null\nCopy-Item data\\publish\\base_tickets_20261016.json data\\publish\\uat\\\npnpm snapshot:serve --dir data/publish/uat</pre>It prints <code>serving snapshots at http://127.0.0.1:8788/</code>. Leave it running. (Port 8788 is the snapshot host; 8787 is the market-data service.)",
+   "In the app press <b>Download latest</b>."
+  ],
+  "A note reads <b>The last try kept the previous snapshot: no snapshot is published for the last few sessions.</b> The 2026-10-16 file is not taken because the app only asks for today and the three sessions before it. There is still no “Up to” row. Under it up to four <b>Sent</b> rows, each <code>GET http://127.0.0.1:8788/base_tickets_YYYYMMDD.json</code> for today and earlier sessions, with no query part."
+ ],
+ [
+  "A3",
+  "A. Daily snapshot (Data tab)",
+  true,
+  false,
+  "A fresh, correctly signed snapshot is downloaded and accepted",
+  [
+   "Stop the host (Ctrl+C in the second terminal). Make a <b>test</b> snapshot dated today (replace YYYY-MM-DD; on a weekend or exchange holiday use the last trading day) and start the host again:<pre>pnpm snapshot:publish --payload data/derived/snapshot_universe_v2.json --as-of YYYY-MM-DD --key C:\\Users\\Admin\\keys\\snapshot_k1.pem --key-id k1 --out data/publish/uat\npnpm snapshot:serve --dir data/publish/uat</pre>This relabels the 2026-10-16 data with a newer date <b>for this test only</b>. The file stays in <code>data\\publish\\uat</code>, never in the real daily folder.",
+   "In the app press <b>Download latest</b>."
+  ],
+  "The headline reads <b>Snapshot up to YYYY-MM-DD.</b> Two rows appear: <b>Up to</b> with the date and <b>Sessions behind</b> with <b>0</b>. One <b>Sent</b> row: <code>GET http://127.0.0.1:8788/base_tickets_YYYYMMDD.json</code>."
+ ],
+ [
+  "A4",
+  "A. Daily snapshot (Data tab)",
+  true,
+  false,
+  "The stored snapshot survives a reload and a stopped host",
+  [
+   "Reload the page and open the Data tab. Then stop the host (Ctrl+C), reload again and open the Data tab."
+  ],
+  "Both times the headline still reads <b>Snapshot up to YYYY-MM-DD.</b> with the same two rows. Nothing needs the host to show what is stored."
+ ],
+ [
+  "A5",
+  "A. Daily snapshot (Data tab)",
+  true,
+  false,
+  "With the host down, the old snapshot is kept and the app keeps working",
+  [
+   "With the host still stopped press <b>Download latest</b>.",
+   "Open the <b>Ledger</b> and <b>Trade</b> tabs."
+  ],
+  "The note reads <b>The last try kept the previous snapshot: could not reach the snapshot host (</b> followed by the browser’s error text and a closing bracket<b>).</b> “Snapshot up to YYYY-MM-DD” is still shown. The Ledger and Trade tabs work as before."
+ ],
+ [
+  "A6",
+  "A. Daily snapshot (Data tab)",
+  true,
+  false,
+  "A tampered file is refused and the good one is kept",
+  [
+   "Make a copy of the test snapshot with one word changed in its payload and serve that copy (replace YYYYMMDD with the file’s date, no dashes):<pre>$f = 'C:\\Users\\Admin\\Sunil\\Trading\\data\\publish\\uat\\base_tickets_YYYYMMDD.json'\n$t = [System.IO.File]::ReadAllText($f).Replace('\"problems\"', '\"problemz\"')\nNew-Item -ItemType Directory -Force C:\\Users\\Admin\\Sunil\\Trading\\data\\publish\\uat-bad | Out-Null\n[System.IO.File]::WriteAllText('C:\\Users\\Admin\\Sunil\\Trading\\data\\publish\\uat-bad\\base_tickets_YYYYMMDD.json', $t)\npnpm snapshot:serve --dir data/publish/uat-bad</pre>",
+   "In the app press <b>Download latest</b>."
+  ],
+  "The note reads <b>The last try kept the previous snapshot: the payload does not match its manifest hash.</b> “Snapshot up to YYYY-MM-DD” is unchanged. Stop the host afterwards."
+ ],
+ [
+  "A7",
+  "A. Daily snapshot (Data tab)",
+  true,
+  false,
+  "The app sends nothing but plain GET requests for the file",
+  [
+   "Start the good host again: <pre>pnpm snapshot:serve --dir data/publish/uat</pre> In the browser press F12, open <b>Network</b>, clear it, and press <b>Download latest</b>.",
+   "Click the request to <code>127.0.0.1:8788</code> and look at Headers and Payload."
+  ],
+  "Exactly the requests listed under “Sent” and no others to that address: method <b>GET</b>, a file name <code>base_tickets_YYYYMMDD.json</code>, no query string, no request body, no cookies, no <code>Authorization</code> header. Nothing is sent to any other address by this action."
+ ],
+ [
+  "A8",
+  "A. Daily snapshot (Data tab)",
+  true,
+  false,
+  "The public file holds no astro fields (and what it does hold)",
+  [
+   "Open <code>data\\publish\\uat\\base_tickets_YYYYMMDD.json</code> in an editor. Look at the keys under <code>payload</code> and at one entry of <code>series</code>. Search the file for <code>nakshatra</code>, <code>lagna</code>, <code>dasha</code>, <code>rashi</code>, <code>janma</code> and <code>chandra</code>."
+  ],
+  "Top level: <code>manifest</code>, <code>payload</code>, <code>signature</code>. Payload: <code>snapshot</code>, <code>problems</code>, <code>missing</code>. Each series entry has <code>instrumentId</code>, <code>firstDate</code>, <code>lastDate</code>, <code>bars</code>, <code>disputedBars</code>, <code>eventBars</code> four hashes (<code>eventDatesHash</code>, <code>barsHash</code>, <code>actionsHash</code>, <code>adjustedHash</code>) and <code>adjustmentMismatches</code>. None of the search words appears as a field name. <b>Known gap, not a failure:</b> the file is an index of the 83 series (dates, bar counts, hashes). It does not yet carry the price bars, so it cannot drive paper-trading fills; adding them is a later work item."
+ ],
+ [
+  "B1",
+  "B. The R2 report and H-21",
+  true,
+  false,
+  "You accept the R2 report, or list corrections",
+  [
+   "Open <code>docs\\R2_REPORT.md</code> and read it through, in particular section 1 (result), section 4 (the nine steps) and section 5 (limits)."
+  ],
+  "You can say: <b>accepted as drafted</b>, or give a list of corrections. Check three things: the result is stated fairly (not supported, and not “shown to work in reverse”); the limits are honest (the placebo that did not run, one buyer star, the draft names); nothing reads as advice or as a claim about astrology in general."
+ ],
+ [
+  "B2",
+  "B. The R2 report and H-21",
+  true,
+  true,
+  "The prepared grid reproduces the numbers in the report",
+  [
+   "In the terminal run (do <b>not</b> add <code>--execute</code>): <pre>pnpm run:h21</pre>"
+  ],
+  "Two result lines and a closing sentence. Grid: <b>83</b> instruments, <b>1974</b> dates, <b>163842</b> cells, <b>140843</b> valid cells, Tara groups good <b>37506</b>, bad <b>57246</b>, mixed <b>9870</b>, none <b>59220</b>, Chandrashtama days <b>163</b>. Overlay: ok, denied <b>66048</b>, taken <b>97794</b>. Last line: <b>Dry run only. Nothing was evaluated.</b>"
+ ],
+ [
+  "B3",
+  "B. The R2 report and H-21",
+  false,
+  false,
+  "The registry shows the claim came before the result (exploratory)",
+  [
+   "Open <code>data\\registry\\experiments.json</code>. Look at <code>events</code>, and at <code>registrations</code> for H-21 (<code>claimed</code>, <code>frozen</code>)."
+  ],
+  "Three events in order: <b>pre-registration</b> (seq 0), <b>freeze</b> (seq 1), <b>variant</b> (seq 2), each one’s <code>prevHash</code> equal to the hash before it, and times increasing. One registration, H-21, claiming 2 percent, up, 20 sessions, with an OpenTimestamps receipt (alice). One variant logged. The Bitcoin proof may still be pending."
+ ],
+ [
+  "B4",
+  "B. The R2 report and H-21",
+  false,
+  false,
+  "Your review of the company names (exploratory)",
+  [
+   "Open <code>data\\names\\universe_v2_names.csv</code> (78 companies). Compare against what you know of the companies’ legal names."
+  ],
+  "A list of names you think are wrong, or “reviewed, no changes”. A wrong name can change a star; the five removed companies stay in the universe with no name and no signal."
+ ],
+ [
+  "C1",
+  "C. Command line (back end)",
+  true,
+  true,
+  "Full verification",
+  [
+   "In the terminal run: <pre>pnpm verify</pre>"
+  ],
+  "Ends without errors: 1,027 tests in 101 files passed at last count; type, lint, size and architecture checks clean."
+ ],
+ [
+  "C2",
+  "C. Command line (back end)",
+  true,
+  false,
+  "Every browser check",
+  [
+   "After <code>pnpm --filter @trading/app export:web</code> run each: <pre>pnpm e2e:airplane\npnpm e2e:orders\npnpm e2e:backup\npnpm e2e:universe\npnpm e2e:phone\npnpm e2e:noastro\npnpm e2e:profile\npnpm e2e:lots</pre>"
+  ],
+  "Each exits without a failed check. (Airplane and no-astro were already run on 2026-10-23 and passed.)"
+ ]
+];
+
+const STATUSES = [["none","Not run"],["pass","Pass"],["fail","Fail"],["block","Blocked"]];
+const KEY = "uat-5-results-v1";
+let filter = "all";
+let results = {};
+
+function embedded() {
+  try { return JSON.parse(document.getElementById("state").textContent || "{}"); } catch (e) { return {}; }
+}
+function load() {
+  let stored = {};
+  try { stored = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { stored = {}; }
+  const base = embedded();
+  results = Object.assign({}, base, stored);
+}
+function persist() {
+  try { localStorage.setItem(KEY, JSON.stringify(results)); } catch (e) { /* private mode: use Save a copy */ }
+}
+function get(id) { return results[id] || { status: "none", note: "", at: "" }; }
+
+function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
+
+function render() {
+  const box = document.getElementById("cases");
+  box.textContent = "";
+  let group = "";
+  CASES.forEach(function (c) {
+    const [id, g, must, auto, title, steps, expected] = c;
+    const r = get(id);
+    if (filter !== "all" && r.status !== filter) return;
+    if (g !== group) { group = g; const h = document.createElement("h3"); h.textContent = g; h.style.margin = "22px 0 4px"; box.appendChild(h); }
+    const el = document.createElement("section");
+    el.className = "card case";
+    el.innerHTML =
+      '<header><span class="id">' + id + '</span><span class="title">' + esc(title) + '</span>' +
+      '<span class="tag">' + (must ? "Must" : "Exploratory") + '</span>' +
+      (auto ? '<span class="tag auto-pass">Automated: passed ' + PREPASS + '</span>' : '') +
+      '<span class="pill s-' + r.status + '" id="pill-' + id + '">' + STATUSES.find(function (s) { return s[0] === r.status; })[1] + '</span></header>' +
+      '<ol>' + steps.map(function (s) { return "<li>" + s + "</li>"; }).join("") + '</ol>' +
+      '<div class="expect"><b>Expected.</b> ' + expected + '</div>' +
+      '<div class="status-row"><label>Result <select data-id="' + id + '" aria-label="Result for ' + id + '">' +
+      STATUSES.map(function (s) { return '<option value="' + s[0] + '"' + (s[0] === r.status ? " selected" : "") + ">" + s[1] + "</option>"; }).join("") +
+      '</select></label><textarea data-note="' + id + '" placeholder="Note: what you saw, screenshot file name" aria-label="Note for ' + id + '">' + esc(r.note) + '</textarea>' +
+      '<span class="muted" id="at-' + id + '">' + (r.at ? "Updated " + r.at : "") + '</span></div>';
+    box.appendChild(el);
+  });
+  fixCode();
+  summary();
+}
+// the expected text may contain <code> tags written as markup in the data; make them real
+function fixCode() {
+  document.querySelectorAll(".expect").forEach(function (e) { e.innerHTML = e.innerHTML.replace(/&lt;code&gt;(.*?)&lt;\/code&gt;/g, "<code>$1</code>"); });
+}
+
+function counts() {
+  const n = { none: 0, pass: 0, fail: 0, block: 0 };
+  CASES.forEach(function (c) { n[get(c[0]).status]++; });
+  return n;
+}
+function summary() {
+  const n = counts(), total = CASES.length;
+  const colors = { pass: "var(--pass)", fail: "var(--fail)", block: "var(--block)" };
+  document.getElementById("bar").innerHTML = ["pass", "fail", "block"].map(function (k) {
+    return '<span style="width:' + (100 * n[k] / total) + '%;background:' + colors[k] + '"></span>';
+  }).join("");
+  document.getElementById("tally").innerHTML =
+    '<span><b>' + n.pass + '</b> pass</span><span><b>' + n.fail + '</b> fail</span><span><b>' + n.block + '</b> blocked</span><span><b>' + n.none + '</b> not run</span><span class="muted">of ' + total + ' cases</span>';
+  const mustOpen = CASES.filter(function (c) { return c[2] && get(c[0]).status !== "pass"; }).length;
+  const v = document.getElementById("verdict");
+  if (n.fail > 0) v.innerHTML = "<b style='color:var(--fail)'>Not accepted yet:</b> " + n.fail + " failed case(s) to fix and re-run.";
+  else if (mustOpen > 0) v.innerHTML = "<b>In progress:</b> " + mustOpen + " must-pass case(s) still open.";
+  else v.innerHTML = "<b style='color:var(--pass)'>All must-pass cases passed.</b> Record sign-off in the progress tracker.";
+}
+function filters() {
+  const f = document.getElementById("filters");
+  f.innerHTML = [["all", "All"]].concat(STATUSES).map(function (s) {
+    return '<button data-f="' + s[0] + '" class="' + (filter === s[0] ? "on" : "") + '">' + s[1] + "</button> ";
+  }).join("");
+}
+
+document.addEventListener("change", function (e) {
+  const id = e.target.getAttribute && e.target.getAttribute("data-id");
+  if (!id) return;
+  const r = get(id); r.status = e.target.value; r.at = new Date().toLocaleString();
+  results[id] = r; persist();
+  if (filter !== "all") render(); else {
+    const p = document.getElementById("pill-" + id);
+    p.className = "pill s-" + r.status; p.textContent = STATUSES.find(function (s) { return s[0] === r.status; })[1];
+    document.getElementById("at-" + id).textContent = "Updated " + r.at; summary();
+  }
+});
+document.addEventListener("input", function (e) {
+  const id = e.target.getAttribute && e.target.getAttribute("data-note");
+  if (!id) return;
+  const r = get(id); r.note = e.target.value; r.at = new Date().toLocaleString();
+  results[id] = r; persist();
+});
+document.addEventListener("click", function (e) {
+  const f = e.target.getAttribute && e.target.getAttribute("data-f");
+  if (f) { filter = f; filters(); render(); }
+});
+function download(name, text, type) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([text], { type: type }));
+  a.download = name; document.body.appendChild(a); a.click(); a.remove();
+}
+document.getElementById("save").addEventListener("click", function () {
+  const html = "<!doctype html>\n" + document.documentElement.outerHTML;
+  const marker = /(<script id="state" type="application\/json">)[\s\S]*?(<\/script>)/;
+  const json = JSON.stringify(results).replace(/</g, "\\u003c");
+  download("UAT-5.html", html.replace(marker, function (m, a, b) { return a + json + b; }), "text/html");
+});
+document.getElementById("exportCsv").addEventListener("click", function () {
+  const q = function (s) { return '"' + String(s).replace(/"/g, '""') + '"'; };
+  const rows = [["id", "group", "must", "title", "status", "note", "updated"].join(",")].concat(CASES.map(function (c) {
+    const r = get(c[0]); return [c[0], q(c[1]), c[2], q(c[4]), r.status, q(r.note), q(r.at)].join(",");
+  }));
+  download("uat_5_results.csv", rows.join("\n"), "text/csv");
+});
+document.getElementById("reset").addEventListener("click", function () {
+  if (confirm("Clear every result and note?")) { results = {}; try { localStorage.removeItem(KEY); } catch (e) {} render(); }
+});
+
+load(); filters(); render();
+</script>
+</body>
+</html>
