@@ -6,6 +6,8 @@ import { createRng } from '../random';
 import { baselineArm, calendarControlArm, matchedRandomArm, overlayRun, summarise } from './arms';
 import type { ArmGrid, ArmSummary, CalendarControlResult } from './arms';
 import { evaluateRule } from './evaluate';
+import { relabelPlacebo } from './placebo';
+import type { RelabelResult } from './placebo';
 import type { EvalConfig, EvaluationReport } from './evaluate';
 import { benjaminiHochberg, benjaminiYekutieli } from './multiplicity';
 import { estimatePower, findMde, isSharedSignal } from './positiveControl';
@@ -41,6 +43,13 @@ export interface FrozenRunConfig {
   recoveryTolerance: number;
   /** Time the run's own variant is logged, UTC ms. */
   loggedAt: number;
+  /**
+   * Which placebo gates the verdict. 'shifted' (default, step 5 B2) moves the signal in time; 'relabel' deals fixed
+   * per-instrument labels among the instruments at random, for a signal that does not change over time.
+   */
+  placebo?: 'shifted' | 'relabel';
+  /** Draws for the relabelling placebo (default 500). */
+  relabelDraws?: number;
 }
 
 export interface FrozenRunReport {
@@ -54,6 +63,8 @@ export interface FrozenRunReport {
     B1: { p: number; observed: number; draws: number };
     B2: { p: number; observedT: number; shiftsUsed: number; allowedShifts: number };
     B3: CalendarControlResult | null;
+    /** Present only when the run used the relabelling placebo. */
+    relabel?: RelabelResult;
   };
   evaluation: EvaluationReport;
   positiveControl: {
@@ -109,13 +120,17 @@ function multiplicityOutcome(
   };
 }
 
-function decisionFlags(ev: EvaluationReport, mult: FrozenRunReport['multiplicity']) {
+function decisionFlags(
+  ev: EvaluationReport,
+  mult: FrozenRunReport['multiplicity'],
+  placeboP: number,
+) {
   const diffOk = ev.nonOverlap.meanDiff > 0;
   return {
     passesNonOverlap: diffOk && ev.nonOverlap.p < 0.05 && Math.abs(ev.nonOverlap.t) >= 3,
     passesBootstrap:
       ev.blockMeans !== null && ev.blockMeans.difference > 0 && ev.blockMeans.p < 0.05,
-    passesPlacebo: ev.placebo.p < 0.05,
+    passesPlacebo: placeboP < 0.05,
     passesMultiplicity: mult.bhRejected,
   };
 }
@@ -149,10 +164,11 @@ function verdictFor(
   b3: CalendarControlResult | null,
   control: FrozenRunReport['positiveControl'],
   claimedEffect: number,
+  placeboP: number,
 ): Verdict {
   return verdictOf({
     nonOverlapN: ev.nonOverlap.n,
-    ...decisionFlags(ev, mult),
+    ...decisionFlags(ev, mult, placeboP),
     beatsCalendarControl: b3 === null ? null : b3.beats,
     mde: control.mde,
     claimedEffect,
@@ -172,6 +188,34 @@ function dropInvalid(
       run.weights[k] = 0;
     }
   });
+}
+
+/** The p-value that gates the verdict's placebo test: the relabelling one when the run uses it. */
+function placeboP(ev: EvaluationReport, relabel: RelabelResult | undefined): number {
+  return relabel === undefined ? ev.placebo.p : relabel.p;
+}
+
+function armsOf(
+  panel: ArmGrid['panel'],
+  weights: Float64Array,
+  ev: EvaluationReport,
+  b1: { p: number; observed: number; drawMeans: readonly number[] },
+  b3: CalendarControlResult | null,
+  relabel: RelabelResult | undefined,
+): FrozenRunReport['arms'] {
+  return {
+    B0: baselineArm(panel),
+    A: summarise(panel, weights),
+    B1: { p: b1.p, observed: b1.observed, draws: b1.drawMeans.length },
+    B2: {
+      p: ev.placebo.p,
+      observedT: ev.placebo.observedT,
+      shiftsUsed: ev.placebo.shiftsUsed,
+      allowedShifts: ev.placebo.allowedShifts,
+    },
+    B3: b3,
+    ...(relabel === undefined ? {} : { relabel }),
+  };
 }
 
 export function runFrozenEvaluation(
@@ -206,23 +250,23 @@ export function runFrozenEvaluation(
   const control = controlOutcome(panel, cfg, rng);
   const claimedEffect =
     cfg.returnUnit === 'percent' ? spec.claimed.effectSizePct : spec.claimed.effectSizePct / 100;
-  const verdict = verdictFor(evaluation, mult, b3, control, claimedEffect);
+  const relabel =
+    cfg.placebo === 'relabel'
+      ? relabelPlacebo(panel, rng.fork('relabel'), cfg.relabelDraws ?? 500)
+      : undefined;
+  const verdict = verdictFor(
+    evaluation,
+    mult,
+    b3,
+    control,
+    claimedEffect,
+    placeboP(evaluation, relabel),
+  );
   const body: Omit<FrozenRunReport, 'reportHash'> = {
     seed: cfg.seed,
     hypothesisId: spec.id,
     overlay: { denied: run.denied, resized: run.resized, rows: run.mask.length },
-    arms: {
-      B0: baselineArm(grid.panel),
-      A: summarise(grid.panel, run.weights),
-      B1: { p: b1.p, observed: b1.observed, draws: b1.drawMeans.length },
-      B2: {
-        p: evaluation.placebo.p,
-        observedT: evaluation.placebo.observedT,
-        shiftsUsed: evaluation.placebo.shiftsUsed,
-        allowedShifts: evaluation.placebo.allowedShifts,
-      },
-      B3: b3,
-    },
+    arms: armsOf(grid.panel, run.weights, evaluation, b1, b3, relabel),
     evaluation,
     positiveControl: control,
     multiplicity: mult,

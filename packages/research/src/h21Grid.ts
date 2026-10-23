@@ -58,12 +58,12 @@ export interface H21Grid {
   summary: GridSummary;
 }
 
-function barMaps(m: GridMember): Map<string, GridBar> {
+export function barMaps(m: GridMember): Map<string, GridBar> {
   return new Map(m.bars.map((b) => [b.date, b]));
 }
 
 /** The forward return for a decision at session index `t`, or null if the cell has no usable return. */
-function forwardReturn(
+export function forwardReturn(
   bars: Map<string, GridBar>,
   m: GridMember,
   sessions: readonly string[],

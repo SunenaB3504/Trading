@@ -81,3 +81,17 @@ export {
   h21Spec,
 } from './h21';
 export type { H21Claim } from './h21';
+export {
+  PH12_CLAIM,
+  PH12_ID,
+  PH12_LISTING_MOMENT_UTC,
+  PH12_TRADER,
+  PH12_VERSION,
+  listingStar,
+  ph12FeatureValues,
+  ph12Features,
+  ph12Overlay,
+  ph12RuleHash,
+  ph12Spec,
+} from './ph12';
+export type { Ph12Features, Ph12Frozen } from './ph12';

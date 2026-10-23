@@ -1,0 +1,99 @@
+{
+ "seed": "PH-12 first frozen run 2026-10-23",
+ "hypothesisId": "PH-12",
+ "overlay": {
+  "denied": 33558,
+  "resized": 0,
+  "rows": 142128
+ },
+ "arms": {
+  "B0": {
+   "n": 127803,
+   "meanReturn": 0.010734279774234015
+  },
+  "A": {
+   "n": 98302,
+   "meanReturn": 0.010288600729320169
+  },
+  "B1": {
+   "p": 0.0919080919080919,
+   "observed": 0.010288600729320169,
+   "draws": 1000
+  },
+  "B2": {
+   "p": 1,
+   "observedT": -2.730459332445853,
+   "shiftsUsed": 0,
+   "allowedShifts": 0
+  },
+  "B3": null,
+  "relabel": {
+   "p": 0.48502994011976047,
+   "observedT": -2.730459332445853,
+   "draws": 500
+  }
+ },
+ "evaluation": {
+  "rawNOn": 98302,
+  "rawNOff": 29501,
+  "embargoDropped": 0,
+  "ess": {
+   "rawN": 1947,
+   "rho1": 0.9607606573306912,
+   "effectiveN": 146.0044619118876
+  },
+  "nonOverlap": {
+   "n": 99,
+   "meanDiff": -0.001708663699351683,
+   "t": -0.5499015241367712,
+   "p": 0.5836380195852515,
+   "design": "paired"
+  },
+  "bootstrap": {
+   "observed": -0.001930752143218915,
+   "lo": -0.00665563523640563,
+   "hi": 0.002848509257278486,
+   "p": 0.4062968515742129,
+   "sd": 0.0023906005006288657,
+   "draws": 2000,
+   "discarded": 0
+  },
+  "blockMeans": {
+   "difference": -0.0018894487598411207,
+   "se": 0.0025445489370465434,
+   "t": -0.7425476210468182,
+   "p": 0.46527236693284524,
+   "blocks": 24
+  },
+  "placebo": {
+   "p": 1,
+   "observedT": -2.730459332445853,
+   "shiftsUsed": 0,
+   "allowedShifts": 0
+  }
+ },
+ "positiveControl": {
+  "mde": 0.008278108526404452,
+  "powerAtMde": 0.86,
+  "confirmPower": 0.87,
+  "recovered": true
+ },
+ "multiplicity": {
+  "family": "buyer-company",
+  "m": 2,
+  "pilot": 0,
+  "synthetic": 0,
+  "pValues": [
+   0.07182645742042332,
+   0.5836380195852515
+  ],
+  "withoutP": 0,
+  "adjustedP": 0.5836380195852515,
+  "bhRejected": false,
+  "byRejected": false
+ },
+ "claimedEffect": 0.02,
+ "verdict": "Not supported (adequately powered)",
+ "warnings": [],
+ "reportHash": "38f1ff553d4aecb2018aecaeb214ed5bd73efa38ec40c1dc39eb6c6f1af41709"
+}

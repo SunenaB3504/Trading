@@ -37,6 +37,8 @@
     "ots:verify": "tsx packages/workers/src/otsVerify.ts",
     "register:h21": "tsx packages/research/src/registerH21Cli.ts",
     "run:h21": "tsx packages/research/src/h21RunCli.ts",
+    "register:ph12": "tsx packages/research/src/registerPh12Cli.ts",
+    "run:ph12": "tsx packages/research/src/ph12RunCli.ts",
     "snapshot:publish": "tsx packages/workers/src/publishSnapshot.ts",
     "snapshot:serve": "tsx packages/workers/src/serveSnapshots.ts",
     "uat:start": "tsx tools/uat/start.ts",
