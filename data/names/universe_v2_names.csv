@@ -1,7 +1,6 @@
 instrumentId,legalName,effectiveFrom,effectiveTo,confidence,note
 ABAN:INE421A01028,Aban Offshore Limited,,,high,
 ADANITRANS:INE931S01010,Adani Transmission Limited,,,high,"Renamed Adani Energy Solutions Limited in 2023; same first syllable, so no second row"
-AIFL:INE428O01016,,,,unknown,Company not identified; H-21 gives no signal until a name is supplied
 ARVIND:INE034A01011,Arvind Limited,,,high,
 ASIANPAINT:INE021A01026,Asian Paints Limited,,,high,
 BAJAJ-AUTO:INE917I01010,Bajaj Auto Limited,,,high,
@@ -29,7 +28,6 @@ HINDOILEXP:INE345A01011,Hindustan Oil Exploration Company Limited,,,high,
 HINDPETRO:INE094A01015,Hindustan Petroleum Corporation Limited,,,high,
 HINDZINC:INE267A01025,Hindustan Zinc Limited,,,high,
 HSCL:INE019C01026,Himadri Speciality Chemical Limited,,,high,
-IBREALEST:INE069I01010,Indiabulls Real Estate Limited,,,check,"Renamed later; the new name and date are not known to me. If its first syllable differs, add a row"
 IDBI:INE008A01015,IDBI Bank Limited,,,high,
 IDFC:INE043D01016,IDFC Limited,,,high,Later IDFC Financial Holding Company; same first syllable
 IFCI:INE039A01010,IFCI Limited,,,high,
@@ -43,8 +41,6 @@ KAJARIACER:INE217B01036,Kajaria Ceramics Limited,,,high,
 KARURVYSYA:INE036D01028,Karur Vysya Bank Limited,,,high,
 KEC:INE389H01022,KEC International Limited,,,high,
 KOTAKBANK:INE237A01028,Kotak Mahindra Bank Limited,,,high,
-KPIT:INE836A01035,KPIT Technologies Limited,,2019-01-23,check,"This ISIN (INE836A01035) passed to Birlasoft Limited after the merger; date taken from the price-adjustment day in our data (BSOFT, 2019-01-24)"
-KPIT:INE836A01035,Birlasoft Limited,2019-01-24,,check,See the row above
 KSCL:INE455I01029,Kaveri Seed Company Limited,,,high,
 L&TFH:INE498L01015,L&T Finance Holdings Limited,,,high,Later renamed L&T Finance Limited; same first syllable
 LUXIND:INE150G01020,Lux Industries Limited,,,high,
@@ -52,7 +48,6 @@ M&M:INE101A01026,Mahindra & Mahindra Limited,,,high,
 M&MFIN:INE774D01024,Mahindra & Mahindra Financial Services Limited,,,high,
 MARUTI:INE585B01010,Maruti Suzuki India Limited,,,high,
 MCX:INE745G01035,Multi Commodity Exchange of India Limited,,,high,
-MEGH:INE974H01013,,,,unknown,Company not identified; H-21 gives no signal until a name is supplied
 MGL:INE002S01010,Mahanagar Gas Limited,,,high,
 MRF:INE883A01011,MRF Limited,,,high,
 MRPL:INE103A01014,Mangalore Refinery and Petrochemicals Limited,,,high,
@@ -75,7 +70,6 @@ RPOWER:INE614G01033,Reliance Power Limited,,,high,
 SIEMENS:INE003A01024,Siemens Limited,,,high,
 SUNTECK:INE805D01026,Sunteck Realty Limited,,,high,
 THOMASCOOK:INE332A01027,Thomas Cook (India) Limited,,,high,
-TINPLATE:INE422C01014,The Tinplate Company of India Limited,,,check,"The legal name starts with ""The"". Decide whether a leading ""The"" counts as the first syllable (the table rule says legal name as written)"
 TIRUMALCHM:INE338A01016,Tirumalai Chemicals Limited,,,high,
 ULTRACEMCO:INE481G01011,UltraTech Cement Limited,,,high,
 VGUARD:INE951I01027,V-Guard Industries Limited,,,high,

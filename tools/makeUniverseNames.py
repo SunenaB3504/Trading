@@ -11,11 +11,13 @@ import json
 import sys
 
 # symbol -> list of (legalName, from, to, confidence, note)
+# Left out on purpose (owner, 2026-10-23, proof of concept): AIFL and MEGH (company not identified), IBREALEST,
+# KPIT and TINPLATE (name or date uncertain). They stay in the frozen universe with no name, so H-21 gives them
+# no signal.
 OPEN = ''
 NAMES = {
     'ABAN': [('Aban Offshore Limited', OPEN, OPEN, 'high', '')],
     'ADANITRANS': [('Adani Transmission Limited', OPEN, OPEN, 'high', 'Renamed Adani Energy Solutions Limited in 2023; same first syllable, so no second row')],
-    'AIFL': [('', OPEN, OPEN, 'unknown', 'Company not identified; H-21 gives no signal until a name is supplied')],
     'ARVIND': [('Arvind Limited', OPEN, OPEN, 'high', '')],
     'ASIANPAINT': [('Asian Paints Limited', OPEN, OPEN, 'high', '')],
     'BAJAJ-AUTO': [('Bajaj Auto Limited', OPEN, OPEN, 'high', '')],
@@ -43,7 +45,6 @@ NAMES = {
     'HINDPETRO': [('Hindustan Petroleum Corporation Limited', OPEN, OPEN, 'high', '')],
     'HINDZINC': [('Hindustan Zinc Limited', OPEN, OPEN, 'high', '')],
     'HSCL': [('Himadri Speciality Chemical Limited', OPEN, OPEN, 'high', '')],
-    'IBREALEST': [('Indiabulls Real Estate Limited', OPEN, OPEN, 'check', 'Renamed later; the new name and date are not known to me. If its first syllable differs, add a row')],
     'IDBI': [('IDBI Bank Limited', OPEN, OPEN, 'high', '')],
     'IDFC': [('IDFC Limited', OPEN, OPEN, 'high', 'Later IDFC Financial Holding Company; same first syllable')],
     'IFCI': [('IFCI Limited', OPEN, OPEN, 'high', '')],
@@ -57,10 +58,6 @@ NAMES = {
     'KARURVYSYA': [('Karur Vysya Bank Limited', OPEN, OPEN, 'high', '')],
     'KEC': [('KEC International Limited', OPEN, OPEN, 'high', '')],
     'KOTAKBANK': [('Kotak Mahindra Bank Limited', OPEN, OPEN, 'high', '')],
-    'KPIT': [
-        ('KPIT Technologies Limited', OPEN, '2019-01-23', 'check', 'This ISIN (INE836A01035) passed to Birlasoft Limited after the merger; date taken from the price-adjustment day in our data (BSOFT, 2019-01-24)'),
-        ('Birlasoft Limited', '2019-01-24', OPEN, 'check', 'See the row above'),
-    ],
     'KSCL': [('Kaveri Seed Company Limited', OPEN, OPEN, 'high', '')],
     'L&TFH': [('L&T Finance Holdings Limited', OPEN, OPEN, 'high', 'Later renamed L&T Finance Limited; same first syllable')],
     'LUXIND': [('Lux Industries Limited', OPEN, OPEN, 'high', '')],
@@ -68,7 +65,6 @@ NAMES = {
     'M&MFIN': [('Mahindra & Mahindra Financial Services Limited', OPEN, OPEN, 'high', '')],
     'MARUTI': [('Maruti Suzuki India Limited', OPEN, OPEN, 'high', '')],
     'MCX': [('Multi Commodity Exchange of India Limited', OPEN, OPEN, 'high', '')],
-    'MEGH': [('', OPEN, OPEN, 'unknown', 'Company not identified; H-21 gives no signal until a name is supplied')],
     'MGL': [('Mahanagar Gas Limited', OPEN, OPEN, 'high', '')],
     'MRF': [('MRF Limited', OPEN, OPEN, 'high', '')],
     'MRPL': [('Mangalore Refinery and Petrochemicals Limited', OPEN, OPEN, 'high', '')],
@@ -91,7 +87,6 @@ NAMES = {
     'SIEMENS': [('Siemens Limited', OPEN, OPEN, 'high', '')],
     'SUNTECK': [('Sunteck Realty Limited', OPEN, OPEN, 'high', '')],
     'THOMASCOOK': [('Thomas Cook (India) Limited', OPEN, OPEN, 'high', '')],
-    'TINPLATE': [('The Tinplate Company of India Limited', OPEN, OPEN, 'check', 'The legal name starts with "The". Decide whether a leading "The" counts as the first syllable (the table rule says legal name as written)')],
     'TIRUMALCHM': [('Tirumalai Chemicals Limited', OPEN, OPEN, 'high', '')],
     'ULTRACEMCO': [('UltraTech Cement Limited', OPEN, OPEN, 'high', '')],
     'VGUARD': [('V-Guard Industries Limited', OPEN, OPEN, 'high', '')],
@@ -103,7 +98,8 @@ NAMES = {
 
 frozen = json.load(open('data/frozen/universe_v2.json', encoding='utf-8'))
 members = {m['symbol']: m['instrumentId'] for m in frozen['members']}
-missing = sorted(set(members) - set(NAMES))
+LEFT_OUT = {'AIFL', 'MEGH', 'IBREALEST', 'KPIT', 'TINPLATE'}
+missing = sorted(set(members) - set(NAMES) - LEFT_OUT)
 extra = sorted(set(NAMES) - set(members))
 if missing or extra:
     sys.exit(f'missing {missing}; not in universe {extra}')
