@@ -1,0 +1,93 @@
+{
+ "seed": "H-21 first frozen run 2026-10-22",
+ "hypothesisId": "H-21",
+ "overlay": {
+  "denied": 66048,
+  "resized": 0,
+  "rows": 163842
+ },
+ "arms": {
+  "B0": {
+   "n": 140843,
+   "meanReturn": 0.010869412003046006
+  },
+  "A": {
+   "n": 81036,
+   "meanReturn": 0.009233890927243095
+  },
+  "B1": {
+   "p": 0.7732267732267732,
+   "observed": 0.009233890927243095,
+   "draws": 1000
+  },
+  "B2": {
+   "p": 1,
+   "observedT": -6.579427279106045,
+   "shiftsUsed": 0,
+   "allowedShifts": 0
+  },
+  "B3": null
+ },
+ "evaluation": {
+  "rawNOn": 81036,
+  "rawNOff": 52574,
+  "embargoDropped": 7233,
+  "ess": {
+   "rawN": 1787,
+   "rho1": 0.9571565120933098,
+   "effectiveN": 142.76830843584517
+  },
+  "nonOverlap": {
+   "n": 94,
+   "meanDiff": -0.004851900674981057,
+   "t": -1.8209736693484297,
+   "p": 0.07182645742042332,
+   "design": "paired"
+  },
+  "bootstrap": {
+   "observed": -0.004206253315366261,
+   "lo": -0.008215876555007252,
+   "hi": -0.00037157109349554004,
+   "p": 0.037481259370314844,
+   "sd": 0.0020686171887564857,
+   "draws": 2000,
+   "discarded": 0
+  },
+  "blockMeans": {
+   "difference": -0.004236385182160952,
+   "se": 0.0021702312302726073,
+   "t": -1.9520432307246867,
+   "p": 0.0632119144609951,
+   "blocks": 24
+  },
+  "placebo": {
+   "p": 1,
+   "observedT": -6.579427279106045,
+   "shiftsUsed": 0,
+   "allowedShifts": 0
+  }
+ },
+ "positiveControl": {
+  "mde": 0.008698532461013628,
+  "powerAtMde": 0.82,
+  "confirmPower": 0.82,
+  "recovered": true
+ },
+ "multiplicity": {
+  "family": "buyer-company",
+  "m": 1,
+  "pilot": 0,
+  "synthetic": 0,
+  "pValues": [
+   0.07182645742042332
+  ],
+  "withoutP": 0,
+  "adjustedP": 0.07182645742042332,
+  "bhRejected": false,
+  "byRejected": false
+ },
+ "claimedEffect": 0.02,
+ "verdict": "Not supported (adequately powered)",
+ "warnings": [],
+ "reportHash": "096f950f4ad7b4e05ecae49f822c4d1d4688fe1da90c6511a94cee09b2cf162b"
+}
