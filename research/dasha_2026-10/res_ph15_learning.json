@@ -1,0 +1,57 @@
+{
+ "spec_sha256": "5e6c5ecd8f412f0e82c1a998f81b5a3f8bc751e955ae59439813ea5488d15faf",
+ "D_stocks": 109,
+ "H_stocks": 97,
+ "learning": {
+  "ketu": {
+   "obs": 5,
+   "exp": 5.46,
+   "z": -0.21
+  },
+  "venus": {
+   "obs": 20,
+   "exp": 18.2,
+   "z": 0.51
+  },
+  "sun": {
+   "obs": 4,
+   "exp": 5.57,
+   "z": -0.71
+  },
+  "moon": {
+   "obs": 8,
+   "exp": 8.82,
+   "z": -0.3
+  },
+  "mars": {
+   "obs": 5,
+   "exp": 5.64,
+   "z": -0.29
+  },
+  "rahu": {
+   "obs": 21,
+   "exp": 17.62,
+   "z": 0.97
+  },
+  "jupiter": {
+   "obs": 18,
+   "exp": 17.09,
+   "z": 0.27
+  },
+  "saturn": {
+   "obs": 15,
+   "exp": 15.16,
+   "z": -0.05
+  },
+  "mercury": {
+   "obs": 13,
+   "exp": 15.45,
+   "z": -0.74
+  }
+ },
+ "risk_set": [
+  "rahu",
+  "venus",
+  "jupiter"
+ ]
+}

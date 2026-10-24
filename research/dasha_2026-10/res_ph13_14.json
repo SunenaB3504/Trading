@@ -1,0 +1,69 @@
+{
+ "P1": {
+  "n": 206,
+  "event_share": 0.42718446601941745,
+  "null_share": 0.40922932620262054,
+  "effect_points": 1.7955139816796917,
+  "p_one_sided": 0.30486951304869514,
+  "holm_threshold": 0.0125,
+  "reject": false
+ },
+ "P2": {
+  "n": 0,
+  "verdict": "Not testable: no stock keeps one lagna sign at 09:15, 10:00 and 15:30 IST"
+ },
+ "sensitivity": {
+  "bhukti_changes_0915_vs_1000": 0.23786407766990292,
+  "bhukti_changes_1530_vs_1000": 0.9854368932038835
+ },
+ "descriptive_bhukti_obs_vs_exp": {
+  "ketu": [
+   6,
+   10.6
+  ],
+  "venus": [
+   35,
+   35.6
+  ],
+  "sun": [
+   11,
+   10.5
+  ],
+  "moon": [
+   12,
+   15.0
+  ],
+  "mars": [
+   13,
+   10.1
+  ],
+  "rahu": [
+   37,
+   30.5
+  ],
+  "jupiter": [
+   28,
+   29.1
+  ],
+  "saturn": [
+   32,
+   33.1
+  ],
+  "mercury": [
+   32,
+   31.5
+  ]
+ },
+ "mahadasha_obs": {
+  "ketu": 18,
+  "venus": 19,
+  "sun": 15,
+  "moon": 25,
+  "mars": 24,
+  "rahu": 27,
+  "jupiter": 26,
+  "saturn": 28,
+  "mercury": 24
+ },
+ "stocks_n": 206
+}
