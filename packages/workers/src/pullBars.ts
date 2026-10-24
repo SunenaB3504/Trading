@@ -16,6 +16,7 @@ import type { FetchDeps, SessionPull } from '@trading/data-service';
  * Usage:  pnpm pull:bars --from 2024-02-01 --to 2026-10-16 [--dir data/raw/nse-bars] [--spacing-ms 2000]
  *            [--weekends] (also Saturdays and Sundays, bhavcopy only, to find special sessions)
  *            [--recheck-missing] (ask again for dates earlier answered "no such file")
+ *            [--no-pr] (bhavcopy only; the PR archive is not published for the early years)
  *            [--index] (pull the daily index closes instead of the bhavcopy and PR archive)
  */
 const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms));
@@ -98,7 +99,11 @@ export async function main(args: readonly string[]): Promise<number> {
       const problem = s.problems.length > 0 ? ` PROBLEM ${s.problems.join('; ')}` : '';
       console.log(`${s.date} bhavcopy ${s.bhavcopy}, PR ${s.pr}${problem}`);
     },
-    { weekends: args.includes('--weekends'), recheckMissing: args.includes('--recheck-missing') },
+    {
+      weekends: args.includes('--weekends'),
+      recheckMissing: args.includes('--recheck-missing'),
+      noPr: args.includes('--no-pr'),
+    },
   );
   console.log(JSON.stringify(summary(results)));
   return failed === 0 ? 0 : 1;

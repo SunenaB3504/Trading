@@ -107,6 +107,7 @@ describe('NSE bhavcopy, legacy format', () => {
   it('converts DD-MON-YYYY dates', () => {
     expect(legacyDate('03-JUN-2024')).toBe('2024-06-03');
     expect(legacyDate('31-dec-2020')).toBe('2020-12-31');
+    expect(legacyDate('3-NOV-1994')).toBe('1994-11-03');
     expect(() => legacyDate('2024-06-03')).toThrow();
     expect(() => legacyDate('03-XXX-2024')).toThrow();
   });
@@ -252,5 +253,30 @@ describe('CSV reader', () => {
     ]);
     expect(parseCsv('')).toEqual([]);
     expect(parseCsv('last,row')).toEqual([['last', 'row']]);
+  });
+});
+
+describe('NSE bhavcopy, legacy format before ISINs were published', () => {
+  const old = [
+    'SYMBOL,SERIES,OPEN,HIGH,LOW,CLOSE,LAST,PREVCLOSE,TOTTRDQTY,TOTTRDVAL,TIMESTAMP,',
+    'RELIANCE,EQ,360,364,356.75,361.25,360.5,361.5,66900,24149512.5,15-NOV-1994,',
+  ].join('\n');
+
+  it('reads a 1994 row with no ISIN column and gives it a null ISIN', () => {
+    const { rows, skipped } = parseBhavcopyLegacy(old);
+    expect(skipped).toEqual([]);
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({
+      symbol: 'RELIANCE',
+      series: 'EQ',
+      isin: null,
+      date: '1994-11-15',
+      close: 36125,
+      volume: 66900,
+    });
+  });
+
+  it('still requires the ISIN column in the UDiFF format', () => {
+    expect(() => parseBhavcopyUdiff('TckrSymb,SctySrs\nX,EQ')).toThrow();
   });
 });

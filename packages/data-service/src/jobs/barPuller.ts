@@ -43,6 +43,8 @@ export interface PullOptions {
   weekends?: boolean;
   /** Ask again for dates whose earlier answer was "no such file". */
   recheckMissing?: boolean;
+  /** Skip the PR archive, which is not published for the early years (bhavcopy only). */
+  noPr?: boolean;
 }
 
 /**
@@ -93,6 +95,7 @@ export async function pullSession(
   deps: FetchDeps,
   have: Set<string>,
   weekend = false,
+  noPr = false,
 ): Promise<SessionPull> {
   const format = bhavcopyFormatFor(date);
   const bhav = await fetchDay(deps, have, {
@@ -102,14 +105,15 @@ export async function pullSession(
     date,
   });
   // No archive is published for a weekend, so only the bhavcopy is asked for there.
-  const pr: { result: Result; problem?: string } = weekend
-    ? { result: 'none' }
-    : await fetchDay(deps, have, {
-        urlClass: URL_CLASSES.pr,
-        provider: 'nse-pr',
-        url: prZipUrl(date),
-        date,
-      });
+  const pr: { result: Result; problem?: string } =
+    weekend || noPr
+      ? { result: 'none' }
+      : await fetchDay(deps, have, {
+          urlClass: URL_CLASSES.pr,
+          provider: 'nse-pr',
+          url: prZipUrl(date),
+          date,
+        });
   return {
     date,
     bhavcopy: bhav.result,
@@ -146,7 +150,7 @@ export async function pullRange(
   const have = await stored(deps.store, options.recheckMissing === true);
   const out: SessionPull[] = [];
   for (const date of pullDates(from, to, options.weekends === true)) {
-    const s = await pullSession(date, deps, have, isWeekend(date));
+    const s = await pullSession(date, deps, have, isWeekend(date), options.noPr === true);
     out.push(s);
     onSession(s);
   }

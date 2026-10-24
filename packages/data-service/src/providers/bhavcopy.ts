@@ -18,12 +18,12 @@ const MONTHS: Record<string, string> = {
   DEC: '12',
 };
 
-/** `03-JUN-2024` to `2024-06-03`. */
+/** `03-JUN-2024` to `2024-06-03`; files before 2000s print `3-JUN-1996` with no leading zero. */
 export function legacyDate(text: string): string {
-  const m = /^(\d{2})-([A-Z]{3})-(\d{4})$/.exec(text.trim().toUpperCase());
+  const m = /^(\d{1,2})-([A-Z]{3})-(\d{4})$/.exec(text.trim().toUpperCase());
   const month = m === null ? undefined : MONTHS[m[2] as string];
   if (m === null || month === undefined) throw new Error(`bad legacy date "${text}"`);
-  return `${m[3] as string}-${month}-${m[1] as string}`;
+  return `${m[3] as string}-${month}-${(m[1] as string).padStart(2, '0')}`;
 }
 
 interface Columns {
@@ -107,7 +107,11 @@ function parseWith(
   if (header === undefined) throw new ProviderError('malformed', 'empty bhavcopy file');
   let ix: Record<string, number>;
   try {
-    ix = columnIndex(header, Object.values(c));
+    // Legacy files carry no ISIN column before 2012, so there it is optional and the row gets a null ISIN.
+    ix = columnIndex(
+      header,
+      Object.values(c).filter((name) => !legacy || name !== c.isin),
+    );
   } catch (e) {
     throw new ProviderError('malformed', e instanceof Error ? e.message : 'bad header');
   }
