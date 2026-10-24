@@ -38,6 +38,7 @@
     "register:h21": "tsx packages/research/src/registerH21Cli.ts",
     "run:h21": "tsx packages/research/src/h21RunCli.ts",
     "register:ph12": "tsx packages/research/src/registerPh12Cli.ts",
+    "register:dasha": "tsx packages/research/src/registerDashaCollapseCli.ts",
     "run:ph12": "tsx packages/research/src/ph12RunCli.ts",
     "snapshot:publish": "tsx packages/workers/src/publishSnapshot.ts",
     "snapshot:serve": "tsx packages/workers/src/serveSnapshots.ts",

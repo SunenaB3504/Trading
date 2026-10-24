@@ -95,3 +95,16 @@ export {
   ph12Spec,
 } from './ph12';
 export type { Ph12Features, Ph12Frozen } from './ph12';
+export {
+  DC_CLAIM,
+  DC_FAMILY,
+  DC_MOMENTS_UTC,
+  DC_P1_ID,
+  DC_P1_LORDS,
+  DC_P2_HOUSES,
+  DC_P2_ID,
+  DC_VERSION,
+  dcRuleHash,
+  dcSpec,
+} from './dashaCollapse';
+export type { DcFrozen, DcTest } from './dashaCollapse';

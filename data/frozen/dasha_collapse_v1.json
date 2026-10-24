@@ -1,0 +1,37 @@
+{
+ "id": "dasha-collapse-v1",
+ "createdAt": "2026-10-24",
+ "purpose": "Frozen inputs for PH-13 and PH-14 (docs/DASHA_COLLAPSE_STUDY_PLAN.md). No dasha has been computed for any stock in the list.",
+ "window": {
+  "from": "2007-01-02",
+  "to": "2026-10-16"
+ },
+ "collapseRule": {
+  "fallFromPeakAtLeast": 0.7,
+  "neverRegained": 0.5,
+  "lastCloseAtMost": 0.4,
+  "minSessions": 250,
+  "excludeUnexplainedOneDayDropBelow": -0.35,
+  "priceBasis": "close, adjusted for splits and bonuses only (NSE corporate-actions list 2007-2009, NSE PR files 2010 onward)"
+ },
+ "verification": "NSE first appearance within 3 days of an NSE IPO listing date (NSE past-issues table to Jan 2016, NSE past-issues API 2016 on)",
+ "list": {
+  "file": "data/frozen/dasha_collapse_verified_v1.csv",
+  "rows": 206,
+  "hashLfNormalised": "a4a78eab148296d1855102985086e22e3a7aa6213109f6dacbd1fcef738710ae"
+ },
+ "inputs": {
+  "eq_daily.csv (merged NSE bhavcopy EQ+BE rows, 1994-11-03 to 2026-10-16, 10,787,382 rows)": "092aedca83ed472a9a7d7dc86180b4a667f4d58ece1d4c0ccf10e7f81d6126c6",
+  "actions_pr.json (NSE PR corporate actions 2010-)": "ccd0a93cef04a4f42dd985b05110253b4ec101480ec842be5a31e52fcdab9cd0",
+  "actions_api.json (NSE corporate-actions history 1995-2010)": "8b9d257a59f85bceb89aab7415ed0665fb1121f4056e4bae86ffc71a454f2146",
+  "ipo_verified.json (IPO-verified symbols)": "76a5eb8efcb1b5ccbe1cca03c555ecba7605f1682d20327156eb1c0f1e799469",
+  "first_appearance.csv": "182e990048deac1448724924252c0d0191d028af229b6df8f62ad1a26a4bc499",
+  "downfalls_v2.json (collapse table behind the list)": "82eb2602edc2f649d14be528d7958c7a1b1a113b127c113adbca7cc4dac79067"
+ },
+ "derivationScripts": "tools/dasha-collapse/ (exploratory scripts run on 2026-10-24; paths as run, outputs not reproducible without the private raw NSE files)",
+ "knownLimits": [
+  "Mergers, demergers and rights issues are not adjusted",
+  "NSE IPO table is nearly empty for 2011-2014; BSE lists were not reachable",
+  "Raw NSE data is private; terms of use not settled"
+ ]
+}
