@@ -1,0 +1,809 @@
+symbol,company_name,listing_date,tob,ayanamsa,lagna_sign_id,lagna_sign,lagna_deg,moon_sign_id,moon_sign,moon_deg,moon_nakshatra,pada,birth_md_lord,starting_balance_years
+BALAJITELE,Balaji Telefilms Limited,2000-11-22,10:00:00,23.869548,9,Sagittarius,18.5193,6,Virgo,21.2251,Hasta,4,moon,1.5812
+CREATIVEYE,Creative Eye Limited,2000-12-20,10:00:00,23.870619,10,Capricorn,16.8425,7,Libra,1.4181,Chitra,3,mars,2.7555
+DIVISLAB,Divi's Laboratories Limited,2003-03-12,10:00:00,23.901674,1,Aries,24.5229,3,Gemini,7.2969,Ardra,1,rahu,17.1492
+ITI,ITI Limited,2003-09-15,10:00:00,23.908826,7,Libra,17.2424,1,Aries,18.8577,Bharani,2,venus,11.7135
+VARDHACRLC,Vardhman Acrylics Limited,2003-09-30,10:00:00,23.9094,8,Scorpio,0.5515,8,Scorpio,8.2398,Anuradha,2,saturn,12.0083
+IGL,Indraprastha Gas Limited,2003-12-26,10:00:00,23.912727,10,Capricorn,22.6266,10,Capricorn,18.2831,Shravana,3,moon,3.7877
+TVTODAY,TV Today Network Limited,2004-01-16,10:00:00,23.91353,11,Aquarius,17.4354,7,Libra,14.2184,Swati,3,rahu,7.8052
+PETRONET,Petronet LNG Limited,2004-03-26,10:00:00,23.916207,2,Taurus,10.0074,2,Taurus,11.4959,Rohini,1,moon,8.8781
+BIOCON,Biocon Limited,2004-04-07,10:00:00,23.916666,2,Taurus,21.7664,7,Libra,17.0388,Swati,4,rahu,3.9976
+NDTV,New Delhi Television Limited,2004-05-19,10:00:00,23.918273,3,Gemini,29.5614,2,Taurus,4.4547,Krittika,3,sun,2.4954
+TCS,Tata Consultancy Services Limited,2004-08-25,10:00:00,23.922021,6,Virgo,28.8479,9,Sagittarius,1.7089,Mula,1,ketu,6.1029
+SALSTEEL,S.A.L. Steel Limited,2004-11-24,10:00:00,23.925501,9,Sagittarius,20.3903,1,Aries,8.2968,Ashwini,3,ketu,2.6442
+INDOCO,Indoco Remedies Limited,2005-01-14,10:00:00,23.927451,11,Aquarius,15.8923,11,Aquarius,21.5628,Purva Bhadrapada,1,jupiter,14.1246
+GOKEX,Gokaldas Exports Limited,2005-04-27,10:00:00,23.931391,3,Gemini,9.9444,8,Scorpio,18.8405,Jyeshtha,1,mercury,14.2284
+SHOPERSTOP,Shoppers Stop Limited,2005-05-23,10:00:00,23.932385,4,Cancer,2.8344,7,Libra,29.4789,Vishakha,3,jupiter,4.6253
+YESBANK,Yes Bank Limited,2005-07-12,10:00:00,23.934297,5,Leo,17.6835,5,Leo,28.1871,Uttara Phalguni,1,sun,5.3158
+NECLIFE,Nectar Lifesciences Limited,2005-07-18,10:00:00,23.934527,5,Leo,23.247,8,Scorpio,16.0199,Anuradha,4,saturn,0.9216
+SPLIL,SPL Industries Limited,2005-07-26,10:00:00,23.934833,6,Virgo,0.7009,12,Pisces,14.9236,Uttara Bhadrapada,4,saturn,2.4838
+HTMEDIA,HT Media Limited,2005-09-01,10:00:00,23.936248,7,Libra,5.0254,4,Cancer,16.5612,Pushya,4,saturn,0.1503
+SUZLON,Suzlon Energy Limited,2005-10-19,10:00:00,23.938084,8,Scorpio,17.6204,1,Aries,23.6006,Bharani,4,venus,4.5992
+AURIONPRO,Aurionpro Solutions Limited,2005-10-25,10:00:00,23.938313,8,Scorpio,22.8874,4,Cancer,9.3884,Pushya,2,saturn,10.3716
+RENUKA,Shree Renuka Sugars Limited,2005-10-31,10:00:00,23.938543,8,Scorpio,28.1885,6,Virgo,21.7278,Hasta,4,moon,1.2041
+BASML,Bannari Amman Spinning Mills Limited,2005-11-14,10:00:00,23.939078,9,Sagittarius,10.8028,1,Aries,4.6036,Ashwini,2,ketu,4.5831
+TRIVENI,Triveni Engineering & Industries Limited,2005-12-13,10:00:00,23.940187,10,Capricorn,9.0758,1,Aries,27.5814,Krittika,1,sun,5.5884
+AIAENG,AIA Engineering Limited,2005-12-14,10:00:00,23.940225,10,Capricorn,10.1247,2,Taurus,10.6866,Rohini,1,moon,9.485
+EKC,Everest Kanto Cylinder Limited,2005-12-15,10:00:00,23.940264,10,Capricorn,11.1794,2,Taurus,23.602,Mrigashirsha,1,mars,6.859
+REPRO,Repro India Limited,2005-12-22,10:00:00,23.940531,10,Capricorn,18.7291,5,Leo,18.7734,Purva Phalguni,2,venus,11.8398
+CELEBRITY,Celebrity Fashions Limited,2006-01-12,10:00:00,23.941335,11,Aquarius,13.1343,3,Gemini,2.7655,Mrigashirsha,3,mars,2.0481
+NITINSPIN,Nitin Spinners Limited,2006-02-02,10:00:00,23.942138,12,Pisces,9.3875,12,Pisces,9.5385,Uttara Bhadrapada,2,saturn,10.1576
+ROHLTD,Royal Orchid Hotels Limited,2006-02-06,10:00:00,23.942291,12,Pisces,14.4289,2,Taurus,4.4172,Krittika,3,sun,2.5123
+ENIL,Entertainment Network (India) Limited,2006-02-15,10:00:00,23.942635,12,Pisces,25.6395,5,Leo,23.9114,Purva Phalguni,4,venus,4.1329
+JAGRAN,Jagran Prakashan Limited,2006-02-22,10:00:00,23.942903,1,Aries,4.145,8,Scorpio,20.247,Jyeshtha,2,mercury,12.4351
+GVKPIL,GVK Power & Infrastructure Limited,2006-02-27,10:00:00,23.943094,1,Aries,10.0682,11,Aquarius,2.6068,Dhanishta,3,mars,2.1314
+SADBHAV,Sadbhav Engineering Limited,2006-03-01,10:00:00,23.94317,1,Aries,12.3979,12,Pisces,3.0406,Purva Bhadrapada,4,jupiter,0.3512
+JKCEMENT,JK Cement Limited,2006-03-14,10:00:00,23.943668,1,Aries,26.9523,5,Leo,20.8771,Purva Phalguni,3,venus,8.6844
+M&MFIN,Mahindra & Mahindra Financial Services Limited,2006-03-17,10:00:00,23.943782,2,Taurus,0.1648,6,Virgo,26.6931,Chitra,2,mars,5.2361
+UTTAMSUGAR,Uttam Sugar Mills Limited,2006-04-10,10:00:00,23.9447,2,Taurus,24.1241,5,Leo,17.6221,Purva Phalguni,2,venus,13.5669
+KKCL,Kewal Kiran Clothing Limited,2006-04-13,10:00:00,23.944815,2,Taurus,26.9386,6,Virgo,23.4812,Chitra,1,mars,6.9224
+GPIL,Godawari Power And Ispat limited,2006-04-25,10:00:00,23.945274,3,Gemini,7.9183,12,Pisces,5.0185,Uttara Bhadrapada,1,saturn,16.5986
+RSYSTEMS,R Systems International Limited,2006-04-26,10:00:00,23.945312,3,Gemini,8.8169,12,Pisces,19.6739,Revati,1,mercury,13.1658
+LOKESHMACH,Lokesh Machines Limited,2006-05-05,10:00:00,23.945656,3,Gemini,16.8236,4,Cancer,20.2812,Ashlesha,2,mercury,12.3915
+PFOCUS,Prime Focus Limited,2006-06-20,10:00:00,23.947416,4,Cancer,27.3748,12,Pisces,25.6867,Revati,3,mercury,5.4994
+TECHM,Tech Mahindra Limited,2006-08-28,10:00:00,23.950055,7,Libra,1.1305,6,Virgo,28.3999,Chitra,2,mars,4.3401
+VOLTAMP,Voltamp Transformers Limited,2006-09-20,10:00:00,23.950934,7,Libra,21.9058,5,Leo,8.2162,Magha,3,ketu,2.6865
+ACE,Action Construction Equipment Limited,2006-09-26,10:00:00,23.951164,7,Libra,27.2232,7,Libra,19.3623,Swati,4,rahu,0.8609
+TALBROAUTO,Talbros Automotive Components Limited,2006-09-29,10:00:00,23.951279,7,Libra,29.8691,8,Scorpio,26.6064,Jyeshtha,3,mercury,4.3268
+FIEMIND,Fiem Industries Limited,2006-10-19,10:00:00,23.952043,8,Scorpio,17.394,5,Leo,28.7738,Uttara Phalguni,1,sun,5.0518
+JHS,JHS Svendgaard Laboratories Limited,2006-10-21,10:00:00,23.95212,8,Scorpio,19.1468,6,Virgo,22.4024,Hasta,4,moon,0.6982
+GLOBALVECT,Global Vectra Helicorp Limited,2006-10-27,10:00:00,23.952349,8,Scorpio,24.4218,9,Sagittarius,6.4324,Mula,2,ketu,3.623
+NAUKRI,Info Edge (India) Limited,2006-11-21,10:00:00,23.953306,9,Sagittarius,17.0639,8,Scorpio,7.7479,Anuradha,2,saturn,12.7093
+PARSVNATH,Parsvnath Developers Limited,2006-11-30,10:00:00,23.95365,9,Sagittarius,25.6842,12,Pisces,9.024,Uttara Bhadrapada,2,saturn,10.8907
+RUCHIRA,Ruchira Papers Limited,2006-12-20,10:00:00,23.954415,10,Capricorn,16.2647,8,Scorpio,29.3471,Jyeshtha,4,mercury,0.8324
+AUTOIND,Autoline Industries Limited,2007-01-31,10:00:00,23.956021,12,Pisces,6.5416,3,Gemini,22.6833,Punarvasu,1,jupiter,12.78
+TIIL,Technocraft Industries (India) Limited,2007-02-12,10:00:00,23.95648,12,Pisces,21.616,8,Scorpio,19.2792,Jyeshtha,1,mercury,13.669
+REDINGTON,Redington Limited,2007-02-15,10:00:00,23.956595,12,Pisces,25.3275,9,Sagittarius,29.0125,Uttara Ashadha,1,sun,4.9444
+FSL,Firstsource Solutions Limited,2007-02-22,10:00:00,23.956862,1,Aries,3.8409,1,Aries,11.133,Ashwini,4,ketu,1.1552
+PFC,Power Finance Corporation Limited,2007-02-23,10:00:00,23.956901,1,Aries,5.0376,1,Aries,25.4127,Bharani,4,venus,1.8809
+TFL,Transwarranty Finance Limited,2007-02-26,10:00:00,23.957015,1,Aries,8.5957,3,Gemini,6.4308,Mrigashirsha,4,mars,0.1238
+SMSPHARMA,SMS Pharmaceuticals Limited,2007-02-28,10:00:00,23.957092,1,Aries,10.9398,4,Cancer,2.3481,Punarvasu,4,jupiter,1.1823
+INDIANB,Indian Bank,2007-03-01,10:00:00,23.95713,1,Aries,12.1031,4,Cancer,14.9499,Pushya,4,saturn,2.4464
+PAGEIND,Page Industries Limited,2007-03-16,10:00:00,23.957704,1,Aries,28.827,10,Capricorn,20.9903,Shravana,4,moon,1.7573
+RAJTV,Raj Television Network Limited,2007-03-16,10:00:00,23.957704,1,Aries,28.827,10,Capricorn,20.9903,Shravana,4,moon,1.7573
+ICRA,ICRA Limited,2007-04-13,10:00:00,23.958775,2,Taurus,26.6983,10,Capricorn,29.4715,Dhanishta,2,mars,3.7775
+FORTIS,Fortis Healthcare Limited,2007-05-09,10:00:00,23.959769,3,Gemini,20.1201,10,Capricorn,11.8872,Shravana,1,moon,8.5846
+TIMETECHNO,Time Technoplast Limited,2007-06-13,10:00:00,23.961108,4,Cancer,20.8823,2,Taurus,1.1847,Krittika,2,sun,3.9669
+NELCAST,Nelcast Limited,2007-06-27,10:00:00,23.961643,5,Leo,3.4639,8,Scorpio,2.03,Vishakha,4,jupiter,1.564
+DLF,DLF Limited,2007-07-05,10:00:00,23.961949,5,Leo,10.762,11,Aquarius,16.1132,Shatabhisha,3,rahu,5.2471
+ADSL,Allied Digital Services Limited,2007-07-25,10:00:00,23.962714,5,Leo,29.2873,8,Scorpio,10.1009,Anuradha,3,saturn,9.3562
+ALPA,Alpa Laboratories Limited,2007-08-06,10:00:00,23.963173,6,Virgo,10.4948,1,Aries,23.3521,Bharani,4,venus,4.9719
+CENTRALBK,Central Bank of India,2007-08-21,10:00:00,23.963747,6,Virgo,24.4455,8,Scorpio,5.9158,Anuradha,1,saturn,15.32
+ASIANTILES,Asian Granito India Limited,2007-08-23,10:00:00,23.963823,6,Virgo,26.293,9,Sagittarius,0.3701,Mula,1,ketu,6.8057
+KPRMILL,K.P.R. Mill Limited,2007-08-28,10:00:00,23.964014,7,Libra,0.8941,11,Aquarius,7.1767,Shatabhisha,1,rahu,17.3115
+MOTILALOFS,Motilal Oswal Financial Services Limited,2007-09-11,10:00:00,23.96455,7,Libra,13.6217,5,Leo,20.2172,Purva Phalguni,3,venus,9.6742
+INDOWIND,Indowind Energy Limited,2007-09-14,10:00:00,23.964665,7,Libra,16.3174,6,Virgo,26.5603,Chitra,1,mars,5.3058
+MAGNUM,Magnum Ventures Limited,2007-09-20,10:00:00,23.964894,7,Libra,21.6762,9,Sagittarius,8.4289,Mula,3,ketu,2.5748
+KSCL,Kaveri Seed Company Limited,2007-10-04,10:00:00,23.96543,8,Scorpio,4.0369,3,Gemini,26.1722,Punarvasu,2,jupiter,8.5934
+CCCL,Consolidated Construction Consortium Limited,2007-10-15,10:00:00,23.96585,8,Scorpio,13.6671,8,Scorpio,10.75,Anuradha,3,saturn,8.4313
+SUPREMEINF,Supreme Infrastructure India Limited,2007-10-18,10:00:00,23.965965,8,Scorpio,16.2922,9,Sagittarius,16.9802,Purva Ashadha,2,venus,14.5297
+RELIGARE,Religare Enterprises Limited,2007-11-21,10:00:00,23.967265,9,Sagittarius,16.8223,12,Pisces,16.3282,Uttara Bhadrapada,4,saturn,0.4823
+BVCL,Barak Valley Cements Limited,2007-11-23,10:00:00,23.967342,9,Sagittarius,18.708,1,Aries,16.2693,Bharani,1,venus,15.5961
+KOLTEPATIL,Kolte - Patil Developers Limited,2007-12-13,10:00:00,23.968107,10,Capricorn,8.5421,10,Capricorn,5.7574,Uttara Ashadha,3,sun,1.9092
+KAUSHALYA,Kaushalya Infrastructure Development Corporation Limited,2007-12-14,10:00:00,23.968145,10,Capricorn,9.5882,10,Capricorn,18.411,Shravana,3,moon,3.6917
+BRIGADE,Brigade Enterprises Limited,2007-12-31,10:00:00,23.968795,10,Capricorn,28.2893,6,Virgo,13.5829,Hasta,2,moon,7.3128
+ECLERX,eClerx Services Limited,2007-12-31,10:00:00,23.968795,10,Capricorn,28.2893,6,Virgo,13.5829,Hasta,2,moon,7.3128
+BGRENERGY,BGR Energy Systems Limited,2008-01-03,10:00:00,23.96891,11,Aquarius,1.7713,7,Libra,19.3362,Swati,4,rahu,0.8961
+MANAKSIA,Manaksia Limited,2008-01-08,10:00:00,23.969101,11,Aquarius,7.6887,9,Sagittarius,19.8684,Purva Ashadha,2,venus,10.1975
+ARIES,Aries Agro Limited,2008-01-11,10:00:00,23.969216,11,Aquarius,11.3026,10,Capricorn,28.2374,Dhanishta,2,mars,4.4254
+RPOWER,Reliance Power Limited,2008-02-11,10:00:00,23.970401,12,Pisces,20.0563,12,Pisces,18.9602,Revati,1,mercury,14.0757
+JKIL,J.Kumar Infraprojects Limited,2008-02-12,10:00:00,23.97044,12,Pisces,21.3011,1,Aries,3.045,Ashwini,1,ketu,5.4014
+CORDSCABLE,Cords Cable Industries Limited,2008-02-13,10:00:00,23.970478,12,Pisces,22.5427,1,Aries,17.2041,Bharani,2,venus,14.1939
+ONMOBILE,OnMobile Global Limited,2008-02-19,10:00:00,23.970707,12,Pisces,29.912,4,Cancer,11.541,Pushya,3,saturn,7.304
+BANG,Bang Overseas Limited,2008-02-20,10:00:00,23.970746,1,Aries,1.125,4,Cancer,25.115,Ashlesha,3,mercury,6.2284
+IRB,IRB Infrastructure Developers Limited,2008-02-25,10:00:00,23.970937,1,Aries,7.1144,6,Virgo,29.1511,Chitra,2,mars,3.9456
+VGUARD,V-Guard Industries Limited,2008-03-13,10:00:00,23.971587,1,Aries,26.4002,2,Taurus,12.3627,Rohini,1,moon,8.228
+GOKUL,Gokul Refoils and Solvent Limited,2008-06-04,10:00:00,23.974762,4,Cancer,13.566,2,Taurus,25.4037,Mrigashirsha,1,mars,5.913
+ARCHIDPLY,Archidply Industries Limited,2008-07-04,10:00:00,23.975909,5,Leo,10.5258,4,Cancer,3.7315,Pushya,1,saturn,18.4326
+20MICRONS,20 Microns Limited,2008-10-06,10:00:00,23.979504,8,Scorpio,6.4406,9,Sagittarius,6.3591,Mula,2,ketu,3.6615
+ALKALI,Alkali Metals Limited,2008-11-06,10:00:00,23.98069,9,Sagittarius,3.7466,10,Capricorn,20.3598,Shravana,4,moon,2.2302
+MHRIL,Mahindra Holidays & Resorts India Limited,2009-07-16,10:00:00,23.990328,5,Leo,21.3617,1,Aries,9.3531,Ashwini,3,ketu,2.0896
+NHPC,NHPC Limited,2009-09-01,10:00:00,23.992125,7,Libra,4.9972,10,Capricorn,6.391,Uttara Ashadha,3,sun,1.624
+GLOBUSSPR,Globus Spirits Limited,2009-09-23,10:00:00,23.992967,7,Libra,24.7689,8,Scorpio,2.1774,Vishakha,4,jupiter,1.3871
+OIL,Oil India Limited,2009-09-30,10:00:00,23.993234,8,Scorpio,0.9475,10,Capricorn,26.4882,Dhanishta,1,mars,5.3437
+DEN,Den Networks Limited,2009-11-24,10:00:00,23.995338,9,Sagittarius,20.1196,11,Aquarius,0.2465,Dhanishta,3,mars,3.3706
+ASTEC,Astec LifeSciences Limited,2009-11-25,10:00:00,23.995376,9,Sagittarius,21.0741,11,Aquarius,12.1673,Shatabhisha,2,rahu,10.5742
+DLINKINDIA,D-Link (India) Limited,2009-12-18,10:00:00,23.996256,10,Capricorn,14.3577,9,Sagittarius,21.061,Purva Ashadha,3,venus,8.4085
+JSWENERGY,JSW Energy Limited,2010-01-04,10:00:00,23.996906,11,Aquarius,3.5233,5,Leo,6.9951,Magha,3,ketu,3.3276
+GODREJPROP,Godrej Properties Limited,2010-01-05,10:00:00,23.996944,11,Aquarius,4.7042,5,Leo,21.5377,Purva Phalguni,3,venus,7.6934
+JUBLFOOD,Jubilant Foodworks Limited,2010-02-08,10:00:00,23.998245,12,Pisces,16.9234,8,Scorpio,20.7268,Jyeshtha,2,mercury,11.8234
+VASCONEQ,Vascon Engineers Limited,2010-02-15,10:00:00,23.998512,12,Pisces,25.6222,11,Aquarius,13.9792,Shatabhisha,3,rahu,8.1281
+THANGAMAYL,Thangamayil Jewellery Limited,2010-02-19,10:00:00,23.998665,1,Aries,0.5098,1,Aries,2.6439,Ashwini,1,ketu,5.612
+HATHWAY,Hathway Cable & Datacom Limited,2010-02-25,10:00:00,23.998895,1,Aries,7.6961,3,Gemini,23.3353,Punarvasu,2,jupiter,11.9977
+MANINFRA,Man Infraconstruction Limited,2010-03-11,10:00:00,23.99943,1,Aries,23.6627,10,Capricorn,5.4047,Uttara Ashadha,3,sun,2.0679
+PERSISTENT,Persistent Systems Limited,2010-04-06,10:00:00,24.000425,2,Taurus,20.2911,9,Sagittarius,19.9133,Purva Ashadha,2,venus,10.1301
+TARAPUR,Tarapur Transformers Limited,2010-05-18,10:00:00,24.002031,3,Gemini,28.2047,3,Gemini,26.2474,Punarvasu,2,jupiter,8.5031
+SJVN,SJVN Limited,2010-05-20,10:00:00,24.002108,3,Gemini,29.9541,4,Cancer,24.4937,Ashlesha,3,mercury,7.0205
+RAMKY,Ramky Infrastructure Limited,2010-10-08,10:00:00,24.0075,8,Scorpio,7.74,6,Virgo,26.4793,Chitra,1,mars,5.3483
+BEDMUTHA,Bedmutha Industries Limited,2010-10-14,10:00:00,24.00773,8,Scorpio,12.9895,9,Sagittarius,18.7108,Purva Ashadha,2,venus,11.9338
+REPCOHOME,Repco Home Finance Limited,2013-04-01,10:00:00,24.042152,2,Taurus,15.6654,8,Scorpio,21.0456,Jyeshtha,2,mercury,11.4169
+WONDERLA,Wonderla Holidays Limited,2014-05-09,10:00:00,24.057565,3,Gemini,20.2886,5,Leo,17.0438,Purva Phalguni,2,venus,14.4343
+SNOWMAN,Snowman Logistics Limited,2014-09-12,10:00:00,24.062385,7,Libra,14.6978,1,Aries,7.8174,Ashwini,3,ketu,2.8959
+SHARDACROP,Sharda Cropchem Limited,2014-09-23,10:00:00,24.062805,7,Libra,24.5128,5,Leo,24.1337,Purva Phalguni,4,venus,3.7995
+MONTECARLO,Monte Carlo Fashions Limited,2014-12-19,10:00:00,24.066133,10,Capricorn,15.1407,7,Libra,26.2047,Vishakha,2,jupiter,8.5544
+INOXWIND,Inox Wind Limited,2015-04-09,10:00:00,24.070378,2,Taurus,22.8795,8,Scorpio,18.3547,Jyeshtha,1,mercury,14.8477
+VRLLOG,VRL Logistics Limited,2015-04-30,10:00:00,24.071181,3,Gemini,12.1038,6,Virgo,1.2113,Uttara Phalguni,2,sun,3.9549
+MEP,MEP Infrastructure Developers Limited,2015-05-06,10:00:00,24.071411,3,Gemini,17.42,8,Scorpio,15.2192,Anuradha,4,saturn,2.0626
+UFO,UFO Moviez India Limited,2015-05-14,10:00:00,24.071717,3,Gemini,24.4491,12,Pisces,5.493,Uttara Bhadrapada,1,saturn,15.9224
+PNCINFRA,PNC Infratech Limited,2015-05-26,10:00:00,24.072176,4,Cancer,4.9504,5,Leo,15.6404,Purva Phalguni,1,venus,16.5395
+SYNGENE,Syngene International Limited,2015-08-11,10:00:00,24.075121,6,Virgo,15.1058,3,Gemini,14.6981,Ardra,3,rahu,7.1576
+POWERMECH,Power Mech Projects Limited,2015-08-26,10:00:00,24.075695,6,Virgo,29.0027,9,Sagittarius,19.666,Purva Ashadha,2,venus,10.501
+NAVKARCORP,Navkar Corporation Limited,2015-09-09,10:00:00,24.07623,7,Libra,11.7633,4,Cancer,6.9026,Pushya,2,saturn,13.9138
+SADBHIN,Sadbhav Infrastructure Project Limited,2015-09-16,10:00:00,24.076498,7,Libra,18.053,7,Libra,0.3909,Chitra,3,mars,3.2948
+INDIGO,InterGlobe Aviation Limited,2015-11-10,10:00:00,24.078601,9,Sagittarius,6.6333,7,Libra,6.1511,Chitra,4,mars,0.2707
+SHK,S H Kelkar and Company Limited,2015-11-16,10:00:00,24.078831,9,Sagittarius,12.1181,9,Sagittarius,21.1203,Purva Ashadha,3,venus,8.3196
+ALKEM,Alkem Laboratories Limited,2015-12-23,10:00:00,24.080246,10,Capricorn,19.2298,2,Taurus,7.1021,Krittika,4,sun,1.304
+LALPATHLAB,Dr. Lal Path Labs Ltd.,2015-12-23,10:00:00,24.080246,10,Capricorn,19.2298,2,Taurus,7.1021,Krittika,4,sun,1.304
+NH,Narayana Hrudayalaya Ltd.,2016-01-06,10:00:00,24.080782,11,Aquarius,5.2698,8,Scorpio,4.6588,Anuradha,1,saturn,17.1112
+PRECAM,Precision Camshafts Limited,2016-02-08,10:00:00,24.082044,12,Pisces,16.27,10,Capricorn,19.1385,Shravana,3,moon,3.1461
+TEAMLEASE,Teamlease Services Limited,2016-02-12,10:00:00,24.082197,12,Pisces,21.2652,12,Pisces,17.2042,Revati,1,mercury,16.3147
+QUICKHEAL,Quick Heal Technologies Limited,2016-02-18,10:00:00,24.082426,12,Pisces,28.6565,3,Gemini,10.9762,Ardra,2,rahu,12.1822
+HCG,Healthcare Global Enterprises Limited,2016-03-30,10:00:00,24.083994,2,Taurus,13.9239,8,Scorpio,29.0634,Jyeshtha,4,mercury,1.1941
+BHARATWIRE,Bharat Wire Ropes Limited,2016-04-01,10:00:00,24.084071,2,Taurus,15.8911,9,Sagittarius,24.3451,Purva Ashadha,4,venus,3.4824
+THYROCARE,Thyrocare Technologies Limited,2016-05-09,10:00:00,24.085524,3,Gemini,20.7142,2,Taurus,28.1472,Mrigashirsha,2,mars,4.4727
+PARAGMILK,Parag Milk Foods Limited,2016-05-19,10:00:00,24.085907,3,Gemini,29.4743,7,Libra,4.934,Chitra,4,mars,0.9096
+MGL,Mahanagar Gas Limited,2016-07-01,10:00:00,24.087551,5,Leo,7.7268,2,Taurus,1.518,Krittika,2,sun,3.8169
+QUESS,Quess Corp Limited,2016-07-12,10:00:00,24.087972,5,Leo,17.8406,6,Virgo,27.8295,Chitra,2,mars,4.6395
+ADVENZYMES,Advanced Enzyme Technologies Limited,2016-08-01,10:00:00,24.088737,6,Virgo,6.4653,3,Gemini,24.108,Punarvasu,2,jupiter,11.0704
+DBL,Dilip Buildcon Limited,2016-08-11,10:00:00,24.08912,6,Virgo,15.7981,7,Libra,29.4837,Vishakha,3,jupiter,4.6196
+SPAL,S. P. Apparels Limited,2016-08-12,10:00:00,24.089158,6,Virgo,16.7292,8,Scorpio,11.4778,Anuradha,3,saturn,7.3942
+RBLBANK,RBL Bank Limited,2016-08-31,10:00:00,24.089884,7,Libra,4.2656,5,Leo,0.1006,Magha,1,ketu,6.9472
+LTTS,L&T Technology Services Limited,2016-09-23,10:00:00,24.090764,7,Libra,24.9423,3,Gemini,3.5635,Mrigashirsha,4,mars,1.6292
+GNA,GNA Axles Limited,2016-09-26,10:00:00,24.090879,7,Libra,27.5948,4,Cancer,13.9311,Pushya,4,saturn,3.8982
+HPL,HPL Electric & Power Limited,2016-10-04,10:00:00,24.091185,8,Scorpio,4.6321,7,Libra,22.1287,Vishakha,1,jupiter,13.4456
+ENDURANCE,Endurance Technologies Limited,2016-10-19,10:00:00,24.091759,8,Scorpio,17.7626,2,Taurus,14.6383,Rohini,2,moon,6.5213
+VBL,Varun Beverages Limited,2016-11-08,10:00:00,24.092524,9,Sagittarius,5.4957,10,Capricorn,26.4252,Dhanishta,1,mars,5.3768
+SFL,Sheela Foam Limited,2016-12-09,10:00:00,24.093709,10,Capricorn,5.1311,12,Pisces,16.5482,Uttara Bhadrapada,4,saturn,0.1688
+LAURUSLABS,Laurus Labs Limited,2016-12-19,10:00:00,24.094092,10,Capricorn,15.6707,5,Leo,11.6933,Magha,4,ketu,0.861
+BSE,BSE Limited,2017-02-03,10:00:00,24.095851,12,Pisces,10.919,1,Aries,7.463,Ashwini,3,ketu,3.0819
+RADIOCITY,Music Broadcast Limited,2017-03-17,10:00:00,24.097457,2,Taurus,0.3641,7,Libra,24.716,Vishakha,2,jupiter,10.3408
+DMART,Avenue Supermarts Limited,2017-03-21,10:00:00,24.09761,2,Taurus,4.5573,9,Sagittarius,12.4045,Mula,4,ketu,0.4876
+CLEDUCATE,CL Educate Limited,2017-03-31,10:00:00,24.097993,2,Taurus,14.6578,1,Aries,28.4502,Krittika,1,sun,5.1974
+SHANKARA,Shankara Building Products Limited,2017-04-05,10:00:00,24.098184,2,Taurus,19.5241,4,Cancer,9.4526,Pushya,2,saturn,10.28
+SCHAND,S Chand And Company Limited,2017-05-09,10:00:00,24.099485,3,Gemini,20.4878,7,Libra,5.6467,Chitra,4,mars,0.5355
+HUDCO,Housing & Urban Development Corporation Limited,2017-05-19,10:00:00,24.099867,3,Gemini,29.2488,11,Aquarius,6.2412,Dhanishta,4,mars,0.2234
+PSPPROJECT,PSP Projects Limited,2017-05-29,10:00:00,24.10025,4,Cancer,8.005,4,Cancer,1.2808,Punarvasu,4,jupiter,2.463
+TEJASNET,Tejas Networks Limited,2017-06-27,10:00:00,24.101359,5,Leo,3.8496,4,Cancer,24.1701,Ashlesha,3,mercury,7.4331
+ERIS,Eris Lifesciences Limited,2017-06-29,10:00:00,24.101435,5,Leo,5.6683,5,Leo,21.5273,Purva Phalguni,3,venus,7.709
+CDSL,Central Depository Services (India) Limited,2017-06-30,10:00:00,24.101473,5,Leo,6.5795,6,Virgo,4.5491,Uttara Phalguni,3,sun,2.4529
+GTPL,GTPL Hathway Limited,2017-07-04,10:00:00,24.101626,5,Leo,10.2363,7,Libra,23.6889,Vishakha,2,jupiter,11.5734
+AUBANK,AU Small Finance Bank Limited,2017-07-10,10:00:00,24.101856,5,Leo,15.7551,10,Capricorn,5.3535,Uttara Ashadha,3,sun,2.0909
+SALASAR,Salasar Techno Engineering Limited,2017-07-25,10:00:00,24.10243,5,Leo,29.6877,5,Leo,2.3575,Magha,1,ketu,5.7623
+SIS,SIS LIMITED,2017-08-10,10:00:00,24.103042,6,Virgo,14.6269,11,Aquarius,22.2941,Purva Bhadrapada,1,jupiter,13.2471
+COCHINSHIP,Cochin Shipyard Limited,2017-08-11,10:00:00,24.10308,6,Virgo,15.5587,12,Pisces,5.4223,Uttara Bhadrapada,1,saturn,16.0233
+APEX,Apex Frozen Foods Limited,2017-09-04,10:00:00,24.103998,7,Libra,7.6745,10,Capricorn,22.6541,Shravana,4,moon,0.5095
+BRNL,Bharat Road Network Limited,2017-09-18,10:00:00,24.104533,7,Libra,20.2714,5,Leo,5.6854,Magha,2,ketu,4.0152
+DIXON,Dixon Technologies (India) Limited,2017-09-18,10:00:00,24.104533,7,Libra,20.2714,5,Leo,5.6854,Magha,2,ketu,4.0152
+MATRIMONY,Matrimony.Com Limited,2017-09-21,10:00:00,24.104648,7,Libra,22.9402,6,Virgo,15.9937,Hasta,2,moon,5.5047
+RHFL,Reliance Home Finance Limited,2017-09-22,10:00:00,24.104686,7,Libra,23.8276,6,Virgo,28.9226,Chitra,2,mars,4.0656
+CAPACITE,Capacit'e Infraprojects Limited,2017-09-25,10:00:00,24.104801,7,Libra,26.4838,8,Scorpio,6.1428,Anuradha,1,saturn,14.9965
+ICICIGI,ICICI Lombard General Insurance Company Limited,2017-09-27,10:00:00,24.104878,7,Libra,28.2498,9,Sagittarius,0.0223,Mula,1,ketu,6.9883
+SBILIFE,SBI Life Insurance Company Limited,2017-10-03,10:00:00,24.105107,8,Scorpio,3.5285,11,Aquarius,13.4925,Shatabhisha,3,rahu,8.7851
+DIAMONDYD,Prataap Snacks Limited,2017-10-05,10:00:00,24.105184,8,Scorpio,5.2828,12,Pisces,10.3937,Uttara Bhadrapada,3,saturn,8.939
+GODREJAGRO,Godrej Agrovet Limited,2017-10-16,10:00:00,24.105604,8,Scorpio,14.91,5,Leo,15.4994,Purva Phalguni,1,venus,16.7509
+MASFIN,MAS Financial Services Limited,2017-10-18,10:00:00,24.105681,8,Scorpio,16.6607,6,Virgo,11.8198,Hasta,1,moon,8.6352
+IEX,Indian Energy Exchange Limited,2017-10-23,10:00:00,24.105872,8,Scorpio,21.0455,8,Scorpio,14.2222,Anuradha,4,saturn,3.4834
+GICRE,General Insurance Corporation of India,2017-10-25,10:00:00,24.105948,8,Scorpio,22.8042,9,Sagittarius,8.0146,Mula,3,ketu,2.7923
+MAHLOG,Mahindra Logistics Limited,2017-11-10,10:00:00,24.10656,9,Sagittarius,7.0733,4,Cancer,15.2642,Pushya,4,saturn,1.9985
+NIACL,The New India Assurance Company Limited,2017-11-13,10:00:00,24.106675,9,Sagittarius,9.8073,5,Leo,25.6633,Purva Phalguni,4,venus,1.505
+KHADIM,Khadim India Limited,2017-11-14,10:00:00,24.106713,9,Sagittarius,10.7241,6,Virgo,8.609,Uttara Phalguni,4,sun,0.626
+HDFCLIFE,HDFC Life Insurance Company Limited,2017-11-17,10:00:00,24.106828,9,Sagittarius,13.4925,7,Libra,16.3195,Swati,3,rahu,4.9687
+SHALBY,Shalby Limited,2017-12-15,10:00:00,24.107899,10,Capricorn,11.1143,7,Libra,25.5312,Vishakha,2,jupiter,9.3625
+ASTRON,Astron Paper & Board Mill Limited,2017-12-29,10:00:00,24.108435,10,Capricorn,26.5204,1,Aries,18.8817,Bharani,2,venus,11.6774
+APOLLO,Apollo Micro Systems Limited,2018-01-22,10:00:00,24.109353,11,Aquarius,25.4671,12,Pisces,4.8635,Uttara Bhadrapada,1,saturn,16.8196
+NEWGEN,Newgen Software Technologies Limited,2018-01-29,10:00:00,24.10962,12,Pisces,4.2847,3,Gemini,11.8319,Ardra,2,rahu,11.0269
+AMBER,Amber Enterprises India Limited,2018-01-30,10:00:00,24.109658,12,Pisces,5.5481,3,Gemini,26.8646,Punarvasu,3,jupiter,7.7625
+GALAXYSURF,Galaxy Surfactants Limited,2018-02-08,10:00:00,24.110003,12,Pisces,16.888,8,Scorpio,1.1436,Vishakha,4,jupiter,2.6277
+ASTERDM,Aster DM Quality Care Limited,2018-02-26,10:00:00,24.110691,1,Aries,8.8344,3,Gemini,21.1856,Punarvasu,1,jupiter,14.5773
+HGINFRA,H.G. Infra Engineering Limited,2018-03-09,10:00:00,24.111112,1,Aries,21.41,8,Scorpio,21.3111,Jyeshtha,2,mercury,11.0783
+BDL,Bharat Dynamics Limited,2018-03-23,10:00:00,24.111647,2,Taurus,6.3576,2,Taurus,19.2706,Rohini,3,moon,3.047
+BANDHANBNK,Bandhan Bank Limited,2018-03-27,10:00:00,24.1118,2,Taurus,10.4228,4,Cancer,15.8036,Pushya,4,saturn,1.2299
+HAL,Hindustan Aeronautics Limited,2018-03-28,10:00:00,24.111839,2,Taurus,11.426,4,Cancer,29.9911,Ashlesha,4,mercury,0.0113
+SANDHAR,Sandhar Technologies Limited,2018-04-02,10:00:00,24.11203,2,Taurus,16.3679,7,Libra,8.9425,Swati,1,rahu,14.9277
+MIDHANI,Mishra Dhatu Nigam Limited,2018-04-04,10:00:00,24.112106,2,Taurus,18.3119,8,Scorpio,4.6326,Anuradha,1,saturn,17.1486
+LEMONTREE,Lemon Tree Hotels Limited,2018-04-09,10:00:00,24.112298,2,Taurus,23.0974,10,Capricorn,4.7397,Uttara Ashadha,3,sun,2.3671
+HITECH,Hi-Tech Pipes Limited,2018-05-07,10:00:00,24.113369,3,Gemini,18.5015,10,Capricorn,12.6311,Shravana,1,moon,8.0267
+FINEORG,Fine Organic Industries Limited,2018-07-02,10:00:00,24.11551,5,Leo,8.1704,10,Capricorn,29.4429,Dhanishta,2,mars,3.7925
+RITES,RITES Limited,2018-07-02,10:00:00,24.11551,5,Leo,8.1704,10,Capricorn,29.4429,Dhanishta,2,mars,3.7925
+VARROC,Varroc Engineering Limited,2018-07-06,10:00:00,24.115663,5,Leo,11.8353,12,Pisces,18.3158,Revati,1,mercury,14.8973
+HDFCAMC,HDFC Asset Management Company Limited,2018-08-06,10:00:00,24.116849,6,Virgo,10.6555,2,Taurus,7.6053,Krittika,4,sun,1.0776
+CREDITACC,CREDITACCESS GRAMEEN LIMITED,2018-08-23,10:00:00,24.117499,6,Virgo,26.45,9,Sagittarius,29.783,Uttara Ashadha,1,sun,4.5976
+IRCON,Ircon International Limited,2018-09-28,10:00:00,24.118876,7,Libra,28.9043,1,Aries,17.5306,Bharani,2,venus,13.7041
+AAVAS,Aavas Financiers Limited,2018-10-08,10:00:00,24.119259,8,Scorpio,7.685,6,Virgo,7.877,Uttara Phalguni,4,sun,0.9554
+GRSE,Garden Reach Shipbuilders & Engineers Limited,2018-10-10,10:00:00,24.119335,8,Scorpio,9.4355,7,Libra,6.0835,Chitra,4,mars,0.3062
+SAGARDEEP,Sagardeep Alloys Limited,2019-01-25,10:00:00,24.123428,11,Aquarius,28.9186,6,Virgo,6.1572,Uttara Phalguni,3,sun,1.7292
+XELPMOC,Xelpmoc Design And Tech Limited,2019-02-04,10:00:00,24.12381,12,Pisces,11.541,10,Capricorn,13.4898,Shravana,2,moon,7.3827
+CHALET,Chalet Hotels Limited,2019-02-07,10:00:00,24.123925,12,Pisces,15.3159,11,Aquarius,18.9369,Shatabhisha,4,rahu,1.4351
+AGROPHOS,Agro Phos India Limited,2019-03-08,10:00:00,24.125034,1,Aries,20.013,12,Pisces,9.9363,Uttara Bhadrapada,2,saturn,9.5908
+MSTCLTD,Mstc Limited,2019-03-29,10:00:00,24.125837,2,Taurus,12.1692,9,Sagittarius,25.3309,Purva Ashadha,4,venus,2.0036
+RVNL,Rail Vikas Nigam Limited,2019-04-11,10:00:00,24.126335,2,Taurus,24.7428,3,Gemini,6.4298,Mrigashirsha,4,mars,0.1244
+SAKAR,Sakar Healthcare Limited,2019-04-11,10:00:00,24.126335,2,Taurus,24.7428,3,Gemini,6.4298,Mrigashirsha,4,mars,0.1244
+MAHESHWARI,Maheshwari Logistics Limited,2019-04-15,10:00:00,24.126488,2,Taurus,28.4768,5,Leo,2.417,Magha,1,ketu,5.7311
+METROPOLIS,Metropolis Healthcare Limited,2019-04-15,10:00:00,24.126488,2,Taurus,28.4768,5,Leo,2.417,Magha,1,ketu,5.7311
+POLYCAB,Polycab India Limited,2019-04-16,10:00:00,24.126526,2,Taurus,29.4021,5,Leo,16.9804,Purva Phalguni,2,venus,14.5294
+SOUTHWEST,South West Pinnacle Exploration Limited,2019-04-18,10:00:00,24.126602,3,Gemini,1.2433,6,Virgo,16.369,Hasta,2,moon,5.2232
+AIRAN,Airan Limited,2019-05-03,10:00:00,24.127176,3,Gemini,14.7412,12,Pisces,27.5523,Revati,4,mercury,3.1208
+NEOGEN,Neogen Chemicals Limited,2019-05-08,10:00:00,24.127367,3,Gemini,19.1551,3,Gemini,3.258,Mrigashirsha,3,mars,1.7896
+ONEPOINT,One Point One Solutions Limited,2019-05-09,10:00:00,24.127405,3,Gemini,20.0347,3,Gemini,16.9638,Ardra,4,rahu,4.0989
+STEELCITY,Steel City Securities Limited,2019-06-27,10:00:00,24.12928,5,Leo,3.3823,1,Aries,1.178,Ashwini,1,ketu,6.3815
+INDIAMART,Indiamart Intermesh Limited,2019-07-04,10:00:00,24.129547,5,Leo,9.7648,4,Cancer,6.5927,Pushya,1,saturn,14.3554
+INFOBEAN,InfoBeans Technologies Limited,2019-07-15,10:00:00,24.129968,5,Leo,19.9044,9,Sagittarius,8.7148,Mula,3,ketu,2.4247
+SIRCA,Sirca Paints India Limited,2019-07-22,10:00:00,24.130236,5,Leo,26.4109,12,Pisces,3.132,Purva Bhadrapada,4,jupiter,0.2415
+LIBAS,Libas Consumer Products Limited,2019-07-23,10:00:00,24.130274,5,Leo,27.3428,12,Pisces,15.0542,Uttara Bhadrapada,4,saturn,2.2977
+SUMIT,Sumit Woods Limited,2019-07-30,10:00:00,24.130542,6,Virgo,3.8765,3,Gemini,15.9274,Ardra,3,rahu,5.498
+SHRENIK,Shrenik Limited,2019-08-02,10:00:00,24.130657,6,Virgo,6.6793,5,Leo,0.3231,Magha,1,ketu,6.8304
+AFFLE,Affle 3i Limited,2019-08-08,10:00:00,24.130886,6,Virgo,12.2823,7,Libra,26.9786,Vishakha,3,jupiter,7.6257
+ZOTA,Zota Health Care LImited,2019-08-19,10:00:00,24.131307,6,Virgo,22.5144,12,Pisces,11.7966,Uttara Bhadrapada,3,saturn,6.9399
+KRISHANA,Krishana Phoschem Limited,2019-08-22,10:00:00,24.131422,6,Virgo,25.2896,1,Aries,18.0599,Bharani,2,venus,12.9102
+MBAPL,Madhya Bharat Agro Products Limited,2019-08-22,10:00:00,24.131422,6,Virgo,25.2896,1,Aries,18.0599,Bharani,2,venus,12.9102
+AKASH,Akash Infra-Projects Limited,2019-10-11,10:00:00,24.133334,8,Scorpio,10.0845,11,Aquarius,23.8386,Purva Bhadrapada,2,jupiter,11.3937
+IRCTC,Indian Railway Catering And Tourism Corporation Limited,2019-10-14,10:00:00,24.133449,8,Scorpio,12.7087,12,Pisces,29.8295,Revati,4,mercury,0.2174
+VISHWARAJ,Vishwaraj Sugar Industries Limited,2019-10-15,10:00:00,24.133487,8,Scorpio,13.5835,1,Aries,12.0513,Ashwini,4,ketu,0.6731
+JASH,Jash Engineering Limited,2019-10-30,10:00:00,24.134061,8,Scorpio,26.7623,8,Scorpio,9.7079,Anuradha,2,saturn,9.9163
+CSBBANK,CSB Bank Limited,2019-12-04,10:00:00,24.135399,9,Sagittarius,29.3036,11,Aquarius,16.4613,Shatabhisha,3,rahu,4.7772
+UJJIVANSFB,Ujjivan Small Finance Bank Limited,2019-12-12,10:00:00,24.135705,10,Capricorn,7.434,2,Taurus,25.3417,Mrigashirsha,1,mars,5.9456
+PRINCEPIPE,Prince Pipes And Fittings Limited,2019-12-30,10:00:00,24.136394,10,Capricorn,27.082,11,Aquarius,0.2144,Dhanishta,3,mars,3.3874
+PANACHE,Panache Digilife Limited,2020-01-06,10:00:00,24.136662,11,Aquarius,5.2498,1,Aries,24.4448,Bharani,4,venus,3.3328
+MMP,MMP Industries Limited,2020-01-09,10:00:00,24.136776,11,Aquarius,8.8341,3,Gemini,3.4788,Mrigashirsha,4,mars,1.6737
+VAISHALI,Vaishali Pharma Limited,2020-01-15,10:00:00,24.137006,11,Aquarius,16.1351,5,Leo,29.1136,Uttara Phalguni,1,sun,4.8989
+DPWIRES,D P Wires Limited,2020-01-17,10:00:00,24.137082,11,Aquarius,18.603,6,Virgo,27.7543,Chitra,2,mars,4.679
+TOUCHWOOD,Touchwood Entertainment Limited,2020-01-21,10:00:00,24.137235,11,Aquarius,23.5801,8,Scorpio,22.4733,Jyeshtha,2,mercury,9.5965
+GEEKAYWIRE,Geekay Wires Limited,2020-03-06,10:00:00,24.138956,1,Aries,18.6065,4,Cancer,2.9583,Punarvasu,4,jupiter,0.4501
+SBICARD,SBI Cards and Payment Services Limited,2020-03-16,10:00:00,24.139339,1,Aries,29.5515,8,Scorpio,29.3352,Jyeshtha,4,mercury,0.8476
+MITTAL,Mittal Life Style Limited,2020-04-29,10:00:00,24.141022,3,Gemini,11.8476,3,Gemini,24.5675,Punarvasu,2,jupiter,10.519
+VERTOZ,Vertoz Limited,2020-05-14,10:00:00,24.141596,3,Gemini,25.0717,10,Capricorn,25.2005,Dhanishta,1,mars,6.0197
+KAPSTON,Kapston Services Limited,2020-05-27,10:00:00,24.142093,4,Cancer,6.4494,4,Cancer,4.7297,Pushya,1,saturn,17.0102
+UNIVASTU,Univastu India Limited,2020-06-22,10:00:00,24.143087,4,Cancer,29.5298,3,Gemini,18.0703,Ardra,4,rahu,2.6051
+AARVI,Aarvi Encon Limited,2020-06-24,10:00:00,24.143164,5,Leo,1.3367,4,Cancer,14.8655,Pushya,4,saturn,2.5666
+ROSSARI,Rossari Biotech Limited,2020-07-23,10:00:00,24.144273,5,Leo,28.0354,5,Leo,8.7309,Magha,3,ketu,2.4163
+MACPOWER,Macpower CNC Machines Limited,2020-08-19,10:00:00,24.145306,6,Virgo,23.2022,5,Leo,3.5361,Magha,2,ketu,5.1436
+MCL,M TEK COPPER LIMITED,2020-08-19,10:00:00,24.145306,6,Virgo,23.2022,5,Leo,3.5361,Magha,2,ketu,5.1436
+TOTAL,Total Transport Systems Limited,2020-08-28,10:00:00,24.14565,7,Libra,1.4943,9,Sagittarius,11.8889,Mula,4,ketu,0.7583
+HAPPSTMNDS,Happiest Minds Technologies Limited,2020-09-17,10:00:00,24.146415,7,Libra,19.5818,5,Leo,26.7893,Uttara Phalguni,1,sun,5.9448
+ROUTE,ROUTE MOBILE LIMITED,2020-09-21,10:00:00,24.146568,7,Libra,23.1413,7,Libra,26.8048,Vishakha,3,jupiter,7.8343
+AAKASH,Aakash Exploration Services Limited,2020-09-29,10:00:00,24.146874,8,Scorpio,0.2113,11,Aquarius,12.4778,Shatabhisha,2,rahu,10.155
+CHEMCON,Chemcon Speciality Chemicals Limited,2020-10-01,10:00:00,24.14695,8,Scorpio,1.9704,12,Pisces,6.7164,Uttara Bhadrapada,2,saturn,14.1792
+GLOBE,GLOBE ENTERPRISES (INDIA) LIMITED,2020-10-07,10:00:00,24.14718,8,Scorpio,7.2329,2,Taurus,18.02,Rohini,3,moon,3.985
+SINTERCOM,Sintercom India Limited,2020-10-07,10:00:00,24.14718,8,Scorpio,7.2329,2,Taurus,18.02,Rohini,3,moon,3.985
+ICEMAKE,Ice Make Refrigeration Limited,2020-10-12,10:00:00,24.147371,8,Scorpio,11.6081,4,Cancer,21.6094,Ashlesha,2,mercury,10.698
+MAZDOCK,Mazagon Dock Shipbuilders Limited,2020-10-12,10:00:00,24.147371,8,Scorpio,11.6081,4,Cancer,21.6094,Ashlesha,2,mercury,10.698
+UTIAMC,UTI Asset Management Company Limited,2020-10-12,10:00:00,24.147371,8,Scorpio,11.6081,4,Cancer,21.6094,Ashlesha,2,mercury,10.698
+LIKHITHA,Likhitha Infrastructure Limited,2020-10-15,10:00:00,24.147486,8,Scorpio,14.2323,6,Virgo,4.9803,Uttara Phalguni,3,sun,2.2589
+SHRADHA,Shradha Realty Limited,2020-10-22,10:00:00,24.147753,8,Scorpio,20.3652,9,Sagittarius,18.3098,Purva Ashadha,2,venus,12.5354
+BSHSL,Bombay Super Hybrid Seeds Limited,2020-10-28,10:00:00,24.147983,8,Scorpio,25.6492,12,Pisces,3.7408,Uttara Bhadrapada,1,saturn,18.4194
+BANKA,Banka BioLoo Limited,2020-10-29,10:00:00,24.148021,8,Scorpio,26.5337,12,Pisces,15.6766,Uttara Bhadrapada,4,saturn,1.4109
+EQUITASBNK,Equitas Small Finance Bank Limited,2020-11-02,10:00:00,24.148174,9,Sagittarius,0.086,2,Taurus,3.1309,Krittika,2,sun,3.0911
+DPABHUSHAN,D. P. Abhushan Limited,2020-11-03,10:00:00,24.148212,9,Sagittarius,0.9781,2,Taurus,15.0703,Rohini,2,moon,6.1972
+AARON,Aaron Industries Limited,2020-11-06,10:00:00,24.148327,9,Sagittarius,3.6656,3,Gemini,21.6945,Punarvasu,1,jupiter,13.9666
+DANGEE,Dangee Dums Limited,2020-11-13,10:00:00,24.148595,9,Sagittarius,10.0152,6,Virgo,28.4088,Chitra,2,mars,4.3354
+GLAND,Gland Pharma Limited,2020-11-20,10:00:00,24.148863,9,Sagittarius,16.5038,10,Capricorn,10.3461,Shravana,1,moon,9.7404
+MARINE,Marine Electricals (India) Limited,2020-12-02,10:00:00,24.149322,9,Sagittarius,28.0566,3,Gemini,6.3442,Mrigashirsha,4,mars,0.1693
+SUPREMEENG,Supreme Engineering Limited,2020-12-04,10:00:00,24.149398,10,Capricorn,0.0451,4,Cancer,1.3961,Punarvasu,4,jupiter,2.3247
+GLOBAL,Global Education Limited,2020-12-07,10:00:00,24.149513,10,Capricorn,3.0659,5,Leo,10.7634,Magha,4,ketu,1.3492
+ACCURACY,Accuracy Shipping Limited,2020-12-11,10:00:00,24.149666,10,Capricorn,7.1683,7,Libra,7.3989,Swati,1,rahu,17.0114
+REPL,Rudrabhishek Enterprises Limited,2020-12-14,10:00:00,24.149781,10,Capricorn,10.304,8,Scorpio,21.7887,Jyeshtha,2,mercury,10.4694
+RKEC,RKEC Projects Limited,2020-12-18,10:00:00,24.149934,10,Capricorn,14.5668,10,Capricorn,18.3127,Shravana,3,moon,3.7655
+MGEL,Mangalam Global Enterprise Limited,2020-12-23,10:00:00,24.150125,10,Capricorn,20.0309,12,Pisces,20.8293,Revati,2,mercury,11.6927
+BECTORFOOD,Mrs. Bectors Food Specialities Limited,2020-12-24,10:00:00,24.150163,10,Capricorn,21.1422,1,Aries,2.6891,Ashwini,1,ketu,5.5882
+AWHCL,Antony Waste Handling Cell Limited,2021-01-01,10:00:00,24.150469,11,Aquarius,0.2516,4,Cancer,11.0441,Pushya,3,saturn,8.0122
+WEALTH,Wealth First Portfolio Managers Limited,2021-01-20,10:00:00,24.151196,11,Aquarius,23.2633,12,Pisces,28.7071,Revati,4,mercury,1.6485
+AHLADA,Ahlada Engineers Limited,2021-01-28,10:00:00,24.151502,12,Pisces,3.3249,4,Cancer,6.7339,Pushya,2,saturn,14.1541
+INDIGOPNTS,Indigo Paints Limited,2021-02-02,10:00:00,24.151693,12,Pisces,9.6406,6,Virgo,15.9273,Hasta,2,moon,5.5546
+HOMEFIRST,Home First Finance Company India Limited,2021-02-03,10:00:00,24.151731,12,Pisces,10.9023,7,Libra,0.1024,Chitra,3,mars,3.4463
+STOVEKRAFT,Stove Kraft Limited,2021-02-05,10:00:00,24.151808,12,Pisces,13.4222,7,Libra,28.3686,Vishakha,3,jupiter,5.9577
+AKG,Akg Exim Limited,2021-02-16,10:00:00,24.152229,12,Pisces,27.1068,12,Pisces,24.5168,Revati,3,mercury,6.9911
+RAJMET,Rajnandini Metal Limited,2021-02-16,10:00:00,24.152229,12,Pisces,27.1068,12,Pisces,24.5168,Revati,3,mercury,6.9911
+IRISDOREME,Iris Clothings Limited,2021-02-22,10:00:00,24.152458,1,Aries,4.3731,3,Gemini,6.1708,Mrigashirsha,4,mars,0.2603
+NURECA,Nureca Limited,2021-02-25,10:00:00,24.152573,1,Aries,7.9375,4,Cancer,14.8152,Pushya,4,saturn,2.6384
+RAILTEL,Railtel Corporation Of India Limited,2021-02-26,10:00:00,24.152611,1,Aries,9.1146,4,Cancer,28.5015,Ashlesha,4,mercury,1.9106
+HERANBA,Heranba Industries Limited,2021-03-05,10:00:00,24.152879,1,Aries,17.1906,8,Scorpio,9.2645,Anuradha,2,saturn,10.548
+MTARTECH,Mtar Technologies Limited,2021-03-15,10:00:00,24.153261,1,Aries,28.2114,12,Pisces,20.5653,Revati,2,mercury,12.0292
+EASEMYTRIP,Easy Trip Planners Limited,2021-03-19,10:00:00,24.153414,2,Taurus,2.4505,2,Taurus,8.1665,Krittika,4,sun,0.8251
+ARVEE,Arvee Laboratories (India) Limited,2021-03-22,10:00:00,24.153529,2,Taurus,5.5691,3,Gemini,14.0903,Ardra,3,rahu,7.9781
+ANURAS,Anupam Rasayan India Limited,2021-03-24,10:00:00,24.153605,2,Taurus,7.6203,4,Cancer,9.4082,Pushya,2,saturn,10.3434
+CRAFTSMAN,Craftsman Automation Limited,2021-03-25,10:00:00,24.153644,2,Taurus,8.6378,4,Cancer,22.7067,Ashlesha,2,mercury,9.299
+LXCHEM,Laxmi Organic Industries Limited,2021-03-25,10:00:00,24.153644,2,Taurus,8.6378,4,Cancer,22.7067,Ashlesha,2,mercury,9.299
+KALYANKJIL,Kalyan Jewellers India Limited,2021-03-26,10:00:00,24.153682,2,Taurus,9.6499,5,Leo,6.4781,Magha,2,ketu,3.599
+SURYODAY,Suryoday Small Finance Bank Limited,2021-03-26,10:00:00,24.153682,2,Taurus,9.6499,5,Leo,6.4781,Magha,2,ketu,3.599
+NAZARA,Nazara Technologies Limited,2021-03-30,10:00:00,24.153835,2,Taurus,13.6472,7,Libra,5.1911,Chitra,4,mars,0.7747
+LODHA,Lodha Developers Limited,2021-04-19,10:00:00,24.1546,3,Gemini,2.6035,3,Gemini,22.5393,Punarvasu,1,jupiter,12.9528
+NITIRAJ,Nitiraj Engineers Limited,2021-04-22,10:00:00,24.154715,3,Gemini,5.3318,5,Leo,0.9788,Magha,1,ketu,6.4861
+AJOONI,Ajooni Biotech Limited,2021-05-07,10:00:00,24.155288,3,Gemini,18.7011,12,Pisces,2.091,Purva Bhadrapada,4,jupiter,1.4908
+CAMS,Computer Age Management Services Limited,2021-05-07,10:00:00,24.155288,3,Gemini,18.7011,12,Pisces,2.091,Purva Bhadrapada,4,jupiter,1.4908
+MOKSH,Moksh Ornaments Limited,2021-05-21,10:00:00,24.155824,4,Cancer,0.9705,5,Leo,23.5712,Purva Phalguni,4,venus,4.6432
+SHYAMMETL,Shyam Metalics and Energy Limited,2021-06-24,10:00:00,24.157124,5,Leo,1.1036,9,Sagittarius,0.5106,Mula,1,ketu,6.7319
+SONACOMS,Sona BLW Precision Forgings Limited,2021-06-24,10:00:00,24.157124,5,Leo,1.1036,9,Sagittarius,0.5106,Mula,1,ketu,6.7319
+DODLA,Dodla Dairy Limited,2021-06-28,10:00:00,24.157277,5,Leo,4.7312,10,Capricorn,28.2953,Dhanishta,2,mars,4.395
+KIMS,Krishna Institute of Medical Sciences Limited,2021-06-28,10:00:00,24.157277,5,Leo,4.7312,10,Capricorn,28.2953,Dhanishta,2,mars,4.395
+HINDCON,Hindcon Chemicals Limited,2021-07-05,10:00:00,24.157545,5,Leo,11.1264,1,Aries,25.5866,Bharani,4,venus,1.6202
+IPL,India Pesticides Limited,2021-07-05,10:00:00,24.157545,5,Leo,11.1264,1,Aries,25.5866,Bharani,4,venus,1.6202
+GANGAFORGE,Ganga Forging Limited,2021-07-06,10:00:00,24.157583,5,Leo,12.0446,2,Taurus,7.3735,Krittika,4,sun,1.1819
+CLEAN,Clean Science and Technology Limited,2021-07-19,10:00:00,24.158081,5,Leo,24.07,7,Libra,25.8752,Vishakha,2,jupiter,8.9497
+GRINFRA,G R Infraprojects Limited,2021-07-19,10:00:00,24.158081,5,Leo,24.07,7,Libra,25.8752,Vishakha,2,jupiter,8.9497
+TATVA,Tatva Chintan Pharma Chem Limited,2021-07-29,10:00:00,24.158463,6,Virgo,3.396,12,Pisces,15.6058,Uttara Bhadrapada,4,saturn,1.5117
+ROLEXRINGS,Rolex Rings Limited,2021-08-09,10:00:00,24.158884,6,Virgo,13.6681,5,Leo,0.0909,Magha,1,ketu,6.9523
+DEVYANI,Devyani International Limited,2021-08-16,10:00:00,24.159151,6,Virgo,20.1824,8,Scorpio,6.6147,Anuradha,1,saturn,14.3241
+EXXARO,Exxaro Tiles Limited,2021-08-16,10:00:00,24.159151,6,Virgo,20.1824,8,Scorpio,6.6147,Anuradha,1,saturn,14.3241
+KRSNAA,Krsnaa Diagnostics Limited,2021-08-16,10:00:00,24.159151,6,Virgo,20.1824,8,Scorpio,6.6147,Anuradha,1,saturn,14.3241
+WINDLAS,Windlas Biotech Limited,2021-08-16,10:00:00,24.159151,6,Virgo,20.1824,8,Scorpio,6.6147,Anuradha,1,saturn,14.3241
+CARTRADE,Cartrade Tech Limited,2021-08-20,10:00:00,24.159304,6,Virgo,23.8895,10,Capricorn,3.3138,Uttara Ashadha,2,sun,3.0088
+APTUS,Aptus Value Housing Finance India Limited,2021-08-24,10:00:00,24.159457,6,Virgo,27.5821,11,Aquarius,28.0161,Purva Bhadrapada,3,jupiter,6.3807
+CHEMPLASTS,Chemplast Sanmar Limited,2021-08-24,10:00:00,24.159457,6,Virgo,27.5821,11,Aquarius,28.0161,Purva Bhadrapada,3,jupiter,6.3807
+JAIPURKURT,Nandani Creation Limited,2021-09-02,10:00:00,24.159802,7,Libra,5.8278,3,Gemini,17.4762,Ardra,4,rahu,3.4072
+SERVOTECH,Servotech Renewable Power System Limited,2021-09-02,10:00:00,24.159802,7,Libra,5.8278,3,Gemini,17.4762,Ardra,4,rahu,3.4072
+VIJAYA,Vijaya Diagnostic Centre Limited,2021-09-14,10:00:00,24.160261,7,Libra,16.6691,9,Sagittarius,1.7114,Mula,1,ketu,6.1015
+PAR,Par Drugs And Chemicals Limited,2021-09-16,10:00:00,24.160337,7,Libra,18.4587,9,Sagittarius,29.5893,Uttara Ashadha,1,sun,4.6848
+SHANTI,Shanti Overseas (India) Limited,2021-09-16,10:00:00,24.160337,7,Libra,18.4587,9,Sagittarius,29.5893,Uttara Ashadha,1,sun,4.6848
+SANSERA,Sansera Engineering Limited,2021-09-24,10:00:00,24.160643,7,Libra,25.5713,1,Aries,13.8886,Bharani,1,venus,19.1671
+LAGNAM,Lagnam Spintex Limited,2021-09-30,10:00:00,24.160873,8,Scorpio,0.8641,3,Gemini,25.3569,Punarvasu,2,jupiter,9.5718
+PARAS,Paras Defence and Space Technologies Limited,2021-10-01,10:00:00,24.160911,8,Scorpio,1.7434,4,Cancer,7.7231,Pushya,2,saturn,12.7446
+ABSLAMC,Aditya Birla Sun Life AMC Limited,2021-10-11,10:00:00,24.161293,8,Scorpio,10.5074,8,Scorpio,28.2522,Jyeshtha,4,mercury,2.2284
+EIFFL,Euro India Fresh Foods Limited,2021-10-12,10:00:00,24.161332,8,Scorpio,11.3821,9,Sagittarius,12.4881,Mula,4,ketu,0.4437
+AIROLAM,Airo Lam limited,2021-10-13,10:00:00,24.16137,8,Scorpio,12.2568,9,Sagittarius,26.4846,Purva Ashadha,4,venus,0.2731
+ARTNIRMAN,Art Nirman Limited,2021-10-18,10:00:00,24.161561,8,Scorpio,16.6319,12,Pisces,2.8974,Purva Bhadrapada,4,jupiter,0.5231
+PANSARI,Pansari Developers Limited,2021-10-18,10:00:00,24.161561,8,Scorpio,16.6319,12,Pisces,2.8974,Purva Bhadrapada,4,jupiter,0.5231
+SIKKO,Sikko Industries Limited,2021-10-22,10:00:00,24.161714,8,Scorpio,20.1384,1,Aries,22.2186,Bharani,3,venus,6.6722
+NYKAA,FSN E-Commerce Ventures Limited,2021-11-10,10:00:00,24.162441,9,Sagittarius,7.0449,10,Capricorn,6.6884,Uttara Ashadha,4,sun,1.4902
+FINOPB,Fino Payments Bank Limited,2021-11-12,10:00:00,24.162517,9,Sagittarius,8.865,11,Aquarius,3.9679,Dhanishta,4,mars,1.4168
+LAXMICOT,Laxmi Cotspin Limited,2021-11-12,10:00:00,24.162517,9,Sagittarius,8.865,11,Aquarius,3.9679,Dhanishta,4,mars,1.4168
+POLICYBZR,PB Fintech Limited,2021-11-15,10:00:00,24.162632,9,Sagittarius,11.6158,12,Pisces,12.455,Uttara Bhadrapada,3,saturn,6.0017
+SIGACHI,Sigachi Industries Limited,2021-11-15,10:00:00,24.162632,9,Sagittarius,11.6158,12,Pisces,12.455,Uttara Bhadrapada,3,saturn,6.0017
+SJS,S.J.S. Enterprises Limited,2021-11-15,10:00:00,24.162632,9,Sagittarius,11.6158,12,Pisces,12.455,Uttara Bhadrapada,3,saturn,6.0017
+PAYTM,One 97 Communications Limited,2021-11-18,10:00:00,24.162747,9,Sagittarius,14.3937,1,Aries,18.9698,Bharani,2,venus,11.5453
+SAPPHIRE,Sapphire Foods India Limited,2021-11-18,10:00:00,24.162747,9,Sagittarius,14.3937,1,Aries,18.9698,Bharani,2,venus,11.5453
+LATENTVIEW,Latent View Analytics Limited,2021-11-23,10:00:00,24.162938,9,Sagittarius,19.0921,3,Gemini,18.1499,Ardra,4,rahu,2.4977
+FOCUS,Focus Lighting and Fixtures Limited,2021-11-24,10:00:00,24.162976,9,Sagittarius,20.043,4,Cancer,0.0847,Punarvasu,4,jupiter,3.8983
+RPPL,Rajshree Polypack Limited,2021-11-26,10:00:00,24.163053,9,Sagittarius,21.9568,4,Cancer,24.4765,Ashlesha,3,mercury,7.0424
+TARSONS,Tarsons Products Limited,2021-11-26,10:00:00,24.163053,9,Sagittarius,21.9568,4,Cancer,24.4765,Ashlesha,3,mercury,7.0424
+GOCOLORS,Go Fashion (India) Limited,2021-11-30,10:00:00,24.163206,9,Sagittarius,25.8358,6,Virgo,17.1224,Hasta,3,moon,4.6582
+STARHEALTH,Star Health and Allied Insurance Company Limited,2021-12-10,10:00:00,24.163588,10,Capricorn,5.8705,11,Aquarius,13.4871,Shatabhisha,3,rahu,8.7924
+TEGA,Tega Industries Limited,2021-12-13,10:00:00,24.163703,10,Capricorn,8.985,12,Pisces,21.814,Revati,2,mercury,10.4371
+ANANDRATHI,Anand Rathi Wealth Limited,2021-12-14,10:00:00,24.163741,10,Capricorn,10.0346,1,Aries,3.9917,Ashwini,2,ketu,4.9043
+ZODIAC,Zodiac Energy Limited,2021-12-14,10:00:00,24.163741,10,Capricorn,10.0346,1,Aries,3.9917,Ashwini,2,ketu,4.9043
+RATEGAIN,Rategain Travel Technologies Limited,2021-12-17,10:00:00,24.163856,10,Capricorn,13.2185,2,Taurus,9.669,Krittika,4,sun,0.1489
+SHRIRAMPPS,Shriram Properties Limited,2021-12-20,10:00:00,24.163971,10,Capricorn,16.4561,3,Gemini,15.1468,Ardra,3,rahu,6.5518
+JETFREIGHT,Jet Freight Logistics Limited,2021-12-21,10:00:00,24.164009,10,Capricorn,17.5474,3,Gemini,27.1038,Punarvasu,3,jupiter,7.4755
+MAPMYINDIA,C.E. Info Systems Limited,2021-12-21,10:00:00,24.164009,10,Capricorn,17.5474,3,Gemini,27.1038,Punarvasu,3,jupiter,7.4755
+METROBRAND,Metro Brands Limited,2021-12-22,10:00:00,24.164047,10,Capricorn,18.6449,4,Cancer,9.1767,Pushya,2,saturn,10.6732
+MEDPLUS,Medplus Health Services Limited,2021-12-23,10:00:00,24.164086,10,Capricorn,19.7485,4,Cancer,21.3972,Ashlesha,2,mercury,10.9686
+DATAPATTNS,Data Patterns (India) Limited,2021-12-24,10:00:00,24.164124,10,Capricorn,20.8582,5,Leo,3.8013,Magha,2,ketu,5.0043
+HPAL,HP Adhesives Limited,2021-12-27,10:00:00,24.164238,10,Capricorn,24.2242,6,Virgo,12.5464,Hasta,1,moon,8.0902
+SUPRIYA,Supriya Lifescience Limited,2021-12-28,10:00:00,24.164277,10,Capricorn,25.3585,6,Virgo,26.1228,Chitra,1,mars,5.5355
+HECPROJECT,HEC Infra Projects Limited,2021-12-30,10:00:00,24.164353,10,Capricorn,27.6452,7,Libra,24.442,Vishakha,2,jupiter,10.6696
+CMSINFO,CMS Info Systems Limited,2021-12-31,10:00:00,24.164391,10,Capricorn,28.7976,8,Scorpio,9.1546,Anuradha,2,saturn,10.7047
+UNITEDPOLY,United Polyfab Gujarat Limited,2021-12-31,10:00:00,24.164391,10,Capricorn,28.7976,8,Scorpio,9.1546,Anuradha,2,saturn,10.7047
+BCONCEPTS,Brand Concepts Limited,2022-01-11,10:00:00,24.164812,11,Aquarius,11.8467,1,Aries,12.7518,Ashwini,4,ketu,0.3053
+UNIINFO,Uniinfo Telecom Services Limited,2022-01-12,10:00:00,24.16485,11,Aquarius,13.0638,1,Aries,24.692,Bharani,4,venus,2.962
+AGSTRA,AGS Transact Technologies Limited,2022-01-31,10:00:00,24.165577,12,Pisces,6.7951,10,Capricorn,2.6196,Uttara Ashadha,2,sun,3.3212
+AWL,AWL Agri Business Limited,2022-02-08,10:00:00,24.165883,12,Pisces,16.8716,1,Aries,20.9341,Bharani,3,venus,8.5988
+CROWN,Crown Lifters Limited,2022-02-08,10:00:00,24.165883,12,Pisces,16.8716,1,Aries,20.9341,Bharani,3,venus,8.5988
+DEVIT,Dev Information Technology Limited,2022-02-15,10:00:00,24.166151,12,Pisces,25.5683,4,Cancer,14.6917,Pushya,4,saturn,2.8144
+MANYAVAR,Vedant Fashions Limited,2022-02-16,10:00:00,24.166189,12,Pisces,26.7964,4,Cancer,27.2347,Ashlesha,4,mercury,3.5258
+SOFTTECH,Softtech Engineers Limited,2022-02-25,10:00:00,24.166533,1,Aries,7.638,8,Scorpio,28.7433,Jyeshtha,4,mercury,1.6023
+PRITI,Priti International Limited,2022-03-02,10:00:00,24.166725,1,Aries,13.4727,11,Aquarius,10.3134,Shatabhisha,2,rahu,13.077
+UMAEXPORTS,Uma Exports Limited,2022-04-07,10:00:00,24.168102,2,Taurus,21.1708,3,Gemini,0.4138,Mrigashirsha,3,mars,3.2828
+VERANDA,Veranda Learning Solutions Limited,2022-04-11,10:00:00,24.168255,2,Taurus,24.9588,4,Cancer,18.2807,Ashlesha,1,mercury,14.9421
+E2E,E2E Networks Limited,2022-04-12,10:00:00,24.168293,2,Taurus,25.8965,5,Leo,0.7466,Magha,1,ketu,6.608
+HARIOMPIPE,Hariom Pipe Industries Limited,2022-04-13,10:00:00,24.168331,2,Taurus,26.8307,5,Leo,13.5435,Purva Phalguni,1,venus,19.6847
+VCL,Vaxtex Cotfab Limited,2022-04-19,10:00:00,24.168561,3,Gemini,2.3684,8,Scorpio,7.1842,Anuradha,2,saturn,13.5125
+KRITIKA,Kritika Wires Limited,2022-05-04,10:00:00,24.169134,3,Gemini,15.8267,2,Taurus,26.6555,Mrigashirsha,1,mars,5.2559
+CAMPUS,Campus Activewear Limited,2022-05-09,10:00:00,24.169326,3,Gemini,20.2335,4,Cancer,26.3378,Ashlesha,3,mercury,4.6693
+RAINBOW,Rainbow Childrens Medicare Limited,2022-05-10,10:00:00,24.169364,3,Gemini,21.1121,5,Leo,8.7684,Magha,3,ketu,2.3966
+SILVERTUC,Silver Touch Technologies Limited,2022-05-12,10:00:00,24.16944,3,Gemini,22.867,6,Virgo,4.6799,Uttara Phalguni,3,sun,2.394
+LICI,Life Insurance Corporation Of India,2022-05-17,10:00:00,24.169632,3,Gemini,27.2457,8,Scorpio,16.186,Anuradha,4,saturn,0.685
+PRUDENT,Prudent Corporate Advisory Services Limited,2022-05-20,10:00:00,24.169746,3,Gemini,29.8699,10,Capricorn,0.7577,Uttara Ashadha,2,sun,4.159
+DELHIVERY,Delhivery Limited,2022-05-24,10:00:00,24.169899,4,Cancer,3.3695,11,Aquarius,26.4541,Purva Bhadrapada,2,jupiter,8.2551
+VENUSPIPES,Venus Pipes & Tubes Limited,2022-05-24,10:00:00,24.169899,4,Cancer,3.3695,11,Aquarius,26.4541,Purva Bhadrapada,2,jupiter,8.2551
+PARADEEP,Paradeep Phosphates Limited,2022-05-27,10:00:00,24.170014,4,Cancer,5.9969,1,Aries,4.8639,Ashwini,2,ketu,4.4465
+ETHOSLTD,Ethos Limited,2022-05-30,10:00:00,24.170129,4,Cancer,8.6283,2,Taurus,11.3956,Rohini,1,moon,8.9533
+EMUDHRA,eMudhra Limited,2022-06-01,10:00:00,24.170205,4,Cancer,10.3856,3,Gemini,5.1846,Mrigashirsha,4,mars,0.7781
+AETHER,Aether Industries Limited,2022-06-03,10:00:00,24.170282,4,Cancer,12.1457,3,Gemini,28.8439,Punarvasu,3,jupiter,5.3874
+KSHITIJPOL,Kshitij Polyline Limited,2022-07-27,10:00:00,24.172347,6,Virgo,1.2879,3,Gemini,22.8858,Punarvasu,1,jupiter,12.537
+SYRMA,Syrma SGS Technology Limited,2022-08-26,10:00:00,24.173495,6,Virgo,29.1857,4,Cancer,25.643,Ashlesha,3,mercury,5.5551
+DREAMFOLKS,Dreamfolks Services Limited,2022-09-06,10:00:00,24.173915,7,Libra,9.2281,9,Sagittarius,21.7185,Purva Ashadha,3,venus,7.4223
+TMB,Tamilnad Mercantile Bank Limited,2022-09-15,10:00:00,24.17426,7,Libra,17.3336,1,Aries,27.6691,Krittika,1,sun,5.5489
+KSOLVES,Ksolves India Limited,2022-09-23,10:00:00,24.174566,7,Libra,24.4572,5,Leo,4.0807,Magha,2,ketu,4.8577
+HARSHA,Harsha Engineers International Limited,2022-09-26,10:00:00,24.17468,7,Libra,27.111,6,Virgo,12.218,Hasta,1,moon,8.3365
+EMIL,Electronics Mart India Limited,2022-10-17,10:00:00,24.175484,8,Scorpio,15.5302,3,Gemini,23.8355,Punarvasu,2,jupiter,11.3975
+DCI,Dc Infotech And Communication Limited,2022-10-19,10:00:00,24.17556,8,Scorpio,17.2813,4,Cancer,17.6517,Ashlesha,1,mercury,15.7441
+TRACXN,Tracxn Technologies Limited,2022-10-20,10:00:00,24.175598,8,Scorpio,18.1575,4,Cancer,29.7438,Ashlesha,4,mercury,0.3267
+BOHRAIND,Bohra Industries Limited,2022-10-27,10:00:00,24.175866,8,Scorpio,24.31,8,Scorpio,2.0508,Vishakha,4,jupiter,1.5391
+NARMADA,Narmada Agrobase Limited,2022-10-27,10:00:00,24.175866,8,Scorpio,24.31,8,Scorpio,2.0508,Vishakha,4,jupiter,1.5391
+ACEINTEG,Ace Integrated Solutions Limited,2022-11-04,10:00:00,24.176172,9,Sagittarius,1.4101,11,Aquarius,25.2599,Purva Bhadrapada,2,jupiter,9.6881
+HPIL,Hindprakash Industries Limited,2022-11-07,10:00:00,24.176287,9,Sagittarius,4.1008,1,Aries,5.4228,Ashwini,2,ketu,4.153
+FUSION,Fusion Finance Limited,2022-11-15,10:00:00,24.176593,9,Sagittarius,11.3784,4,Cancer,13.5909,Pushya,4,saturn,4.383
+BIKAJI,Bikaji Foods International Limited,2022-11-16,10:00:00,24.176631,9,Sagittarius,12.3005,4,Cancer,25.5112,Ashlesha,3,mercury,5.7233
+MEDANTA,Global Health Limited,2022-11-16,10:00:00,24.176631,9,Sagittarius,12.3005,4,Cancer,25.5112,Ashlesha,3,mercury,5.7233
+ACI,Archean Chemical Industries Limited,2022-11-21,10:00:00,24.176822,9,Sagittarius,16.9596,6,Virgo,28.5891,Chitra,2,mars,4.2407
+FIVESTAR,Five-Star Business Finance Limited,2022-11-21,10:00:00,24.176822,9,Sagittarius,16.9596,6,Virgo,28.5891,Chitra,2,mars,4.2407
+KAYNES,Kaynes Technology India Limited,2022-11-22,10:00:00,24.17686,9,Sagittarius,17.9019,7,Libra,12.2926,Swati,2,rahu,10.4051
+BBTCL,B&B Triplewall Containers Limited,2022-11-23,10:00:00,24.176899,9,Sagittarius,18.848,7,Libra,26.3856,Vishakha,2,jupiter,8.3372
+INOXGREEN,Inox Green Energy Services Limited,2022-11-23,10:00:00,24.176899,9,Sagittarius,18.848,7,Libra,26.3856,Vishakha,2,jupiter,8.3372
+RUSTOMJEE,Keystone Realtors Limited,2022-11-24,10:00:00,24.176937,9,Sagittarius,19.798,8,Scorpio,10.8118,Anuradha,3,saturn,8.3432
+AAATECH,AAA Technologies Limited,2022-11-28,10:00:00,24.17709,9,Sagittarius,23.6384,10,Capricorn,9.7075,Uttara Ashadha,4,sun,0.1316
+VINNY,Vinny Overseas Limited,2022-11-28,10:00:00,24.17709,9,Sagittarius,23.6384,10,Capricorn,9.7075,Uttara Ashadha,4,sun,0.1316
+OSIAHYPER,Osia Hyper Retail Limited,2022-12-01,10:00:00,24.177205,9,Sagittarius,26.5645,11,Aquarius,22.17,Purva Bhadrapada,1,jupiter,13.396
+DHARMAJ,Dharmaj Crop Guard Limited,2022-12-08,10:00:00,24.177472,10,Capricorn,3.5612,2,Taurus,22.0412,Rohini,4,moon,0.9691
+SARVESHWAR,Sarveshwar Foods Limited,2022-12-08,10:00:00,24.177472,10,Capricorn,3.5612,2,Taurus,22.0412,Rohini,4,moon,0.9691
+UNIPARTS,Uniparts India Limited,2022-12-12,10:00:00,24.177625,10,Capricorn,7.675,4,Cancer,9.9521,Pushya,2,saturn,9.5682
+SULA,Sula Vineyards Limited,2022-12-22,10:00:00,24.178008,10,Capricorn,18.3643,8,Scorpio,18.7892,Jyeshtha,1,mercury,14.2938
+LANDMARK,Landmark Cars Limited,2022-12-23,10:00:00,24.178046,10,Capricorn,19.4664,9,Sagittarius,3.7346,Mula,2,ketu,5.0393
+KFINTECH,Kfin Technologies Limited,2022-12-29,10:00:00,24.178276,10,Capricorn,26.2079,12,Pisces,2.3422,Purva Bhadrapada,4,jupiter,1.1894
+ELIN,Elin Electronics Limited,2022-12-30,10:00:00,24.178314,10,Capricorn,27.3529,12,Pisces,15.8864,Uttara Bhadrapada,4,saturn,1.1119
+RADIANTCMS,Radiant Cash Management Services Limited,2023-01-04,10:00:00,24.178505,11,Aquarius,3.1665,2,Taurus,18.8967,Rohini,3,moon,3.3275
+NRL,Nupur Recyclers Limited,2023-01-12,10:00:00,24.178811,11,Aquarius,12.7546,5,Leo,24.4437,Purva Phalguni,4,venus,3.3345
+BTML,Bodhi Tree Multimedia Limited,2023-02-15,10:00:00,24.180112,12,Pisces,25.2566,8,Scorpio,21.2978,Jyeshtha,2,mercury,11.0953
+OSWALSEEDS,ShreeOswal Seeds And Chemicals Limited,2023-02-28,10:00:00,24.180609,1,Aries,10.8605,2,Taurus,24.687,Mrigashirsha,1,mars,6.2893
+LEXUS,Lexus Granito (India) Limited,2023-03-13,10:00:00,24.181106,1,Aries,25.5031,8,Scorpio,4.2442,Anuradha,1,saturn,17.7019
+DIVGIITTS,Divgi Torqtransfer Systems Limited,2023-03-14,10:00:00,24.181144,1,Aries,26.5867,8,Scorpio,17.6762,Jyeshtha,1,mercury,15.7129
+GSLSU,Global Surfaces Limited,2023-03-23,10:00:00,24.181489,2,Taurus,6.0727,12,Pisces,27.5831,Revati,4,mercury,3.0816
+USK,Udayshivakumar Infra Limited,2023-04-03,10:00:00,24.181909,2,Taurus,17.0687,5,Leo,14.649,Purva Phalguni,1,venus,18.0265
+AVALON,Avalon Technologies Limited,2023-04-18,10:00:00,24.182483,3,Gemini,1.2169,12,Pisces,7.8043,Uttara Bhadrapada,2,saturn,12.6289
+SVLL,Shree Vasu Logistics Limited,2023-04-21,10:00:00,24.182598,3,Gemini,3.9569,1,Aries,19.4325,Bharani,2,venus,10.8512
+MANKIND,Mankind Pharma Limited,2023-05-09,10:00:00,24.183286,3,Gemini,20.0066,9,Sagittarius,8.7445,Mula,3,ketu,2.4091
+ATALREAL,Atal Realtech Limited,2023-05-12,10:00:00,24.183401,3,Gemini,22.6405,10,Capricorn,21.5213,Shravana,4,moon,1.359
+AVG,AVG Logistics Limited,2023-05-12,10:00:00,24.183401,3,Gemini,22.6405,10,Capricorn,21.5213,Shravana,4,moon,1.359
+PIGL,Power & Instrumentation (Gujarat) Limited,2023-05-17,10:00:00,24.183592,3,Gemini,27.0197,1,Aries,1.3316,Ashwini,1,ketu,6.3009
+LATTEYS,Latteys Industries Limited,2023-05-23,10:00:00,24.183822,4,Cancer,2.2683,3,Gemini,18.657,Ardra,4,rahu,1.813
+PAVNAIND,Pavna Industries Limited,2023-06-01,10:00:00,24.184166,4,Cancer,10.1585,7,Libra,8.4122,Swati,1,rahu,15.6435
+SIGMA,Sigma Solve Limited,2023-06-09,10:00:00,24.184472,4,Cancer,17.2178,11,Aquarius,2.3838,Dhanishta,3,mars,2.2485
+MKPL,M K Proteins Limited,2023-06-13,10:00:00,24.184625,4,Cancer,20.7707,12,Pisces,28.0238,Revati,4,mercury,2.5197
+IKIO,IKIO Technologies Limited,2023-06-16,10:00:00,24.18474,4,Cancer,23.4471,2,Taurus,7.2785,Krittika,4,sun,1.2247
+HMAAGRO,HMA Agro Industries Limited,2023-07-04,10:00:00,24.185428,5,Leo,9.7372,9,Sagittarius,27.6573,Uttara Ashadha,1,sun,5.5542
+IDEAFORGE,Ideaforge Technology Limited,2023-07-07,10:00:00,24.185543,5,Leo,12.4902,11,Aquarius,12.5451,Shatabhisha,2,rahu,10.0641
+CYIENTDLM,Cyient DLM Limited,2023-07-10,10:00:00,24.185658,5,Leo,15.2531,12,Pisces,24.941,Revati,3,mercury,6.4503
+SENCO,Senco Gold Limited,2023-07-14,10:00:00,24.185811,5,Leo,18.9505,2,Taurus,16.8703,Rohini,3,moon,4.8473
+UTKARSHBNK,Utkarsh Small Finance Bank Limited,2023-07-21,10:00:00,24.186078,5,Leo,25.4524,5,Leo,11.3796,Magha,4,ketu,1.0257
+NETWEB,Netweb Technologies India Limited,2023-07-27,10:00:00,24.186308,6,Virgo,1.0476,7,Libra,24.7911,Vishakha,2,jupiter,10.2507
+YATHARTH,Yatharth Hospital & Trauma Care Services Limited,2023-08-07,10:00:00,24.186729,6,Virgo,11.322,1,Aries,4.7312,Ashwini,2,ketu,4.5161
+SBFC,SBFC Finance Limited,2023-08-16,10:00:00,24.187073,6,Virgo,19.7044,4,Cancer,26.5656,Ashlesha,3,mercury,4.3789
+CONCORDBIO,Concord Biotech Limited,2023-08-18,10:00:00,24.187149,6,Virgo,21.5604,5,Leo,20.2597,Purva Phalguni,3,venus,9.6105
+TVSSCS,TVS Supply Chain Solutions Limited,2023-08-23,10:00:00,24.187341,6,Virgo,26.1854,7,Libra,20.9844,Vishakha,1,jupiter,14.8187
+PYRAMID,Pyramid Technoplast Limited,2023-08-29,10:00:00,24.18757,7,Libra,1.7026,10,Capricorn,14.5779,Shravana,2,moon,6.5666
+AEROFLEX,Aeroflex Industries Limited,2023-08-31,10:00:00,24.187647,7,Libra,3.5328,11,Aquarius,15.0828,Shatabhisha,3,rahu,6.6383
+VPRPL,Vishnu Prakash R Punglia Limited,2023-09-05,10:00:00,24.187838,7,Libra,8.0872,1,Aries,27.2239,Krittika,1,sun,5.7493
+RATNAVEER,Ratnaveer Precision Engineering Limited,2023-09-11,10:00:00,24.188067,7,Libra,13.5114,4,Cancer,11.7125,Pushya,3,saturn,7.0597
+RISHABH,Rishabh Instruments Limited,2023-09-11,10:00:00,24.188067,7,Libra,13.5114,4,Cancer,11.7125,Pushya,3,saturn,7.0597
+JLHL,Jupiter Life Line Hospitals Limited,2023-09-18,10:00:00,24.188335,7,Libra,19.7833,7,Libra,5.5721,Chitra,4,mars,0.5747
+RRKABEL,R R Kabel Limited,2023-09-20,10:00:00,24.188412,7,Libra,21.5646,8,Scorpio,0.6744,Vishakha,4,jupiter,3.1907
+EMSLIMITED,EMS Limited,2023-09-21,10:00:00,24.18845,7,Libra,22.4536,8,Scorpio,13.6123,Anuradha,4,saturn,4.3524
+SAMHI,Samhi Hotels Limited,2023-09-22,10:00:00,24.188488,7,Libra,23.3415,8,Scorpio,26.8701,Jyeshtha,4,mercury,3.9906
+ZAGGLE,Zaggle Prepaid Ocean Services Limited,2023-09-22,10:00:00,24.188488,7,Libra,23.3415,8,Scorpio,26.8701,Jyeshtha,4,mercury,3.9906
+KALAMANDIR,Sai Silks (Kalamandir) Limited,2023-09-27,10:00:00,24.188679,7,Libra,27.7658,11,Aquarius,8.4334,Shatabhisha,1,rahu,15.6149
+SIGNATURE,Signatureglobal (India) Limited,2023-09-27,10:00:00,24.188679,7,Libra,27.7658,11,Aquarius,8.4334,Shatabhisha,1,rahu,15.6149
+YATRA,Yatra Online Limited,2023-09-28,10:00:00,24.188718,7,Libra,28.6478,11,Aquarius,23.4527,Purva Bhadrapada,2,jupiter,11.8567
+JSWINFRA,JSW Infrastructure Limited,2023-10-03,10:00:00,24.188909,8,Scorpio,3.0464,2,Taurus,5.5037,Krittika,3,sun,2.0233
+MVGJL,Manoj Vaibhav Gems N Jewellers Limited,2023-10-03,10:00:00,24.188909,8,Scorpio,3.0464,2,Taurus,5.5037,Krittika,3,sun,2.0233
+UDS,Updater Services Limited,2023-10-04,10:00:00,24.188947,8,Scorpio,3.924,2,Taurus,18.7484,Rohini,3,moon,3.4387
+VALIANTLAB,Valiant Laboratories Limited,2023-10-06,10:00:00,24.189024,8,Scorpio,5.6777,3,Gemini,14.0975,Ardra,3,rahu,7.9683
+PLAZACABLE,Plaza Wires Limited,2023-10-12,10:00:00,24.189253,8,Scorpio,10.9299,5,Leo,25.8675,Purva Phalguni,4,venus,1.1988
+IRMENERGY,IRM Energy Limited,2023-10-26,10:00:00,24.189789,8,Scorpio,23.2008,12,Pisces,2.4538,Purva Bhadrapada,4,jupiter,1.0555
+BLUEJET,Blue Jet Healthcare Limited,2023-11-01,10:00:00,24.190018,8,Scorpio,28.5068,2,Taurus,26.6344,Mrigashirsha,1,mars,5.2669
+CELLO,Cello World Limited,2023-11-06,10:00:00,24.190209,9,Sagittarius,2.9702,4,Cancer,28.3318,Ashlesha,4,mercury,2.1269
+HONASA,Honasa Consumer Limited,2023-11-07,10:00:00,24.190248,9,Sagittarius,3.8685,5,Leo,10.1766,Magha,4,ketu,1.6573
+LGHL,Laxmi Goldorna House Limited,2023-11-10,10:00:00,24.190362,9,Sagittarius,6.5769,6,Virgo,16.1023,Hasta,2,moon,5.4233
+ASKAUTOLTD,ASK Automotive Limited,2023-11-15,10:00:00,24.190554,9,Sagittarius,11.1413,8,Scorpio,20.3685,Jyeshtha,2,mercury,12.2801
+FEDFINA,Fedbank Financial Services Limited,2023-11-30,10:00:00,24.191127,9,Sagittarius,25.3338,3,Gemini,17.3514,Ardra,4,rahu,3.5757
+GANDHAR,Gandhar Oil Refinery (India) Limited,2023-11-30,10:00:00,24.191127,9,Sagittarius,25.3338,3,Gemini,17.3514,Ardra,4,rahu,3.5757
+TATATECH,Tata Technologies Limited,2023-11-30,10:00:00,24.191127,9,Sagittarius,25.3338,3,Gemini,17.3514,Ardra,4,rahu,3.5757
+FLAIR,Flair Writing Industries Limited,2023-12-01,10:00:00,24.191165,9,Sagittarius,26.3126,3,Gemini,29.8933,Punarvasu,3,jupiter,4.1281
+DOMS,DOMS Industries Limited,2023-12-20,10:00:00,24.191892,10,Capricorn,15.9013,12,Pisces,9.1448,Uttara Bhadrapada,2,saturn,10.7186
+INDIASHLTR,India Shelter Finance Corporation Limited,2023-12-20,10:00:00,24.191892,10,Capricorn,15.9013,12,Pisces,9.1448,Uttara Bhadrapada,2,saturn,10.7186
+INOXINDIA,INOX India Limited,2023-12-21,10:00:00,24.19193,10,Capricorn,16.9897,12,Pisces,23.0316,Revati,2,mercury,8.8847
+MOTISONS,Motisons Jewellers Limited,2023-12-26,10:00:00,24.192122,10,Capricorn,22.5236,3,Gemini,0.0254,Mrigashirsha,3,mars,3.4866
+MUTHOOTMF,Muthoot Microfin Limited,2023-12-26,10:00:00,24.192122,10,Capricorn,22.5236,3,Gemini,0.0254,Mrigashirsha,3,mars,3.4866
+SURAJEST,Suraj Estate Developers Limited,2023-12-26,10:00:00,24.192122,10,Capricorn,22.5236,3,Gemini,0.0254,Mrigashirsha,3,mars,3.4866
+HAPPYFORGE,Happy Forgings Limited,2023-12-27,10:00:00,24.19216,10,Capricorn,23.6488,3,Gemini,12.8766,Ardra,2,rahu,9.6165
+MUFTI,Credo Brands Marketing Limited,2023-12-27,10:00:00,24.19216,10,Capricorn,23.6488,3,Gemini,12.8766,Ardra,2,rahu,9.6165
+RBZJEWEL,RBZ Jewellers Limited,2023-12-27,10:00:00,24.19216,10,Capricorn,23.6488,3,Gemini,12.8766,Ardra,2,rahu,9.6165
+AZAD,Azad Engineering Limited,2023-12-28,10:00:00,24.192198,10,Capricorn,24.7801,3,Gemini,25.5102,Punarvasu,2,jupiter,9.3877
+INNOVACAP,Innova Captab Limited,2023-12-29,10:00:00,24.192236,10,Capricorn,25.9175,4,Cancer,7.9219,Pushya,2,saturn,12.4613
+JYOTICNC,Jyoti CNC Automation Limited,2024-01-16,10:00:00,24.192925,11,Aquarius,17.3497,12,Pisces,5.6239,Uttara Bhadrapada,1,saturn,15.7359
+MEDIASSIST,Medi Assist Healthcare Services Limited,2024-01-23,10:00:00,24.193193,11,Aquarius,26.0691,3,Gemini,9.3126,Ardra,1,rahu,14.428
+EPACK,EPACK Durable Limited,2024-01-30,10:00:00,24.19346,12,Pisces,4.8921,6,Virgo,4.0546,Uttara Phalguni,3,sun,2.6754
+NOVAAGRI,Nova Agritech Limited,2024-01-31,10:00:00,24.193499,12,Pisces,6.1556,6,Virgo,15.8551,Hasta,2,moon,5.6087
+BLSE,BLS E-Services Limited,2024-02-06,10:00:00,24.193728,12,Pisces,13.725,9,Sagittarius,1.3852,Mula,1,ketu,6.2728
+PARKHOTELS,Apeejay Surrendra Park Hotels Limited,2024-02-12,10:00:00,24.193958,12,Pisces,21.232,12,Pisces,0.2524,Purva Bhadrapada,4,jupiter,3.6971
+CAPITALSFB,Capital Small Finance Bank Limited,2024-02-14,10:00:00,24.194034,12,Pisces,23.7108,12,Pisces,29.5706,Revati,4,mercury,0.5474
+JSFB,Jana Small Finance Bank Limited,2024-02-14,10:00:00,24.194034,12,Pisces,23.7108,12,Pisces,29.5706,Revati,4,mercury,0.5474
+RPTECH,Rashi Peripherals Limited,2024-02-14,10:00:00,24.194034,12,Pisces,23.7108,12,Pisces,29.5706,Revati,4,mercury,0.5474
+ENTERO,Entero Healthcare Solutions Limited,2024-02-16,10:00:00,24.194111,12,Pisces,26.1747,1,Aries,27.3538,Krittika,1,sun,5.6908
+VSTL,Vibhor Steel Tubes Limited,2024-02-20,10:00:00,24.194264,1,Aries,1.0516,3,Gemini,18.8576,Ardra,4,rahu,1.5422
+JUNIPER,Juniper Hotels Limited,2024-02-28,10:00:00,24.19457,1,Aries,10.5643,6,Virgo,24.5446,Chitra,1,mars,6.3641
+GPTHEALTH,GPT Healthcare Limited,2024-02-29,10:00:00,24.194608,1,Aries,11.7283,7,Libra,6.4805,Chitra,4,mars,0.0978
+EXICOM,Exicom Tele-Systems Limited,2024-03-05,10:00:00,24.194799,1,Aries,17.4591,9,Sagittarius,9.9075,Mula,3,ketu,1.7986
+PLATIND,Platinum Industries Limited,2024-03-05,10:00:00,24.194799,1,Aries,17.4591,9,Sagittarius,9.9075,Mula,3,ketu,1.7986
+MUKKA,Mukka Proteins Limited,2024-03-07,10:00:00,24.194876,1,Aries,19.7089,10,Capricorn,8.1439,Uttara Ashadha,4,sun,0.8352
+RKSWAMY,R K Swamy Limited,2024-03-12,10:00:00,24.195067,1,Aries,25.226,12,Pisces,23.5073,Revati,3,mercury,8.2782
+JGCHEM,J.G.Chemicals Limited,2024-03-13,10:00:00,24.195105,1,Aries,26.311,1,Aries,8.2559,Ashwini,3,ketu,2.6656
+GOPAL,Gopal Snacks Limited,2024-03-14,10:00:00,24.195143,1,Aries,27.39,1,Aries,22.6053,Bharani,3,venus,6.092
+PVSL,Popular Vehicles and Services Limited,2024-03-19,10:00:00,24.195335,2,Taurus,2.6956,3,Gemini,28.1493,Punarvasu,3,jupiter,6.2209
+KRYSTAL,Krystal Integrated Services Limited,2024-03-21,10:00:00,24.195411,2,Taurus,4.7772,4,Cancer,22.3342,Ashlesha,2,mercury,9.7739
+SRM,SRM Contractors Limited,2024-04-03,10:00:00,24.195908,2,Taurus,17.7907,10,Capricorn,3.1129,Uttara Ashadha,2,sun,3.0992
+BHARTIHEXA,Bharti Hexacom Limited,2024-04-12,10:00:00,24.196253,2,Taurus,26.3507,2,Taurus,14.8534,Rohini,2,moon,6.36
+TARACHAND,Tara Chand InfraLogistic Solutions Limited,2024-04-16,10:00:00,24.196406,3,Gemini,0.0608,4,Cancer,6.8816,Pushya,2,saturn,13.9437
+JNKINDIA,JNK India Limited,2024-04-30,10:00:00,24.196941,3,Gemini,12.7095,9,Sagittarius,29.6538,Uttara Ashadha,1,sun,4.6558
+INDGN,Indegene Limited,2024-05-13,10:00:00,24.197438,3,Gemini,24.1671,4,Cancer,2.598,Punarvasu,4,jupiter,0.8824
+AADHARHFC,Aadhar Housing Finance Limited,2024-05-15,10:00:00,24.197515,3,Gemini,25.9184,4,Cancer,27.2778,Ashlesha,4,mercury,3.4708
+TBOTEK,TBO Tek Limited,2024-05-15,10:00:00,24.197515,3,Gemini,25.9184,4,Cancer,27.2778,Ashlesha,4,mercury,3.4708
+GODIGIT,Go Digit General Insurance Limited,2024-05-23,10:00:00,24.197821,4,Cancer,2.9172,8,Scorpio,3.7329,Anuradha,1,saturn,18.4306
+AWFIS,Awfis Space Solutions Limited,2024-05-30,10:00:00,24.198089,4,Cancer,9.0527,11,Aquarius,8.1172,Shatabhisha,1,rahu,16.0418
+KRONOX,Kronox Lab Sciences Limited,2024-06-10,10:00:00,24.198509,4,Cancer,18.7628,4,Cancer,10.5696,Pushya,3,saturn,8.6883
+IXIGO,Le Travenues Technology Limited,2024-06-18,10:00:00,24.198815,4,Cancer,25.9027,7,Libra,16.9384,Swati,4,rahu,4.1332
+DEEDEV,DEE Development Engineers Limited,2024-06-26,10:00:00,24.199121,5,Leo,3.1204,11,Aquarius,4.8394,Dhanishta,4,mars,0.9593
+STANLEY,Stanley Lifestyles Limited,2024-06-28,10:00:00,24.199198,5,Leo,4.9374,12,Pisces,3.2273,Purva Bhadrapada,4,jupiter,0.1272
+ABDL,Allied Blenders and Distillers Limited,2024-07-02,10:00:00,24.199351,5,Leo,8.5861,1,Aries,29.2856,Krittika,1,sun,4.8215
+VRAJ,Vraj Iron and Steel Limited,2024-07-03,10:00:00,24.199389,5,Leo,9.5012,2,Taurus,13.0451,Rohini,1,moon,7.7162
+BANSALWIRE,Bansal Wire Industries Limited,2024-07-10,10:00:00,24.199657,5,Leo,15.9382,5,Leo,13.2053,Magha,4,ketu,0.0672
+EMCURE,Emcure Pharmaceuticals Limited,2024-07-10,10:00:00,24.199657,5,Leo,15.9382,5,Leo,13.2053,Magha,4,ketu,0.0672
+RELIABLE,Reliable Data Services Limited,2024-07-10,10:00:00,24.199657,5,Leo,15.9382,5,Leo,13.2053,Magha,4,ketu,0.0672
+SANSTAR,Sanstar Limited,2024-07-26,10:00:00,24.200269,6,Virgo,0.8074,12,Pisces,13.976,Uttara Bhadrapada,4,saturn,3.8342
+AKUMS,Akums Drugs and Pharmaceuticals Limited,2024-08-06,10:00:00,24.200689,6,Virgo,11.0818,5,Leo,9.4454,Magha,3,ketu,2.0411
+CEIGALL,Ceigall India Limited,2024-08-08,10:00:00,24.200766,6,Virgo,12.9481,6,Virgo,3.3269,Uttara Phalguni,2,sun,3.0029
+OLAELEC,Ola Electric Mobility Limited,2024-08-09,10:00:00,24.200804,6,Virgo,13.8807,6,Virgo,15.1194,Hasta,2,moon,6.1604
+FIRSTCRY,Brainbees Solutions Limited,2024-08-13,10:00:00,24.200957,6,Virgo,17.6062,8,Scorpio,2.9511,Vishakha,4,jupiter,0.4586
+UNIECOM,Unicommerce Esolutions Limited,2024-08-13,10:00:00,24.200957,6,Virgo,17.6062,8,Scorpio,2.9511,Vishakha,4,jupiter,0.4586
+SSDL,Saraswati Saree Depot Limited,2024-08-20,10:00:00,24.201225,6,Virgo,24.1,11,Aquarius,9.3048,Shatabhisha,1,rahu,14.4386
+INTERARCH,Interarch Building Solutions Limited,2024-08-26,10:00:00,24.201454,6,Virgo,29.6312,2,Taurus,6.6207,Krittika,3,sun,1.5207
+ORIENTTECH,Orient Technologies Limited,2024-08-28,10:00:00,24.201531,7,Libra,1.4665,3,Gemini,3.4578,Mrigashirsha,4,mars,1.6847
+PREMIERENE,Premier Energies Limited,2024-09-03,10:00:00,24.20176,7,Libra,6.9444,5,Leo,18.1492,Purva Phalguni,2,venus,12.7763
+ECOSMOBLTY,Ecos (India) Mobility & Hospitality Limited,2024-09-04,10:00:00,24.201799,7,Libra,7.8531,6,Virgo,0.037,Uttara Phalguni,2,sun,4.4833
+STYLEBAAZA,Baazar Style Retail Limited,2024-09-06,10:00:00,24.201875,7,Libra,9.6668,6,Virgo,23.6169,Chitra,1,mars,6.8511
+GALAPREC,Gala Precision Engineering Limited,2024-09-09,10:00:00,24.20199,7,Libra,12.378,7,Libra,29.2541,Vishakha,3,jupiter,4.895
+BALAJEE,Shree Tirupati Balajee Agro Trading Company Limited,2024-09-12,10:00:00,24.202105,7,Libra,15.0778,9,Sagittarius,6.8166,Mula,3,ketu,3.4213
+BAJAJHFL,Bajaj Housing Finance Limited,2024-09-16,10:00:00,24.202258,7,Libra,18.6604,11,Aquarius,2.6171,Dhanishta,3,mars,2.126
+KROSS,Kross Limited,2024-09-16,10:00:00,24.202258,7,Libra,18.6604,11,Aquarius,2.6171,Dhanishta,3,mars,2.126
+TOLINS,Tolins Tyres Limited,2024-09-16,10:00:00,24.202258,7,Libra,18.6604,11,Aquarius,2.6171,Dhanishta,3,mars,2.126
+PNGJL,P N Gadgil Jewellers Limited,2024-09-17,10:00:00,24.202296,7,Libra,19.5531,11,Aquarius,17.5552,Shatabhisha,4,rahu,3.3005
+ARKADE,Arkade Developers Limited,2024-09-24,10:00:00,24.202564,7,Libra,25.7705,3,Gemini,0.0417,Mrigashirsha,3,mars,3.4781
+WCIL,Western Carriers (India) Limited,2024-09-24,10:00:00,24.202564,7,Libra,25.7705,3,Gemini,0.0417,Mrigashirsha,3,mars,3.4781
+MANBA,Manba Finance Limited,2024-09-30,10:00:00,24.202793,8,Scorpio,1.0619,5,Leo,15.1635,Purva Phalguni,1,venus,17.2547
+KRN,KRN Heat Exchanger and Refrigeration Limited,2024-10-03,10:00:00,24.202908,8,Scorpio,3.6973,6,Virgo,20.6127,Hasta,4,moon,2.0405
+DIFFNKG,Diffusion Engineers Limited,2024-10-04,10:00:00,24.202946,8,Scorpio,4.5745,7,Libra,2.4111,Chitra,3,mars,2.2342
+GARUDA,Garuda Construction and Engineering Limited,2024-10-15,10:00:00,24.203367,8,Scorpio,14.2027,11,Aquarius,25.7499,Purva Bhadrapada,2,jupiter,9.1001
+HYUNDAI,Hyundai Motor India Limited,2024-10-22,10:00:00,24.203635,8,Scorpio,20.3356,3,Gemini,9.024,Ardra,1,rahu,14.8176
+DBEIL,Deepak Builders & Engineers India Limited,2024-10-28,10:00:00,24.203864,8,Scorpio,25.6197,5,Leo,24.0091,Purva Phalguni,4,venus,3.9863
+WAAREEENER,Waaree Energies Limited,2024-10-28,10:00:00,24.203864,8,Scorpio,25.6197,5,Leo,24.0091,Purva Phalguni,4,venus,3.9863
+GODAVARIB,Godavari Biorefineries Limited,2024-10-30,10:00:00,24.203941,8,Scorpio,27.3901,6,Virgo,17.572,Hasta,3,moon,4.321
+ABINFRA,A B Infrabuild Limited,2024-11-08,10:00:00,24.204285,9,Sagittarius,5.4388,10,Capricorn,8.8593,Uttara Ashadha,4,sun,0.5133
+SAGILITY,SAGILITY LIMITED,2024-11-12,10:00:00,24.204438,9,Sagittarius,9.0718,12,Pisces,4.625,Uttara Bhadrapada,1,saturn,17.1594
+ACMESOLAR,Acme Solar Holdings Limited,2024-11-13,10:00:00,24.204476,9,Sagittarius,9.9866,12,Pisces,19.3362,Revati,1,mercury,13.5963
+SWIGGY,Swiggy Limited,2024-11-13,10:00:00,24.204476,9,Sagittarius,9.9866,12,Pisces,19.3362,Revati,1,mercury,13.5963
+NIVABUPA,Niva Bupa Health Insurance Company Limited,2024-11-14,10:00:00,24.204514,9,Sagittarius,10.9043,1,Aries,4.2465,Ashwini,2,ketu,4.7706
+BLACKBUCK,BLACKBUCK LIMITED,2024-11-22,10:00:00,24.20482,9,Sagittarius,18.3608,4,Cancer,26.304,Ashlesha,3,mercury,4.7123
+EIEL,Enviro Infra Engineers Limited,2024-11-29,10:00:00,24.205088,9,Sagittarius,25.0832,7,Libra,19.849,Swati,4,rahu,0.2038
+SURAKSHA,Suraksha Diagnostic Limited,2024-12-06,10:00:00,24.205356,10,Capricorn,2.0283,10,Capricorn,19.2306,Shravana,3,moon,3.0771
+INNOVANA,Innovana Thinklabs Limited,2024-12-17,10:00:00,24.205777,10,Capricorn,13.4689,3,Gemini,25.0208,Punarvasu,2,jupiter,9.9751
+MOBIKWIK,One Mobikwik Systems Limited,2024-12-18,10:00:00,24.205815,10,Capricorn,14.5438,4,Cancer,8.4793,Pushya,2,saturn,11.6669
+SAILIFE,Sai Life Sciences Limited,2024-12-18,10:00:00,24.205815,10,Capricorn,14.5438,4,Cancer,8.4793,Pushya,2,saturn,11.6669
+VMM,Vishal Mega Mart Limited,2024-12-18,10:00:00,24.205815,10,Capricorn,14.5438,4,Cancer,8.4793,Pushya,2,saturn,11.6669
+IKS,Inventurus Knowledge Solutions Limited,2024-12-19,10:00:00,24.205853,10,Capricorn,15.6246,4,Cancer,21.5248,Ashlesha,2,mercury,10.8059
+IGIL,International Gemological Institute Limited,2024-12-20,10:00:00,24.205891,10,Capricorn,16.7116,5,Leo,4.1782,Magha,2,ketu,4.8065
+CEWATER,Concord Enviro Systems Limited,2024-12-27,10:00:00,24.206159,10,Capricorn,24.4917,7,Libra,27.992,Vishakha,3,jupiter,6.4097
+DAMCAPITAL,Dam Capital Advisors Limited,2024-12-27,10:00:00,24.206159,10,Capricorn,24.4917,7,Libra,27.992,Vishakha,3,jupiter,6.4097
+MAMATA,Mamata Machinery Limited,2024-12-27,10:00:00,24.206159,10,Capricorn,24.4917,7,Libra,27.992,Vishakha,3,jupiter,6.4097
+SANATHAN,Sanathan Textiles Limited,2024-12-27,10:00:00,24.206159,10,Capricorn,24.4917,7,Libra,27.992,Vishakha,3,jupiter,6.4097
+TRANSRAILL,Transrail Lighting Limited,2024-12-27,10:00:00,24.206159,10,Capricorn,24.4917,7,Libra,27.992,Vishakha,3,jupiter,6.4097
+CARRARO,Carraro India Limited,2024-12-30,10:00:00,24.206274,10,Capricorn,27.9177,9,Sagittarius,5.7279,Mula,2,ketu,3.9929
+SENORES,Senores Pharmaceuticals Limited,2024-12-30,10:00:00,24.206274,10,Capricorn,27.9177,9,Sagittarius,5.7279,Mula,2,ketu,3.9929
+VENTIVE,Ventive Hospitality Limited,2024-12-30,10:00:00,24.206274,10,Capricorn,27.9177,9,Sagittarius,5.7279,Mula,2,ketu,3.9929
+UNIMECH,Unimech Aerospace and Manufacturing Limited,2024-12-31,10:00:00,24.206312,10,Capricorn,29.0718,9,Sagittarius,18.8574,Purva Ashadha,2,venus,11.7139
+INDOFARM,Indo Farm Equipment Limited,2025-01-07,10:00:00,24.20658,11,Aquarius,7.3114,12,Pisces,25.3983,Revati,3,mercury,5.8671
+QUADFUTURE,Quadrant Future Tek Limited,2025-01-14,10:00:00,24.206848,11,Aquarius,15.8059,4,Cancer,3.1751,Punarvasu,4,jupiter,0.1899
+LAXMIDENTL,Laxmi Dental Limited,2025-01-20,10:00:00,24.207077,11,Aquarius,23.2469,6,Virgo,18.1599,Hasta,3,moon,3.88
+STALLION,Stallion India Fluorochemicals Limited,2025-01-23,10:00:00,24.207192,11,Aquarius,27.0071,7,Libra,23.704,Vishakha,2,jupiter,11.5552
+DENTA,Denta Water and Infra Solutions Limited,2025-01-29,10:00:00,24.207421,12,Pisces,4.5724,10,Capricorn,10.9556,Shravana,1,moon,9.2833
+AGARWALEYE,Dr. Agarwal's Health Care Limited,2025-02-04,10:00:00,24.207651,12,Pisces,12.1474,1,Aries,6.3506,Ashwini,2,ketu,3.6659
+PROTEAN,Protean eGov Technologies Limited,2025-02-06,10:00:00,24.207727,12,Pisces,14.6641,2,Taurus,4.4982,Krittika,3,sun,2.4758
+AJAXENGG,Ajax Engineering Limited,2025-02-17,10:00:00,24.208148,12,Pisces,28.3129,6,Virgo,26.0362,Chitra,1,mars,5.581
+HEXT,Hexaware Technologies Limited,2025-02-19,10:00:00,24.208224,1,Aries,0.7446,7,Libra,19.6725,Swati,4,rahu,0.4421
+QPOWER,Quality Power Electrical Equipments Limited,2025-02-24,10:00:00,24.208416,1,Aries,6.7371,9,Sagittarius,21.6817,Purva Ashadha,3,venus,7.4775
+SPECTRUM,Spectrum Electrical Industries Limited,2025-03-28,10:00:00,24.20964,2,Taurus,11.6344,11,Aquarius,25.7958,Purva Bhadrapada,2,jupiter,9.045
+NPST,Network People Services Technologies Limited,2025-04-30,10:00:00,24.210902,3,Gemini,12.4799,2,Taurus,19.4579,Rohini,3,moon,2.9066
+ATHERENERG,Ather Energy Limited,2025-05-06,10:00:00,24.211131,3,Gemini,17.7912,5,Leo,10.3355,Magha,4,ketu,1.5739
+BORANA,Borana Weaves Limited,2025-05-27,10:00:00,24.211935,4,Cancer,6.1939,2,Taurus,12.7996,Rohini,1,moon,7.9003
+BELRISE,Belrise Industries Limited,2025-05-28,10:00:00,24.211973,4,Cancer,7.0706,2,Taurus,27.7702,Mrigashirsha,2,mars,4.6706
+THELEELA,Leela Palaces Hotels & Resorts Limited,2025-06-02,10:00:00,24.212164,4,Cancer,11.4633,5,Leo,6.5775,Magha,2,ketu,3.5468
+PROSTARM,Prostarm Info Systems Limited,2025-06-03,10:00:00,24.212202,4,Cancer,12.3439,5,Leo,19.0417,Purva Phalguni,2,venus,11.4375
+SCODATUBES,Scoda Tubes Limited,2025-06-04,10:00:00,24.212241,4,Cancer,13.2254,6,Virgo,1.2122,Uttara Phalguni,2,sun,3.9545
+KRISHIVAL,Krishival Foods Limited,2025-06-20,10:00:00,24.212853,4,Cancer,27.4675,12,Pisces,22.9958,Revati,2,mercury,8.9304
+OSWALPUMPS,Oswal Pumps Limited,2025-06-20,10:00:00,24.212853,4,Cancer,27.4675,12,Pisces,22.9958,Revati,2,mercury,8.9304
+ELLEN,Ellenbarrie Industrial Gases Limited,2025-07-01,10:00:00,24.213273,5,Leo,7.4367,5,Leo,27.2323,Uttara Phalguni,1,sun,5.7455
+GLOBECIVIL,Globe Civil Projects Limited,2025-07-01,10:00:00,24.213273,5,Leo,7.4367,5,Leo,27.2323,Uttara Phalguni,1,sun,5.7455
+KALPATARU,Kalpataru Limited,2025-07-01,10:00:00,24.213273,5,Leo,7.4367,5,Leo,27.2323,Uttara Phalguni,1,sun,5.7455
+HDBFS,HDB Financial Services Limited,2025-07-02,10:00:00,24.213312,5,Leo,8.3504,6,Virgo,9.4341,Uttara Phalguni,4,sun,0.2547
+SAMBHV,Sambhv Steel Tubes Limited,2025-07-02,10:00:00,24.213312,5,Leo,8.3504,6,Virgo,9.4341,Uttara Phalguni,4,sun,0.2547
+IGCL,Indogulf Cropsciences Limited,2025-07-03,10:00:00,24.21335,5,Leo,9.2652,6,Virgo,21.4256,Hasta,4,moon,1.4308
+CRIZAC,Crizac Limited,2025-07-09,10:00:00,24.213579,5,Leo,14.778,9,Sagittarius,3.4917,Mula,2,ketu,5.1669
+TRAVELFOOD,Travel Food Services Limited,2025-07-14,10:00:00,24.213771,5,Leo,19.3998,11,Aquarius,8.4523,Shatabhisha,1,rahu,15.5894
+PASHUPATI,Pashupati Cotspin Limited,2025-07-17,10:00:00,24.213885,5,Leo,22.1833,12,Pisces,19.6684,Revati,1,mercury,13.1728
+SMARTWORKS,Smartworks Coworking Spaces Limited,2025-07-17,10:00:00,24.213885,5,Leo,22.1833,12,Pisces,19.6684,Revati,1,mercury,13.1728
+ANTHEM,Anthem Biosciences Limited,2025-07-21,10:00:00,24.214038,5,Leo,25.9043,2,Taurus,16.6639,Rohini,2,moon,5.0021
+EBGNG,GNG Electronics Limited,2025-07-30,10:00:00,24.214383,6,Virgo,4.3028,6,Virgo,17.3652,Hasta,3,moon,4.4761
+INDIQUBE,Indiqube Spaces Limited,2025-07-30,10:00:00,24.214383,6,Virgo,4.3028,6,Virgo,17.3652,Hasta,3,moon,4.4761
+RMDRIP,R M Drip and Sprinklers Systems Limited,2025-07-30,10:00:00,24.214383,6,Virgo,4.3028,6,Virgo,17.3652,Hasta,3,moon,4.4761
+BRIGHOTEL,Brigade Hotel Ventures Limited,2025-07-31,10:00:00,24.214421,6,Virgo,5.2371,6,Virgo,29.3744,Chitra,2,mars,3.8284
+EUROBOND,Euro Panel Products Limited,2025-08-01,10:00:00,24.214459,6,Virgo,6.1714,7,Libra,11.2667,Swati,2,rahu,11.7899
+SHANTIGOLD,Shanti Gold International Limited,2025-08-01,10:00:00,24.214459,6,Virgo,6.1714,7,Libra,11.2667,Swati,2,rahu,11.7899
+CPPLUS,Aditya Infotech Limited,2025-08-05,10:00:00,24.214612,6,Virgo,9.9079,8,Scorpio,29.2881,Jyeshtha,4,mercury,0.9077
+LAXMIINDIA,Laxmi India Finance Limited,2025-08-05,10:00:00,24.214612,6,Virgo,9.9079,8,Scorpio,29.2881,Jyeshtha,4,mercury,0.9077
+LOTUSDEV,Sri Lotus Developers and Realty Limited,2025-08-06,10:00:00,24.21465,6,Virgo,10.8415,9,Sagittarius,11.7554,Mula,4,ketu,0.8284
+MBEL,M & B Engineering Limited,2025-08-06,10:00:00,24.21465,6,Virgo,10.8415,9,Sagittarius,11.7554,Mula,4,ketu,0.8284
+JSLL,Jeena Sikho Lifecare Limited,2025-08-11,10:00:00,24.214842,6,Virgo,15.5047,11,Aquarius,18.2556,Shatabhisha,4,rahu,2.3549
+HILINFRA,Highway Infrastructure Limited,2025-08-12,10:00:00,24.21488,6,Virgo,16.436,12,Pisces,2.2377,Purva Bhadrapada,4,jupiter,1.3147
+ALLTIME,All Time Plastics Limited,2025-08-14,10:00:00,24.214956,6,Virgo,18.2968,1,Aries,0.532,Ashwini,1,ketu,6.7207
+JSWCEMENT,JSW Cement Limited,2025-08-14,10:00:00,24.214956,6,Virgo,18.2968,1,Aries,0.532,Ashwini,1,ketu,6.7207
+BLUESTONE,BlueStone Jewellery and Lifestyle Limited,2025-08-19,10:00:00,24.215148,6,Virgo,22.9363,3,Gemini,11.256,Ardra,2,rahu,11.8044
+REGAAL,Regaal Resources Limited,2025-08-20,10:00:00,24.215186,6,Virgo,23.8618,3,Gemini,25.0924,Punarvasu,2,jupiter,9.8891
+GEMAROMA,Gem Aromatics Limited,2025-08-26,10:00:00,24.215415,6,Virgo,29.3945,6,Virgo,13.1559,Hasta,1,moon,7.6331
+PATELRMART,Patel Retail Limited,2025-08-26,10:00:00,24.215415,6,Virgo,29.3945,6,Virgo,13.1559,Hasta,1,moon,7.6331
+SHREEJISPG,Shreeji Shipping Global Limited,2025-08-26,10:00:00,24.215415,6,Virgo,29.3945,6,Virgo,13.1559,Hasta,1,moon,7.6331
+VIKRAMSOLR,Vikram Solar Limited,2025-08-26,10:00:00,24.215415,6,Virgo,29.3945,6,Virgo,13.1559,Hasta,1,moon,7.6331
+MEIL,Mangal Electrical Industries Limited,2025-08-28,10:00:00,24.215492,7,Libra,1.2303,7,Libra,7.2983,Swati,1,rahu,17.1474
+AHCL,Anlon Healthcare Limited,2025-09-03,10:00:00,24.215721,7,Libra,6.7099,9,Sagittarius,19.6919,Purva Ashadha,2,venus,10.4621
+VIKRAN,Vikran Engineering Limited,2025-09-03,10:00:00,24.215721,7,Libra,6.7099,9,Sagittarius,19.6919,Purva Ashadha,2,venus,10.4621
+AMANTA,Amanta Healthcare Limited,2025-09-09,10:00:00,24.215951,7,Libra,12.1453,12,Pisces,11.7458,Uttara Bhadrapada,3,saturn,7.0122
+DEVX,Dev Accelerator Limited,2025-09-17,10:00:00,24.216257,7,Libra,19.3227,4,Cancer,5.32,Pushya,1,saturn,16.1691
+SHRINGARMS,Shringar House of Mangalsutra Limited,2025-09-17,10:00:00,24.216257,7,Libra,19.3227,4,Cancer,5.32,Pushya,1,saturn,16.1691
+URBANCO,Urban Company Limited,2025-09-17,10:00:00,24.216257,7,Libra,19.3227,4,Cancer,5.32,Pushya,1,saturn,16.1691
+EUROPRATIK,Euro Pratik Sales Limited,2025-09-23,10:00:00,24.216486,7,Libra,24.6567,6,Virgo,21.481,Hasta,4,moon,1.3893
+ABCOTS,A B Cotspin India Limited,2025-09-24,10:00:00,24.216524,7,Libra,25.542,7,Libra,3.5336,Chitra,4,mars,1.6448
+VMSTMT,VMS TMT Limited,2025-09-24,10:00:00,24.216524,7,Libra,25.542,7,Libra,3.5336,Chitra,4,mars,1.6448
+IVALUE,Ivalue Infosolutions Limited,2025-09-25,10:00:00,24.216563,7,Libra,26.4264,7,Libra,15.4713,Swati,3,rahu,6.1137
+GKENERGY,GK Energy Limited,2025-09-26,10:00:00,24.216601,7,Libra,27.3098,7,Libra,27.3362,Vishakha,3,jupiter,7.1966
+ATLANTAELE,Atlanta Electricals Limited,2025-09-29,10:00:00,24.216716,7,Libra,29.9546,9,Sagittarius,3.0538,Mula,1,ketu,5.3968
+GANESHCP,Ganesh Consumer Products Limited,2025-09-29,10:00:00,24.216716,7,Libra,29.9546,9,Sagittarius,3.0538,Mula,1,ketu,5.3968
+ARSSBL,Anand Rathi Share and Stock Brokers Limited,2025-09-30,10:00:00,24.216754,8,Scorpio,0.8347,9,Sagittarius,15.2268,Purva Ashadha,1,venus,17.1598
+JARO,Jaro Institute of Technology Management and Research Limited,2025-09-30,10:00:00,24.216754,8,Scorpio,0.8347,9,Sagittarius,15.2268,Purva Ashadha,1,venus,17.1598
+SOLARWORLD,Solarworld Energy Solutions Limited,2025-09-30,10:00:00,24.216754,8,Scorpio,0.8347,9,Sagittarius,15.2268,Purva Ashadha,1,venus,17.1598
+STYL,Seshaasai Technologies Limited,2025-09-30,10:00:00,24.216754,8,Scorpio,0.8347,9,Sagittarius,15.2268,Purva Ashadha,1,venus,17.1598
+BMWVENTLTD,BMW Ventures Limited,2025-10-01,10:00:00,24.216792,8,Scorpio,1.7139,9,Sagittarius,27.6576,Uttara Ashadha,1,sun,5.5541
+EPACKPEB,EPack Prefab Technologies Limited,2025-10-01,10:00:00,24.216792,8,Scorpio,1.7139,9,Sagittarius,27.6576,Uttara Ashadha,1,sun,5.5541
+JAINREC,Jain Resource Recycling Limited,2025-10-01,10:00:00,24.216792,8,Scorpio,1.7139,9,Sagittarius,27.6576,Uttara Ashadha,1,sun,5.5541
+JKIPL,Jinkushal Industries Limited,2025-10-03,10:00:00,24.216869,8,Scorpio,3.4705,10,Capricorn,23.5688,Dhanishta,1,mars,6.8764
+TRUALT,TruAlt Bioenergy Limited,2025-10-03,10:00:00,24.216869,8,Scorpio,3.4705,10,Capricorn,23.5688,Dhanishta,1,mars,6.8764
+PACEDIGITK,Pace Digitek Limited,2025-10-06,10:00:00,24.216983,8,Scorpio,6.1011,12,Pisces,5.5998,Uttara Bhadrapada,1,saturn,15.7702
+FABTECH,Fabtech Technologies Limited,2025-10-07,10:00:00,24.217022,8,Scorpio,6.977,12,Pisces,20.3619,Revati,2,mercury,12.2886
+GLOTTIS,Glottis Limited,2025-10-07,10:00:00,24.217022,8,Scorpio,6.977,12,Pisces,20.3619,Revati,2,mercury,12.2886
+ADVANCE,Advance Agrolife Limited,2025-10-08,10:00:00,24.21706,8,Scorpio,7.8526,1,Aries,5.3388,Ashwini,2,ketu,4.1971
+OMFREIGHT,Om Freight Forwarders Limited,2025-10-08,10:00:00,24.21706,8,Scorpio,7.8526,1,Aries,5.3388,Ashwini,2,ketu,4.1971
+SOLEX,Solex Energy Limited,2025-10-08,10:00:00,24.21706,8,Scorpio,7.8526,1,Aries,5.3388,Ashwini,2,ketu,4.1971
+WEWORK,WeWork India Management Limited,2025-10-10,10:00:00,24.217136,8,Scorpio,9.6029,2,Taurus,5.3485,Krittika,3,sun,2.0932
+LGEINDIA,LG Electronics India Limited,2025-10-14,10:00:00,24.217289,8,Scorpio,13.1018,4,Cancer,2.2616,Punarvasu,4,jupiter,1.2861
+CRAMC,Canara Robeco Asset Management Company Limited,2025-10-16,10:00:00,24.217366,8,Scorpio,14.8515,4,Cancer,28.5549,Ashlesha,4,mercury,1.8425
+RUBICON,Rubicon Research Limited,2025-10-16,10:00:00,24.217366,8,Scorpio,14.8515,4,Cancer,28.5549,Ashlesha,4,mercury,1.8425
+MIDWESTLTD,Midwest Limited,2025-10-24,10:00:00,24.217672,8,Scorpio,21.866,8,Scorpio,5.8728,Anuradha,1,saturn,15.3812
+ORKLAINDIA,Orkla India Limited,2025-11-06,10:00:00,24.218169,9,Sagittarius,3.4048,1,Aries,28.8587,Krittika,1,sun,5.0136
+STUDDS,Studds Accessories Limited,2025-11-07,10:00:00,24.218207,9,Sagittarius,4.3042,2,Taurus,14.1493,Rohini,2,moon,6.888
+LENSKART,Lenskart Solutions Limited,2025-11-10,10:00:00,24.218322,9,Sagittarius,7.0162,3,Gemini,28.2188,Punarvasu,3,jupiter,6.1374
+GROWW,Billionbrains Garage Ventures Limited,2025-11-12,10:00:00,24.218399,9,Sagittarius,8.8365,4,Cancer,25.3322,Ashlesha,3,mercury,5.9514
+PINELABS,Pine Labs Limited,2025-11-14,10:00:00,24.218475,9,Sagittarius,10.6677,5,Leo,20.8196,Purva Phalguni,3,venus,8.7706
+SHIVAUM,Shiv Aum Steels Limited,2025-11-14,10:00:00,24.218475,9,Sagittarius,10.6677,5,Leo,20.8196,Purva Phalguni,3,venus,8.7706
+EMMVEE,Emmvee Photovoltaic Power Limited,2025-11-18,10:00:00,24.218628,9,Sagittarius,14.3659,7,Libra,9.1282,Swati,1,rahu,14.6769
+PWL,Physicswallah Limited,2025-11-18,10:00:00,24.218628,9,Sagittarius,14.3659,7,Libra,9.1282,Swati,1,rahu,14.6769
+TENNIND,Tenneco Clean Air India Limited,2025-11-19,10:00:00,24.218666,9,Sagittarius,15.2986,7,Libra,20.9928,Vishakha,1,jupiter,14.8086
+UTLSOLAR,Fujiyama Power Systems Limited,2025-11-20,10:00:00,24.218705,9,Sagittarius,16.2347,8,Scorpio,2.8484,Vishakha,4,jupiter,0.582
+CAPILLARY,Capillary Technologies India Limited,2025-11-21,10:00:00,24.218743,9,Sagittarius,17.1744,8,Scorpio,14.7185,Anuradha,4,saturn,2.7761
+BETA,Beta Drugs Limited,2025-11-24,10:00:00,24.218858,9,Sagittarius,20.0159,9,Sagittarius,20.6459,Purva Ashadha,3,venus,9.0312
+EXCELSOFT,Excelsoft Technologies Limited,2025-11-26,10:00:00,24.218934,9,Sagittarius,21.9301,10,Capricorn,15.1965,Shravana,2,moon,6.1026
+SUDEEPPHRM,Sudeep Pharma Limited,2025-11-28,10:00:00,24.219011,9,Sagittarius,23.861,11,Aquarius,10.7209,Shatabhisha,2,rahu,12.5268
+KNAGRI,KN Agri Resources Limited,2025-12-09,10:00:00,24.219431,10,Capricorn,4.8191,4,Cancer,20.7568,Ashlesha,2,mercury,11.785
+AEQUS,Aequs Limited,2025-12-10,10:00:00,24.21947,10,Capricorn,5.8463,5,Leo,4.2205,Magha,2,ketu,4.7842
+MEESHO,Meesho Limited,2025-12-10,10:00:00,24.21947,10,Capricorn,5.8463,5,Leo,4.2205,Magha,2,ketu,4.7842
+VIDYAWIRES,Vidya Wires Limited,2025-12-10,10:00:00,24.21947,10,Capricorn,5.8463,5,Leo,4.2205,Magha,2,ketu,4.7842
+LEMERITE,Le Merite Exports Limited,2025-12-12,10:00:00,24.219546,10,Capricorn,7.9173,5,Leo,29.8215,Uttara Phalguni,1,sun,4.5803
+CORONA,CORONA Remedies Limited,2025-12-15,10:00:00,24.219661,10,Capricorn,11.0667,7,Libra,6.0988,Chitra,4,mars,0.2981
+WAKEFIT,Wakefit Innovations Limited,2025-12-15,10:00:00,24.219661,10,Capricorn,11.0667,7,Libra,6.0988,Chitra,4,mars,0.2981
+NEPHROPLUS,Nephrocare Health Services Limited,2025-12-17,10:00:00,24.219737,10,Capricorn,13.1957,7,Libra,29.7819,Vishakha,3,jupiter,4.2618
+PARKHOSPS,Park Medi World Limited,2025-12-17,10:00:00,24.219737,10,Capricorn,13.1957,7,Libra,29.7819,Vishakha,3,jupiter,4.2618
+ICICIAMC,ICICI Prudential Asset Management Company Limited,2025-12-19,10:00:00,24.219814,10,Capricorn,15.3485,8,Scorpio,23.5755,Jyeshtha,3,mercury,8.1912
+KSHINTL,KSH International Limited,2025-12-23,10:00:00,24.219967,10,Capricorn,19.727,10,Capricorn,12.3096,Shravana,1,moon,8.2678
+GKSL,Gujarat Kidney And Super Speciality Limited,2025-12-30,10:00:00,24.220235,10,Capricorn,27.6254,1,Aries,15.7022,Bharani,1,venus,16.4466
+KRISHNADEF,Krishna Defence And Allied Industries Limited,2025-12-30,10:00:00,24.220235,10,Capricorn,27.6254,1,Aries,15.7022,Bharani,1,venus,16.4466
+BHARATCOAL,Bharat Coking Coal Limited,2026-01-19,10:00:00,24.221,11,Aquarius,21.6831,10,Capricorn,9.0173,Uttara Ashadha,4,sun,0.4422
+AMAGI,Amagi Media Labs Limited,2026-01-21,10:00:00,24.221076,11,Aquarius,24.1811,11,Aquarius,4.5211,Dhanishta,4,mars,1.1264
+SHADOWFAX,Shadowfax Technologies Limited,2026-01-28,10:00:00,24.221344,12,Pisces,2.9896,2,Taurus,10.3294,Rohini,1,moon,9.753
+AYE,Aye Finance Limited,2026-02-16,10:00:00,24.222071,12,Pisces,26.7797,10,Capricorn,17.5362,Shravana,3,moon,4.3479
+FRACTAL,Fractal Analytics Limited,2026-02-16,10:00:00,24.222071,12,Pisces,26.7797,10,Capricorn,17.5362,Shravana,3,moon,4.3479
+GICL,Globe International Carriers Limited,2026-02-18,10:00:00,24.222147,12,Pisces,29.2227,11,Aquarius,13.7074,Shatabhisha,3,rahu,8.4951
+GAUDIUMIVF,Gaudium IVF and Women Health Limited,2026-02-27,10:00:00,24.222491,1,Aries,9.9706,3,Gemini,19.5195,Ardra,4,rahu,0.6487
+CLEANMAX,Clean Max Enviro Energy Solutions Limited,2026-03-02,10:00:00,24.222606,1,Aries,13.4535,5,Leo,1.2141,Magha,1,ketu,6.3626
+SRTL,Shree Ram Twistex Limited,2026-03-02,10:00:00,24.222606,1,Aries,13.4535,5,Leo,1.2141,Magha,1,ketu,6.3626
+PNGSREVA,PNGS Reva Diamond Jewellery Limited,2026-03-04,10:00:00,24.222683,1,Aries,15.7456,5,Leo,27.9491,Uttara Phalguni,1,sun,5.4229
+OMNI,Omnitech Engineering Limited,2026-03-05,10:00:00,24.222721,1,Aries,16.8826,6,Virgo,10.91,Hasta,1,moon,9.3175
+SEDEMAC,SEDEMAC Mechatronics Limited,2026-03-11,10:00:00,24.22295,1,Aries,23.576,8,Scorpio,24.047,Jyeshtha,3,mercury,7.5901
+VITAL,Vital Chemtech Limited,2026-03-11,10:00:00,24.22295,1,Aries,23.576,8,Scorpio,24.047,Jyeshtha,3,mercury,7.5901
+KOTYARK,Kotyark Industries Limited,2026-03-12,10:00:00,24.222989,1,Aries,24.6701,9,Sagittarius,5.9651,Mula,2,ketu,3.8683
+RSL,Rajputana Stainless Limited,2026-03-19,10:00:00,24.223256,2,Taurus,2.1599,12,Pisces,6.0376,Uttara Bhadrapada,1,saturn,15.1464
+INNOVISION,Innovision Limited,2026-03-23,10:00:00,24.223409,2,Taurus,6.3115,2,Taurus,3.4777,Krittika,3,sun,2.935
+GSPCROP,GSP Crop Science Limited,2026-03-24,10:00:00,24.223448,2,Taurus,7.3354,2,Taurus,17.9041,Rohini,3,moon,4.0719
+CMPDI,Central Mine Planning & Design Institute Limited,2026-03-30,10:00:00,24.223677,2,Taurus,13.3686,5,Leo,10.7005,Magha,4,ketu,1.3822
+POWERICA,Powerica Limited,2026-04-02,10:00:00,24.223792,2,Taurus,16.3182,6,Virgo,19.3339,Hasta,3,moon,2.9996
+SAIPARENT,Sai Parenterals Limited,2026-04-02,10:00:00,24.223792,2,Taurus,16.3182,6,Virgo,19.3339,Hasta,3,moon,2.9996
+OMPOWER,Om Power Transmission Limited,2026-04-17,10:00:00,24.224366,3,Gemini,0.5068,12,Pisces,28.7548,Revati,4,mercury,1.5877
+KISSHT,OnEMI Technology Solutions Limited,2026-05-08,10:00:00,24.225169,3,Gemini,19.3248,10,Capricorn,4.2868,Uttara Ashadha,3,sun,2.5709
+CMRGREEN,CMR Green Technologies Limited,2026-06-10,10:00:00,24.226431,4,Cancer,18.3043,12,Pisces,17.0324,Revati,1,mercury,16.5337
+HEXAGON,Hexagon Nutrition Limited,2026-06-12,10:00:00,24.226508,4,Cancer,20.0814,1,Aries,15.4825,Bharani,1,venus,16.7763
+QMSMEDI,QMS Medical Allied Services Limited,2026-06-18,10:00:00,24.226737,4,Cancer,25.4397,4,Cancer,15.7398,Pushya,4,saturn,1.3208
+TURTLEMINT,Turtlemint Fintech Solutions Limited,2026-06-29,10:00:00,24.227158,5,Leo,5.3783,9,Sagittarius,4.3793,Mula,2,ketu,4.7009
+CORDELIA,Waterways Leisure Tourism Limited,2026-07-01,10:00:00,24.227234,5,Leo,7.2014,9,Sagittarius,28.2348,Uttara Ashadha,1,sun,5.2943
+RAMBHAJO,Advit Jewels Limited,2026-07-01,10:00:00,24.227234,5,Leo,7.2014,9,Sagittarius,28.2348,Uttara Ashadha,1,sun,5.2943
+CSM,CSM Technologies Limited,2026-07-02,10:00:00,24.227272,5,Leo,8.1148,10,Capricorn,10.2722,Shravana,1,moon,9.7958
+AASTHA,Aastha Spintex Limited,2026-07-06,10:00:00,24.227425,5,Leo,11.78,12,Pisces,0.0215,Purva Bhadrapada,4,jupiter,3.9742
+KNACK,Knack Packaging Limited,2026-07-08,10:00:00,24.227502,5,Leo,13.6193,12,Pisces,26.5686,Revati,3,mercury,4.3751
+KUSUMGAR,Kusumgar Limited,2026-07-15,10:00:00,24.22777,5,Leo,20.0881,4,Cancer,9.4299,Pushya,2,saturn,10.3124
+LASERPOWER,Laser Power & Infra Limited,2026-07-16,10:00:00,24.227808,5,Leo,21.0157,4,Cancer,24.0818,Ashlesha,3,mercury,7.5457
+ALPINETEX,Alpine Texworld Limited,2026-07-21,10:00:00,24.227999,5,Leo,25.6645,7,Libra,1.0838,Chitra,3,mars,2.931
+SBIFUNDS,SBI Funds Management Limited,2026-07-21,10:00:00,24.227999,5,Leo,25.6645,7,Libra,1.0838,Chitra,3,mars,2.931
+CMLL,Caliber Mining and Logistics Limited,2026-07-24,10:00:00,24.228114,5,Leo,28.4607,8,Scorpio,7.449,Anuradha,2,saturn,13.1352
+INDOMIM,INDO-MIM Limited,2026-07-30,10:00:00,24.228343,6,Virgo,4.0624,10,Capricorn,19.3673,Shravana,3,moon,2.9745
+LCL,Lohia Corp Limited,2026-07-30,10:00:00,24.228343,6,Virgo,4.0624,10,Capricorn,19.3673,Shravana,3,moon,2.9745
+XTRANET,Xtranet Technologies Limited,2026-07-30,10:00:00,24.228343,6,Virgo,4.0624,10,Capricorn,19.3673,Shravana,3,moon,2.9745
+MANIPALHOS,Manipal Health Enterprises Limited,2026-08-05,10:00:00,24.228573,6,Virgo,9.6676,1,Aries,6.8564,Ashwini,3,ketu,3.4004
+JNPR,Juniper Green Energy Limited,2026-08-06,10:00:00,24.228611,6,Virgo,10.6013,1,Aries,20.6832,Bharani,3,venus,8.9752
+MVELECTRO,MV Electrosystems Limited,2026-08-06,10:00:00,24.228611,6,Virgo,10.6013,1,Aries,20.6832,Bharani,3,venus,8.9752
+ANNAPURNA,Annapurna Swadisht Limited,2026-08-12,10:00:00,24.228841,6,Virgo,16.1963,4,Cancer,17.8806,Ashlesha,1,mercury,15.4523
+ARDEE,Ardee Industries Limited,2026-08-12,10:00:00,24.228841,6,Virgo,16.1963,4,Cancer,17.8806,Ashlesha,1,mercury,15.4523
+SWARAJ,Swaraj Suiting Limited,2026-08-13,10:00:00,24.228879,6,Virgo,17.1271,5,Leo,2.3196,Magha,1,ketu,5.7822
+TECHNOCRAF,Technocraft Ventures Limited,2026-08-14,10:00:00,24.228917,6,Virgo,18.0574,5,Leo,16.4593,Purva Phalguni,1,venus,15.311
+DHOOTTRANS,Dhoot Transmission Limited,2026-08-17,10:00:00,24.229032,6,Virgo,20.844,6,Virgo,26.6317,Chitra,1,mars,5.2683
+MOLBIO,Molbio Diagnostics Limited,2026-08-17,10:00:00,24.229032,6,Virgo,20.844,6,Virgo,26.6317,Chitra,1,mars,5.2683
+MILKYMIST,Milky Mist Dairy Food Limited,2026-08-18,10:00:00,24.22907,6,Virgo,21.7713,7,Libra,9.2851,Swati,1,rahu,14.4651
+BLEL,Behari Lal Engineering Limited,2026-08-19,10:00:00,24.229108,6,Virgo,22.6979,7,Libra,21.6403,Vishakha,1,jupiter,14.0317
+SHIPROCKET,Shiprocket Limited,2026-08-19,10:00:00,24.229108,6,Virgo,22.6979,7,Libra,21.6403,Vishakha,1,jupiter,14.0317
+HORIZONIND,Horizon Industrial Parks Limited,2026-08-24,10:00:00,24.2293,6,Virgo,27.317,9,Sagittarius,21.4243,Purva Ashadha,3,venus,7.8635
+LALITHAA,Lalithaa Jewellery Mart Limited,2026-08-24,10:00:00,24.2293,6,Virgo,27.317,9,Sagittarius,21.4243,Purva Ashadha,3,venus,7.8635
+SHANKESH,Shankesh Jewellers Limited,2026-08-25,10:00:00,24.229338,6,Virgo,28.2379,10,Capricorn,3.4767,Uttara Ashadha,3,sun,2.9355
+SUNSHINE,Sunshine Pictures Limited,2026-08-25,10:00:00,24.229338,6,Virgo,28.2379,10,Capricorn,3.4767,Uttara Ashadha,3,sun,2.9355
+GAJA,Gaja Alternative Asset Management Limited,2026-08-26,10:00:00,24.229376,6,Virgo,29.1577,10,Capricorn,15.6959,Shravana,2,moon,5.728
+TEMPSENS,Tempsens Instruments (India) Limited,2026-08-28,10:00:00,24.229453,7,Libra,0.994,11,Aquarius,10.7714,Shatabhisha,2,rahu,12.4586
+AUGMONT,Augmont Enterprises Limited,2026-08-31,10:00:00,24.229567,7,Libra,3.7401,12,Pisces,20.1693,Revati,2,mercury,12.5342
+HTEL,Hy-Tech Engineers Limited,2026-09-01,10:00:00,24.229606,7,Libra,4.653,1,Aries,3.7569,Ashwini,2,ketu,5.0276
+SKYWAYS,Skyways Air Services Limited,2026-09-01,10:00:00,24.229606,7,Libra,4.653,1,Aries,3.7569,Ashwini,2,ketu,5.0276
+SYMBIOTEC,Symbiotec Pharmalab Limited,2026-09-01,10:00:00,24.229606,7,Libra,4.653,1,Aries,3.7569,Ashwini,2,ketu,5.0276
+ANNU,Annu Projects Limited,2026-09-02,10:00:00,24.229644,7,Libra,5.5648,1,Aries,17.5419,Bharani,2,venus,13.6872
+LUMINO,Lumino Industries Limited,2026-09-03,10:00:00,24.229682,7,Libra,6.4754,2,Taurus,1.4995,Krittika,2,sun,3.8252
+ESDS,ESDS Software Solution Limited,2026-09-04,10:00:00,24.22972,7,Libra,7.3847,2,Taurus,15.6017,Rohini,2,moon,5.7987
+PRIORITY,Priority Jewels Limited,2026-09-04,10:00:00,24.22972,7,Libra,7.3847,2,Taurus,15.6017,Rohini,2,moon,5.7987
+PERNIASPOP,Purple Style Labs Limited,2026-09-07,10:00:00,24.229835,7,Libra,10.1052,3,Gemini,28.4222,Punarvasu,3,jupiter,5.8934
+DEEPA,Deepa Jewellers Limited,2026-09-08,10:00:00,24.229873,7,Libra,11.0095,4,Cancer,12.7127,Pushya,3,saturn,5.6344
+MOMSBELIEF,Rays of Belief Limited,2026-09-08,10:00:00,24.229873,7,Libra,11.0095,4,Cancer,12.7127,Pushya,3,saturn,5.6344
+DOLLEX,Dollex Agrotech Limited,2026-09-11,10:00:00,24.229988,7,Libra,13.7149,5,Leo,24.7991,Purva Phalguni,4,venus,2.8014
+PRANAV,Pranav Constructions Limited,2026-09-15,10:00:00,24.230141,7,Libra,17.3048,7,Libra,17.2194,Swati,4,rahu,3.7538
+GLASSWALL,Glass Wall Systems (India) Limited,2026-09-16,10:00:00,24.230179,7,Libra,18.1992,7,Libra,29.5811,Vishakha,3,jupiter,4.5027
+KANOHAR,Kanohar Electricals Limited,2026-09-16,10:00:00,24.230179,7,Libra,18.1992,7,Libra,29.5811,Vishakha,3,jupiter,4.5027
+PRASOLCHEM,Prasol Chemicals Limited,2026-09-16,10:00:00,24.230179,7,Libra,18.1992,7,Libra,29.5811,Vishakha,3,jupiter,4.5027
+ARCIL,Asset Reconstruction Company (India) Limited,2026-09-17,10:00:00,24.230218,7,Libra,19.0924,8,Scorpio,11.7143,Anuradha,3,saturn,7.0572
+KARAMTARA,Karamtara Engineering Limited,2026-09-17,10:00:00,24.230218,7,Libra,19.0924,8,Scorpio,11.7143,Anuradha,3,saturn,7.0572
+LCCPROJECT,LCC Projects Limited,2026-09-17,10:00:00,24.230218,7,Libra,19.0924,8,Scorpio,11.7143,Anuradha,3,saturn,7.0572
+MPIMANIPAL,Manipal Payment and Identity Solutions Limited,2026-09-17,10:00:00,24.230218,7,Libra,19.0924,8,Scorpio,11.7143,Anuradha,3,saturn,7.0572
+RENTOMOJO,Rentomojo Limited,2026-09-17,10:00:00,24.230218,7,Libra,19.0924,8,Scorpio,11.7143,Anuradha,3,saturn,7.0572
+STEAMHOUSE,Steamhouse India Limited,2026-09-17,10:00:00,24.230218,7,Libra,19.0924,8,Scorpio,11.7143,Anuradha,3,saturn,7.0572
+VEEGALAND,Veegaland Developers Limited,2026-09-18,10:00:00,24.230256,7,Libra,19.9845,8,Scorpio,23.6832,Jyeshtha,3,mercury,8.0539
+MANIKA,Manika Plastech Limited,2026-09-21,10:00:00,24.230371,7,Libra,22.6538,9,Sagittarius,29.3726,Uttara Ashadha,1,sun,4.7823
+HEROMOTORS,Hero Motors Limited,2026-09-23,10:00:00,24.230447,7,Libra,24.428,10,Capricorn,23.7704,Dhanishta,1,mars,6.7705
+JSIPL,Jindal Supreme (India) Limited,2026-09-23,10:00:00,24.230447,7,Libra,24.428,10,Capricorn,23.7704,Dhanishta,1,mars,6.7705
+SSRETAIL,SS Retail Limited,2026-09-23,10:00:00,24.230447,7,Libra,24.428,10,Capricorn,23.7704,Dhanishta,1,mars,6.7705
+SONA,Sonaselection India Limited,2026-09-24,10:00:00,24.230485,7,Libra,25.3135,11,Aquarius,6.3537,Dhanishta,4,mars,0.1643
+PARIN,Parin Enterprises Limited,2026-09-25,10:00:00,24.230524,7,Libra,26.1981,11,Aquarius,19.2501,Shatabhisha,4,rahu,1.0124
+VARMORA,Varmora Granito Limited,2026-09-29,10:00:00,24.230677,7,Libra,29.7272,1,Aries,13.8855,Bharani,1,venus,19.1718
+ADROITIND,Adroit Industries (India) Limited,2026-09-30,10:00:00,24.230715,8,Scorpio,0.6074,1,Aries,28.0811,Krittika,1,sun,5.3635
+ARMEE,ArMee Infotech Limited,2026-09-30,10:00:00,24.230715,8,Scorpio,0.6074,1,Aries,28.0811,Krittika,1,sun,5.3635
+ELEVATE,Elevate Campuses Limited,2026-09-30,10:00:00,24.230715,8,Scorpio,0.6074,1,Aries,28.0811,Krittika,1,sun,5.3635
+SWASTIKAIN,Swastika Infra Limited,2026-09-30,10:00:00,24.230715,8,Scorpio,0.6074,1,Aries,28.0811,Krittika,1,sun,5.3635
+AONESTEELS,A-One Steels India Limited,2026-10-01,10:00:00,24.230753,8,Scorpio,1.4869,2,Taurus,12.3513,Rohini,1,moon,8.2365
+MONEYVIEW,Moneyview Limited,2026-10-01,10:00:00,24.230753,8,Scorpio,1.4869,2,Taurus,12.3513,Rohini,1,moon,8.2365
+ACEVECTOR,AceVector Limited,2026-10-05,10:00:00,24.230906,8,Scorpio,4.9982,4,Cancer,9.0278,Pushya,2,saturn,10.8855
+GERMAN,German Green Steel and Power Limited,2026-10-05,10:00:00,24.230906,8,Scorpio,4.9982,4,Cancer,9.0278,Pushya,2,saturn,10.8855
+ORIENTCABL,Orient Cables (India) Limited,2026-10-05,10:00:00,24.230906,8,Scorpio,4.9982,4,Cancer,9.0278,Pushya,2,saturn,10.8855
+RUNWALENTR,Runwal Enterprises Limited,2026-10-05,10:00:00,24.230906,8,Scorpio,4.9982,4,Cancer,9.0278,Pushya,2,saturn,10.8855
+SHAHINVEST,Shah Investor's Home Limited,2026-10-06,10:00:00,24.230944,8,Scorpio,5.8747,4,Cancer,22.9307,Ashlesha,2,mercury,9.0134
+SRIT,SRIT India Limited,2026-10-06,10:00:00,24.230944,8,Scorpio,5.8747,4,Cancer,22.9307,Ashlesha,2,mercury,9.0134
+NITYAS,Nityas Gems and Jewellery Limited,2026-10-08,10:00:00,24.231021,8,Scorpio,7.6264,5,Leo,20.2982,Purva Phalguni,3,venus,9.5527
+VNL,Vishal Nirmiti Limited,2026-10-08,10:00:00,24.231021,8,Scorpio,7.6264,5,Leo,20.2982,Purva Phalguni,3,venus,9.5527
+HDFIRE,HD Fire Protect Limited,2026-10-21,10:00:00,24.231518,8,Scorpio,19.0047,11,Aquarius,1.5501,Dhanishta,3,mars,2.6862
+FUSIONCX,Fusion CX Limited,2026-10-22,10:00:00,24.231556,8,Scorpio,19.8821,11,Aquarius,14.1817,Shatabhisha,3,rahu,7.8547
+BONFIG,Bonfiglioli Transmissions Limited,2026-10-23,10:00:00,24.231595,8,Scorpio,20.7601,11,Aquarius,27.1982,Purva Bhadrapada,3,jupiter,7.3622
+SMT,Sahajanand Medical Technologies Limited,2026-10-23,10:00:00,24.231595,8,Scorpio,20.7601,11,Aquarius,27.1982,Purva Bhadrapada,3,jupiter,7.3622
+TONBO,Tonbo Imaging India Limited,2026-10-23,10:00:00,24.231595,8,Scorpio,20.7601,11,Aquarius,27.1982,Purva Bhadrapada,3,jupiter,7.3622
+ZETWERK,Zetwerk Manufacturing Businesses Limited,2026-10-23,10:00:00,24.231595,8,Scorpio,20.7601,11,Aquarius,27.1982,Purva Bhadrapada,3,jupiter,7.3622

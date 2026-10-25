@@ -191,26 +191,21 @@ Therefore, the study tracks two distinct astrological timestamps for each quarte
 
 ---
 
-### Phase 1: Universe Compilation
-* Compile master list of companies whose primary IPO was on the NSE from [`EQUITY_L.csv`](file:///c:/Users/Admin/Sunil/Trading/data/raw/nse-ipo-lists/EQUITY_L.csv) and historical IPO archives in [`data/raw/nse-ipo-lists/`](file:///c:/Users/Admin/Sunil/Trading/data/raw/nse-ipo-lists/).
-* Record verified listing date ($D_0$) for each stock.
-* Freeze master dataset with SHA-256 hash.
-* 🛑 **HITL GATE 1 — User Verification Checklist:**
-  * Total qualifying IPO count presented (pure NSE IPOs vs. excluded legacy admissions).
-  * Date range distribution of listings (1994 to present).
-  * Preview of 10 earliest, 10 median, and 10 most recent listings for user sanity check.
-  * **STOP:** Wait for user review and approval before generating charts.
+### Phase 1: Universe Compilation (✅ COMPLETED & SIGNED OFF AT HITL GATE 1)
+* Compiled master list of companies whose primary IPO was on the NSE from [`EQUITY_L.csv`](file:///c:/Users/Admin/Sunil/Trading/data/raw/nse-ipo-lists/EQUITY_L.csv) and historical IPO archives in [`data/raw/nse-ipo-lists/`](file:///c:/Users/Admin/Sunil/Trading/data/raw/nse-ipo-lists/).
+* Identified exactly **808 pure primary NSE IPO listings** (2000 to 2026).
+* Saved dataset: [`data/derived/jathakam-dasha-study/phase1_universe.csv`](file:///c:/Users/Admin/Sunil/Trading/data/derived/jathakam-dasha-study/phase1_universe.csv)
+* SHA-256 Checksum: `69509ebb21fae31eceb264a1e76a67c129191dd0b2fa1976349a07d7e486a675`
+* 🛑 **HITL GATE 1:** Reviewed and approved by user.
 
 ---
 
-### Phase 2: Astrological Engine Setup
-* For each verified stock, compute the natal D1 rashi chart at 10:00:00 AM IST on listing date $D_0$.
-* Generate continuous time-series table mapping every session to its running `(MD, AD, PD)` and functional house roles.
-* 🛑 **HITL GATE 2 — User Verification Checklist:**
-  * Lagna and Moon nakshatra distribution across the universe.
-  * Spot-check 5 recognizable stocks (e.g., Infosys, TCS, Maruti, Reliance Power, Zomato): display natal Lagna, Moon sign, birth Dasha balance, and current/historical transition dates.
-  * Allow user to independently cross-check chart outputs against their preferred astrological software.
-  * **STOP:** Wait for user confirmation that planetary computations match expectations.
+### Phase 2: Astrological Engine Setup (✅ COMPLETED & SIGNED OFF AT HITL GATE 2)
+* Computed 10:00:00 AM IST Mumbai natal D1 rashi charts for all 808 stocks using Swiss Ephemeris (Lahiri Ayanamsa).
+* Generated continuous daily time-series mapping every trading session (1994–2026) to its running `(MD, AD, PD)` state and functional house roles.
+* Saved natal charts: [`data/derived/jathakam-dasha-study/phase2_natal_charts.csv`](file:///c:/Users/Admin/Sunil/Trading/data/derived/jathakam-dasha-study/phase2_natal_charts.csv) (SHA-256: `523a9fde58123a2d8d0ffc4520f798627716193df52731e5b8d107243959e7e2`)
+* Saved daily timeline: [`data/derived/jathakam-dasha-study/phase2_daily_dasha_timeline.parquet`](file:///c:/Users/Admin/Sunil/Trading/data/derived/jathakam-dasha-study/phase2_daily_dasha_timeline.parquet) (1,229,182 rows, 2.20 MB, SHA-256: `dcbb66defc58d39d1c299488112a80f13225240c45814cd2d857ace46100ff56`)
+* 🛑 **HITL GATE 2:** Reviewed and approved by user with 5 spot-checks (TCS, DIVISLAB, RPOWER, INDIGO, PAYTM).
 
 ---
 
