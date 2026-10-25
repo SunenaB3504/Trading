@@ -220,19 +220,29 @@ Therefore, the study tracks two distinct astrological timestamps for each quarte
 
 ---
 
-### Phase 4: Discovery on Cohort A (50% Split)
-* Split stocks 50/50 deterministically using `SHA256(symbol) % 2`.
-* On Cohort A, search for empirical patterns across:
-  * 9 PD Lords (Tier 1).
-  * Functional Trikona (1, 5, 9) vs. Dusthana (6, 8, 12) Lagna house lords (Tier 2).
-  * Dual-state quarterly earnings alignment (Operational PD vs. Announcement PD).
-* Filter: Enforce minimum sample size $N \ge 30$ per tested bucket.
-* 🛑 **HITL GATE 4 — User Verification Checklist:**
-  * Detailed presentation of all discovered empirical patterns in `FINDINGS_DISCOVERY.md`.
-  * Display return distributions, win rates, and quarterly alignment metrics.
-  * User reviews which candidate patterns (if any) are compelling enough to pre-register for out-of-sample testing.
-  * Pre-register exact candidate pattern rules before touching Cohort B.
-  * **STOP:** Wait for user approval of pre-registered rules.
+### Phase 4: Discovery on Cohort A (50% Split) — (✅ COMPLETED & PRESENTED AT HITL GATE 4)
+* **Deterministic 50/50 Split Completed:**
+  * Universe divided using `SHA256(symbol)` into Cohort A (Discovery: 412 stocks) and Cohort B (Hold-out Confirmation: 396 stocks).
+  * Dataset: [`data/derived/jathakam-dasha-study/phase4_cohort_split.csv`](file:///c:/Users/Admin/Sunil/Trading/data/derived/jathakam-dasha-study/phase4_cohort_split.csv) (SHA-256: `c0a0d5c13b6c1ccf28114f451f591e2c6283388b94d8c2ec770e2311215c84d7`).
+  * Cohort B remains completely untouched (zero data snooping).
+* **Module 1: Core Multi-Tier Dasha Confluence Model Completed:**
+  * Analyzed 603,095 clean trading days in Cohort A across two-tier and three-tier permutations of Trikona (1, 5, 9) and Dusthana (6, 8, 12).
+  * Datasets generated:
+    * [`data/derived/jathakam-dasha-study/phase4_discovery_statistics.csv`](file:///c:/Users/Admin/Sunil/Trading/data/derived/jathakam-dasha-study/phase4_discovery_statistics.csv) (SHA-256: `ea41914560713bbf6101609614756a78741af8f9cd4233409739544a25027dda`)
+    * [`data/derived/jathakam-dasha-study/phase4_confluence_statistics.csv`](file:///c:/Users/Admin/Sunil/Trading/data/derived/jathakam-dasha-study/phase4_confluence_statistics.csv) (SHA-256: `71bbecda99be0b107ed0cf23a0849270929b337a1a15dc8158d396006f7c90d2`)
+  * Full Discovery Report: [`docs/jathakam-dasha-study/FINDINGS_DISCOVERY.md`](file:///c:/Users/Admin/Sunil/Trading/docs/jathakam-dasha-study/FINDINGS_DISCOVERY.md).
+* **Key Findings:**
+  * `[T-T-T]` Triple Trikona: Annualized Alpha **+28.10%**, DD >30% rate **55.63%**, Mean Drawdown **-43.15%**.
+  * `[D-D-D]` Triple Dusthana: Annualized Alpha **-3.41%**, DD >30% rate **70.46%**, Mean Drawdown **-52.31%**.
+  * Spread: **+14.83% higher frequency of severe drawdowns** and **-31.51% annualized alpha penalty** under Triple Dusthana vs Triple Trikona.
+  * `[T-T-D]` Institutional Dip: Mean DD -46.35%, Alpha **+9.79%** (healthy tactical pullback in secular bull trend).
+* **Pre-Registered Candidate Rules for Phase 5:**
+  * **Rule R-1 (Triple Confluence Capital Preservation):** Cohort B `[T-T-T]` vs `[D-D-D]` alpha spread $\ge +8.0\%$, DD $>30\%$ rate difference $\ge 4.0\%$ ($p < 0.05$).
+  * **Rule R-2 (Dusthana Alpha Drag):** Cohort B pure Dusthana PD underperformance penalty $> -5.0\%$ vs pure Trikona PD ($p < 0.05$).
+  * **Rule R-3 (Large-Cap Astrological Sensitivity):** Large Caps in Cohort B exhibit $>5.0\%$ deeper drawdowns during Dusthana sub-periods.
+* 🛑 **HITL GATE 4 — Formal Sign-Off Deliverable Presented.** Stop and await user approval before commencing Phase 5 out-of-sample hold-out confirmation.
+
+---
 
 ---
 
@@ -249,14 +259,20 @@ Therefore, the study tracks two distinct astrological timestamps for each quarte
 
 ---
 
-### Phase 6: Stage 2 Rigorous Calibration & Investment Synthesis (Conditional)
-* If and only if a Candidate Solid Pattern survived Phase 5:
-  * Incorporate delisted historical entities, test opening bell timing regime variations, apply rolling CAPM Beta-adjustments, and run FDR multiple-testing corrections.
-  * Formulate practical risk overlay rules (allocation, stop-loss timing).
-* 🛑 **HITL GATE 6 — User Verification Checklist:**
-  * Final investment methodology review.
-  * Portfolio backtest and capital preservation guardrails review.
-  * **STOP:** Final user sign-off.
+### Phase 6: Multi-Module Specialized Studies & Final Master Thesis (Post Phase 5)
+Following Phase 5 confirmation of Module 1, the remaining specialized modules will be executed sequentially:
+
+* **Phase 6A: Module 2 — Panchanga Catalyst & Acceleration Study:**
+  * Tests daily Tithi (Rikta 4/9/14), Vishti Karana, Vyatipata/Vaidhriti Yogas, and Chandrashtama.
+  * Objective: Determine whether ambient Panchanga features act as high-frequency catalysts that accelerate or retard Dasha-driven selloffs.
+* **Phase 6B: Module 3 — Corporate Financials & 12-House Balance Sheet Study:**
+  * Tests 11th House (Profits/PAT) and 2nd House (Treasury/Cash Reserves) alignment with quarterly filings and subsequent 60-day price trends.
+  * Objective: Establish whether astrological house transits map directly to corporate revenue and earnings trajectory.
+* **Phase 6C: Master Thesis Synthesis & Risk Architecture:**
+  * Unifies Module 1, Module 2, and Module 3 into a comprehensive master thesis.
+  * Delisted entities backfill, historical bell regimes, and FDR multiple-testing corrections.
+  * Formulate practical risk overlay rules and portfolio guardrails.
+* 🛑 **HITL GATE 6 — Final Synthesis & Investment Review Sign-Off.**
 
 ---
 

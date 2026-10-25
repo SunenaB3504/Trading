@@ -1,0 +1,17 @@
+cohort,category,name,trading_days,mean_drawdown_pct,median_drawdown_pct,rate_dd_gt_30pct,rate_dd_gt_50pct,daily_residual_ret_bps,annualized_alpha_pct,win_rate_pct
+Cohort A,PD Functional Role,Trikona,122888,-47.35,-44.23,63.16,45.47,4.79,12.08,45.67
+Cohort A,PD Functional Role,Kendra,102175,-49.77,-47.27,65.29,47.65,3.64,9.17,45.67
+Cohort A,PD Functional Role,Dusthana,96188,-49.28,-47.37,66.37,47.79,1.57,3.96,45.33
+Cohort A,PD Functional Role,Trikona+Dusthana,99618,-49.21,-46.52,66.01,46.71,4.28,10.8,45.82
+Cohort A,PD Functional Role,Kendra+Dusthana,23314,-46.24,-42.98,62.17,43.81,4.08,10.27,45.7
+Cohort A,PD Functional Role,Neutral,33965,-47.33,-45.03,65.39,44.7,0.96,2.43,45.33
+Cohort A,PD Functional Role,Node,124947,-48.65,-46.11,65.17,46.75,2.82,7.11,45.48
+Cohort A,PD Lord,Ketu,35137,-47.88,-45.15,63.51,45.58,5.05,12.73,45.55
+Cohort A,PD Lord,Venus,101443,-48.17,-45.49,64.39,46.29,3.16,7.97,45.7
+Cohort A,PD Lord,Sun,30139,-48.13,-45.18,64.61,45.66,4.02,10.14,45.64
+Cohort A,PD Lord,Moon,49841,-48.24,-45.85,64.37,46.36,3.23,8.13,45.49
+Cohort A,PD Lord,Mars,34493,-48.69,-46.08,65.11,46.37,2.39,6.02,45.1
+Cohort A,PD Lord,Rahu,89810,-48.95,-46.46,65.81,47.21,1.95,4.92,45.44
+Cohort A,PD Lord,Jupiter,80904,-49.38,-47.12,66.26,47.47,2.58,6.5,45.35
+Cohort A,PD Lord,Saturn,95762,-48.85,-46.62,65.32,47.13,3.85,9.69,45.67
+Cohort A,PD Lord,Mercury,85566,-48.38,-45.4,64.45,45.69,4.72,11.9,45.93
