@@ -1,0 +1,13 @@
+house_number,house_name,balance_sheet_domain,trading_stock_days,arithmetic_alpha_pct,geometric_log_alpha_pct,median_alpha_pct,distress_filtered_alpha_pct,distress_filtered_log_alpha_pct,win_rate_pct,mean_drawdown_pct,rate_dd_gt_30pct,filtered_rate_dd_gt_30pct,rate_dd_gt_50pct
+1,Tanu / Lagna,Core Company Health & Corporate Identity,144542,8.14,-6.01,-47.88,20.14,9.44,45.44,-48.0,65.4,52.67,46.49
+2,Dhana Bhava,"Treasury, Accumulated Cash Reserves & Liquid Wealth",147698,9.04,-4.48,-47.88,21.81,11.34,45.5,-48.52,65.15,51.55,46.83
+3,Sahaja / Parakrama,"Marketing, Operations, Sales Velocity & Enterprise",146742,9.28,-6.42,-47.88,18.32,6.13,45.52,-49.59,66.88,52.93,48.09
+4,Sukha / Bandhu,"Fixed Assets, Plant & Machinery, Real Estate Infrastructure",137373,10.08,-3.52,-47.88,23.86,11.8,45.56,-50.4,67.97,54.27,50.11
+5,Putra / Buddhi,"R&D, Patents, Innovation & High-Margin New Offerings",145760,8.49,-5.29,-47.88,20.3,9.69,45.45,-48.63,66.03,53.48,47.47
+6,Rina / Ari,"Debt Burden, Interest Costs, Legal Disputes & NPAs",143472,8.04,-5.97,-47.88,17.94,8.28,45.53,-48.32,65.24,51.88,47.06
+7,Jaya / Kalatra,"Strategic Partnerships, B2B Joint Ventures & Mergers",141614,8.06,-5.39,-47.88,19.34,9.57,45.52,-50.22,66.79,51.82,49.37
+8,Randhra / Ayur,"Solvency Crises, Balance Sheet Shocks, Write-downs & Probes",137320,6.17,-6.75,-52.92,15.57,5.3,45.28,-49.8,67.32,54.19,49.01
+9,Bhagya / Dharma,"Fortune, Regulatory Clearances, Subsidies & Secular Bull Trends",140466,12.02,0.09,-47.88,23.06,12.99,45.66,-48.24,64.73,51.42,46.76
+10,Karma Bhava,"Executive Leadership, Market Cap, Corporate Governance & Prestige",145099,8.9,-5.7,-47.88,17.14,7.13,45.47,-48.35,64.94,50.72,46.48
+11,Labha Bhava,"Net Profit (PAT), Revenue Surplus, Dividend Capacity & Cash Inflow",137017,4.61,-6.81,-50.4,15.67,6.11,45.22,-49.38,66.48,52.58,48.61
+12,Vyaya Bhava,"Capex Leakage, Operating Losses, Cash Burn & Write-offs",145956,8.91,-3.61,-47.88,20.67,9.85,45.48,-49.23,66.59,53.08,47.75
