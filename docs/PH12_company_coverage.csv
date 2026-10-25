@@ -1,0 +1,73 @@
+symbol,bseListingDate,star,taraNumber,taraName,group,decisionDates,usableDates,coveragePct
+ABAN,1988-08-29,U.Bhadrapada,3,Vipat,bad,1974,1813,91.8
+ADANITRANS,2015-07-31,U.Ashadha,7,Naidhana,bad,1974,1184,60.0
+ASIANPAINT,1982-10-22,Mula,5,Pratyak,bad,1974,1925,97.5
+BAJAJ-AUTO,2008-05-26,Shravana,8,Mitra,good,1974,1925,97.5
+BANKBARODA,1997-02-21,Ashlesha,4,Kshema,good,1974,1925,97.5
+BATAINDIA,1974-05-09,Jyeshtha,4,Kshema,good,1974,1925,97.5
+BEPL,1985-05-28,P.Phalguni,6,Sadhana,good,1974,1925,97.5
+CHAMBLFERT,1993-10-08,Ardra,1,Janma,mixed,1974,1925,97.5
+CHENNPETRO,1992-10-30,Mula,5,Pratyak,bad,1974,1947,98.6
+COLPAL,1979-03-01,Revati,4,Kshema,good,1974,1925,97.5
+CYIENT,1997-09-25,Punarvasu,2,Sampat,good,1974,1925,97.5
+DABUR,1994-03-07,P.Ashadha,6,Sadhana,good,1974,1925,97.5
+DCBBANK,2004-02-12,Swati,1,Janma,mixed,1974,1925,97.5
+DHFL,1985-05-17,Ashwini,5,Pratyak,bad,1974,638,32.3
+DLF,2007-07-05,Shatabhisha,1,Janma,mixed,1974,1859,94.2
+EDELWEISS,2007-12-12,P.Ashadha,6,Sadhana,good,1974,1882,95.3
+EQUITAS,2016-04-21,Chitra,9,Parama Mitra,good,1974,1048,53.1
+GMRINFRA,2006-08-21,Pushya,3,Vipat,bad,1974,1494,75.7
+GREAVESCOT,1958-05-13,P.Bhadrapada,2,Sampat,good,1974,1903,96.4
+HCLTECH,2000-01-11,Shatabhisha,1,Janma,mixed,1974,1925,97.5
+HDFC,1978-08-26,Rohini,8,Mitra,good,1974,1155,58.5
+HEROMOTOCO,1985-02-14,Jyeshtha,4,Kshema,good,1974,1925,97.5
+HINDOILEXP,1990-04-30,Punarvasu,2,Sampat,good,1974,1925,97.5
+HINDPETRO,1992-09-11,Shatabhisha,1,Janma,mixed,1974,1947,98.6
+HINDZINC,1992-10-09,P.Bhadrapada,2,Sampat,good,1974,1947,98.6
+HSCL,1993-06-04,Anuradha,3,Vipat,bad,1974,1925,97.5
+IDBI,1995-09-20,Pushya,3,Vipat,bad,1974,1903,96.4
+IDFC,2005-08-12,Swati,1,Janma,mixed,1974,1452,73.6
+INDUSINDBK,1998-01-29,Dhanishta,9,Parama Mitra,good,1974,1925,97.5
+INTELLECT,2014-12-18,Swati,1,Janma,mixed,1974,1925,97.5
+IOC,1995-08-09,U.Ashadha,7,Naidhana,bad,1974,1925,97.5
+IPCALAB,1994-05-06,P.Bhadrapada,2,Sampat,good,1974,1925,97.5
+JISLJALEQS,1989-01-05,Jyeshtha,4,Kshema,good,1974,1903,96.4
+JKTYRE,1975-07-22,P.Ashadha,6,Sadhana,good,1974,1925,97.5
+KAJARIACER,1995-06-12,Anuradha,3,Vipat,bad,1974,1881,95.3
+KEC,2006-03-10,Punarvasu,2,Sampat,good,1974,1925,97.5
+KOTAKBANK,1992-04-10,Punarvasu,2,Sampat,good,1974,1925,97.5
+KSCL,2007-10-04,Punarvasu,2,Sampat,good,1974,1925,97.5
+L&TFH,2011-08-12,U.Ashadha,7,Naidhana,bad,1974,1338,67.8
+LUXIND,2016-01-05,Vishakha,2,Sampat,good,1974,1925,97.5
+M&M,1956-02-15,U.Bhadrapada,3,Vipat,bad,1974,1903,96.4
+M&MFIN,2006-03-17,Chitra,9,Parama Mitra,good,1974,1856,94.0
+MARUTI,2003-07-09,Swati,1,Janma,mixed,1974,1925,97.5
+MCX,2012-03-09,U.Phalguni,7,Naidhana,bad,1974,1925,97.5
+MGL,2016-07-01,Krittika,7,Naidhana,bad,1974,1925,97.5
+MRF,1961-09-23,Shatabhisha,1,Janma,mixed,1974,1925,97.5
+MRPL,1992-10-08,Shatabhisha,1,Janma,mixed,1974,1925,97.5
+MUTHOOTFIN,2011-05-06,Mrigashira,9,Parama Mitra,good,1974,1903,96.4
+NESTLEIND,1969-02-15,Shravana,8,Mitra,good,1974,1925,97.5
+NTPC,2004-11-05,Ashlesha,4,Kshema,good,1974,1925,97.5
+OFSS,2002-06-28,Shravana,8,Mitra,good,1974,1925,97.5
+OIL,2009-09-30,Dhanishta,9,Parama Mitra,good,1974,1925,97.5
+OMAXE,2007-08-09,Mrigashira,9,Parama Mitra,good,1974,1903,96.4
+ORIENTBANK,1994-12-19,Ardra,1,Janma,mixed,1974,340,17.2
+PIDILITIND,1994-01-21,Bharani,6,Sadhana,good,1974,1925,97.5
+PNB,2002-04-26,Chitra,9,Parama Mitra,good,1974,1925,97.5
+POWERGRID,2007-10-05,Pushya,3,Vipat,bad,1974,1925,97.5
+PRAKASH,1981-08-05,Hasta,8,Mitra,good,1974,1904,96.5
+PVR,2006-01-04,Shatabhisha,1,Janma,mixed,1974,1112,56.3
+RAYMOND,1959-12-01,Jyeshtha,4,Kshema,good,1974,1903,96.4
+RELCAPITAL,1990-08-16,Mrigashira,9,Parama Mitra,good,1974,1027,52.0
+REPCOHOME,2013-04-01,Jyeshtha,4,Kshema,good,1974,1925,97.5
+RPOWER,2008-02-11,Revati,4,Kshema,good,1974,1925,97.5
+SIEMENS,1971-06-14,Dhanishta,9,Parama Mitra,good,1974,1913,96.9
+SUNTECK,2001-08-27,Jyeshtha,4,Kshema,good,1974,1925,97.5
+THOMASCOOK,1983-03-22,Ardra,1,Janma,mixed,1974,1882,95.3
+TIRUMALCHM,1974-04-23,Bharani,6,Sadhana,good,1974,1925,97.5
+ULTRACEMCO,2004-08-24,Jyeshtha,4,Kshema,good,1974,1925,97.5
+VGUARD,2008-03-13,Rohini,8,Mitra,good,1974,1925,97.5
+VIJAYABANK,2001-01-09,Ardra,1,Janma,mixed,1974,88,4.5
+WIPRO,1947-06-13,U.Bhadrapada,3,Vipat,bad,1974,1925,97.5
+YESBANK,2005-07-12,U.Phalguni,7,Naidhana,bad,1974,1925,97.5
