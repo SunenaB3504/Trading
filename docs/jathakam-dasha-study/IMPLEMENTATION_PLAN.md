@@ -209,18 +209,14 @@ Therefore, the study tracks two distinct astrological timestamps for each quarte
 
 ---
 
-### Phase 3: Market & Fundamentals Ingestion
-* Extract split/bonus-adjusted daily price bars from [`data/raw/nse-bars/`](file:///c:/Users/Admin/Sunil/Trading/data/raw/nse-bars/).
-* Ingest daily Nifty 500 closing levels from [`data/raw/nse-index/`](file:///c:/Users/Admin/Sunil/Trading/data/raw/nse-index/).
-* Ingest historical quarterly announcement dates ($T_0$) and reported revenue/PAT metrics.
-* Align Operational Quarter state and Announcement Reaction state.
-* 🛑 **HITL GATE 3 — User Verification Checklist:**
-  * Price and quarterly data coverage statistics (missing data rate, date span).
-  * Demonstration of the dual-state quarterly alignment for 3 sample stocks showing:
-    * Operational Quarter Dasha vs. reported YoY PAT/Revenue.
-    * Result Announcement Date ($T_0$) Dasha vs. $[T_0, T_{+60}]$ market excess return.
-  * Systemic crisis mask verification (verifying that Jan–Oct 2008 and Feb–Apr 2020 dates are flagged).
-  * **STOP:** Wait for user sign-off on data cleanliness and alignment integrity.
+### Phase 3: Market & Fundamentals Ingestion (✅ COMPLETED & SIGNED OFF AT HITL GATE 3)
+* Extracted split/bonus-adjusted daily prices, log returns, and rolling peak drawdowns from [`data/raw/nse-bars/`](file:///c:/Users/Admin/Sunil/Trading/data/raw/nse-bars/) across 7,918 trading sessions (2000–2026).
+* Ingested daily Nifty 50 / Nifty 500 benchmark returns and estimated rolling 252-day Beta ($\beta$) and idiosyncratic residual returns.
+* Implemented objective macro crisis contagion masking (flagging 2008 GFC, 2020 COVID shock, and market drawdowns $>12\%$).
+* Merged with Phase 2 daily Vimshottari dasha state and corporate event logs.
+* Saved dataset: [`data/derived/jathakam-dasha-study/phase3_daily_market_metrics.parquet`](file:///c:/Users/Admin/Sunil/Trading/data/derived/jathakam-dasha-study/phase3_daily_market_metrics.parquet) (1,222,765 records, 29.32 MB)
+* SHA-256 Checksum: `45e1457b8699cf273a500c79a927fb315dd3c59e6d95d9a937765ae6241e87b6`
+* 🛑 **HITL GATE 3:** Reviewed and approved by user with 3 spot-checks (RPOWER, TCS, PAYTM).
 
 ---
 
