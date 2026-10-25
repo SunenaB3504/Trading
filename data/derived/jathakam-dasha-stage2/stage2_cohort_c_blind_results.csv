@@ -1,0 +1,9 @@
+cohort,state,raw_days,raw_stocks,raw_arith_alpha_pct,raw_log_alpha_pct,raw_mean_dd_pct,raw_deep_dd_rate_gt30pct,filt_days,filt_stocks,filt_arith_alpha_pct,filt_log_alpha_pct,filt_mean_dd_pct,filt_deep_dd_rate_gt30pct
+Cohort C (Virgin 2024-2026 Out-of-Time),[T-T-T],872,20,75.61,55.14,-27.7,47.59,868,20,29.0,20.15,-27.83,47.81
+Cohort C (Virgin 2024-2026 Out-of-Time),[T-T-D],1321,20,36.93,22.65,-22.98,31.26,1302,19,13.57,2.65,-22.37,30.65
+Cohort C (Virgin 2024-2026 Out-of-Time),[T-D-T],808,19,50.57,38.59,-20.47,27.1,806,19,53.07,41.14,-20.52,27.17
+Cohort C (Virgin 2024-2026 Out-of-Time),[T-D-D],936,14,93.01,66.72,-20.96,27.78,934,14,50.13,36.56,-21.0,27.84
+Cohort C (Virgin 2024-2026 Out-of-Time),[D-T-T],1139,22,39.93,10.11,-24.91,43.37,1131,22,-20.08,-32.25,-25.09,43.68
+Cohort C (Virgin 2024-2026 Out-of-Time),[D-T-D],1015,17,4.33,-5.56,-24.53,38.13,1010,17,-3.23,-12.74,-24.66,38.32
+Cohort C (Virgin 2024-2026 Out-of-Time),[D-D-T],1116,18,-12.69,-21.41,-37.16,54.93,1005,17,-13.84,-22.3,-32.12,50.05
+Cohort C (Virgin 2024-2026 Out-of-Time),[D-D-D],1818,27,2.65,-10.19,-29.26,38.12,1700,26,-3.92,-14.12,-25.8,34.35

@@ -1,0 +1,5 @@
+audit_protocol,dimension,sample_size,primary_metric,benchmark_expected,statistical_verdict
+Protocol A: The Graveyard Ingestion,Delisted / Bankrupt Ingestion,101,66.7% Insolvent in Fatal Periods,33.3% Random Baseline,CONFIRMED (p < 0.001) - Survivorship Bias Refuted
+Protocol E: Historical Bell Calibration,10:00 AM vs 09:55 AM vs 09:15 AM,808,"98.39% Dasha Stability, 67.57% Lagna Stability",Minimal Dasha Boundary Drift,RESOLVED - Modern IPOs Legally Execute at 10:00 AM
+Protocol B: Clustered Econometrics,Petersen Firm-Clustered Standard Errors,186,+27.46% Compounded Spread,"t >= 2.00, p < 0.05, 95% CI > 0","CONFIRMED (t=2.42, p=0.0154, CI: [5.71%, 50.34%])"
+Protocol C: Virgin Blind Out-of-Time Test,Cohort C (2024-2026 Fresh IPOs),47,+34.27% Ex-Ante Filtered Blind Spread,"Spread >= +10.0%, p < 0.05",CONFIRMED (p < 0.01) - Data Snooping Refuted
