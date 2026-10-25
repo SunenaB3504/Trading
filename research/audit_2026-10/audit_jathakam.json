@@ -1,0 +1,106 @@
+{
+ "split_matches_rule": true,
+ "n_A": 412,
+ "n_B": 396,
+ "split_is_stratified": false,
+ "A_[T-T-T]": {
+  "days": 6340,
+  "stocks": 56,
+  "alpha": 28.096807570977916,
+  "log_alpha": 18.77456948429241,
+  "dd30": 55.630914826498426,
+  "median_age": 4.841889117043122
+ },
+ "A_[D-D-D]": {
+  "days": 9352,
+  "stocks": 65,
+  "alpha": -3.4146107784431146,
+  "log_alpha": -15.311863068821221,
+  "dd30": 70.45551753635586,
+  "median_age": 4.551676933607119
+ },
+ "B_[T-T-T]": {
+  "days": 5349,
+  "stocks": 59,
+  "alpha": 35.116522714526084,
+  "log_alpha": 21.10377361631897,
+  "dd30": 59.43166947092915,
+  "median_age": 3.676933607118412
+ },
+ "B_[D-D-D]": {
+  "days": 5507,
+  "stocks": 55,
+  "alpha": 15.08659524241874,
+  "log_alpha": -3.499836915298023,
+  "dd30": 55.69275467586707,
+  "median_age": 2.5845311430527036
+ },
+ "A_alpha_spread_cluster": {
+  "est": 31.511418349421028,
+  "ci95": [
+   3.9213915029600996,
+   60.28705085044635
+  ],
+  "stocks": 111
+ },
+ "A_dd30_spread_cluster": {
+  "est": 14.82460270985743,
+  "ci95": [
+   -0.5742856671075918,
+   30.476438466739975
+  ],
+  "stocks": 111
+ },
+ "B_alpha_spread_cluster": {
+  "est": 20.029927472107346,
+  "ci95": [
+   -11.92607008022844,
+   50.711335965217444
+  ],
+  "stocks": 105
+ },
+ "B_dd30_spread_cluster": {
+  "est": -3.7389147950620796,
+  "ci95": [
+   -23.040102772028394,
+   16.435598115723536
+  ],
+  "stocks": 105
+ },
+ "B_[T-T-T]_vol_daily_pct": 3.353097431869676,
+ "B_[T-T-T]_arith_minus_log": 14.012749098207115,
+ "B_[T-T-T]_pct_distressed": 17.554683118339874,
+ "B_[T-T-T]_filtered": {
+  "days": 4410,
+  "stocks": 52,
+  "alpha": 51.179428571428566,
+  "log_alpha": 38.36420602294311,
+  "dd30": 50.79365079365079,
+  "median_age": 2.722792607802875
+ },
+ "B_[D-D-D]_vol_daily_pct": 3.390709770876094,
+ "B_[D-D-D]_arith_minus_log": 18.586432157716764,
+ "B_[D-D-D]_pct_distressed": 20.21064100236063,
+ "B_[D-D-D]_filtered": {
+  "days": 4394,
+  "stocks": 50,
+  "alpha": 34.70878470641784,
+  "log_alpha": 22.757044098935282,
+  "dd30": 44.49248975876195,
+  "median_age": 2.3394934976043804
+ },
+ "age_mix_TTT": "{Interval(0, 1, closed='right'): 0.156, Interval(1, 3, closed='right'): 0.248, Interval(3, 6, closed='right'): 0.229, Interval(6, 10, closed='right'): 0.23, Interval(10, 15, closed='right'): 0.056, Interval(15, 40, closed='right'): 0.08}",
+ "age_mix_DDD": "{Interval(0, 1, closed='right'): 0.164, Interval(1, 3, closed='right'): 0.238, Interval(3, 6, closed='right'): 0.251, Interval(6, 10, closed='right'): 0.178, Interval(10, 15, closed='right'): 0.106, Interval(15, 40, closed='right'): 0.063}",
+ "B_[T-T-T]_dd_le_-0.75_share": 17.21817162086371,
+ "B_[T-T-T]_dd30_unfiltered_vs_filtered": [
+  59.43166947092915,
+  50.79365079365079
+ ],
+ "B_[D-D-D]_dd_le_-0.75_share": 16.14309061194843,
+ "B_[D-D-D]_dd30_unfiltered_vs_filtered": [
+  55.69275467586707,
+  44.49248975876195
+ ],
+ "stocks_with_data_ending_before_2026-09": 0,
+ "stocks_total": 802
+}
