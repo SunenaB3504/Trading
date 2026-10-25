@@ -20,5 +20,7 @@ docs/UAT/**/bundle*.txt
 # scratch files from local runs
 *.tmp.txt
 *.tmp.ts
-data/derived/
+data/derived/*
+!data/derived/jathakam-dasha-study/
 data/publish/
+
