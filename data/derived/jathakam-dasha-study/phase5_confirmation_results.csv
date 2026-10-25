@@ -1,0 +1,4 @@
+rule_id,rule_name,cohort_a_metric,cohort_b_metric,p_value_t_test,p_value_fisher,status
+Rule R-1,Triple Confluence Capital Preservation ([T-T-T] vs [D-D-D]),"Alpha Spread: 31.51%, DD Spread: 14.83%","Alpha Spread: +20.03%, DD Spread: -3.74%",0.21948131198784376,8.740587179425523e-05,FALSIFIED / NOT SUPPORTED
+Rule R-2,Dusthana Alpha Drag (Dusthana PD vs Trikona PD),Alpha Penalty: -8.12%,Alpha Penalty: +0.60%,0.8609173427089903,,FALSIFIED / NOT SUPPORTED
+Rule R-3,Large-Cap Astrological Sensitivity,DD Difference: -6.40%,DD Difference: -1.84%,0.02531197748301854,,FALSIFIED / NOT SUPPORTED

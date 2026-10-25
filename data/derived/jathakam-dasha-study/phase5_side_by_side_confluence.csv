@@ -1,0 +1,9 @@
+tier,state,trading_days,mean_drawdown_pct,median_drawdown_pct,rate_dd_gt_30pct,rate_dd_gt_50pct,annualized_alpha_pct,win_rate_pct,cohort_b_days,cohort_b_mean_dd,cohort_b_median_dd,cohort_b_rate_dd30,cohort_b_rate_dd50,cohort_b_alpha,cohort_b_win_rate
+Three-Tier Confluence,[D-D-D],9352,-52.31,-51.66,70.46,51.41,-3.41,44.92,5507,-42.06,-38.36,55.69,42.24,15.09,45.92
+Three-Tier Confluence,[D-D-T],6604,-54.22,-53.26,71.67,53.54,15.06,45.4,3968,-49.25,-51.69,66.2,52.12,12.74,44.61
+Three-Tier Confluence,[D-T-D],5810,-49.91,-47.19,66.64,47.62,11.05,46.59,4767,-47.44,-48.49,68.2,48.98,16.42,44.85
+Three-Tier Confluence,[D-T-T],5377,-46.39,-41.71,64.16,42.18,18.68,45.38,4538,-46.65,-47.02,71.18,46.69,14.09,44.8
+Three-Tier Confluence,[T-D-D],6748,-48.27,-52.99,63.83,51.67,9.52,44.86,5280,-47.01,-44.12,65.23,45.06,12.29,46.36
+Three-Tier Confluence,[T-D-T],6036,-46.6,-52.84,60.54,52.8,3.85,45.03,4650,-47.72,-42.2,69.66,42.09,-10.83,43.87
+Three-Tier Confluence,[T-T-D],5349,-46.35,-45.81,69.86,43.67,9.79,46.25,4935,-42.82,-40.54,58.74,39.7,-3.85,45.27
+Three-Tier Confluence,[T-T-T],6340,-43.15,-34.84,55.63,38.08,28.1,46.88,5349,-42.41,-40.48,59.43,39.6,35.12,47.26
