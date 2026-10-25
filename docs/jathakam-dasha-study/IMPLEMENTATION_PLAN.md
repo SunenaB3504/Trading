@@ -264,9 +264,16 @@ Therefore, the study tracks two distinct astrological timestamps for each quarte
 ### Phase 6: Multi-Module Specialized Studies & Final Master Thesis (Post Phase 5)
 Following Phase 5 confirmation of Module 1, the remaining specialized modules will be executed sequentially:
 
-* **Phase 6A: Module 2 — Panchanga Catalyst & Acceleration Study:**
-  * Tests daily Tithi (Rikta 4/9/14), Vishti Karana, Vyatipata/Vaidhriti Yogas, and Chandrashtama.
-  * Objective: Determine whether ambient Panchanga features act as high-frequency catalysts that accelerate or retard Dasha-driven selloffs.
+* **Phase 6A: Module 2 — Panchanga Catalyst & Acceleration Study: (✅ COMPLETED & PRESENTED AT HITL GATE 6A)**
+  * Evaluated 6,420 daily ephemeris sessions and 1,179,199 clean stock-days across Tithis, Karanas, Nitya Yogas, and Chandrashtama.
+  * Datasets generated:
+    * [`data/derived/jathakam-dasha-study/phase6a_daily_panchanga.parquet`](file:///c:/Users/Admin/Sunil/Trading/data/derived/jathakam-dasha-study/phase6a_daily_panchanga.parquet) (SHA-256: `d53b24c43de1eff79357eaedb9c00d896615ec67dc8ae6894b2b441e9baaa614`)
+    * [`data/derived/jathakam-dasha-study/phase6a_panchanga_results.csv`](file:///c:/Users/Admin/Sunil/Trading/data/derived/jathakam-dasha-study/phase6a_panchanga_results.csv) (SHA-256: `95d3fddf6db68430ce81ba81aeec60095d3e9a96105b2e9b68d20acef45518a2`)
+  * Master Report: [`docs/jathakam-dasha-study/PANCHANGA_STUDY.md`](file:///c:/Users/Admin/Sunil/Trading/docs/jathakam-dasha-study/PANCHANGA_STUDY.md).
+  * **Key Discoveries:**
+    1. **Vyatipata & Vaidhriti Yogas (Mahapata) are Severe Alpha Killers:** Across 86,968 stock-days, hostile Yogas plunged annualized alpha to **-9.58%** (vs +9.33% on regular Yogas, an underperformance penalty of **-18.91% per year**).
+    2. **Chandrashtama Accelerates Dusthana Collapse:** While harmless under `[T-T-T]` (+44% alpha), when a stock in `[D-D-D]` hits Chandrashtama (1,290 days), annualized alpha collapses to **-24.99%**!
+    3. **Bullish Immunity:** `[T-T-T]` stocks maintain high positive alpha regardless of ambient Panchanga friction.
 * **Phase 6B: Module 3 — Corporate Financials & 12-House Balance Sheet Study:**
   * Tests 11th House (Profits/PAT) and 2nd House (Treasury/Cash Reserves) alignment with quarterly filings and subsequent 60-day price trends.
   * Objective: Establish whether astrological house transits map directly to corporate revenue and earnings trajectory.

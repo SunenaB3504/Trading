@@ -1,0 +1,27 @@
+category,feature,trading_stock_days,mean_daily_return_pct,annualized_alpha_pct,win_rate_pct,sharp_drop_3pct_rate,sharp_drop_5pct_rate,mean_drawdown_pct,state,condition,trading_days
+Ambient Panchanga,"Tithi Type: Rikta (4, 9, 14)",240217.0,0.094,8.5,45.57,9.51,2.44,-49.03,,,
+Ambient Panchanga,"Tithi Type: Purna (5, 10, 15/30)",225532.0,0.168,12.83,45.74,9.67,2.5,-49.1,,,
+Ambient Panchanga,"Tithi Type: Other (1, 2, 3, 6, 7, 8, 11, 12, 13)",713450.0,0.068,6.2,45.29,9.89,2.56,-49.0,,,
+Ambient Panchanga,Karana: Vishti (Bhadra),148928.0,0.124,17.13,45.74,9.64,2.47,-49.35,,,
+Ambient Panchanga,Karana: Non-Vishti,1030271.0,0.088,6.61,45.39,9.79,2.53,-48.97,,,
+Ambient Panchanga,Yoga: Hostile Mahapata (Vyatipata/Vaidhriti),86968.0,0.025,-9.58,44.33,10.47,2.9,-49.08,,,
+Ambient Panchanga,Yoga: Regular Yogas,1092231.0,0.098,9.33,45.52,9.72,2.49,-49.02,,,
+Ambient Panchanga,Weekday: Hard Days (Tuesday/Saturday),237654.0,0.113,13.59,45.87,9.63,2.5,-49.01,,,
+Ambient Panchanga,Weekday: Soft Days (Monday/Wed/Thu/Fri),941545.0,0.087,6.51,45.32,9.81,2.53,-49.02,,,
+Chandrashtama Analysis,Chandrashtama (Active 8th Moon Transit),98232.0,0.074,4.27,45.37,9.56,2.44,-49.01,,,
+Chandrashtama Analysis,Normal Days (Non-Chandrashtama),1080967.0,0.094,8.27,45.44,9.79,2.53,-49.02,,,
+Catalyst Interaction,,,,19.81,46.2,10.05,,-42.88,[T-T-T],"[T-T-T] + Auspicious Panchanga (Non-Rikta, Non-Vishti, Non-Chandra)",7489.0
+Catalyst Interaction,,,,44.01,49.13,7.05,,-43.26,[T-T-T],[T-T-T] + Chandrashtama (8th Transit Moon),979.0
+Catalyst Interaction,,,,43.4,48.75,8.82,,-42.58,[T-T-T],"[T-T-T] + Rikta Tithi (4, 9, 14)",2359.0
+Catalyst Interaction,,,,77.6,48.7,9.26,,-43.48,[T-T-T],[T-T-T] + Vishti Karana (Bhadra),1458.0
+Catalyst Interaction,,,,51.81,48.57,8.71,,-42.7,[T-T-T],[T-T-T] + Hostile Confluence (Chandrashtama OR Rikta OR Vishti),4200.0
+Catalyst Interaction,,,,-8.2,44.66,10.12,,-47.02,[T-D-T],"[T-D-T] + Auspicious Panchanga (Non-Rikta, Non-Vishti, Non-Chandra)",6887.0
+Catalyst Interaction,,,,-7.44,44.27,10.86,,-46.65,[T-D-T],[T-D-T] + Chandrashtama (8th Transit Moon),829.0
+Catalyst Interaction,,,,12.88,44.53,10.3,,-46.65,[T-D-T],"[T-D-T] + Rikta Tithi (4, 9, 14)",2194.0
+Catalyst Interaction,,,,8.43,43.08,10.81,,-48.02,[T-D-T],[T-D-T] + Vishti Karana (Bhadra),1351.0
+Catalyst Interaction,,,,7.73,44.27,10.63,,-47.21,[T-D-T],[T-D-T] + Hostile Confluence (Chandrashtama OR Rikta OR Vishti),3799.0
+Catalyst Interaction,,,,-0.48,45.06,11.13,,-48.75,[D-D-D],"[D-D-D] + Auspicious Panchanga (Non-Rikta, Non-Vishti, Non-Chandra)",9473.0
+Catalyst Interaction,,,,-24.99,44.81,11.16,,-47.29,[D-D-D],[D-D-D] + Chandrashtama (8th Transit Moon),1290.0
+Catalyst Interaction,,,,2.88,45.67,10.55,,-48.56,[D-D-D],"[D-D-D] + Rikta Tithi (4, 9, 14)",3024.0
+Catalyst Interaction,,,,17.76,44.7,10.45,,-48.2,[D-D-D],[D-D-D] + Vishti Karana (Bhadra),1895.0
+Catalyst Interaction,,,,10.34,45.69,10.62,,-48.07,[D-D-D],[D-D-D] + Hostile Confluence (Chandrashtama OR Rikta OR Vishti),5386.0
