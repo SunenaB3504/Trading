@@ -1,0 +1,23 @@
+{
+  "study": "Sarvatobhadra Chakra (SBC) & Kota Chakra Re-Verification",
+  "total_bars": 1175268,
+  "unique_stocks": 777,
+  "sarvatobhadra_chakra": {
+    "pure_subha_vedha_bars": 198146,
+    "pure_papa_vedha_bars": 325620,
+    "subha_vedha_mean_ret_20d_pct": 1.181,
+    "papa_vedha_mean_ret_20d_pct": 1.043,
+    "alpha_spread_pct": 0.138,
+    "t_stat": 2.855,
+    "p_value": 0.00430279
+  },
+  "kota_chakra_nirgama": {
+    "breach_bars_count": 318573,
+    "clean_bars_count": 856695,
+    "breach_mean_ret_10d_pct": 0.491,
+    "clean_mean_ret_10d_pct": 0.698,
+    "drag_10d_pct": -0.207,
+    "t_stat": -4.443,
+    "p_value": 8.85648e-06
+  }
+}

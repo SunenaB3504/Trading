@@ -1,0 +1,28 @@
+{
+  "study": "PH-02 Indu Lagna Re-Verification",
+  "total_bars": 1220130,
+  "unique_stocks": 802,
+  "active_benefic_bars": 912167,
+  "inactive_bars": 307963,
+  "ret_20d": {
+    "active_benefic_mean_pct": 1.405,
+    "inactive_mean_pct": 0.969,
+    "alpha_spread_pct": 0.435,
+    "t_stat": 7.192,
+    "p_value": 6.38453e-13
+  },
+  "ret_60d": {
+    "active_benefic_mean_pct": 4.108,
+    "inactive_mean_pct": 3.492,
+    "alpha_spread_pct": 0.615,
+    "t_stat": 5.995,
+    "p_value": 2.03247e-09
+  },
+  "jupiter_trikona_vs_dusthana": {
+    "trikona_1_5_9_ret20_pct": 1.749,
+    "dusthana_6_8_12_ret20_pct": 1.189,
+    "trikona_alpha_spread_pct": 0.56,
+    "t_stat": 3.606,
+    "p_value": 0.000310772
+  }
+}

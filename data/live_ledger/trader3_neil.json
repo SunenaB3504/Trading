@@ -1,0 +1,55 @@
+{
+  "trader_id": "trader3_neil",
+  "metadata": {
+    "id": "trader3_neil",
+    "name": "Trader 3: Neil (Son)",
+    "role": "Leo Moon / Gemini Lagna (Pisces 50% Sizing Filter)",
+    "lagna": "Gemini",
+    "moon_sign": "Leo",
+    "nakshatra": "Magha",
+    "indu_lagna": "Aquarius"
+  },
+  "initial_cash": 1000000.0,
+  "cash_balance": 707628.0,
+  "portfolio_value": 1000000.0,
+  "realized_pnl": 0.0,
+  "unrealized_pnl": 0.0,
+  "total_trades": 0,
+  "winning_trades": 0,
+  "losing_trades": 0,
+  "open_positions": {
+    "DIVISLAB": {
+      "qty": 18,
+      "avg_price": 5240.0,
+      "entry_date": "2026-10-25",
+      "current_price": 5240.0,
+      "order_type": "LIMIT",
+      "reason": "Tier 3 Defense: Neil Chandrashtama in Pisces (50% Sizing + Limit Only)"
+    },
+    "TATASTEEL": {
+      "qty": 672,
+      "avg_price": 148.5,
+      "entry_date": "2026-10-25",
+      "current_price": 148.5,
+      "order_type": "LIMIT",
+      "reason": "Tier 3 Defense: Neil Chandrashtama in Pisces (50% Sizing + Limit Only)"
+    },
+    "RELIANCE": {
+      "qty": 34,
+      "avg_price": 2890.0,
+      "entry_date": "2026-10-25",
+      "current_price": 2890.0,
+      "order_type": "LIMIT",
+      "reason": "Tier 3 Defense: Neil Chandrashtama in Pisces (50% Sizing + Limit Only)"
+    }
+  },
+  "daily_equity_curve": [
+    {
+      "date": "2026-10-25",
+      "cash": 707628.0,
+      "equity_val": 292372.0,
+      "nav": 1000000.0,
+      "return_pct": 0.0
+    }
+  ]
+}

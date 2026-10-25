@@ -1,0 +1,25 @@
+timestamp,trader_id,symbol,action,qty,price,order_type,total_val,reason,pnl
+2026-10-25 20:47:16,trader1_ai,DIVISLAB,BUY,28,5240.0,MARKET,146720.0,Tier 4 Indu 1.5x Alpha Boost,0.0
+2026-10-25 20:47:16,trader2_sunil,DIVISLAB,BUY,28,5240.0,MARKET,146720.0,Tier 4 Indu 1.5x Alpha Boost,0.0
+2026-10-25 20:47:16,trader3_neil,DIVISLAB,BUY,9,5240.0,LIMIT,47160.0,Tier 3 Defense: Neil Chandrashtama in Pisces (50% Sizing + Limit Only),0.0
+2026-10-25 20:47:16,trader4_shine,DIVISLAB,BUY,28,5240.0,MARKET,146720.0,Tier 4 Indu 1.5x Alpha Boost,0.0
+2026-10-25 20:47:16,trader1_ai,TATASTEEL,BUY,673,148.5,MARKET,99940.5,Standard Systematic Entry,0.0
+2026-10-25 20:47:16,trader2_sunil,TATASTEEL,BUY,673,148.5,MARKET,99940.5,Standard Systematic Entry,0.0
+2026-10-25 20:47:16,trader3_neil,TATASTEEL,BUY,336,148.5,LIMIT,49896.0,Tier 3 Defense: Neil Chandrashtama in Pisces (50% Sizing + Limit Only),0.0
+2026-10-25 20:47:16,trader4_shine,TATASTEEL,BUY,673,148.5,MARKET,99940.5,Standard Systematic Entry,0.0
+2026-10-25 20:47:16,trader1_ai,RELIANCE,BUY,51,2890.0,MARKET,147390.0,Tier 4 Indu 1.5x Alpha Boost,0.0
+2026-10-25 20:47:16,trader2_sunil,RELIANCE,BUY,51,2890.0,MARKET,147390.0,Tier 4 Indu 1.5x Alpha Boost,0.0
+2026-10-25 20:47:16,trader3_neil,RELIANCE,BUY,17,2890.0,LIMIT,49130.0,Tier 3 Defense: Neil Chandrashtama in Pisces (50% Sizing + Limit Only),0.0
+2026-10-25 20:47:16,trader4_shine,RELIANCE,BUY,51,2890.0,MARKET,147390.0,Tier 4 Indu 1.5x Alpha Boost,0.0
+2026-10-25 20:47:38,trader1_ai,DIVISLAB,BUY,28,5240.0,MARKET,146720.0,Tier 4 Indu 1.5x Alpha Boost,0.0
+2026-10-25 20:47:38,trader2_sunil,DIVISLAB,BUY,28,5240.0,MARKET,146720.0,Tier 4 Indu 1.5x Alpha Boost,0.0
+2026-10-25 20:47:38,trader3_neil,DIVISLAB,BUY,9,5240.0,LIMIT,47160.0,Tier 3 Defense: Neil Chandrashtama in Pisces (50% Sizing + Limit Only),0.0
+2026-10-25 20:47:38,trader4_shine,DIVISLAB,BUY,28,5240.0,MARKET,146720.0,Tier 4 Indu 1.5x Alpha Boost,0.0
+2026-10-25 20:47:38,trader1_ai,TATASTEEL,BUY,673,148.5,MARKET,99940.5,Standard Systematic Entry,0.0
+2026-10-25 20:47:38,trader2_sunil,TATASTEEL,BUY,673,148.5,MARKET,99940.5,Standard Systematic Entry,0.0
+2026-10-25 20:47:38,trader3_neil,TATASTEEL,BUY,336,148.5,LIMIT,49896.0,Tier 3 Defense: Neil Chandrashtama in Pisces (50% Sizing + Limit Only),0.0
+2026-10-25 20:47:38,trader4_shine,TATASTEEL,BUY,673,148.5,MARKET,99940.5,Standard Systematic Entry,0.0
+2026-10-25 20:47:38,trader1_ai,RELIANCE,BUY,51,2890.0,MARKET,147390.0,Tier 4 Indu 1.5x Alpha Boost,0.0
+2026-10-25 20:47:38,trader2_sunil,RELIANCE,BUY,51,2890.0,MARKET,147390.0,Tier 4 Indu 1.5x Alpha Boost,0.0
+2026-10-25 20:47:38,trader3_neil,RELIANCE,BUY,17,2890.0,LIMIT,49130.0,Tier 3 Defense: Neil Chandrashtama in Pisces (50% Sizing + Limit Only),0.0
+2026-10-25 20:47:38,trader4_shine,RELIANCE,BUY,51,2890.0,MARKET,147390.0,Tier 4 Indu 1.5x Alpha Boost,0.0

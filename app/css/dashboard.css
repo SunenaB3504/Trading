@@ -1,0 +1,296 @@
+:root {
+  --bg-dark: #0a0e17;
+  --bg-card: #111827;
+  --bg-card-hover: #1a2234;
+  --border-gold: rgba(212, 175, 55, 0.25);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --gold-primary: #d4af37;
+  --gold-glow: rgba(212, 175, 55, 0.15);
+  --text-main: #f3f4f6;
+  --text-muted: #9ca3af;
+  --color-green: #10b981;
+  --color-yellow: #f59e0b;
+  --color-red: #ef4444;
+  --color-blue: #3b82f6;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  padding: 24px;
+  min-height: 100vh;
+}
+
+.dashboard-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Header */
+.header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-gold);
+  border-radius: 12px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.brand-title {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--gold-primary);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-badge {
+  font-size: 11px;
+  text-transform: uppercase;
+  background: var(--gold-glow);
+  border: 1px solid var(--border-gold);
+  color: var(--gold-primary);
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.system-status {
+  display: flex;
+  gap: 16px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.dot-green { background-color: var(--color-green); box-shadow: 0 0 8px var(--color-green); }
+.dot-yellow { background-color: var(--color-yellow); box-shadow: 0 0 8px var(--color-yellow); }
+.dot-red { background-color: var(--color-red); box-shadow: 0 0 8px var(--color-red); }
+
+/* Astro Dial & Cohort Row */
+.grid-top {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.card-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--gold-primary);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Astro Compass Box */
+.compass-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+}
+
+.compass-ring {
+  width: 180px;
+  height: 180px;
+  border: 2px dashed var(--gold-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  position: relative;
+  background: radial-gradient(circle, rgba(212,175,55,0.08) 0%, rgba(10,14,23,0) 70%);
+}
+
+.compass-center {
+  text-align: center;
+}
+
+.compass-sign {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.compass-nak {
+  font-size: 13px;
+  color: var(--gold-primary);
+}
+
+.astro-meta {
+  width: 100%;
+  font-size: 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.meta-row {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  padding-bottom: 4px;
+}
+
+/* Cohort Cards Grid */
+.cohort-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.trader-card {
+  background: #141d2e;
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 16px;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.trader-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-gold);
+}
+
+.trader-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.trader-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.trader-role {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.trader-nav {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 12px 0 4px 0;
+  color: #fff;
+}
+
+.trader-pnl {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.pnl-green { color: var(--color-green); }
+.pnl-red { color: var(--color-red); }
+
+.trader-pill {
+  font-size: 10px;
+  padding: 3px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.pill-green { background: rgba(16, 185, 129, 0.15); color: var(--color-green); }
+.pill-yellow { background: rgba(245, 158, 11, 0.15); color: var(--color-yellow); }
+.pill-red { background: rgba(239, 68, 68, 0.15); color: var(--color-red); }
+
+/* Bottom Grid */
+.grid-bottom {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+/* Tables */
+.trade-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.trade-table th {
+  text-align: left;
+  padding: 10px;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.trade-table td {
+  padding: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+/* 81-Grid Visualizer */
+.sbc-grid-container {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 4px;
+  background: #0d131f;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-subtle);
+}
+
+.sbc-cell {
+  aspect-ratio: 1;
+  background: #141c2b;
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.sbc-cell.active-subha {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: var(--color-green);
+  color: var(--color-green);
+}
+
+.sbc-cell.active-papa {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: var(--color-red);
+  color: var(--color-red);
+}

@@ -1,0 +1,174 @@
+{
+  "meta": {
+    "total_trades_analyzed": 99566,
+    "unique_stocks": 747,
+    "start_date": "2001-01-05",
+    "end_date": "2026-10-01"
+  },
+  "cohort_results": {
+    "Trader 1 (Pure AI Control)": {
+      "trades_count": 99566,
+      "mean_ret_5d": 0.893,
+      "mean_ret_10d": 1.207,
+      "mean_ret_20d": 1.905,
+      "win_rate_10d": 48.18,
+      "drag_10d": 0.0,
+      "p_value": 1.0
+    },
+    "Trader 2: Sunil (Father - Kataka 8th)": {
+      "transit_rasi": "Cancer (Kataka)",
+      "ch_trades_count": 7585,
+      "non_ch_trades_count": 91981,
+      "ch_ret_5d": 0.627,
+      "ch_ret_10d": 1.216,
+      "non_ch_ret_10d": 1.207,
+      "ch_ret_20d": 1.901,
+      "ch_wr_10d": 49.15,
+      "non_ch_wr_10d": 48.1,
+      "drag_10d": 0.009,
+      "wr_diff": 1.05,
+      "t_stat": 0.043,
+      "p_value": 0.965917
+    },
+    "Trader 3: Neil (Son - Meena 8th)": {
+      "transit_rasi": "Pisces (Meena)",
+      "ch_trades_count": 8210,
+      "non_ch_trades_count": 91356,
+      "ch_ret_5d": 0.518,
+      "ch_ret_10d": 0.8,
+      "non_ch_ret_10d": 1.244,
+      "ch_ret_20d": 0.98,
+      "ch_wr_10d": 48.61,
+      "non_ch_wr_10d": 48.14,
+      "drag_10d": -0.444,
+      "wr_diff": 0.47,
+      "t_stat": -2.182,
+      "p_value": 0.0290825
+    },
+    "Trader 4: Shine (Brother - Vrishabha 8th)": {
+      "transit_rasi": "Taurus (Vrishabha)",
+      "ch_trades_count": 7553,
+      "non_ch_trades_count": 92013,
+      "ch_ret_5d": 0.557,
+      "ch_ret_10d": 0.98,
+      "non_ch_ret_10d": 1.226,
+      "ch_ret_20d": 0.993,
+      "ch_wr_10d": 48.34,
+      "non_ch_wr_10d": 48.17,
+      "drag_10d": -0.246,
+      "wr_diff": 0.17,
+      "t_stat": -1.15,
+      "p_value": 0.250288
+    }
+  },
+  "placebo_12_rasi_results": [
+    {
+      "natal_sign_num": 1,
+      "natal_sign": "Mesha",
+      "eighth_house_num": 8,
+      "eighth_house_sign": "Vrischika",
+      "sample_size": 7204,
+      "drag_10d": -0.23,
+      "p_value": 0.319895
+    },
+    {
+      "natal_sign_num": 2,
+      "natal_sign": "Vrishabha",
+      "eighth_house_num": 9,
+      "eighth_house_sign": "Dhanu",
+      "sample_size": 7963,
+      "drag_10d": 2.15,
+      "p_value": 0.197728
+    },
+    {
+      "natal_sign_num": 3,
+      "natal_sign": "Mithuna",
+      "eighth_house_num": 10,
+      "eighth_house_sign": "Makara",
+      "sample_size": 7021,
+      "drag_10d": -0.761,
+      "p_value": 0.000302823
+    },
+    {
+      "natal_sign_num": 4,
+      "natal_sign": "Kataka",
+      "eighth_house_num": 11,
+      "eighth_house_sign": "Kumbha",
+      "sample_size": 7287,
+      "drag_10d": -0.24,
+      "p_value": 0.25252
+    },
+    {
+      "natal_sign_num": 5,
+      "natal_sign": "Simha",
+      "eighth_house_num": 12,
+      "eighth_house_sign": "Meena",
+      "sample_size": 6906,
+      "drag_10d": -0.607,
+      "p_value": 0.0042714
+    },
+    {
+      "natal_sign_num": 6,
+      "natal_sign": "Kanya",
+      "eighth_house_num": 1,
+      "eighth_house_sign": "Mesha",
+      "sample_size": 6936,
+      "drag_10d": 0.104,
+      "p_value": 0.637984
+    },
+    {
+      "natal_sign_num": 7,
+      "natal_sign": "Tula",
+      "eighth_house_num": 2,
+      "eighth_house_sign": "Vrishabha",
+      "sample_size": 6471,
+      "drag_10d": -0.263,
+      "p_value": 0.235461
+    },
+    {
+      "natal_sign_num": 8,
+      "natal_sign": "Vrischika",
+      "eighth_house_num": 3,
+      "eighth_house_sign": "Mithuna",
+      "sample_size": 6917,
+      "drag_10d": -0.037,
+      "p_value": 0.862793
+    },
+    {
+      "natal_sign_num": 9,
+      "natal_sign": "Dhanu",
+      "eighth_house_num": 4,
+      "eighth_house_sign": "Kataka",
+      "sample_size": 6891,
+      "drag_10d": 0.069,
+      "p_value": 0.748563
+    },
+    {
+      "natal_sign_num": 10,
+      "natal_sign": "Makara",
+      "eighth_house_num": 5,
+      "eighth_house_sign": "Simha",
+      "sample_size": 6662,
+      "drag_10d": -0.072,
+      "p_value": 0.736029
+    },
+    {
+      "natal_sign_num": 11,
+      "natal_sign": "Kumbha",
+      "eighth_house_num": 6,
+      "eighth_house_sign": "Kanya",
+      "sample_size": 7080,
+      "drag_10d": -0.028,
+      "p_value": 0.894995
+    },
+    {
+      "natal_sign_num": 12,
+      "natal_sign": "Meena",
+      "eighth_house_num": 7,
+      "eighth_house_sign": "Tula",
+      "sample_size": 6558,
+      "drag_10d": -0.013,
+      "p_value": 0.953159
+    }
+  ]
+}

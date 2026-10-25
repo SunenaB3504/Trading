@@ -1,0 +1,114 @@
+{
+  "study": "PH-03 Stock Chandrashtama Re-Verification",
+  "total_bars": 1023087,
+  "unique_stocks": 802,
+  "chandrashtama_bars_count": 85172,
+  "non_chandrashtama_bars_count": 937915,
+  "volatility": {
+    "ch_abs_volatility_pct": 2.02,
+    "non_ch_abs_volatility_pct": 2.044,
+    "volatility_spread_pct": -0.025,
+    "t_stat": -2.853,
+    "p_value": 0.00432726
+  },
+  "returns_3d": {
+    "ch_ret_3d_pct": 0.215,
+    "non_ch_ret_3d_pct": 0.216,
+    "ret_spread_pct": -0.001,
+    "t_stat": -0.037,
+    "p_value": 0.970832
+  },
+  "returns_5d": {
+    "ch_ret_5d_pct": 0.335,
+    "non_ch_ret_5d_pct": 0.368,
+    "ret_spread_pct": -0.033,
+    "t_stat": -0.854,
+    "p_value": 0.392848
+  },
+  "all_12_houses_profile": [
+    {
+      "house_from_stock_moon": 1,
+      "bars_count": 85709,
+      "abs_daily_volatility_pct": 2.198,
+      "mean_fwd_ret_3d_pct": 0.198,
+      "mean_fwd_ret_5d_pct": 0.33
+    },
+    {
+      "house_from_stock_moon": 2,
+      "bars_count": 86058,
+      "abs_daily_volatility_pct": 2.035,
+      "mean_fwd_ret_3d_pct": 0.176,
+      "mean_fwd_ret_5d_pct": 0.319
+    },
+    {
+      "house_from_stock_moon": 3,
+      "bars_count": 85247,
+      "abs_daily_volatility_pct": 2.024,
+      "mean_fwd_ret_3d_pct": 0.203,
+      "mean_fwd_ret_5d_pct": 0.359
+    },
+    {
+      "house_from_stock_moon": 4,
+      "bars_count": 85817,
+      "abs_daily_volatility_pct": 2.04,
+      "mean_fwd_ret_3d_pct": 0.214,
+      "mean_fwd_ret_5d_pct": 0.332
+    },
+    {
+      "house_from_stock_moon": 5,
+      "bars_count": 85875,
+      "abs_daily_volatility_pct": 2.026,
+      "mean_fwd_ret_3d_pct": 0.222,
+      "mean_fwd_ret_5d_pct": 0.327
+    },
+    {
+      "house_from_stock_moon": 6,
+      "bars_count": 85123,
+      "abs_daily_volatility_pct": 2.04,
+      "mean_fwd_ret_3d_pct": 0.151,
+      "mean_fwd_ret_5d_pct": 0.288
+    },
+    {
+      "house_from_stock_moon": 7,
+      "bars_count": 85121,
+      "abs_daily_volatility_pct": 2.03,
+      "mean_fwd_ret_3d_pct": 0.189,
+      "mean_fwd_ret_5d_pct": 0.345
+    },
+    {
+      "house_from_stock_moon": 8,
+      "bars_count": 85172,
+      "abs_daily_volatility_pct": 2.02,
+      "mean_fwd_ret_3d_pct": 0.215,
+      "mean_fwd_ret_5d_pct": 0.335
+    },
+    {
+      "house_from_stock_moon": 9,
+      "bars_count": 84764,
+      "abs_daily_volatility_pct": 2.001,
+      "mean_fwd_ret_3d_pct": 0.196,
+      "mean_fwd_ret_5d_pct": 0.297
+    },
+    {
+      "house_from_stock_moon": 10,
+      "bars_count": 84699,
+      "abs_daily_volatility_pct": 2.033,
+      "mean_fwd_ret_3d_pct": 0.171,
+      "mean_fwd_ret_5d_pct": 0.376
+    },
+    {
+      "house_from_stock_moon": 11,
+      "bars_count": 84873,
+      "abs_daily_volatility_pct": 2.016,
+      "mean_fwd_ret_3d_pct": 0.26,
+      "mean_fwd_ret_5d_pct": 0.54
+    },
+    {
+      "house_from_stock_moon": 12,
+      "bars_count": 84629,
+      "abs_daily_volatility_pct": 2.045,
+      "mean_fwd_ret_3d_pct": 0.396,
+      "mean_fwd_ret_5d_pct": 0.542
+    }
+  ]
+}
