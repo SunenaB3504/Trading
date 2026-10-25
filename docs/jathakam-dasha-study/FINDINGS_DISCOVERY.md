@@ -103,4 +103,8 @@ To avoid data mining and combinatorial explosion, the research follows a clean, 
 4. **Final Master Thesis Synthesis (Phase 6C):**
    - Consolidating Module 1, Module 2, and Module 3 into a unified, definitive thesis.
 
-*Phase 4 Discovery Stage Complete — Ready for User Sign-Off at HITL Gate 4.*
+5. **Anti-Distortion & Robustness Metrics:**
+   - Saved dataset: [`data/derived/jathakam-dasha-study/phase4_phase5_robustness_metrics.csv`](file:///c:/Users/Admin/Sunil/Trading/data/derived/jathakam-dasha-study/phase4_phase5_robustness_metrics.csv) (SHA-256: `da518692d5ae68122be7d7148f67c3220fca88cecfd2efeb92df42d896623028`).
+
+*Phase 4 Discovery Stage Complete & Robustness Suite Integrated — Evaluated in Phase 5.*
+
