@@ -7,6 +7,7 @@
 
 import React from 'react';
 import type { FinancialAuditResult } from '../../../core/financial/balanceSheetAudit';
+import type { QuarterlyFundamental } from '../../../core/data/types';
 
 export interface FinancialAuditCardProps {
   auditResult: FinancialAuditResult | null;
@@ -37,6 +38,18 @@ function MetricPill({
       <span style={{ fontSize: '12px', fontWeight: 700, color: isBad ? '#F87171' : '#34D399', fontFamily: 'monospace' }}>
         {value}
       </span>
+    </div>
+  );
+}
+
+function MetricsGrid({ f }: { f: QuarterlyFundamental }): React.ReactElement {
+  const normRoce = f.roce > 1.0 ? f.roce : f.roce * 100;
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
+      <MetricPill label="Debt-to-Equity (6H)" value={f.debt_to_equity.toFixed(2)} isBad={f.debt_to_equity > 1.5} />
+      <MetricPill label="ROCE (5H)" value={`${normRoce.toFixed(1)}%`} isBad={normRoce < 10} />
+      <MetricPill label="Free Cash Flow (9H)" value={`₹${(f.fcf / 1e7).toFixed(1)} Cr`} isBad={f.fcf <= 0} />
+      <MetricPill label="Promoter Pledge (12H)" value={`${f.pledging_pct.toFixed(1)}%`} isBad={f.pledging_pct > 10} />
     </div>
   );
 }
@@ -88,12 +101,7 @@ export const FinancialAuditCard: React.FC<FinancialAuditCardProps> = ({ auditRes
         Statement: <strong style={{ color: '#F3F4F6' }}>{f.fiscal_quarter}</strong> (Filed: {f.filing_timestamp.slice(0, 10)})
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
-        <MetricPill label="Debt-to-Equity (6H)" value={f.debt_to_equity.toFixed(2)} isBad={f.debt_to_equity > 1.5} />
-        <MetricPill label="ROCE (5H)" value={`${(f.roce * 100).toFixed(1)}%`} isBad={f.roce < 0.1} />
-        <MetricPill label="Free Cash Flow (9H)" value={`₹${(f.fcf / 1e7).toFixed(1)} Cr`} isBad={f.fcf <= 0} />
-        <MetricPill label="Promoter Pledge (12H)" value={`${f.pledging_pct.toFixed(1)}%`} isBad={f.pledging_pct > 10} />
-      </div>
+      <MetricsGrid f={f} />
 
       {isTripped && (
         <div style={{ padding: '8px', borderRadius: '4px', backgroundColor: '#450A0A', color: '#FECACA', fontSize: '11px', fontWeight: 600 }}>

@@ -40,7 +40,14 @@ def setup_pit_fundamentals(db_path=DUCKDB_PATH):
         "LT": {"start_year": 2004, "de": 0.48, "roce": 15.6, "roe": 14.1, "fcf": 12000.0, "pledge": 0.0, "icr": 5.2},
         "SBIN": {"start_year": 1995, "de": 0.85, "roce": 11.2, "roe": 13.5, "fcf": 25000.0, "pledge": 0.0, "icr": 3.4},
         "BHARTIARTL": {"start_year": 2002, "de": 0.72, "roce": 14.2, "roe": 12.0, "fcf": 18500.0, "pledge": 0.0, "icr": 4.1},
-        "WIPRO": {"start_year": 1995, "de": 0.08, "roce": 21.0, "roe": 18.5, "fcf": 11000.0, "pledge": 0.0, "icr": 22.0}
+        "WIPRO": {"start_year": 1995, "de": 0.08, "roce": 21.0, "roe": 18.5, "fcf": 11000.0, "pledge": 0.0, "icr": 22.0},
+        "DIVISLAB": {"start_year": 2003, "de": 0.01, "roce": 28.5, "roe": 22.4, "fcf": 1400.0, "pledge": 0.0, "icr": 60.0},
+        "BIOCON": {"start_year": 2004, "de": 0.45, "roce": 14.2, "roe": 12.8, "fcf": 850.0, "pledge": 0.0, "icr": 8.5},
+        "PETRONET": {"start_year": 2004, "de": 0.15, "roce": 26.4, "roe": 23.1, "fcf": 2800.0, "pledge": 0.0, "icr": 24.0},
+        "IGL": {"start_year": 2004, "de": 0.02, "roce": 24.8, "roe": 21.5, "fcf": 1200.0, "pledge": 0.0, "icr": 48.0},
+        "YESBANK": {"start_year": 2005, "de": 2.85, "roce": 4.2, "roe": 3.8, "fcf": -4500.0, "pledge": 12.0, "icr": 0.9},
+        "SUZLON": {"start_year": 2005, "de": 3.40, "roce": 2.1, "roe": -5.4, "fcf": -1800.0, "pledge": 48.5, "icr": 0.6},
+        "BALAJITELE": {"start_year": 2003, "de": 0.12, "roce": 8.5, "roe": 6.8, "fcf": 150.0, "pledge": 2.0, "icr": 5.8}
     }
     
     rows = []

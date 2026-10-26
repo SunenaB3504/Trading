@@ -53,17 +53,19 @@ function scoreBhavaMetrics(f: QuarterlyFundamental): BhavaFinancialScore[] {
   const deScore = Math.max(0, Math.min(1, (2.0 - f.debt_to_equity) / 1.5));
   const icrScore = Math.max(0, Math.min(1, (f.icr - 1.5) / 3.5));
   const fcfScore = f.fcf > 0 ? 1.0 : 0.0;
-  const roceScore = Math.max(0, Math.min(1, f.roce / 0.25));
-  const roeScore = Math.max(0, Math.min(1, f.roe / 0.25));
+  const normRoce = f.roce > 1.0 ? f.roce / 100 : f.roce;
+  const normRoe = f.roe > 1.0 ? f.roe / 100 : f.roe;
+  const roceScore = Math.max(0, Math.min(1, normRoce / 0.25));
+  const roeScore = Math.max(0, Math.min(1, normRoe / 0.25));
   const pledgeScore = Math.max(0, Math.min(1, (25.0 - f.pledging_pct) / 25.0));
 
   return [
     { bhava: 1, name: 'Tanu', metricName: 'Solvency (ICR)', metricValue: f.icr, score: icrScore, isDusthana: false, isBreached: f.icr < 2.0 },
-    { bhava: 5, name: 'Purva Punya', metricName: 'RoCE', metricValue: f.roce, score: roceScore, isDusthana: false, isBreached: f.roce < 0.1 },
+    { bhava: 5, name: 'Purva Punya', metricName: 'RoCE', metricValue: f.roce, score: roceScore, isDusthana: false, isBreached: normRoce < 0.1 },
     { bhava: 6, name: 'Rina (Dusthana)', metricName: 'Debt-to-Equity', metricValue: f.debt_to_equity, score: deScore, isDusthana: true, isBreached: f.debt_to_equity > 1.5 },
     { bhava: 8, name: 'Randhra (Dusthana)', metricName: 'ICR Coverage', metricValue: f.icr, score: icrScore, isDusthana: true, isBreached: f.icr < 1.5 },
     { bhava: 9, name: 'Bhagya', metricName: 'Free Cash Flow', metricValue: f.fcf, score: fcfScore, isDusthana: false, isBreached: f.fcf <= 0 },
-    { bhava: 11, name: 'Labha', metricName: 'RoE', metricValue: f.roe, score: roeScore, isDusthana: false, isBreached: f.roe < 0.1 },
+    { bhava: 11, name: 'Labha', metricName: 'RoE', metricValue: f.roe, score: roeScore, isDusthana: false, isBreached: normRoe < 0.1 },
     { bhava: 12, name: 'Vyaya (Dusthana)', metricName: 'Promoter Pledging %', metricValue: f.pledging_pct, score: pledgeScore, isDusthana: true, isBreached: f.pledging_pct > 10.0 },
   ];
 }

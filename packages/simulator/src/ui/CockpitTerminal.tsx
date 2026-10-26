@@ -18,6 +18,8 @@ import { FinancialAuditCard } from './components/financial/FinancialAuditCard';
 import { MasterTradeTicketCard } from './components/advisory/MasterTradeTicketCard';
 import { CopilotChatCard } from './components/copilot/CopilotChatCard';
 import { evaluateKotaChakra } from '../core/astro/kotaChakra';
+import { calculateTransitNakshatras } from '../core/astro/ephemeris';
+import { NAKSHATRAS } from '../core/astro/constants';
 import { generateMahadashas, resolveActive5FoldDasha } from '../core/astro/vimshottari';
 import { auditBalanceSheetPIT, type FinancialAuditResult } from '../core/financial/balanceSheetAudit';
 import { detectEdgeSignals } from '../core/engine/edgeDetector';
@@ -119,17 +121,14 @@ function useCockpitTelemetryState() {
 
   const dashaState = useMemo(() => deriveActiveDasha(metadata, activeDate), [metadata, activeDate]);
 
-  const kotaState = useMemo(() => evaluateKotaChakra(0, metadata?.moon_sign_id ?? 0, {
-    jupiter: { nakshatraIndex: 0 },
-    venus: { nakshatraIndex: 1 },
-    mercury: { nakshatraIndex: 7 },
-    moon: { nakshatraIndex: 0 },
-    sun: { nakshatraIndex: 4 },
-    mars: { nakshatraIndex: 5 },
-    saturn: { nakshatraIndex: 10 },
-    rahu: { nakshatraIndex: 11 },
-    ketu: { nakshatraIndex: 17 },
-  }), [metadata]);
+  const kotaState = useMemo(() => {
+    const transits = calculateTransitNakshatras(activeDate || '2005-01-01');
+    const janmaNak = metadata?.moon_nakshatra
+      ? Math.max(0, (NAKSHATRAS as readonly string[]).indexOf(metadata.moon_nakshatra))
+      : 0;
+    const moonSign = metadata?.moon_sign_id ?? 0;
+    return evaluateKotaChakra(janmaNak, moonSign, transits);
+  }, [metadata, activeDate]);
 
   const auditResult = useMemo(() => {
     const symFund = pitFundamentals[activeBar?.symbol ?? 'TCS'] ?? [];

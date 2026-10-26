@@ -26,6 +26,7 @@
     "e2e:lots": "tsx tools/e2e/lots.ts",
     "e2e:market": "tsx tools/e2e/realMarket.ts",
     "e2e:stops": "tsx tools/e2e/stopOrders.ts",
+    "content:build": "tsx tools/buildContent.ts",
     "e2e:funds": "tsx tools/e2e/funds.ts",
     "record:status": "tsx packages/workers/src/recordStatus.ts",
     "pull:bars": "tsx packages/workers/src/pullBars.ts",
