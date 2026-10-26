@@ -5,7 +5,7 @@
  * Stop with Ctrl+C. Build the app first:  pnpm --filter @trading/app export:web
  */
 import { existsSync, readFileSync } from 'node:fs';
-import { FixedClock, parseLearningMarket } from '../../packages/core/src/index';
+import { FixedClock, parseFundsMarket, parseLearningMarket } from '../../packages/core/src/index';
 import {
   SeriesStore,
   SnapshotStore,
@@ -28,6 +28,17 @@ function loadMarket(): unknown {
   return market;
 }
 
+const FUNDS_FILE = 'data/derived/market/learning-funds-v1.json';
+
+/** The fund NAVs made by `pnpm funds:build`, if present and valid. */
+function loadFunds(): unknown {
+  if (!existsSync(FUNDS_FILE)) return undefined;
+  const funds = parseFundsMarket(JSON.parse(readFileSync(FUNDS_FILE, 'utf8')));
+  if (funds === null) throw new Error(`${FUNDS_FILE} is not a valid fund file; run pnpm funds:build again`);
+  console.log(`Funds:   ${funds.funds.length} mutual funds, NAVs to ${funds.funds.map((x) => x.lastDate).sort().pop() ?? '-'}`);
+  return funds;
+}
+
 async function main(): Promise<void> {
   await serveStatic(WEB_PORT);
   const handler = createHandler({
@@ -41,6 +52,7 @@ async function main(): Promise<void> {
     ],
     statusHistory: new StatusHistory(),
     market: loadMarket(),
+    funds: loadFunds(),
   });
   await startServer(handler, { port: SERVICE_PORT, allowedOrigin: `http://127.0.0.1:${WEB_PORT}` });
   console.log(

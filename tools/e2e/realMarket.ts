@@ -88,6 +88,9 @@ async function main(): Promise<void> {
     await openTab(fresh, 'Trade');
     await fresh.getByTestId('market-switch').getByText(`prices to ${market.to}`).waitFor({ timeout: 60_000 });
     check('a new install with no data helper still has the bundled real prices', true);
+    await openTab(fresh, 'Data');
+    await fresh.getByTestId('data-screen').getByText(/mutual funds, NAVs to /).waitFor({ timeout: 60_000 });
+    check('the data screen lists the bundled fund NAVs and the stock prices', /NSE stocks, prices to /.test(await fresh.getByTestId('data-screen').innerText()));
     check('no page errors', errors.length === 0, errors.join(' | '));
   } finally {
     await browser.close();

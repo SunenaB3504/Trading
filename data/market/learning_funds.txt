@@ -1,0 +1,13 @@
+# AMFI scheme code ; plain-language kind ; (the name comes from AMFI). Direct plans, growth option.
+120716;Index fund (Nifty 50)
+119063;Index fund (Nifty 50)
+149466;Index fund (Nifty Next 50)
+153401;Index fund (Nifty Midcap 150)
+122639;Flexi cap fund
+118955;Flexi cap fund
+119598;Large cap fund
+118778;Small cap fund
+120377;Balanced advantage fund
+118987;Corporate bond fund
+119800;Liquid fund
+119788;Gold fund

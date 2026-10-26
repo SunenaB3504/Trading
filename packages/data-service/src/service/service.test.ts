@@ -40,6 +40,15 @@ describe('data service endpoints (SSD §9.2)', () => {
     });
   });
 
+  it('serves the loaded market and fund files whole, and says 404 when they are not loaded', () => {
+    const none = createHandler(deps());
+    expect(none(get('/market')).status).toBe(404);
+    expect(none(get('/funds')).status).toBe(404);
+    const loaded = createHandler({ ...deps(), market: { id: 'm' }, funds: { id: 'f' } });
+    expect(loaded(get('/market'))).toMatchObject({ status: 200, body: { id: 'm' } });
+    expect(loaded(get('/funds'))).toMatchObject({ status: 200, body: { id: 'f' } });
+  });
+
   it('lists instruments with their lifecycle status', () => {
     const list = createHandler(deps())(get('/instruments')).body as Array<{ symbol: string }>;
     expect(list).toHaveLength(5);

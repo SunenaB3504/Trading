@@ -21,6 +21,7 @@ import { UniverseScreen } from './screens/UniverseScreen';
 import { loadDeviceSettings, saveDeviceSettings } from './settings/settings';
 import type { DeviceSettings } from './settings/settings';
 import type { SecureStore } from './secure/secureStore';
+import { fundsNote, useFunds } from './trading/useFunds';
 import { useMarkets } from './trading/useMarkets';
 import type { Markets } from './trading/useMarkets';
 import { MarketSwitch } from './ui/MarketSwitch';
@@ -131,6 +132,7 @@ function Settings(props: {
   settings: DeviceSettings;
   now: () => number;
   client: DataServiceClient;
+  prices: string[];
   onImported: (p: Profile) => void;
 }) {
   const [tab, setTab] = useState<SettingsId>('general');
@@ -148,7 +150,7 @@ function Settings(props: {
       {tab === 'backup' ? (
         <BackupScreen device={d.device.kv} profiles={d.device.profiles} profile={profile} now={now} onImported={props.onImported} />
       ) : null}
-      {tab === 'data' ? <DataScreen client={props.client} kv={d.device.kv} now={now} /> : null}
+      {tab === 'data' ? <DataScreen client={props.client} kv={d.device.kv} now={now} prices={props.prices} /> : null}
     </>
   );
 }
@@ -184,6 +186,8 @@ function Main(props: {
 }) {
   const { d, profile, settings, profileKv, section, now } = props;
   const markets = useMarkets(d.device.kv, profileKv, props.client, now);
+  const funds = useFunds(d.device.kv, props.client, now);
+  const prices = [markets.realNote, fundsNote(funds)];
   const accept = () => {
     const next = { ...settings, disclaimerAcceptedAt: Date.now() };
     void saveDeviceSettings(d.device.kv, next).then(() => d.setSettings(next));
@@ -200,7 +204,7 @@ function Main(props: {
       {section === 'measure' ? <ComingScreen title="Measure" lines={MEASURE} testID="measure-screen" /> : null}
       {section === 'tutor' ? <ComingScreen title="Tutor" lines={TUTOR} testID="tutor-screen" /> : null}
       {section === 'settings' ? (
-        <Settings d={d} profile={profile} settings={settings} now={now} client={props.client} onImported={props.onImported} />
+        <Settings d={d} profile={profile} settings={settings} now={now} client={props.client} prices={prices} onImported={props.onImported} />
       ) : null}
     </>
   );

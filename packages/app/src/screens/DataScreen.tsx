@@ -20,10 +20,13 @@ export function DataScreen({
   client,
   kv,
   now,
+  prices,
 }: {
   client: DataServiceClient;
   kv: KeyValueStore;
   now: () => number;
+  /** One sentence each on the stock prices and the fund NAVs held on this device. */
+  prices: string[];
 }) {
   const [state, setState] = useState<State>({ kind: 'loading' });
   const load = useCallback(async () => {
@@ -36,6 +39,11 @@ export function DataScreen({
   }, [load]);
   return (
     <ScrollView contentContainerStyle={styles.page} testID="data-screen">
+      <Section title="Prices on this device">
+        {prices.map((p) => (
+          <Note key={p}>{p}</Note>
+        ))}
+      </Section>
       <Section title="Data helper">
         {state.kind === 'loading' ? <Note>Checking the data helper...</Note> : null}
         {state.kind === 'unavailable' ? (

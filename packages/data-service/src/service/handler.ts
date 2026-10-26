@@ -161,9 +161,16 @@ function market(deps: ServiceDeps): ServiceResponse {
     : ok(deps.market);
 }
 
+function funds(deps: ServiceDeps): ServiceResponse {
+  return deps.funds === undefined
+    ? fail(404, 'no fund file is loaded; run pnpm funds:build')
+    : ok(deps.funds);
+}
+
 const GET: Record<string, Route> = {
   '/health': (d) => health(d),
   '/market': (d) => market(d),
+  '/funds': (d) => funds(d),
   '/instruments': (d) => instruments(d),
   '/bars': bars,
   '/actions': actions,

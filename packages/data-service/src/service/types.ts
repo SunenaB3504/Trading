@@ -38,4 +38,6 @@ export interface ServiceDeps {
   statusHistory?: StatusHistory;
   /** The learning app's real-price market file, served whole on `/market` (MIP v4.1 Stage 2, laptop slice). */
   market?: unknown;
+  /** The learning app's mutual fund NAV file, served whole on `/funds` (MIP v4.1 Stage 2). */
+  funds?: unknown;
 }

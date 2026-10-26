@@ -1,5 +1,5 @@
-import { learningMarketSchema } from '@trading/core';
-import type { LearningMarket } from '@trading/core';
+import { fundsMarketSchema, learningMarketSchema } from '@trading/core';
+import type { FundsMarket, LearningMarket } from '@trading/core';
 import { z } from 'zod';
 
 export const healthSchema = z.object({
@@ -66,6 +66,11 @@ export class DataServiceClient {
   /** The real-price market file (MIP v4.1 Stage 2, laptop slice); 404 until `pnpm market:build` has run. */
   market(): Promise<Result<LearningMarket>> {
     return this.get('/market', learningMarketSchema);
+  }
+
+  /** The mutual fund NAV file (MIP v4.1 Stage 2); 404 until `pnpm funds:build` has run. */
+  funds(): Promise<Result<FundsMarket>> {
+    return this.get('/funds', fundsMarketSchema);
   }
 
   private async get<T>(path: string, schema: z.ZodType<T>): Promise<Result<T>> {

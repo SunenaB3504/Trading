@@ -42,3 +42,4 @@ packages/app/assets/learning-market.market
 data/parquet/*.duckdb
 data/parquet/*.duckdb.wal
 scratch-apk.log
+packages/app/assets/learning-funds.market
