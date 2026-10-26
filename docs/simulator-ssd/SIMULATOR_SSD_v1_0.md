@@ -207,7 +207,11 @@ packages/app/src/
      $$\mathbf{S}(t) = [\text{MD}_t, \text{AD}_t, \text{PD}_t, \text{SD}_t, \text{Prana}_t, \text{LagnaDegree}_t, \text{Role}_t]$$
   4. `timelineCache.ts`: Serializes the entire 25-year timeline sequence into contiguous typed memory arrays on stock load. The simulation playback engine queries this cache in $O(1)$ time per date tick without re-invoking trigonometric routines.
   5. `induLagna.ts`: Computes 9th house from Moon and Lagna ray summation (*Kalas*) to establish the Indu Lagna wealth point.
-* **Rule Engine:** Classifies planetary rulers into pure **Trikona ($T$)**, **Dusthana ($D$)**, or **Kendra ($K$)** based on corporate Lagna lordships. Emits full `CanonicalVedicChart`.
+* **Rule Engine & Trikona Nathans Inspector:**
+  * Computes the 12 corporate Bhavas from the ceremonial listing Lagna.
+  * Formally identifies the **Lagna Trikona Nathans** (the sacred triumvirate of rulers governing the 1st [Tanu], 5th [Purva Punya], and 9th [Bhagya] houses).
+  * Exposes an explicit **Trikona Nathans Persona** (e.g., *Libra Lagna $\rightarrow$ 1st Lord: Venus, 5th Lord: Saturn, 9th Lord: Mercury*) so traders can transparently audit why an ongoing Dasha is classified as **`[T]`** (Trikona Auspicious), **`[K]`** (Kendra Action), or **`[D]`** (Dusthana Stress).
+  * Emits full `CanonicalVedicChart` and assigns confluence weights based on lord dignity.
 
 ---
 
@@ -243,7 +247,13 @@ packages/app/src/
 ### Subsystem 4: Historical Time-Machine Simulation & Replay Engine
 * **Responsibility:** Provides an event-driven backtesting environment that steps through time session-by-session.
 * **Features:**
-  * Interactive playback controls: `[Play]`, `[Pause]`, `[Step +1 Day]`, `[Step +1 Week]`, `[Jump to Date]`.
+  * **Interactive Playback & Ingress Controls:** `[Play]`, `[Pause]`, `[Step +1 Day]`, `[Step +1 Week]`, and editable `[As of: YYYY-MM-DD]` manual entry box enabling instant binary-search session jumps.
+  * **Future Horizon Projection Mode:** When a date beyond the historical market series is entered (e.g., 2027 to 2035+), the engine gracefully decouples into a projection state:
+    * The candlestick chart holds the latest known terminal bar.
+    * High-precision pure TypeScript ephemeris (`astronomy-engine`) and Vimshottari math compute forward planetary transits, Dasha hierarchies, and Kota Chakra fortress defense into the future.
+  * **Adaptive Chart Zoom & Astro-Period Snapping:**
+    * Standard Calendar Intervals: `1W` (5 bars), `1M` (22 bars), `3M` (66 bars), `1Y` (250 bars), `MAX`.
+    * Astro-Aligned Snapping: `Snap to Current PD` (active Pratyantardasha window), `Snap to Current AD` (active Antardasha cycle), and `Snap to Current MD` (active Mahadasha epoch) to visually audit price trend structure under specific planetary rulers.
   * Adjustable speed slider: $1\times$ (1 session/sec), $5\times$, $20\times$, $100\times$.
   * **Zero-Lag 100x Replay Loop:** Synchronizes price candle painting, Dasha color bands, portfolio equity recalculation, and active orders via pre-computed in-memory timeline buffers ($O(1)$ read performance).
   * **Dual Price Series Handling:**
@@ -292,6 +302,10 @@ $$\mathbf{Trade Ticket} = \Big\{ \text{When to Invest}, \quad \text{Quantity / R
 +----------------------------------------------------------------------------------------------------+
 ```
 
+* **Risk Veto State Machine & Zero-Allocation Guard:**
+  * When hard balance-sheet circuit breakers trip ($\Phi_{\text{Financial}} = 0.00$) or Chandrashtama is active ($\Omega_{\text{Trader}} = 0.00$), final calculated allocation evaluates to $\mathbf{₹0.00}$ ($0 \text{ shares}$).
+  * **Deterministic State Resolution:** In such conditions, the ticket automatically suppresses active `BUY` or `SELL` trade action buttons.
+  * The ticket header renders an explicit non-actionable status: **`BLOCKED: FINANCIAL RISK VETO`** (or **`BLOCKED: CHANDRASHTAMA VETO`**), clearly displaying the underlying reason (e.g. *Debt/Equity > 2.0* or *ICR < 1.5*) to avoid misleading traders into executing unfeasible orders.
 * **Exit Rules Stored in Ticket:**
   1. Calendar Cusp Exit Date (e.g., "Sell on 20-Jul-2023 at market open").
   2. Profit Target (e.g., $+16.6\%$ initial rebound harvest).
@@ -306,6 +320,9 @@ $$\mathbf{Trade Ticket} = \Big\{ \text{When to Invest}, \quad \text{Quantity / R
   * **Massive 1M Context Window:** Leverages Gemini Flash's 1-million-token window to ingest the entire 8-monograph learning series (`docs/jathakam-learning-series/`), classical Sanskrit sutras, and historical balance sheets simultaneously without complex vector database chunking.
   * **Specialized Astro-Financial Glossary Layer:** Implements a lookup dictionary in `ai/glossaryMapping.ts` mapping technical terminology (*Jathakam*, *Shadbala*, *Ashtakavarga*, *Dusthana*, *Kota Stambha*, *Viparita Raja Yoga*, *Chandrashtama*) into clean English and Malayalam system prompts.
   * **Live State Injection:** Every user prompt automatically injects the active cockpit context (Active Stock, Active Date, Current Dasha State, Open P&L, Trader Kundli Status).
+  * **API Key Management & Diagnostic Telemetry:**
+    * In-app Settings Modal to securely persist the user's Google Gemini API key in local storage.
+    * Visual Copilot Status Badge: Displays **`Online (Gemini Flash Free Tier)`** with roundtrip latency, or **`Offline Heuristic Fallback`** when offline or unconfigured.
 * **Multi-Lingual Capabilities:** Native bilingual interactions in both **English and Malayalam** with full syntactic fluency.
 
 ---
@@ -316,14 +333,15 @@ The desktop application presents an integrated, single-window trading cockpit de
 
 ```
 +-------------------------------------------------------------------------------------------------------------------------+
-| [TOP BAR] Ticker: [ TCS v ] | Active Date: [ 2026-10-05 ] | Speed: [ 5x v ] [<<] [ Play ] [>>] | Cusp: Mercury AD Today! |
+| [TOP BAR] Ticker: [ TCS v ] | As of: [ 2026-10-05 ] [Jump] | Speed: [ 5x v ] [<<] [ Play ] [>>] | Zoom: [ 1W | 1M | 1Y | PD | AD | MD ] |
+| Horizon: 1H (Lagna): Venus | 5H: Saturn | 9H: Mercury  ---> TRIKONA NATHANS: { Venus, Saturn, Mercury }               |
 +-----------------------------------------------------------+-------------------------------------------------------------+
 | LEFT PANEL (Astrological Engine)                          | CENTER PANEL (Interactive Canvas Price Chart)               |
 |                                                           |                                                             |
 | 1. Running Dasha Hierarchy:                               |  [Candlestick OHLC View with Dynamic Dasha Shading]        |
-|    MD: Venus   (9L - Bhagya / Trikona)                    |   ₹2,500 |               /--- [T-T-T] Green Bull Zone       |
-|    AD: Mercury (1L/10L - Exalted Bhadra)                  |   ₹2,300 |              /                                   |
-|    PD: Mercury (1L - Trikona)                             |   ₹2,100 |  +----------+ <--- BUY CUSP INGRESS ₹2,114.40    |
+|    MD: Venus   (9L - Bhagya / Trikona [T])                |   ₹2,500 |               /--- [T-T-T] Green Bull Zone       |
+|    AD: Mercury (1L/10L - Exalted Bhadra [T])              |   ₹2,300 |              /                                   |
+|    PD: Mercury (1L - Trikona [T])                         |   ₹2,100 |  +----------+ <--- BUY CUSP INGRESS ₹2,114.40    |
 |    SD: Mercury (1L - Sookshma Expansion)                  |   ₹1,900 |  |  Saturn 6H Red Trap (Price Dropped -39%)     |
 |                                                           |          +------------------------------------------------- |
 | 2. Kota Chakra Radar:                                     |             Aug 2023        Jan 2025       Oct 2026         |
@@ -342,8 +360,9 @@ The desktop application presents an integrated, single-window trading cockpit de
 | * Free Cash Flow:       ₹38,000 Cr (Positive)             | * Quantity:       Exactly 70 Shares at ₹2,114.40            |
 | * Promoter Pledging:    0.00% (Clean)                     | * Target 1:       ₹2,465 (+16.6% Rebound)                   |
 |                                                           | * Hard Exit Date: 15-Nov-2028 (Conclusion of Mercury AD)    |
-| [Status: SOVEREIGN BUY VERIFIED (No Debt / Clean Cash)]   | ----------------------------------------------------------- |
-|                                                           | [AI COPILOT CHATBOT]                                        |
+| [Status: SOVEREIGN BUY VERIFIED (No Debt / Clean Cash)]   | * If Breached:    [ BLOCKED: FINANCIAL RISK VETO (₹0) ]     |
+|                                                           | ----------------------------------------------------------- |
+|                                                           | [AI COPILOT CHATBOT] [Online: Gemini Flash] [Settings ⚙]    |
 |                                                           | User: "Why is today's buy signal high conviction?"         |
 |                                                           | Bot:  "TCS completed Saturn 6H drag on Oct 1. Today its     |
 |                                                           |       exalted 1L Mercury AD begins with zero debt and       |

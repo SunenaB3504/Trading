@@ -55,6 +55,14 @@ Every work package (WP) in this plan must satisfy the following invariant criter
 ├── WP-3.3: Master Trade Advisory Ticket & Multiplicative Sizing Generator
 ├── WP-3.4: Gemini Flash Free API Integration & Astrological Glossary Layer
 └── WP-3.5: Multi-Panel Cockpit Integration, End-to-End Replay & Acceptance
+         │
+         ▼
+[ PHASE 4: ADVANCED ERGONOMICS, FORWARD PROJECTIONS & ADVISORY HARDENING ] (Weeks 10–11)
+├── WP-4.1: Direct Date Ingress & Future Horizon Projection Engine
+├── WP-4.2: Adaptive Chart Zoom & Astro-Period Snapping (1W/1M/1Y/PD/AD/MD)
+├── WP-4.3: Master Trade Ticket Risk Veto State Machine (Zero-Allocation Guard)
+├── WP-4.4: Lagna Trikona Nathans (1H, 5H, 9H Lords) Persona Widget
+└── WP-4.5: AI Copilot API Settings, Encryption & Diagnostic Health Monitor
 ```
 
 ---
@@ -315,6 +323,60 @@ packages/app/src/
   * `ui/layout/CockpitGrid.tsx` (`< 350 LOC`).
   * Automated end-to-end integration test suite.
 * **Acceptance Criteria:** Complete playback replay of TCS from 2004 to 2026 runs without memory leaks, maintaining steady 60 FPS.
+
+---
+
+### Phase 4: Advanced Ergonomics, Forward Projections & Advisory Hardening (Weeks 10–11)
+
+#### WP-4.1: Direct Date Ingress & Future Horizon Projection Engine
+* **Objective:** Enable instant date jumping via editable date input, and gracefully decouple into forward projection mode when reaching dates beyond known market bars.
+* **Key Tasks:**
+  1. Add manual `YYYY-MM-DD` text and calendar input in `TopNavigationBar.tsx` with instant binary-search session cursor snap.
+  2. Implement `Future Projection Mode`: If simulation date exceeds the latest market bar, maintain chart canvas on the final terminal session while `astronomy-engine` and `vimshottari.ts` project planetary transits, Dasha hierarchies, and Kota Chakra fortress defense forward through 2027–2035+.
+* **Deliverables:**
+  * `ui/layout/TopNavigationBar.tsx` (`< 250 LOC`).
+  * `core/engine/timeMachine.ts` (`< 350 LOC`).
+* **Acceptance Criteria:** Typing `2028-01-01` renders the forward Dasha hierarchy and Kota fortress state without crashing or throwing no-data exceptions.
+
+#### WP-4.2: Adaptive Chart Zoom & Astro-Period Snapping
+* **Objective:** Allow standard calendar zoom intervals alongside specialized snapping to Dasha rulership spans.
+* **Key Tasks:**
+  1. Add standard timeframe toggles (`1W`, `1M`, `3M`, `1Y`, `MAX`) to adjust the visible canvas window.
+  2. Implement Astro-Period Snapping: `Snap to Current PD`, `Snap to Current AD`, and `Snap to Current MD` buttons that calculate the exact start and end dates of the active planetary ruler and resize the chart bounds accordingly.
+* **Deliverables:**
+  * `ui/components/chart/ChartControls.tsx` (`< 200 LOC`).
+  * `ui/components/chart/PriceCandleCanvas.tsx` (`< 400 LOC`).
+* **Acceptance Criteria:** Clicking `Snap to AD` adjusts the chart canvas to frame only the bars within the ongoing Antardasha.
+
+#### WP-4.3: Master Trade Ticket Risk Veto State Machine
+* **Objective:** Prevent confusing or unfeasible trade actions (e.g. `SELL` with 0 shares) when fundamental circuit breakers or personal astrologic gates reduce allocation to zero.
+* **Key Tasks:**
+  1. When $\Phi_{\text{Financial}} = 0.00$ or $\Omega_{\text{Trader}} = 0.00$, enforce an explicit ticket state: `BLOCKED: FINANCIAL RISK VETO` or `BLOCKED: CHANDRASHTAMA VETO`.
+  2. Suppress active `BUY` and `SELL` paper trade buttons, replacing them with a detailed diagnostic badge explaining the exact trigger (e.g., *Debt/Equity > 2.0* or *Promoter Pledge > 25%*).
+* **Deliverables:**
+  * `core/engine/advisorySynthesizer.ts` (`< 400 LOC`).
+  * `ui/components/advisory/MasterTradeTicketCard.tsx` (`< 350 LOC`).
+* **Acceptance Criteria:** Loading distressed tickers like `YESBANK` or `SUZLON` displays `BLOCKED: FINANCIAL RISK VETO` with ₹0 allocation and disables buy/sell order triggers.
+
+#### WP-4.4: Lagna Trikona Nathans (1H, 5H, 9H Lords) Persona Widget
+* **Objective:** Expose the foundational auspicious astrological rulers of the corporate natal chart directly in the workstation interface.
+* **Key Tasks:**
+  1. Derive the 1st (Lagna), 5th (Purva Punya), and 9th (Bhagya) house signs and their planetary rulers from `corporateRegistry.json`.
+  2. Render a sleek header badge: `Trikona Nathans: { Lord1, Lord5, Lord9 }` so traders can transparently see why an active Dasha is labeled as `[T]` in Triple Trikona `[T-T-T]` harvest signals.
+* **Deliverables:**
+  * `ui/components/chart/DashaRibbon.tsx` (`< 300 LOC`).
+  * `ui/components/astro/TrikonaNathansBadge.tsx` (`< 150 LOC`).
+* **Acceptance Criteria:** Inspecting TCS displays `Trikona Nathans: { Venus, Saturn, Mercury }` with their respective houses (1H, 5H, 9H).
+
+#### WP-4.5: AI Copilot API Settings, Encryption & Diagnostic Health Monitor
+* **Objective:** Provide a user-facing settings modal to configure and persist the Google Gemini API key and monitor connection health.
+* **Key Tasks:**
+  1. Create an in-app Settings Modal to input and validate the user's Google AI Studio Gemini API key, stored encrypted in local client storage.
+  2. Display a live health status indicator in `CopilotChatCard`: `AI Copilot: Online (Gemini Flash)` vs `AI Copilot: Offline Heuristic Fallback`.
+* **Deliverables:**
+  * `core/ai/copilotClient.ts` (`< 300 LOC`).
+  * `ui/components/copilot/CopilotSettingsModal.tsx` (`< 200 LOC`).
+* **Acceptance Criteria:** Entering a valid Gemini API key transitions the status indicator to `Online (Gemini Flash)` and routes prompts to the live cloud endpoint.
 
 ---
 
