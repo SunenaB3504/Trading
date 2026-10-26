@@ -4,7 +4,9 @@ import type { LearningMarket } from '@trading/core';
 import type { DataServiceClient } from '../dataClient/client';
 import { getStamped, putStamped } from '../store/kv';
 import type { KeyValueStore } from '../store/kv';
+import { PLATFORM } from '../platform/device';
 import { bundledMarket } from './bundledMarket';
+import { catchUp, fetchBytesOnDevice } from './catchUpRun';
 import { demoMarket, realMarket } from './market';
 import type { Market } from './market';
 
@@ -12,6 +14,8 @@ import type { Market } from './market';
 export const REAL_MARKET_KEY = 'device/market/real';
 /** Per profile: which prices the Practise section uses. */
 export const MARKET_CHOICE_KEY = 'practise/market';
+
+const IST_OFFSET_MS = 5.5 * 3_600_000;
 
 export type MarketKind = 'demo' | 'real';
 
@@ -63,6 +67,15 @@ export function useMarkets(
         setFile(r.data);
       }
       setFresh(r.ok ? 'fresh' : saved !== null ? 'saved' : 'none');
+      // the phone has no helper: it reads the exchange's daily files itself for the days since the saved prices end
+      const base = r.ok ? r.data : saved;
+      if (PLATFORM === 'android' && !r.ok && base !== null) {
+        const up = await catchUp(base, new Date(now() + IST_OFFSET_MS).toISOString().slice(0, 10), fetchBytesOnDevice);
+        if (live && up.added > 0) {
+          await putStamped(device, REAL_MARKET_KEY, up.market, now());
+          setFile(up.market);
+        }
+      }
     })();
     return () => {
       live = false;
