@@ -1,0 +1,723 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UAT 6 learning app</title>
+<style>
+  :root {
+    --bg: #f6f7f9; --card: #ffffff; --ink: #1b2430; --muted: #5b6676; --line: #dde2ea;
+    --accent: #1f5fbf; --pass: #19803f; --fail: #b3261e; --block: #9a6700; --none: #8a94a3;
+    --pass-bg: #e3f4e9; --fail-bg: #fbe5e3; --block-bg: #fdf0d3; --none-bg: #eceff3;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #12171e; --card: #1b222c; --ink: #e8edf3; --muted: #9aa6b5; --line: #2c3644;
+      --accent: #6aa3ff; --pass: #5fd08a; --fail: #ff8a80; --block: #f0c05a; --none: #8a94a3;
+      --pass-bg: #17321f; --fail-bg: #3a1c1a; --block-bg: #3a2f13; --none-bg: #252d39;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 system-ui, "Segoe UI", sans-serif; }
+  main { max-width: 980px; margin: 0 auto; padding: 24px 16px 64px; }
+  h1 { font-size: 24px; margin: 0 0 4px; }
+  h2 { font-size: 18px; margin: 32px 0 8px; }
+  p, li { color: var(--ink); }
+  .muted { color: var(--muted); }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px; margin: 12px 0; }
+  code, pre { font-family: ui-monospace, Consolas, monospace; font-size: 13px; background: var(--none-bg); border-radius: 5px; }
+  code { padding: 1px 5px; }
+  pre { padding: 10px 12px; overflow-x: auto; margin: 8px 0; }
+  .bar { height: 12px; background: var(--none-bg); border-radius: 6px; overflow: hidden; display: flex; }
+  .bar span { display: block; height: 100%; }
+  .tally { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 10px; }
+  .tally b { font-size: 20px; }
+  .toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; align-items: center; }
+  button, select, input[type=text], textarea {
+    font: inherit; color: var(--ink); background: var(--card); border: 1px solid var(--line);
+    border-radius: 7px; padding: 6px 10px;
+  }
+  button { cursor: pointer; }
+  button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  button:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .case { padding: 14px 16px; }
+  .case header { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: baseline; }
+  .id { font-weight: 700; }
+  .tag { font-size: 12px; padding: 1px 8px; border-radius: 10px; background: var(--none-bg); color: var(--muted); }
+  .auto-pass { background: var(--pass-bg); color: var(--pass); }
+  .title { font-weight: 600; flex: 1 1 260px; }
+  ol { margin: 8px 0 8px 20px; padding: 0; }
+  .expect { border-left: 3px solid var(--accent); padding: 2px 10px; margin: 8px 0; }
+  .status-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-start; margin-top: 8px; }
+  .status-row textarea { flex: 1 1 260px; min-height: 36px; resize: vertical; }
+  .pill { font-weight: 600; border-radius: 12px; padding: 1px 10px; font-size: 13px; }
+  .s-pass { background: var(--pass-bg); color: var(--pass); }
+  .s-fail { background: var(--fail-bg); color: var(--fail); }
+  .s-block { background: var(--block-bg); color: var(--block); }
+  .s-none { background: var(--none-bg); color: var(--none); }
+  table { border-collapse: collapse; width: 100%; }
+  td, th { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .filters button.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+  @media (max-width: 600px) { main { padding: 16px; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>User acceptance test 6: Market Learning App, Stage 1</h1>
+  <p class="muted">Scope: Stage 1 of the learning app (MIP v4.1, D42): the app without astrology, the new sections, family profiles and PIN, settings, per-profile backup, and the first Android build. Tester: Sunil, first on the laptop (sections A to F), then on the Android phone (section G). Prepared 2026-10-26 against commit <code>03e01e1</code>. Section R (added the same day) covers real NSE prices on the laptop for the 51 stocks you chose. Learn, Measure and Tutor are placeholders. Rounds 3 to 5 covered the astro layer and the daily snapshot, which D42 removed from the app; only their lots-popup cases come back here (B3).</p>
+
+  <div class="card" id="summary">
+    <div class="bar" id="bar" aria-hidden="true"></div>
+    <div class="tally" id="tally"></div>
+    <p id="verdict" style="margin:10px 0 0"></p>
+  </div>
+
+  <div class="toolbar">
+    <span class="filters" id="filters"></span>
+    <span style="flex:1"></span>
+    <button id="save" class="primary" title="Downloads this page with your current results built in">Save a copy with my results</button>
+    <button id="exportCsv">Export CSV</button>
+    <button id="reset">Reset all results</button>
+  </div>
+  <p class="muted" style="margin-top:0">Your results are remembered in this browser automatically. Use “Save a copy” to keep them inside the file itself (replace this file with the downloaded copy).</p>
+
+  <h2>1. Get ready</h2>
+  <div class="card">
+    <ol>
+      <li>Open a terminal in <code>C:\Users\Admin\Sunil\Trading</code>.</li>
+      <li>Build the web app (about a minute): <pre>pnpm --filter @trading/app export:web</pre></li>
+      <li>Start the app and the data helper: <pre>pnpm uat:start</pre> Leave this terminal open; Ctrl+C stops both. It uses ports 8080 and 8787.</li>
+      <li>Open Chrome at <code>http://127.0.0.1:8080</code>. Case A1 uses your <b>normal</b> window (it holds your data from earlier rounds); most other laptop cases use a <b>new private window</b> (Ctrl+Shift+N), which behaves like a new device. Keep one private window open from A2 to E1, because C, D and E build on it.</li>
+      <li>For section G you need the Android phone, a way to move files between the laptop and the phone (USB cable, Google Drive, or a message to yourself), and the APK at <code>packages\app\build-apk\market-learning-0.1.0-preview-arm64.apk</code>.</li>
+    </ol>
+  </div>
+
+  <h2>2. Pass bar</h2>
+  <div class="card">
+    <ul>
+      <li>Every case marked <b>Must</b> passes.</li>
+      <li>No practice data is lost: not on upgrade, not on a refused import, not when the app is closed.</li>
+      <li>No astrology anywhere in the app.</li>
+      <li>A backup file never holds a PIN or the signing key.</li>
+      <li>E4 and E5 are exploratory: they do not block.</li>
+    </ul>
+    <p class="muted">“Automated” means the same check passed on 2026-10-26 when this page was prepared. You are confirming it with your own eyes.</p>
+  </div>
+
+  <h2>3. Cases</h2>
+  <div id="cases"></div>
+
+  <h2>4. Not covered in this round</h2>
+  <div class="card">
+    <ul>
+      <li>Real prices on the phone, daily downloads and mutual funds (the rest of Stage 2). Real prices end on 16 Oct 2026, the last NSE file on this laptop.</li>
+      <li>New order types (stop-loss, GTT), ETFs and mutual funds (Stage 3); lessons, glossary, quizzes, journal and mistake checker (Stage 4); the AI tutor (Stage 5).</li>
+      <li>The release APK signed with your own key, and the laptop desktop shortcut (Release 1).</li>
+      <li>The GitHub build (CI): it runs on the first push, which has not happened yet.</li>
+      <li>The research scripts at the top of <code>tools/</code> that do not pass lint (they predate Stage 1).</li>
+    </ul>
+  </div>
+
+  <h2>5. Defects found</h2>
+  <div class="card">
+    <p class="muted">Write each defect in the note of the case it belongs to: what you did, what you expected and what happened. A screenshot file name is enough. Send the exported CSV back, and I will fix and re-run the failed cases.</p>
+  </div>
+</main>
+
+<script id="state" type="application/json">{"H1": {"status": "pass", "note": "Run by the assistant on 2026-10-26: type check clean; size check 0 errors; dependency rules clean (including the new app-no-astro rule); 99 test files, 986 tests passed. Lint passes for packages/ and the test tools; the research scripts at the top of tools/ fail lint, as they did before Stage 1.", "at": "26/10/2026"}, "H2": {"status": "pass", "note": "Run by the assistant on 2026-10-26 on the web export: airplane mode 9 checks, order entry 14, backup (including restore onto a cleared browser), universe 9, lots popup 17, phone width 166 (360 and 320 px), no-astro 37, profiles and PIN 12. Also: an x86_64 test build on the laptop emulator opened, made Owner, and kept an order after a full restart.", "at": "26/10/2026"}}</script>
+<script>
+"use strict";
+const PREPASS = "2026-10-26";
+const CASES = [
+ [
+  "A1",
+  "A. First start and the new layout (laptop)",
+  true,
+  false,
+  "Upgrade keeps your earlier practice book",
+  [
+   "Use your <b>normal</b> Chrome window (not private), the one you used for rounds 1 to 5, at <code>http://127.0.0.1:8080</code>.",
+   "Look at the header, then open <b>Practise</b> &rarr; <b>Trade</b> and scroll to the order list."
+  ],
+  "The header reads <b>Market Learning</b>, then <b>Owner</b>, then Online. The orders you placed in earlier rounds are listed under Trade (if you had none, the list says <b>No orders yet.</b>). There is no Profile tab and no birth-details screen anywhere."
+ ],
+ [
+  "A2",
+  "A. First start and the new layout (laptop)",
+  true,
+  true,
+  "A new device starts with \"Owner\" and the \"not advice\" note",
+  [
+   "Open a <b>new private window</b> (Ctrl+Shift+N) at <code>http://127.0.0.1:8080</code>.",
+   "Read the note at the top, press <b>I understand</b>, then reload the page (F5)."
+  ],
+  "The note reads <i>Practice and learning only. No real money, no broker, no real orders. Nothing in this app is investment advice.</i> The header shows <b>Owner</b>. After <b>I understand</b> the note goes away and stays away after the reload. Home says <b>Hello, Owner</b> with cash <b>₹10,00,000.00</b>."
+ ],
+ [
+  "A3",
+  "A. First start and the new layout (laptop)",
+  true,
+  true,
+  "Six sections, with screens inside Practise and Settings",
+  [
+   "Press each main tab in turn: <b>Home, Learn, Practise, Measure, Tutor, Settings</b>.",
+   "Inside <b>Practise</b> press <b>Trade, Ledger, Universe, Compare, Report</b>; inside <b>Settings</b> press <b>General, Profiles, Backup, Data</b>."
+  ],
+  "Every tab opens without an error. Learn, Measure and Tutor each show a short list of what is coming and the line <i>Not built yet. This page shows what will be here.</i> The Home buttons <b>Go to Practise</b> and <b>Profiles and backup</b> take you to those sections."
+ ],
+ [
+  "A4",
+  "A. First start and the new layout (laptop)",
+  true,
+  true,
+  "No astrology anywhere",
+  [
+   "Go through every screen of A3 again, before and after placing an order.",
+   "Look for any astrology word (nakshatra, rashi, lagna, dasha, Chandrashtama, Tara Bala, kundli, jyotisham), in English, Malayalam or Hindi."
+  ],
+  "None anywhere: not in text, buttons, field hints, or the backup file you make in E1."
+ ],
+ [
+  "B1",
+  "B. Practise: the screens you accepted before (laptop)",
+  true,
+  true,
+  "Placing an order still works and is kept",
+  [
+   "In the private window of A2, open <b>Practise</b> &rarr; <b>Trade</b> and press <b>Place order</b> with the form as it is.",
+   "Reload the page and open <b>Practise</b> &rarr; <b>Trade</b> again."
+  ],
+  "A message <b>Order h-0001 placed.</b> appears; the order shows as filled, cash falls below ₹10,00,000 and a position in AAA appears. After the reload the order and position are still there."
+ ],
+ [
+  "B2",
+  "B. Practise: the screens you accepted before (laptop)",
+  true,
+  true,
+  "Ledger, Compare and Report still show their figures",
+  [
+   "Open <b>Practise</b> &rarr; <b>Ledger</b>, then <b>Compare</b>, then <b>Report</b>."
+  ],
+  "Each shows rupee figures as in rounds 1 and 2 (Ledger A, the comparison, the win/loss report with its <b>Gross of costs</b> switch). Nothing reads as an error."
+ ],
+ [
+  "B3",
+  "B. Practise: the screens you accepted before (laptop)",
+  true,
+  true,
+  "Lots popup in the Ledger",
+  [
+   "In <b>Practise</b> &rarr; <b>Ledger</b>, open the lots of a position (as in round 4), then close it with the close button, open it again and close it with the Esc key."
+  ],
+  "The popup lists the lots oldest first with shares and cost, and closes both ways. (These were round 4 cases you had not run yet.)"
+ ],
+ [
+  "B4",
+  "B. Practise: the screens you accepted before (laptop)",
+  true,
+  true,
+  "Data tab: the data helper, online and offline",
+  [
+   "Open <b>Settings</b> &rarr; <b>Data</b> while <code>pnpm uat:start</code> is running.",
+   "Stop it with Ctrl+C in its terminal and press <b>Check again</b>. Start it again afterwards (<code>pnpm uat:start</code>)."
+  ],
+  "With the helper running, the section <b>Data helper</b> shows <b>Connected</b>. With it stopped it shows <b>Offline, showing last saved</b> and when it last checked. The rest of the app keeps working. There is no \"Daily snapshot\" section any more."
+ ],
+ [
+  "C1",
+  "C. Profiles and PIN (laptop)",
+  true,
+  true,
+  "Add a profile and open it",
+  [
+   "In the private window, open <b>Settings</b> &rarr; <b>Profiles</b>.",
+   "Under <b>Add a profile</b> type <code>Neil</code>, press <b>Add profile</b>, then press <b>Open Neil</b>."
+  ],
+  "<b>Profile added.</b> appears and Neil is listed. After <b>Open Neil</b> the header reads <b>Neil</b>, and <b>Practise</b> &rarr; <b>Trade</b> shows <b>No orders yet.</b>"
+ ],
+ [
+  "C2",
+  "C. Profiles and PIN (laptop)",
+  true,
+  true,
+  "Each profile keeps its own book",
+  [
+   "As Neil, place an order (Practise &rarr; Trade &rarr; <b>Place order</b>).",
+   "Settings &rarr; Profiles &rarr; <b>Open Owner</b>, then look at Trade."
+  ],
+  "Neil has one order. Owner's book shows only Owner's own orders (from B1), not Neil's."
+ ],
+ [
+  "C3",
+  "C. Profiles and PIN (laptop)",
+  true,
+  false,
+  "Rename, and a duplicate name is refused",
+  [
+   "As Owner, in Settings &rarr; Profiles, change Owner's name to <code>Sunil</code> and press <b>Rename</b>.",
+   "Under <b>Add a profile</b> type <code>neil</code> (small letters) and press <b>Add profile</b>."
+  ],
+  "The header changes to <b>Sunil</b>. Adding <i>neil</i> is refused with <b>A profile called neil already exists.</b>"
+ ],
+ [
+  "C4",
+  "C. Profiles and PIN (laptop)",
+  true,
+  true,
+  "A PIN is asked for, and a wrong PIN is refused",
+  [
+   "Open Neil. In Neil's card type <code>2468</code> in <b>New 4-digit PIN</b> and press <b>Set PIN</b>.",
+   "Reload the page. Type <code>1111</code> and press <b>Open</b>; then type <code>2468</code> and press <b>Open</b>.",
+   "Reload again and press <b>Sunil</b> under <b>Or open another profile</b>."
+  ],
+  "<b>PIN set.</b> appears and Neil's card shows <b>PIN</b>. After the reload a screen <b>Open Neil</b> asks for the PIN; 1111 gives <b>That PIN is not right.</b>; 2468 opens Neil. The last step opens Sunil without a PIN."
+ ],
+ [
+  "C5",
+  "C. Profiles and PIN (laptop)",
+  true,
+  false,
+  "Remove a PIN",
+  [
+   "Open Neil (PIN 2468). In Neil's card press <b>Remove PIN</b>, then reload."
+  ],
+  "<b>PIN removed.</b> appears; after the reload Neil opens without being asked."
+ ],
+ [
+  "C6",
+  "C. Profiles and PIN (laptop)",
+  true,
+  false,
+  "Only the device owner sees owner controls",
+  [
+   "As Neil (not the owner), open <b>Settings</b> &rarr; <b>General</b>, then <b>Profiles</b>."
+  ],
+  "General: the AI mode buttons are greyed out, the monthly limit cannot be edited, and a note says <b>Only the device owner can change the AI settings.</b> Profiles: no <b>Make device owner</b> or <b>Delete</b> buttons; Neil can change only Neil's own name and PIN."
+ ],
+ [
+  "C7",
+  "C. Profiles and PIN (laptop)",
+  true,
+  false,
+  "Hand over ownership, and delete a profile (asked twice)",
+  [
+   "Open Sunil. In Settings &rarr; Profiles add a profile <code>Test</code>.",
+   "In Test's card press <b>Delete</b>, then press <b>Confirm: delete Test and all its data</b>.",
+   "In Neil's card press <b>Make device owner</b>. Then open Neil and, in Sunil's card, press <b>Make device owner</b> to give it back."
+  ],
+  "Test is gone after the second press (the first press only asks). The <b>device owner</b> tag moves to Neil and then back to Sunil. The open profile never has a Delete button."
+ ],
+ [
+  "D1",
+  "D. Settings (laptop)",
+  true,
+  false,
+  "AI mode: Off and Preview; On not yet available",
+  [
+   "As the owner, open <b>Settings</b> &rarr; <b>General</b>. Press <b>Off</b> and reload; then press <b>Preview</b> and reload."
+  ],
+  "The chosen mode stays selected after each reload. <b>On</b> is greyed out; the note says live AI arrives with the tutor itself. There is no AI in this build, so nothing is sent anywhere."
+ ],
+ [
+  "D2",
+  "D. Settings (laptop)",
+  true,
+  false,
+  "Limits are saved, and wrong values are refused",
+  [
+   "Set <b>Monthly AI limit</b> to <code>300</code> and press <b>Save limit</b>.",
+   "Change <b>Largest position, % of account</b> to <code>15</code>, press <b>Save checker settings</b>, reload and look again.",
+   "Change it to <code>150</code> and press <b>Save checker settings</b>."
+  ],
+  "<b>Saved.</b> appears and both values are still there after the reload. 150 is refused with <b>Some values are out of range</b>, and 15 stays saved."
+ ],
+ [
+  "E1",
+  "E. Backup (laptop)",
+  true,
+  true,
+  "Export a profile to a file",
+  [
+   "As Sunil (the owner, with the order from B1), open <b>Settings</b> &rarr; <b>Backup</b>.",
+   "Press <b>Export this profile</b>, then <b>Download as a file</b>. Copy the long <b>Signing key</b> into a note on the laptop."
+  ],
+  "Before the first export a reminder says <b>Export this profile now</b>. After it, <b>Last export</b> reads 0 days ago; a file like <code>market-learning-sunil.json</code> is downloaded; the key is shown on screen and is <b>not</b> inside the file. The file holds no PIN."
+ ],
+ [
+  "E2",
+  "E. Backup (laptop)",
+  true,
+  true,
+  "A changed file is refused and nothing changes",
+  [
+   "Open the downloaded file in Notepad, change one digit of a number (for example a quantity) and save it as a new file.",
+   "In Backup press <b>Choose a backup file</b>, pick the changed file, then press <b>Check and import</b>."
+  ],
+  "The message says <b>The file was changed after it was made, so it was not imported.</b> Your orders are unchanged."
+ ],
+ [
+  "E3",
+  "E. Backup (laptop)",
+  true,
+  true,
+  "Restore onto a cleared browser",
+  [
+   "Open a <b>new private window</b>: a fresh device, which makes an empty \"Owner\".",
+   "Settings &rarr; Backup &rarr; <b>Choose a backup file</b>, pick the unchanged file from E1, paste the key into <b>Signing key</b>, press <b>Check and import</b>, then <b>Confirm: import</b>.",
+   "Open Practise &rarr; Trade."
+  ],
+  "The first press explains that the empty starting profile is replaced by Sunil, and says <b>The signature was checked.</b> After confirming, the header reads <b>Sunil</b> and Trade shows the same orders as the window you exported from. Settings &rarr; General shows your checker limit 15."
+ ],
+ [
+  "E4",
+  "E. Backup (laptop)",
+  false,
+  false,
+  "Import into a device already in use adds a profile",
+  [
+   "In another new private window, place an order as Owner, then import the E1 file there."
+  ],
+  "Because this device already has a book, the file is added as a new profile <b>Sunil</b>; nothing on the device is overwritten, and the preview says so before you confirm."
+ ],
+ [
+  "E5",
+  "E. Backup (laptop)",
+  false,
+  false,
+  "An old backup file from rounds 1 to 5 still imports",
+  [
+   "If you kept a <code>mock-trading-bundle.json</code> from an earlier round, choose it in Backup with its key and import it."
+  ],
+  "The preview says the file comes from the earlier single-user app and replaces the owner's book; after confirming, those orders appear under the owner. Mark Blocked if you have no old file."
+ ],
+ [
+  "F1",
+  "F. Phone width in the laptop browser",
+  true,
+  true,
+  "Everything fits at phone width",
+  [
+   "Make the Chrome window as narrow as it goes, or open DevTools (Ctrl+Shift+M) and choose a 360 px phone.",
+   "Go through the screens of A3."
+  ],
+  "The page never scrolls sideways; the main tab row scrolls sideways with a <b>›</b> marker when tabs are hidden; buttons are easy to press; no text is cut off."
+ ],
+ [
+  "G1",
+  "G. Android phone",
+  true,
+  false,
+  "Install the APK",
+  [
+   "Copy <code>C:\\Users\\Admin\\Sunil\\Trading\\packages\\app\\build-apk\\market-learning-0.1.0-preview-arm64.apk</code> to the phone (USB cable, Google Drive, or a message to yourself).",
+   "Open it on the phone. When asked, allow your file app or browser to <b>install unknown apps</b>. If Play Protect warns about an unknown developer, choose <b>Install anyway</b>: the preview is signed with a test key."
+  ],
+  "The app <b>Market Learning</b> installs and appears in the app list."
+ ],
+ [
+  "G2",
+  "G. Android phone",
+  true,
+  false,
+  "First open is quick and looks like the laptop",
+  [
+   "Open the app and accept the note."
+  ],
+  "It opens in about 3 seconds or less with no crash, shows <b>Owner</b>, the note, and the same six sections as the laptop. Text is readable and buttons are easy to press."
+ ],
+ [
+  "G3",
+  "G. Android phone",
+  true,
+  false,
+  "Move your profile from the laptop to the phone",
+  [
+   "Send the E1 file to the phone (Drive, USB, or a message to yourself) and save it on the phone.",
+   "In the app: Settings &rarr; Backup &rarr; <b>Choose a backup file</b> and pick it. Leave the key empty (there is no need to type 64 characters on a phone). Press <b>Check and import</b>, read the message, then <b>Confirm: import</b>."
+  ],
+  "The message explains that the empty starting profile is replaced, and that without the key the signature could not be checked but the file was checked for changes. Afterwards the header reads <b>Sunil</b>, and Practise &rarr; Trade shows the same orders, cash and position as on the laptop."
+ ],
+ [
+  "G4",
+  "G. Android phone",
+  true,
+  false,
+  "Orders survive closing the app",
+  [
+   "Place one more order on the phone.",
+   "Close the app completely (recent apps, swipe it away), then open it again."
+  ],
+  "The new order and the earlier ones are all still there; Home shows the same cash and order count as before."
+ ],
+ [
+  "G5",
+  "G. Android phone",
+  true,
+  false,
+  "Move the profile back from the phone to the laptop",
+  [
+   "On the phone: Settings &rarr; Backup &rarr; <b>Export this profile</b>, then <b>Save or share the file</b>, and send it to the laptop.",
+   "On the laptop, in the window of E1: Backup &rarr; <b>Choose a backup file</b>, pick it, <b>Check and import</b>, then <b>Confirm: import</b>."
+  ],
+  "The phone opens its share sheet with a file like <code>market-learning-sunil.json</code>. On the laptop the preview says it <b>replaces Sunil on this device</b>; after confirming, the laptop shows the order you placed on the phone in G4."
+ ],
+ [
+  "G6",
+  "G. Android phone",
+  true,
+  false,
+  "Profiles and PIN on the phone",
+  [
+   "On the phone add a profile <code>Shine</code>, open it, set a PIN, then close and reopen the app."
+  ],
+  "The PIN screen appears with a number keypad; a wrong PIN is refused; <b>Or open another profile</b> lets you open Sunil."
+ ],
+ [
+  "G7",
+  "G. Android phone",
+  true,
+  false,
+  "Works without internet",
+  [
+   "Turn on airplane mode, open the app and go through Practise."
+  ],
+  "Everything you try works. Settings &rarr; Data says the data helper cannot be reached: that is expected on the phone in this build (real data downloads come in Stage 2)."
+ ],
+ [
+  "R1",
+  "R. Real NSE prices (laptop)",
+  true,
+  true,
+  "Practise offers real NSE prices",
+  [
+   "If you have not yet: in Terminal 1 press Ctrl+C and run <code>pnpm uat:start</code>. It prints <b>Market: 51 real NSE stocks, prices to 2026-10-16</b>.",
+   "Use your <b>normal</b> Chrome window for all R cases (it keeps the real book between steps). Reload the app (F5) and open <b>Practise</b>."
+  ],
+  "Above the Practise tabs: <b>Demo prices</b> and <b>Real NSE prices</b>. The line under them reads <b>51 NSE stocks, prices to 2026-10-16.</b> If it says <i>Looking for real prices...</i>, wait a few seconds: the price file is about 8 MB."
+ ],
+ [
+  "R2",
+  "R. Real NSE prices (laptop)",
+  true,
+  true,
+  "Find a stock and buy it at a real price",
+  [
+   "Press <b>Real NSE prices</b>, then <b>Trade</b>.",
+   "In <b>Stock (51 to choose from): type to search</b> type <code>reli</code> and tap <b>RELIANCE</b>.",
+   "Leave the date as offered (<code>2026-10-15</code>) and press <b>Place order</b>."
+  ],
+  "<b>Selected: RELIANCE</b> shows above the stock buttons. The message reads <b>Order h-0001 placed...</b>; the book shows <b>RELIANCE, 10 shares</b>, the order <b>filled</b> (at the 16 Oct 2026 opening price), and cash a little below ₹10,00,000."
+ ],
+ [
+  "R3",
+  "R. Real NSE prices (laptop)",
+  true,
+  true,
+  "Demo and real books stay apart",
+  [
+   "Press <b>Demo prices</b> and look at the book in Trade.",
+   "Press <b>Real NSE prices</b> again.",
+   "Open <b>Home</b>."
+  ],
+  "With demo prices there is no RELIANCE (only AAA, BBB or CCC orders, if any). With real prices RELIANCE is back. Home's account title reads <b>(real nse prices)</b> and matches the real book."
+ ],
+ [
+  "R4",
+  "R. Real NSE prices (laptop)",
+  true,
+  false,
+  "Tata Motors after the demerger",
+  [
+   "In Trade, clear the search box and type <code>tm</code>."
+  ],
+  "Two stocks: <b>TMPV</b> (Tata Motors, renamed after the October 2025 demerger, with history back to 2011) and <b>TMCV</b> (the commercial-vehicle company, listed November 2025)."
+ ],
+ [
+  "R5",
+  "R. Real NSE prices (laptop)",
+  true,
+  false,
+  "Stocks that stopped trading",
+  [
+   "Search <code>jet</code>, tap <b>JETAIRWAYS</b>, change the date to <code>2023-01-02</code> and press <b>Place order</b>.",
+   "Change the date to <code>2025-01-02</code> and place another order.",
+   "Search <code>gitan</code>, tap <b>GITANJALI</b>, set the date to <code>2018-01-02</code> and place an order."
+  ],
+  "The 2023 Jet Airways order <b>fills</b>. The 2025 one <b>stays pending: prices for JETAIRWAYS end on 2024-11-07</b>. Gitanjali is <b>refused</b> with <b>Orders can be placed from 2020-04-01: the charges table starts then.</b> (its prices end in 2019)."
+ ],
+ [
+  "R6",
+  "R. Real NSE prices (laptop)",
+  true,
+  true,
+  "Real prices work without the data helper",
+  [
+   "In Terminal 1 press <b>Ctrl+C</b>.",
+   "Reload the app and open <b>Practise</b>; press <b>Real NSE prices</b>.",
+   "Restart the helper: <code>pnpm uat:start</code>."
+  ],
+  "The line under the buttons ends with <b>(saved copy; the data helper is not reachable)</b>. Real NSE prices still open, with your RELIANCE and Jet Airways orders."
+ ],
+ [
+  "R7",
+  "R. Real NSE prices (laptop)",
+  false,
+  false,
+  "Backup carries the real book too",
+  [
+   "<b>Settings</b> &rarr; <b>Backup</b> &rarr; <b>Export this profile</b> &rarr; <b>Download as a file</b>.",
+   "Open a <b>new private window</b> at <code>http://127.0.0.1:8080</code>; <b>Settings</b> &rarr; <b>Backup</b> &rarr; <b>Choose a backup file</b>, pick the file, press <b>Check and import</b>, then <b>Confirm: import</b>.",
+   "Open <b>Practise</b> &rarr; <b>Real NSE prices</b>."
+  ],
+  "Your RELIANCE and Jet Airways orders are in the restored profile, and so are its demo orders."
+ ],
+ [
+  "H1",
+  "H. Checks already run by the assistant",
+  true,
+  true,
+  "Code checks",
+  [
+   "Nothing to do; read the note."
+  ],
+  "Type check, size caps, dependency rules and all tests pass."
+ ],
+ [
+  "H2",
+  "H. Checks already run by the assistant",
+  true,
+  true,
+  "Browser checks on the web build",
+  [
+   "Nothing to do; read the note."
+  ],
+  "All browser checks pass."
+ ]
+];
+
+const STATUSES = [["none","Not run"],["pass","Pass"],["fail","Fail"],["block","Blocked"]];
+const KEY = "uat-6-results-v1";
+let filter = "all";
+let results = {};
+
+function embedded() {
+  try { return JSON.parse(document.getElementById("state").textContent || "{}"); } catch (e) { return {}; }
+}
+function load() {
+  let stored = {};
+  try { stored = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { stored = {}; }
+  const base = embedded();
+  results = Object.assign({}, base, stored);
+}
+function persist() {
+  try { localStorage.setItem(KEY, JSON.stringify(results)); } catch (e) { /* private mode: use Save a copy */ }
+}
+function get(id) { return results[id] || { status: "none", note: "", at: "" }; }
+
+function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
+
+function render() {
+  const box = document.getElementById("cases");
+  box.textContent = "";
+  let group = "";
+  CASES.forEach(function (c) {
+    const [id, g, must, auto, title, steps, expected] = c;
+    const r = get(id);
+    if (filter !== "all" && r.status !== filter) return;
+    if (g !== group) { group = g; const h = document.createElement("h3"); h.textContent = g; h.style.margin = "22px 0 4px"; box.appendChild(h); }
+    const el = document.createElement("section");
+    el.className = "card case";
+    el.innerHTML =
+      '<header><span class="id">' + id + '</span><span class="title">' + esc(title) + '</span>' +
+      '<span class="tag">' + (must ? "Must" : "Exploratory") + '</span>' +
+      (auto ? '<span class="tag auto-pass">Automated: passed ' + PREPASS + '</span>' : '') +
+      '<span class="pill s-' + r.status + '" id="pill-' + id + '">' + STATUSES.find(function (s) { return s[0] === r.status; })[1] + '</span></header>' +
+      '<ol>' + steps.map(function (s) { return "<li>" + s + "</li>"; }).join("") + '</ol>' +
+      '<div class="expect"><b>Expected.</b> ' + expected + '</div>' +
+      '<div class="status-row"><label>Result <select data-id="' + id + '" aria-label="Result for ' + id + '">' +
+      STATUSES.map(function (s) { return '<option value="' + s[0] + '"' + (s[0] === r.status ? " selected" : "") + ">" + s[1] + "</option>"; }).join("") +
+      '</select></label><textarea data-note="' + id + '" placeholder="Note: what you saw, screenshot file name" aria-label="Note for ' + id + '">' + esc(r.note) + '</textarea>' +
+      '<span class="muted" id="at-' + id + '">' + (r.at ? "Updated " + r.at : "") + '</span></div>';
+    box.appendChild(el);
+  });
+  fixCode();
+  summary();
+}
+// the expected text may contain <code> tags written as markup in the data; make them real
+function fixCode() {
+  document.querySelectorAll(".expect").forEach(function (e) { e.innerHTML = e.innerHTML.replace(/&lt;code&gt;(.*?)&lt;\/code&gt;/g, "<code>$1</code>"); });
+}
+
+function counts() {
+  const n = { none: 0, pass: 0, fail: 0, block: 0 };
+  CASES.forEach(function (c) { n[get(c[0]).status]++; });
+  return n;
+}
+function summary() {
+  const n = counts(), total = CASES.length;
+  const colors = { pass: "var(--pass)", fail: "var(--fail)", block: "var(--block)" };
+  document.getElementById("bar").innerHTML = ["pass", "fail", "block"].map(function (k) {
+    return '<span style="width:' + (100 * n[k] / total) + '%;background:' + colors[k] + '"></span>';
+  }).join("");
+  document.getElementById("tally").innerHTML =
+    '<span><b>' + n.pass + '</b> pass</span><span><b>' + n.fail + '</b> fail</span><span><b>' + n.block + '</b> blocked</span><span><b>' + n.none + '</b> not run</span><span class="muted">of ' + total + ' cases</span>';
+  const mustOpen = CASES.filter(function (c) { return c[2] && get(c[0]).status !== "pass"; }).length;
+  const v = document.getElementById("verdict");
+  if (n.fail > 0) v.innerHTML = "<b style='color:var(--fail)'>Not accepted yet:</b> " + n.fail + " failed case(s) to fix and re-run.";
+  else if (mustOpen > 0) v.innerHTML = "<b>In progress:</b> " + mustOpen + " must-pass case(s) still open.";
+  else v.innerHTML = "<b style='color:var(--pass)'>All must-pass cases passed.</b> Record sign-off in the progress tracker.";
+}
+function filters() {
+  const f = document.getElementById("filters");
+  f.innerHTML = [["all", "All"]].concat(STATUSES).map(function (s) {
+    return '<button data-f="' + s[0] + '" class="' + (filter === s[0] ? "on" : "") + '">' + s[1] + "</button> ";
+  }).join("");
+}
+
+document.addEventListener("change", function (e) {
+  const id = e.target.getAttribute && e.target.getAttribute("data-id");
+  if (!id) return;
+  const r = get(id); r.status = e.target.value; r.at = new Date().toLocaleString();
+  results[id] = r; persist();
+  if (filter !== "all") render(); else {
+    const p = document.getElementById("pill-" + id);
+    p.className = "pill s-" + r.status; p.textContent = STATUSES.find(function (s) { return s[0] === r.status; })[1];
+    document.getElementById("at-" + id).textContent = "Updated " + r.at; summary();
+  }
+});
+document.addEventListener("input", function (e) {
+  const id = e.target.getAttribute && e.target.getAttribute("data-note");
+  if (!id) return;
+  const r = get(id); r.note = e.target.value; r.at = new Date().toLocaleString();
+  results[id] = r; persist();
+});
+document.addEventListener("click", function (e) {
+  const f = e.target.getAttribute && e.target.getAttribute("data-f");
+  if (f) { filter = f; filters(); render(); }
+});
+function download(name, text, type) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([text], { type: type }));
+  a.download = name; document.body.appendChild(a); a.click(); a.remove();
+}
+document.getElementById("save").addEventListener("click", function () {
+  const html = "<!doctype html>\n" + document.documentElement.outerHTML;
+  const marker = /(<script id="state" type="application\/json">)[\s\S]*?(<\/script>)/;
+  const json = JSON.stringify(results).replace(/</g, "\\u003c");
+  download("UAT-6.html", html.replace(marker, function (m, a, b) { return a + json + b; }), "text/html");
+});
+document.getElementById("exportCsv").addEventListener("click", function () {
+  const q = function (s) { return '"' + String(s).replace(/"/g, '""') + '"'; };
+  const rows = [["id", "group", "must", "title", "status", "note", "updated"].join(",")].concat(CASES.map(function (c) {
+    const r = get(c[0]); return [c[0], q(c[1]), c[2], q(c[4]), r.status, q(r.note), q(r.at)].join(",");
+  }));
+  download("uat_6_results.csv", rows.join("\n"), "text/csv");
+});
+document.getElementById("reset").addEventListener("click", function () {
+  if (confirm("Clear every result and note?")) { results = {}; try { localStorage.removeItem(KEY); } catch (e) {} render(); }
+});
+
+load(); filters(); render();
+</script>
+</body>
+</html>

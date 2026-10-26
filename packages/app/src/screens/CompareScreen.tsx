@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import type { KeyValueStore } from '../store/kv';
+import type { Market } from '../trading/market';
 import { PaperSession } from '../trading/paperSession';
 import { Note, Section, colors } from '../ui/Section';
 import type { ComparisonLine, ComparisonView } from '../viewModels/comparisonView';
@@ -23,11 +24,19 @@ function Line({ line }: { line: ComparisonLine }) {
   );
 }
 
-export function CompareScreen({ kv, now }: { kv: KeyValueStore; now: () => number }) {
+export function CompareScreen({
+  kv,
+  now,
+  market,
+}: {
+  kv: KeyValueStore;
+  now: () => number;
+  market: Market;
+}) {
   const [view, setView] = useState<ComparisonView | null>(null);
   useEffect(() => {
-    void PaperSession.open(kv, now).then((s) => setView(s.comparison()));
-  }, [kv, now]);
+    void PaperSession.open(kv, now, market).then((s) => setView(s.comparison()));
+  }, [kv, now, market]);
   if (view === null) return <Note>Loading...</Note>;
   return (
     <ScrollView contentContainerStyle={styles.page} testID="compare-screen">

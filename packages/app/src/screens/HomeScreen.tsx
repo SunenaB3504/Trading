@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import type { Profile } from '../profiles/profiles';
 import type { KeyValueStore } from '../store/kv';
+import type { Market } from '../trading/market';
 import { PaperSession } from '../trading/paperSession';
 import type { SessionView } from '../trading/paperSession';
 import { Button } from '../ui/Button';
@@ -21,11 +22,11 @@ export function Disclaimer(props: { onAccept: () => void }) {
   );
 }
 
-function usePractice(kv: KeyValueStore, now: () => number): SessionView | null {
+function usePractice(kv: KeyValueStore, now: () => number, market: Market): SessionView | null {
   const [view, setView] = useState<SessionView | null>(null);
   useEffect(() => {
     let live = true;
-    void PaperSession.open(kv, now)
+    void PaperSession.open(kv, now, market)
       .then((s) => s.view())
       .then((v) => {
         if (live) setView(v);
@@ -33,7 +34,7 @@ function usePractice(kv: KeyValueStore, now: () => number): SessionView | null {
     return () => {
       live = false;
     };
-  }, [kv, now]);
+  }, [kv, now, market]);
   return view;
 }
 
@@ -41,21 +42,26 @@ export function HomeScreen(props: {
   profile: Profile;
   kv: KeyValueStore;
   now: () => number;
+  market: Market;
   onGo: (section: 'practise' | 'learn' | 'settings') => void;
 }) {
-  const view = usePractice(props.kv, props.now);
+  const view = usePractice(props.kv, props.now, props.market);
   return (
     <ScrollView contentContainerStyle={styles.page} testID="home-screen">
       <Text style={styles.hello}>{`Hello, ${props.profile.name}`}</Text>
-      <Section title="Your practice account">
+      <Section title={`Your practice account (${props.market.label.toLowerCase()})`}>
         <Row label="Cash" value={view?.cash ?? '...'} />
         <Row label="Open positions" value={view === null ? '...' : String(view.positions.length)} />
         <Row label="Orders placed" value={view === null ? '...' : String(view.orders.length)} />
-        <Note>Practice runs on built-in demo prices for now; real NSE prices come next.</Note>
+        <Note>
+          {props.market.kind === 'real'
+            ? `Real NSE prices to ${props.market.lastDate}. Switch between demo and real prices at the top of Practise.`
+            : 'Built-in demo prices. Real NSE prices can be chosen at the top of Practise on the laptop.'}
+        </Note>
         <Button label="Go to Practise" onPress={() => props.onGo('practise')} quiet />
       </Section>
       <Section title="What is here, and what is coming">
-        <Row label="Practise: trade, ledger, report" value="Ready (demo prices)" />
+        <Row label="Practise: trade, ledger, report" value="Ready (demo or real prices)" />
         <Row label="Learn: lessons and quizzes" value="Coming" />
         <Row label="Measure: journal and mistakes" value="Coming" />
         <Row label="Tutor: guide and AI tutor" value="Coming" />

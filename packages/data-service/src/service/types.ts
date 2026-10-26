@@ -36,4 +36,6 @@ export interface ServiceDeps {
   providerHealth: () => ProviderHealth[];
   /** Band and surveillance records; without it `/status` reports them as not recorded. */
   statusHistory?: StatusHistory;
+  /** The learning app's real-price market file, served whole on `/market` (MIP v4.1 Stage 2, laptop slice). */
+  market?: unknown;
 }

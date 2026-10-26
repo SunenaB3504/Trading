@@ -24,7 +24,11 @@ export function reasonText(reason: string | null): string | null {
 }
 
 /** One line per order: what it was, at what price, decided on which day, and its id. */
-export function describeOrder(o: OrderRecord, req: OrderRequest | undefined): string {
+export function describeOrder(
+  o: OrderRecord,
+  req: OrderRequest | undefined,
+  name: (instrumentId: string) => string = (id) => id,
+): string {
   if (req === undefined) return `${o.requestedQuantity}`;
   const { side, instrumentId, type, limitPaise, tradingDate, id } = req.order;
   const qty =
@@ -33,5 +37,5 @@ export function describeOrder(o: OrderRecord, req: OrderRequest | undefined): st
       : `${o.requestedQuantity}`;
   const price =
     type === 'limit' && limitPaise !== null ? `limit ${formatPaise(limitPaise)}` : 'market';
-  return `${side} ${qty} ${instrumentId}, ${price}, decided ${tradingDate} (${id})`;
+  return `${side} ${qty} ${name(instrumentId)}, ${price}, decided ${tradingDate} (${id})`;
 }

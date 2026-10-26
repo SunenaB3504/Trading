@@ -1,0 +1,190 @@
+{
+ "graveyard_rows": 101,
+ "categories": {
+  "Suspended_Or_Delisted": 65,
+  "Insolvency_Bankruptcy_Liquidation": 23,
+  "Merger_Acquisition_Buyout": 6,
+  "Fraud_Delisting_Liquidation": 4,
+  "Fraud_Insolvency_Liquidation": 3
+ },
+ "default_fate_rows": 65,
+ "insolvent_n": 30,
+ "insolvent_dusthana_pct": 40.0,
+ "insolvent_maraka_pct": 33.33333333333333,
+ "baseline_random_date_dusthana_pct": 36.65,
+ "baseline_random_date_maraka_pct": 24.95,
+ "binom_p_dusthana_vs_random_date": 0.41790005250034523,
+ "graveyard_symbols_with_prices_through_2026-10": 1,
+ "graveyard_symbols_no_price_data": 0,
+ "stated_delist_vs_last_price_gap_gt_1y": 83,
+ "cohort_C_stocks": 309,
+ "cohort_C_stocks_also_in_A_or_B_split": 309,
+ "cohort_C_csv_TTT": {
+  "filt_days": 868.0,
+  "filt_stocks": 20.0,
+  "filt_log_alpha_pct": 20.15
+ },
+ "cohort_C_csv_DDD": {
+  "filt_days": 1700.0,
+  "filt_stocks": 26.0,
+  "filt_log_alpha_pct": -14.12
+ },
+ "cohort_C_csv_TDT_filt_log": 41.14,
+ "cohort_C_csv_all_filt_log": {
+  "[T-T-T]": 20.15,
+  "[T-T-D]": 2.65,
+  "[T-D-T]": 41.14,
+  "[T-D-D]": 36.56,
+  "[D-T-T]": -32.25,
+  "[D-T-D]": -12.74,
+  "[D-D-T]": -22.3,
+  "[D-D-D]": -14.12
+ },
+ "recomputed_cluster_regressions": [
+  {
+   "label": "A raw ",
+   "spread": 34.08643255311266,
+   "se": 13.584486684255475,
+   "t": 2.5092175615747854,
+   "p": 0.012099893497832281,
+   "stocks": 111,
+   "ttt_stocks": 56,
+   "ddd_stocks": 65
+  },
+  {
+   "label": "A raw age-ctrl",
+   "spread": 32.51941586581953,
+   "se": 13.232940272772323,
+   "t": 2.4574595815814604,
+   "p": 0.01399235549942378,
+   "stocks": 111,
+   "ttt_stocks": 56,
+   "ddd_stocks": 65
+  },
+  {
+   "label": "A exante ",
+   "spread": 29.17089992204892,
+   "se": 13.959792133713755,
+   "t": 2.0896371265872506,
+   "p": 0.03665040881994203,
+   "stocks": 89,
+   "ttt_stocks": 46,
+   "ddd_stocks": 51
+  },
+  {
+   "label": "A exante age-ctrl",
+   "spread": 27.642846915771447,
+   "se": 13.706061277241677,
+   "t": 2.016833746517039,
+   "p": 0.04371286596748485,
+   "stocks": 89,
+   "ttt_stocks": 46,
+   "ddd_stocks": 51
+  },
+  {
+   "label": "B raw ",
+   "spread": 24.603610531617296,
+   "se": 18.55740832306845,
+   "t": 1.3258107006802722,
+   "p": 0.18490240767525956,
+   "stocks": 105,
+   "ttt_stocks": 59,
+   "ddd_stocks": 55
+  },
+  {
+   "label": "B raw age-ctrl",
+   "spread": 25.48717948700583,
+   "se": 17.78822058635372,
+   "t": 1.4328122008200408,
+   "p": 0.1519115136411749,
+   "stocks": 105,
+   "ttt_stocks": 59,
+   "ddd_stocks": 55
+  },
+  {
+   "label": "B exante ",
+   "spread": 24.40223260785065,
+   "se": 19.32472250063961,
+   "t": 1.262746857402117,
+   "p": 0.20668016856499793,
+   "stocks": 97,
+   "ttt_stocks": 54,
+   "ddd_stocks": 50
+  },
+  {
+   "label": "B exante age-ctrl",
+   "spread": 23.194293044072534,
+   "se": 18.411222034789837,
+   "t": 1.2597910665704106,
+   "p": 0.2077447432953431,
+   "stocks": 97,
+   "ttt_stocks": 54,
+   "ddd_stocks": 50
+  },
+  {
+   "label": "Pooled raw ",
+   "spread": 30.774559715953853,
+   "se": 10.776181452997582,
+   "t": 2.8557944992094924,
+   "p": 0.004292928932686565,
+   "stocks": 216,
+   "ttt_stocks": 115,
+   "ddd_stocks": 120
+  },
+  {
+   "label": "Pooled raw age-ctrl",
+   "spread": 30.74201886310996,
+   "se": 10.798493937143732,
+   "t": 2.8468802262662027,
+   "p": 0.004414997003869788,
+   "stocks": 216,
+   "ttt_stocks": 115,
+   "ddd_stocks": 120
+  },
+  {
+   "label": "Pooled exante ",
+   "spread": 27.464324230802205,
+   "se": 11.339847999706263,
+   "t": 2.4219305436469356,
+   "p": 0.015438300968670337,
+   "stocks": 186,
+   "ttt_stocks": 100,
+   "ddd_stocks": 101
+  },
+  {
+   "label": "Pooled exante age-ctrl",
+   "spread": 27.51573747651038,
+   "se": 11.385143543923737,
+   "t": 2.4168107648669532,
+   "p": 0.01565715462636935,
+   "stocks": 186,
+   "ttt_stocks": 100,
+   "ddd_stocks": 101
+  },
+  {
+   "label": "C raw",
+   "spread": 65.32583682968351,
+   "se": 38.781400254537424,
+   "t": 1.6844630776847822,
+   "p": 0.09209220927839092,
+   "stocks": 46,
+   "ttt_stocks": 20,
+   "ddd_stocks": 27
+  },
+  {
+   "label": "C exante",
+   "spread": 34.278359098940534,
+   "se": 30.474714321495284,
+   "t": 1.1248131397498402,
+   "p": 0.26066822524260547,
+   "stocks": 45,
+   "ttt_stocks": 20,
+   "ddd_stocks": 26
+  }
+ ],
+ "cohort_C_split_A_B": {
+  "B": 156,
+  "A": 153
+ },
+ "cohort_C_ttt_ddd_stock_overlap": 1
+}

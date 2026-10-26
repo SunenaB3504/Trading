@@ -21,6 +21,9 @@ import { UniverseScreen } from './screens/UniverseScreen';
 import { loadDeviceSettings, saveDeviceSettings } from './settings/settings';
 import type { DeviceSettings } from './settings/settings';
 import type { SecureStore } from './secure/secureStore';
+import { useMarkets } from './trading/useMarkets';
+import type { Markets } from './trading/useMarkets';
+import { MarketSwitch } from './ui/MarketSwitch';
 import type { KeyValueStore } from './store/kv';
 import { colors } from './ui/Section';
 import { RootErrorBoundary } from './ui/RootErrorBoundary';
@@ -103,17 +106,21 @@ function useDevice() {
   return { device, profile, settings, setSettings, locked, setLocked, reload, open };
 }
 
-function Practise(props: { kv: KeyValueStore; now: () => number }) {
+function Practise(props: { kv: KeyValueStore; now: () => number; markets: Markets }) {
   const [tab, setTab] = useState<PractiseId>('trade');
-  const { kv, now } = props;
+  const { kv, now, markets } = props;
+  const market = markets.market;
   return (
     <>
+      <MarketSwitch markets={markets} />
       <TabStrip tabs={PRACTISE} active={tab} onSelect={setTab} small />
-      {tab === 'trade' ? <TradeScreen kv={kv} now={now} /> : null}
-      {tab === 'ledger' ? <LedgerScreen kv={kv} now={now} /> : null}
-      {tab === 'universe' ? <UniverseScreen /> : null}
-      {tab === 'compare' ? <CompareScreen kv={kv} now={now} /> : null}
-      {tab === 'report' ? <ReportScreen kv={kv} now={now} /> : null}
+      <View style={styles.body} key={market.id}>
+        {tab === 'trade' ? <TradeScreen kv={kv} now={now} market={market} /> : null}
+        {tab === 'ledger' ? <LedgerScreen kv={kv} now={now} /> : null}
+        {tab === 'universe' ? <UniverseScreen /> : null}
+        {tab === 'compare' ? <CompareScreen kv={kv} now={now} market={market} /> : null}
+        {tab === 'report' ? <ReportScreen kv={kv} now={now} market={market} /> : null}
+      </View>
     </>
   );
 }
@@ -176,6 +183,7 @@ function Main(props: {
   onImported: (p: Profile) => void;
 }) {
   const { d, profile, settings, profileKv, section, now } = props;
+  const markets = useMarkets(d.device.kv, profileKv, props.client, now);
   const accept = () => {
     const next = { ...settings, disclaimerAcceptedAt: Date.now() };
     void saveDeviceSettings(d.device.kv, next).then(() => d.setSettings(next));
@@ -184,9 +192,11 @@ function Main(props: {
     <>
       {settings.disclaimerAcceptedAt === null ? <Disclaimer onAccept={accept} /> : null}
       <TabStrip tabs={SECTIONS} active={section} onSelect={props.setSection} />
-      {section === 'home' ? <HomeScreen profile={profile} kv={profileKv} now={now} onGo={props.setSection} /> : null}
+      {section === 'home' ? (
+        <HomeScreen profile={profile} kv={profileKv} now={now} market={markets.market} onGo={props.setSection} />
+      ) : null}
       {section === 'learn' ? <ComingScreen title="Learn" lines={LEARN} testID="learn-screen" /> : null}
-      {section === 'practise' ? <Practise kv={profileKv} now={now} /> : null}
+      {section === 'practise' ? <Practise kv={profileKv} now={now} markets={markets} /> : null}
       {section === 'measure' ? <ComingScreen title="Measure" lines={MEASURE} testID="measure-screen" /> : null}
       {section === 'tutor' ? <ComingScreen title="Tutor" lines={TUTOR} testID="tutor-screen" /> : null}
       {section === 'settings' ? (

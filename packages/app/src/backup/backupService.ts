@@ -6,6 +6,7 @@ import { loadProfileSettings, profileSettingsSchema, saveProfileSettings } from 
 import type { ProfileSettings } from '../settings/settings';
 import { getStamped, putStamped } from '../store/kv';
 import type { KeyValueStore } from '../store/kv';
+import { demoMarket, requestsKey } from '../trading/market';
 
 /** Device-wide: the key that signs this device's backups. */
 export const DEVICE_KEY = 'device/key';
@@ -28,7 +29,7 @@ export interface StoredOrder {
 export type BackupItem =
   | { t: 'profile'; profile: ProfileIdentity }
   | { t: 'settings'; settings: ProfileSettings }
-  | ({ t: 'order' } & StoredOrder);
+  | ({ t: 'order'; m?: string } & StoredOrder);
 
 const byPlacement = (a: StoredOrder, b: StoredOrder): number =>
   a.request.order.placedAt - b.request.order.placedAt ||
@@ -61,14 +62,28 @@ export interface ExportDeps {
   randomHex: () => string;
 }
 
+/** Every book of the profile, by market id: the demo book and one per real-price market used. */
+async function booksOf(kv: KeyValueStore): Promise<Map<string, StoredOrder[]>> {
+  const books = new Map<string, StoredOrder[]>();
+  for (const key of await kv.keys()) {
+    if (key !== REQUESTS_KEY && !key.startsWith(`${REQUESTS_KEY}@`)) continue;
+    const market = key === REQUESTS_KEY ? demoMarket().id : key.slice(REQUESTS_KEY.length + 1);
+    books.set(market, (await getStamped<StoredOrder[]>(kv, key))?.value ?? []);
+  }
+  return books;
+}
+
 /** Writes one profile as a signed bundle and notes when (FR-X1, FR-X4). No PIN or secure-store value goes in. */
 export async function exportProfile(d: ExportDeps): Promise<Exported> {
   const keyHex = await deviceKey(d.device, d.randomHex);
-  const orders = [...((await getStamped<StoredOrder[]>(d.profileKv, REQUESTS_KEY))?.value ?? [])];
+  const tagged = [...(await booksOf(d.profileKv))].flatMap(([m, list]) =>
+    list.map((o): BackupItem => (m === demoMarket().id ? { t: 'order', ...o } : { t: 'order', m, ...o })),
+  );
+  const orders = tagged as Array<StoredOrder & { t: 'order' }>;
   const items: BackupItem[] = [
     { t: 'profile', profile: { id: d.profile.id, name: d.profile.name, createdAt: d.profile.createdAt } },
     { t: 'settings', settings: await loadProfileSettings(d.profileKv) },
-    ...orders.sort(byPlacement).map((o): BackupItem => ({ t: 'order', ...o })),
+    ...orders.sort(byPlacement),
   ];
   const bundle = buildBundle({
     createdAt: d.now,
@@ -104,14 +119,27 @@ export interface ReadBackup {
   unsigned: boolean;
   profile: ProfileIdentity | null;
   settings: ProfileSettings | null;
+  /** Every order in the file. */
   orders: StoredOrder[];
+  /** The same orders by market id (the demo market for orders that name none). */
+  books: Record<string, StoredOrder[]>;
 }
 
 const SHAPE = 'The orders in the bundle are not in the expected form.';
 const identitySchema = profileSchema.pick({ id: true, name: true, createdAt: true });
 
 const withoutTag = (o: Record<string, unknown>): unknown =>
-  Object.fromEntries(Object.entries(o).filter(([k]) => k !== 't'));
+  Object.fromEntries(Object.entries(o).filter(([k]) => k !== 't' && k !== 'm'));
+
+/** Groups orders by the market they name; `markets[i]` is the market of `orders[i]`. */
+function byMarket(orders: StoredOrder[], markets: string[]): Record<string, StoredOrder[]> {
+  const books: Record<string, StoredOrder[]> = {};
+  orders.forEach((o, i) => {
+    const m = markets[i] ?? demoMarket().id;
+    (books[m] ??= []).push(o);
+  });
+  return books;
+}
 
 /** The profile and settings records of a tagged backup, or null when they are not in the expected form. */
 function header(tagged: Array<Record<string, unknown>>): Pick<ReadBackup, 'profile' | 'settings'> | null {
@@ -125,13 +153,16 @@ function header(tagged: Array<Record<string, unknown>>): Pick<ReadBackup, 'profi
 }
 
 function contents(items: unknown[]): Omit<ReadBackup, 'level' | 'unsigned'> | string {
-  if (items.every(isOrder)) return { profile: null, settings: null, orders: items };
+  if (items.every(isOrder))
+    return { profile: null, settings: null, orders: items, books: byMarket(items, []) };
   const tagged = items as Array<Record<string, unknown>>;
   if (!tagged.every((i) => i.t === 'profile' || i.t === 'settings' || i.t === 'order')) return SHAPE;
   const head = header(tagged);
-  const orders: unknown[] = tagged.filter((i) => i.t === 'order').map(withoutTag);
+  const orderItems = tagged.filter((i) => i.t === 'order');
+  const markets = orderItems.map((i) => (typeof i.m === 'string' ? i.m : demoMarket().id));
+  const orders: unknown[] = orderItems.map(withoutTag);
   if (head === null || !orders.every(isOrder)) return SHAPE;
-  return { ...head, orders };
+  return { ...head, orders, books: byMarket(orders, markets) };
 }
 
 /** The key to check a bundle against: the one typed in, else this device's key if it is the one that signed. */
@@ -191,7 +222,7 @@ async function ownerOf(profiles: ProfileStore): Promise<Profile | null> {
 }
 
 const countOrders = async (kv: KeyValueStore): Promise<number> =>
-  (await getStamped<StoredOrder[]>(kv, REQUESTS_KEY))?.value.length ?? 0;
+  [...(await booksOf(kv)).values()].reduce((n, b) => n + b.length, 0);
 
 export async function previewImport(b: ReadBackup, profiles: ProfileStore): Promise<ImportPreview> {
   if (b.profile === null) {
@@ -217,6 +248,13 @@ export async function previewImport(b: ReadBackup, profiles: ProfileStore): Prom
   };
 }
 
+/** Replaces the profile's books with the file's: books the file does not hold are emptied, as a full restore. */
+async function putBooks(kv: KeyValueStore, books: Record<string, StoredOrder[]>, now: number): Promise<void> {
+  const markets = new Set([...(await booksOf(kv)).keys(), ...Object.keys(books)]);
+  for (const m of markets)
+    await putStamped(kv, requestsKey(m, REQUESTS_KEY), [...(books[m] ?? [])].sort(byPlacement), now);
+}
+
 /** The device's only profile when it is still empty (no orders): what a restore onto a new device replaces. */
 async function freshStart(profiles: ProfileStore): Promise<Profile | null> {
   const list = await profiles.list();
@@ -230,7 +268,7 @@ export async function applyImport(b: ReadBackup, profiles: ProfileStore, now: nu
   if (b.profile === null) {
     const owner = await ownerOf(profiles);
     if (owner === null) throw new Error('no profile to import into');
-    await putStamped(profiles.scope(owner.id), REQUESTS_KEY, [...b.orders].sort(byPlacement), now);
+    await putBooks(profiles.scope(owner.id), b.books, now);
     return owner;
   }
   const exists = (await profiles.list()).some((p) => p.id === b.profile?.id);
@@ -238,7 +276,7 @@ export async function applyImport(b: ReadBackup, profiles: ProfileStore, now: nu
   if (fresh !== null) await profiles.rename(fresh.id, `${fresh.name.slice(0, 30)} (old)`);
   let target = (await profiles.adopt(b.profile)).profile;
   const kv = profiles.scope(target.id);
-  await putStamped(kv, REQUESTS_KEY, [...b.orders].sort(byPlacement), now);
+  await putBooks(kv, b.books, now);
   if (b.settings !== null) await saveProfileSettings(kv, b.settings);
   if (fresh !== null) {
     await profiles.makeOwner(target.id);

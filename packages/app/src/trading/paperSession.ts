@@ -1,13 +1,12 @@
 import {
   FixedClock,
   PaperExecutionAdapter,
-  buildFixtureScenario,
   computeLedgerB,
   createRng,
   istToUtcMillis,
   winLossReport,
 } from '@trading/core';
-import type { OrderRecord, Position, ReplaySnapshot, WinLossReport } from '@trading/core';
+import type { OrderRecord, Position, WinLossReport } from '@trading/core';
 import { REQUESTS_KEY } from '../backup/backupService';
 import type { StoredOrder } from '../backup/backupService';
 import { formatPaise } from '../format/rupees';
@@ -15,6 +14,8 @@ import { getStamped, putStamped } from '../store/kv';
 import type { KeyValueStore } from '../store/kv';
 import { toComparisonView } from '../viewModels/comparisonView';
 import type { ComparisonView } from '../viewModels/comparisonView';
+import { demoMarket, requestsKey } from './market';
+import type { Market } from './market';
 import { makeOrderRequest } from './orderRequest';
 import { describeOrder, reasonText } from './orderText';
 import type { OrderForm } from './orderRequest';
@@ -26,7 +27,7 @@ type Stored = StoredOrder;
 
 export interface SessionView {
   cash: string;
-  positions: Array<{ instrumentId: string; quantity: number; basis: string }>;
+  positions: Array<{ instrumentId: string; symbol: string; quantity: number; basis: string }>;
   orders: Array<{ id: string; line: string; state: OrderRecord['state']; reason: string | null }>;
 }
 
@@ -34,17 +35,7 @@ export type PlaceOutcome =
   | { ok: true; orderId: string; state: OrderRecord['state']; dataEnds: string }
   | { ok: false; error: string };
 
-/** The instruments and prices the demo book trades: the core's frozen demo snapshot. */
-export function demoMarket(): {
-  snapshot: ReplaySnapshot;
-  instruments: string[];
-  lastDate: string;
-} {
-  const s = buildFixtureScenario();
-  const instruments = Object.keys(s.snapshot.bars).sort();
-  const dates = Object.values(s.snapshot.bars).flatMap((b) => b.map((x) => x.date));
-  return { snapshot: s.snapshot, instruments, lastDate: dates.reduce((a, b) => (a > b ? a : b)) };
-}
+export { demoMarket } from './market';
 
 /**
  * The owner's paper book. Every order goes through `IExecutionAdapter`. The accepted requests are saved
@@ -59,14 +50,14 @@ export class PaperSession {
     private readonly stored: Stored[],
     private readonly kv: KeyValueStore,
     private readonly now: () => number,
+    private readonly market: Market,
   ) {
-    this.adapter = PaperSession.rebuild(stored);
+    this.adapter = PaperSession.rebuild(stored, market);
   }
 
-  private static rebuild(stored: readonly Stored[]): PaperExecutionAdapter {
-    const { snapshot, lastDate } = demoMarket();
-    const clock = new FixedClock(istToUtcMillis(lastDate, '16:00'));
-    const adapter = new PaperExecutionAdapter(() => snapshot, buildFixtureScenario().config, clock);
+  private static rebuild(stored: readonly Stored[], market: Market): PaperExecutionAdapter {
+    const clock = new FixedClock(istToUtcMillis(market.lastDate, '16:00'));
+    const adapter = new PaperExecutionAdapter(() => market.snapshot, market.config, clock);
     const inOrder = [...stored].sort(
       (a, b) =>
         a.request.order.placedAt - b.request.order.placedAt ||
@@ -78,35 +69,44 @@ export class PaperSession {
     return adapter;
   }
 
-  static async open(kv: KeyValueStore, now: () => number): Promise<PaperSession> {
-    const saved = await getStamped<Stored[]>(kv, REQUESTS_KEY);
-    return new PaperSession([...(saved?.value ?? [])], kv, now);
+  /** Opens the profile's book for one market (the demo market when none is given). */
+  static async open(
+    kv: KeyValueStore,
+    now: () => number,
+    market: Market = demoMarket(),
+  ): Promise<PaperSession> {
+    const saved = await getStamped<Stored[]>(kv, requestsKey(market.id, REQUESTS_KEY));
+    return new PaperSession([...(saved?.value ?? [])], kv, now, market);
   }
 
   async place(form: OrderForm): Promise<PlaceOutcome> {
     const built = makeOrderRequest(form, this.stored.length + 1);
     if (!built.ok) return built;
     const key = `ui-${built.request.order.id}`;
-    const probe = PaperSession.rebuild(this.stored);
+    if (form.date < this.market.firstTradeDate)
+      return {
+        ok: false,
+        error: `Orders can be placed from ${this.market.firstTradeDate}: the charges table starts then.`,
+      };
+    const probe = PaperSession.rebuild(this.stored, this.market);
     const result = await probe.placeOrder(built.request, key);
     if (result.status === 'rejected')
       return { ok: false, error: `Order rejected: ${result.reasonCode}` };
     this.stored.push({ key, request: built.request });
-    await putStamped(this.kv, REQUESTS_KEY, this.stored, this.now());
-    this.adapter = PaperSession.rebuild(this.stored);
+    await putStamped(this.kv, requestsKey(this.market.id, REQUESTS_KEY), this.stored, this.now());
+    this.adapter = PaperSession.rebuild(this.stored, this.market);
     const placed = (await this.adapter.getOrders()).find((o) => o.orderId === result.orderId);
     return {
       ok: true,
       orderId: result.orderId,
       state: placed?.state ?? 'pending',
-      dataEnds: demoMarket().lastDate,
+      dataEnds: this.market.lastDate,
     };
   }
 
   /** Ledger A beside Ledger B for this book, from the same snapshot (FR-L3). */
   comparison(): ComparisonView {
-    const { snapshot } = demoMarket();
-    const cfg = buildFixtureScenario().config;
+    const { snapshot, config: cfg } = this.market;
     const result = this.adapter.result();
     return toComparisonView(
       computeLedgerB(result, snapshot, cfg.actions, cfg.endDate, cfg.capitalPaise),
@@ -129,13 +129,14 @@ export class PaperSession {
       cash: formatPaise(cash),
       positions: positions.map((p) => ({
         instrumentId: p.instrumentId,
+        symbol: this.market.symbols[p.instrumentId] ?? p.instrumentId,
         quantity: p.quantity,
         basis: formatPaise(p.basisPaise),
       })),
       orders: orders
         .map((o) => ({
           id: o.orderId,
-          line: describeOrder(o, byId.get(o.orderId)),
+          line: describeOrder(o, byId.get(o.orderId), (id) => this.market.symbols[id] ?? id),
           state: o.state,
           reason: reasonText(o.reason),
         }))

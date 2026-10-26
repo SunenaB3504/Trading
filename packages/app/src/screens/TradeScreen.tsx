@@ -3,19 +3,21 @@ import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-
 import type { KeyValueStore } from '../store/kv';
 import { previewCosts } from '../trading/costPreview';
 import type { OrderForm } from '../trading/orderRequest';
-import { PaperSession, demoMarket } from '../trading/paperSession';
+import type { Market } from '../trading/market';
+import { PaperSession } from '../trading/paperSession';
 import type { SessionView } from '../trading/paperSession';
 import { Note, Row, Section, colors } from '../ui/Section';
 
-const FIRST_FORM: OrderForm = {
-  instrumentId: 'AAA',
+/** Where the form starts: the first stock and a date whose next session has prices, so a first order fills. */
+const firstForm = (market: Market): OrderForm => ({
+  instrumentId: market.instruments[0] ?? '',
   side: 'buy',
   type: 'market',
   quantity: '10',
   limit: '',
   stop: '',
-  date: '2026-03-02',
-};
+  date: market.defaultDate,
+});
 
 function Choice<T extends string>(props: {
   label: string;
@@ -23,6 +25,7 @@ function Choice<T extends string>(props: {
   options: readonly T[];
   onChange: (v: T) => void;
   testID: string;
+  labels?: Readonly<Record<string, string>>;
 }) {
   return (
     <View style={styles.field}>
@@ -36,7 +39,9 @@ function Choice<T extends string>(props: {
             onPress={() => props.onChange(o)}
             style={[styles.choice, o === props.value ? styles.choiceOn : null]}
           >
-            <Text style={o === props.value ? styles.choiceTextOn : styles.choiceText}>{o}</Text>
+            <Text style={o === props.value ? styles.choiceTextOn : styles.choiceText}>
+              {props.labels?.[o] ?? o}
+            </Text>
           </Pressable>
         ))}
       </View>
@@ -75,7 +80,7 @@ function Book({ view }: { view: SessionView }) {
         {view.positions.map((p) => (
           <Row
             key={p.instrumentId}
-            label={`${p.instrumentId}, ${p.quantity} shares`}
+            label={`${p.symbol}, ${p.quantity} shares`}
             value={`basis ${p.basis}`}
           />
         ))}
@@ -96,49 +101,79 @@ function Book({ view }: { view: SessionView }) {
   );
 }
 
-type Market = ReturnType<typeof demoMarket>;
 type SetField = <K extends keyof OrderForm>(k: K, v: OrderForm[K]) => void;
 
 /** What to tell the person after an order is accepted: the next open, or why it will wait. */
-function placedMessage(r: { orderId: string; state: string; dataEnds: string }): string {
+function placedMessage(r: { orderId: string; state: string }, market: Market, instrumentId: string): string {
   if (r.state === 'pending') {
-    return `Order ${r.orderId} placed, but it stays pending: the demo prices end on ${r.dataEnds}, so there is no later session to fill it.`;
+    const bars = market.snapshot.bars[instrumentId] ?? [];
+    const ends = bars[bars.length - 1]?.date ?? market.lastDate;
+    const name = market.symbols[instrumentId] ?? instrumentId;
+    return `Order ${r.orderId} placed, but it stays pending: prices for ${name} end on ${ends}, so there is no later session to fill it.`;
   }
   return `Order ${r.orderId} placed. It is tried at the next session's open, which can be days away around a holiday or a weekend.`;
 }
 
-function useTrade(kv: KeyValueStore, now: () => number) {
+function useTrade(kv: KeyValueStore, now: () => number, market: Market) {
   const [session, setSession] = useState<PaperSession | null>(null);
   const [view, setView] = useState<SessionView | null>(null);
-  const [form, setForm] = useState<OrderForm>(FIRST_FORM);
+  const [form, setForm] = useState<OrderForm>(() => firstForm(market));
   const [message, setMessage] = useState<string | null>(null);
   useEffect(() => {
-    void PaperSession.open(kv, now).then(async (s) => {
+    void PaperSession.open(kv, now, market).then(async (s) => {
       setSession(s);
       setView(await s.view());
     });
-  }, [kv, now]);
+  }, [kv, now, market]);
   const set: SetField = (k, v) => setForm((f) => ({ ...f, [k]: v }));
   const submit = useCallback(async () => {
     if (session === null) return;
     const r = await session.place(form);
-    setMessage(r.ok ? placedMessage(r) : r.error);
+    setMessage(r.ok ? placedMessage(r, market, form.instrumentId) : r.error);
     setView(await session.view());
-  }, [session, form]);
+  }, [session, form, market]);
   return { view, form, message, set, submit };
+}
+
+/** A few instruments are buttons; a longer list gets a search box and shows the matches as buttons. */
+function StockPicker(props: { market: Market; value: string; onChange: (id: string) => void }) {
+  const { market } = props;
+  const [query, setQuery] = useState('');
+  if (market.instruments.length <= 6)
+    return (
+      <Choice
+        label="Instrument"
+        value={props.value}
+        options={market.instruments}
+        labels={market.symbols}
+        onChange={props.onChange}
+        testID="pick-instrument"
+      />
+    );
+  const q = query.trim().toUpperCase();
+  const name = (id: string): string => market.symbols[id] ?? id;
+  const matches = market.instruments.filter((id) => q === '' || name(id).includes(q)).slice(0, 12);
+  const shown = matches.includes(props.value) ? matches : [props.value, ...matches.slice(0, 11)];
+  return (
+    <>
+      <Field label={`Stock (${market.instruments.length} to choose from): type to search`} value={query} onChange={setQuery} testID="stock-search" />
+      <Choice
+        label={`Selected: ${name(props.value)}`}
+        value={props.value}
+        options={shown}
+        labels={market.symbols}
+        onChange={props.onChange}
+        testID="pick-instrument"
+      />
+    </>
+  );
 }
 
 function OrderFields(props: { market: Market; form: OrderForm; set: SetField }) {
   const { market, form, set } = props;
   return (
     <>
-      <Choice
-        label="Instrument"
-        value={form.instrumentId}
-        options={market.instruments}
-        onChange={(v) => set('instrumentId', v)}
-        testID="pick-instrument"
-      />
+      <StockPicker market={market} value={form.instrumentId} onChange={(v) => set('instrumentId', v)} />
       <Choice
         label="Side"
         value={form.side}
@@ -208,9 +243,8 @@ function CostSection({ market, form }: { market: Market; form: OrderForm }) {
   );
 }
 
-export function TradeScreen({ kv, now }: { kv: KeyValueStore; now: () => number }) {
-  const market = useMemo(() => demoMarket(), []);
-  const { view, form, message, set, submit } = useTrade(kv, now);
+export function TradeScreen({ kv, now, market }: { kv: KeyValueStore; now: () => number; market: Market }) {
+  const { view, form, message, set, submit } = useTrade(kv, now, market);
   return (
     <ScrollView contentContainerStyle={styles.page} testID="trade-screen">
       <Section title="New order (virtual money)">

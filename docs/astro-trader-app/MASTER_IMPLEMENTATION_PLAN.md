@@ -155,6 +155,13 @@ Changes beyond the task table: the app's snapshot client moved to `packages/work
 ---
 
 ### Stage 2: Real Market Data on Both Devices
+
+#### Stage 2a (laptop slice), built 2026-10-26 at the owner's request during UAT-6
+* The owner's list of 50 stocks (`data/market/learning_symbols.txt`; TATAMTR replaced by TATAMOTORS, which is now TMPV, plus TMCV after the October 2025 demerger: 51) is built from the NSE bhavcopy archive already on the laptop by `pnpm market:build` into `data/derived/market/learning-market-v1.json` (git-ignored, about 8 MB): prices 2011-06-22 to 2026-10-16, 926 corporate actions, renames followed by ISIN. Stocks that stopped trading keep their history (Jet Airways to 2024-11-07, Punj Lloyd to 2022-10-06); Gitanjali (2019) and DCHL (2013) end before the charges table starts on 2020-04-01, so they can be viewed but not traded.
+* `packages/core/src/market`: the market file format (compact bars) and its decoding into the replay snapshot. The data helper serves it on `/market`; `pnpm uat:start` loads it.
+* App: a Demo / Real NSE switch at the top of Practise, one book per market per profile (the demo book keeps its key), a searchable stock picker, symbols in the book, the real market saved on the device for offline use, and backups that carry every book.
+* Checks: 997 tests; all earlier browser checks; new `pnpm e2e:market` (6 checks).
+* Still to do in Stage 2: real prices on the phone (device downloader), daily catch-up of new sessions, bundled history in the APK, mutual funds.
 * **Reuse:** data-service parsers, canonicalisation, cross-check, index puller, actions, status, HTTP service.
 * **Tasks:** pure-JS inflate in the shared zip path; React Native HTTP client implementing the existing `HttpClient`; device downloader with rate limiting and retry (existing); MF NAV route on the data helper; table store for daily bars (SQLite on Android, IndexedDB on web); bundled history build job in `workers` (universe, main ETFs and indices from 2015, selected funds); catch-up of missing sessions on app open; the Practice account switches from demo data to real data; data health view.
 * **Exit gate:** fresh install loads bundled history offline; a missed week catches up in under 30 s on Wi-Fi on the phone and via the helper on the laptop; cross-check passes; holidays skipped; no host outside the allowlist.

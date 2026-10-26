@@ -23,6 +23,7 @@ docs/UAT/**/bundle*.txt
 data/derived/*
 !data/derived/jathakam-dasha-study/
 data/publish/
+scratch/
 
 
 # Python bytecode

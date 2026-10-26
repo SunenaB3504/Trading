@@ -155,8 +155,15 @@ function getSnap(deps: ServiceDeps, req: ServiceRequest): ServiceResponse {
   return found === undefined ? fail(404, `unknown snapshot ${id}`) : ok(found);
 }
 
+function market(deps: ServiceDeps): ServiceResponse {
+  return deps.market === undefined
+    ? fail(404, 'no learning market is loaded; run pnpm market:build')
+    : ok(deps.market);
+}
+
 const GET: Record<string, Route> = {
   '/health': (d) => health(d),
+  '/market': (d) => market(d),
   '/instruments': (d) => instruments(d),
   '/bars': bars,
   '/actions': actions,

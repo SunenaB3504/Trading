@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import type { CostView, WinLossReport } from '@trading/core';
 import type { KeyValueStore } from '../store/kv';
+import type { Market } from '../trading/market';
 import { PaperSession } from '../trading/paperSession';
 import { Note, Row, Section, colors } from '../ui/Section';
 import { toWinLossView, tradeCount } from '../viewModels/winLossView';
@@ -43,12 +44,20 @@ function ViewToggle(props: { view: CostView; onChange: (v: CostView) => void }) 
   );
 }
 
-export function ReportScreen({ kv, now }: { kv: KeyValueStore; now: () => number }) {
+export function ReportScreen({
+  kv,
+  now,
+  market,
+}: {
+  kv: KeyValueStore;
+  now: () => number;
+  market: Market;
+}) {
   const [report, setReport] = useState<WinLossReport | null>(null);
   const [view, setView] = useState<CostView>('net');
   useEffect(() => {
-    void PaperSession.open(kv, now).then((s) => setReport(s.report()));
-  }, [kv, now]);
+    void PaperSession.open(kv, now, market).then((s) => setReport(s.report()));
+  }, [kv, now, market]);
   const text = useMemo(
     () => (report === null ? null : toWinLossView(report, view)),
     [report, view],
