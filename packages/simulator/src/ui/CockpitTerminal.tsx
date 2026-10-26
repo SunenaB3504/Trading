@@ -22,6 +22,7 @@ import { evaluateKotaChakra } from '../core/astro/kotaChakra';
 import { calculateTransitNakshatras } from '../core/astro/ephemeris';
 import { NAKSHATRAS } from '../core/astro/constants';
 import { generateMahadashas, resolveActive5FoldDasha } from '../core/astro/vimshottari';
+import { classifyLordRole } from '../core/astro/trikonaNathans';
 import { auditBalanceSheetPIT, type FinancialAuditResult } from '../core/financial/balanceSheetAudit';
 import { detectEdgeSignals } from '../core/engine/edgeDetector';
 import { calculatePositionSize } from '../core/engine/sizingCalculator';
@@ -85,13 +86,21 @@ function deriveTradeTicket(
   bar: DailyBar | null,
   totalEquity: number,
   phiFinancial: number,
-  isBreached: boolean
+  isBreached: boolean,
+  dashaState: ActiveDashaState | null,
+  metadata: CorporateRegistryRecord | null
 ): MasterTradeTicket | null {
   if (!bar) return null;
+
+  const lagnaId = metadata?.lagna_sign_id ?? 0;
+  const mdCategory = dashaState ? classifyLordRole(dashaState.mahadasha, lagnaId) : 'neutral';
+  const adCategory = dashaState ? classifyLordRole(dashaState.antardasha, lagnaId) : 'neutral';
+  const pdCategory = dashaState ? classifyLordRole(dashaState.pratyantardasha, lagnaId) : 'neutral';
+
   const edge = detectEdgeSignals(bar, {
-    mdCategory: 'trikona',
-    adCategory: 'trikona',
-    pdCategory: 'trikona',
+    mdCategory,
+    adCategory,
+    pdCategory,
     sessionsToCusp: 2,
     isVry: false,
     isFortressBreached: isBreached,
@@ -140,8 +149,8 @@ function useCockpitTelemetryState() {
   }, [activeBar?.symbol, activeDate]);
 
   const tradeTicket = useMemo(
-    () => deriveTradeTicket(activeBar, ledger.total_equity, auditResult.phiFinancial, kotaState.defenseScore < 0.35),
-    [activeBar, ledger.total_equity, auditResult.phiFinancial, kotaState.defenseScore]
+    () => deriveTradeTicket(activeBar, ledger.total_equity, auditResult.phiFinancial, kotaState.defenseScore < 0.35, dashaState, metadata),
+    [activeBar, ledger.total_equity, auditResult.phiFinancial, kotaState.defenseScore, dashaState, metadata]
   );
 
   const telemetry = useMemo(() => serializeCockpitState({

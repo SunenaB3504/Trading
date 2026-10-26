@@ -77,6 +77,10 @@ export const TrikonaNathansBadge: React.FC<TrikonaNathansBadgeProps> = ({ metada
       <span style={{ color: '#34D399', fontSize: '10px', fontWeight: 700, fontFamily: 'monospace' }}>
         [T] Set: &#123;{res.trikonaLords.join(', ')}&#125;
       </span>
+      <span style={{ color: '#64748B', fontSize: '10px' }}>|</span>
+      <span style={{ color: '#F87171', fontSize: '10px', fontWeight: 700, fontFamily: 'monospace' }}>
+        [D] Set: &#123;{res.dusthanaLords.join(', ')}&#125;
+      </span>
     </div>
   );
 };

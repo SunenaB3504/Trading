@@ -207,10 +207,24 @@ packages/app/src/
      $$\mathbf{S}(t) = [\text{MD}_t, \text{AD}_t, \text{PD}_t, \text{SD}_t, \text{Prana}_t, \text{LagnaDegree}_t, \text{Role}_t]$$
   4. `timelineCache.ts`: Serializes the entire 25-year timeline sequence into contiguous typed memory arrays on stock load. The simulation playback engine queries this cache in $O(1)$ time per date tick without re-invoking trigonometric routines.
   5. `induLagna.ts`: Computes 9th house from Moon and Lagna ray summation (*Kalas*) to establish the Indu Lagna wealth point.
-* **Rule Engine & Trikona Nathans Inspector:**
+* **Rule Engine, Dual Lordship Resolution & Trikona/Dusthana Inspectors:**
   * Computes the 12 corporate Bhavas from the ceremonial listing Lagna.
-  * Formally identifies the **Lagna Trikona Nathans** (the sacred triumvirate of rulers governing the 1st [Tanu], 5th [Purva Punya], and 9th [Bhagya] houses).
-  * Exposes an explicit **Trikona Nathans Persona** (e.g., *Libra Lagna $\rightarrow$ 1st Lord: Venus, 5th Lord: Saturn, 9th Lord: Mercury*) so traders can transparently audit why an ongoing Dasha is classified as **`[T]`** (Trikona Auspicious), **`[K]`** (Kendra Action), or **`[D]`** (Dusthana Stress).
+  * **Dual Lordship Resolution (*Dvi-Rashi Adhipatya* - BPHS Ch. 34):**
+    Because every planet except Sun and Moon rules two signs, Parashara's 4-fold hierarchy resolves conflicting house lordships deterministically:
+    1. **Moolatrikona Precedence Law:** A planet expresses $70\text{--}75\%$ of its energy through the house containing its Moolatrikona sign, and only $25\text{--}30\%$ through its secondary sign (Sun: Leo, Moon: Taurus, Mars: Aries, Mercury: Virgo, Jupiter: Sagittarius, Venus: Libra, Saturn: Aquarius).
+    2. **Lagnesha Immunity (*Ashtamadhipati Dosha Na Vidyate*):** The Lagna Lord (1L) is categorically immune from the 8th house blemish. (e.g. Venus for Libra Lagna rules 1H and 8H; as Lagnesha, it functions as an auspicious $[T]$ sovereign).
+    3. **8th & 12th House Neutrality Principle:** Lords of 2H, 8H, and 12H have no independent functional agenda; their nature takes the color of the other sign owned by that planet.
+    4. **6th House (Rina/Shatru) Non-Neutralization:** The 6th house is an active *Trishadaya* and *Dusthana*; its debt/litigation energy cannot be neutralized. (e.g. Jupiter for Libra Lagna rules 3H and 6H with zero Kendra/Trikona mitigating lordship, making it a pure functional malefic $[D]$).
+  * **Mathematical Lordship Scoring Formula:**
+    $$\text{Score}(P) = 0.70 \times W(\text{House}(\text{Moolatrikona})) + 0.30 \times W(\text{House}(\text{Second Sign}))$$
+    Where house weights are: Trikona (1, 5, 9) $= +1.0$; Kendra (4, 7, 10) $= +0.5$; Chameleon (2, 8, 12) $= 0.0$; Dusthana (3, 6, 11) $= -0.8$.
+    $$\begin{cases}
+    \text{Score} \ge +0.50 \implies \mathbf{[T]} \text{ (Trikona Benefic Set)} \\
+    \text{Score} \le -0.30 \implies \mathbf{[D]} \text{ (Dusthana Malefic Set)} \\
+    \text{Otherwise} \implies \mathbf{[K]} \text{ (Kendra / Neutral Action Set)}
+    \end{cases}$$
+  * Formally identifies both the **Lagna Trikona Nathans $[T]$ Set** and **Dusthana Nathans $[D]$ Set** (e.g., *Libra Lagna $\rightarrow [T]\text{ Set}: \{\text{Venus, Saturn, Mercury}\}$, $[D]\text{ Set}: \{\text{Jupiter, Mars, Rahu, Ketu}\}$*).
+  * Exposes explicit badges in the UI so traders can transparently audit why each level of an ongoing Dasha is classified as **`[T]`** (Trikona Auspicious), **`[K]`** (Kendra Action), or **`[D]`** (Dusthana Stress).
   * Emits full `CanonicalVedicChart` and assigns confluence weights based on lord dignity.
 
 ---
