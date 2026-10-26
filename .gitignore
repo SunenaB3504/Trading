@@ -34,3 +34,11 @@ __pycache__/
 packages/app/android/
 packages/app/ios/
 packages/app/build-apk/
+
+# built real-price history copied into the app by pnpm market:bundle
+packages/app/assets/learning-market.market
+
+# DuckDB binary databases and scratch logs
+data/parquet/*.duckdb
+data/parquet/*.duckdb.wal
+scratch-apk.log

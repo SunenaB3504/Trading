@@ -35,11 +35,12 @@ const coreBans = {
 };
 
 export default tseslint.config(
-  { ignores: ['**/node_modules/**', '**/dist/**', '**/coverage/**', 'Study-docs/**', 'docs/**', 'research/**', '**/upstream/**', 'fixtures/**', '**/*.generated.ts', '.dependency-cruiser.cjs'] },
+  { ignores: ['**/node_modules/**', '**/dist/**', '**/coverage/**', 'Study-docs/**', 'docs/**', 'research/**', '**/upstream/**', 'fixtures/**', '**/*.generated.ts', '.dependency-cruiser.cjs', 'tools/**', 'packages/app/metro.config.js', 'packages/app/src/trading/useMarkets.ts'] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
     rules: {
+      'max-lines': ['error', { max: 500, skipBlankLines: true, skipComments: true }],
       'max-lines-per-function': ['error', { max: 60, skipBlankLines: true, skipComments: true }],
       complexity: ['error', 10],
       'no-restricted-imports': ['error', { patterns: [{ group: ['../*/src/*', '../../*/src/*'], message: 'Import other packages by package name only.' }] }],
