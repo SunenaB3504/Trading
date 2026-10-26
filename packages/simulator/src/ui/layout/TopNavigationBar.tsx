@@ -9,7 +9,7 @@ import { useSimulationStore, type PlaybackSpeed } from '../../state/simulationSt
 import { useStockStore } from '../../state/stockStore';
 import { TimeMachine } from '../../core/engine/timeMachine';
 
-const TICKERS = ['TCS', 'INFY', 'RELIANCE', 'HDFCBANK', 'ICICIBANK', 'SBIN', 'LT', 'BHARTIARTL'];
+const TICKERS = ['TCS', 'DIVISLAB', 'BIOCON', 'PETRONET', 'IGL', 'YESBANK', 'SUZLON', 'BALAJITELE'];
 
 function BrandAndTicker({
   symbol,

@@ -9,6 +9,9 @@ export interface DailyBar {
   date: string; // YYYY-MM-DD
   close: number;
   prev_close: number;
+  open?: number;
+  high?: number;
+  low?: number;
   volume: number;
   daily_return: number;
   adj_close_index: number;

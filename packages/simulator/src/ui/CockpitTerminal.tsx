@@ -18,13 +18,17 @@ import { FinancialAuditCard } from './components/financial/FinancialAuditCard';
 import { MasterTradeTicketCard } from './components/advisory/MasterTradeTicketCard';
 import { CopilotChatCard } from './components/copilot/CopilotChatCard';
 import { evaluateKotaChakra } from '../core/astro/kotaChakra';
+import { generateMahadashas, resolveActive5FoldDasha } from '../core/astro/vimshottari';
 import { auditBalanceSheetPIT, type FinancialAuditResult } from '../core/financial/balanceSheetAudit';
 import { detectEdgeSignals } from '../core/engine/edgeDetector';
 import { calculatePositionSize } from '../core/engine/sizingCalculator';
 import { synthesizeTradeTicket, type MasterTradeTicket } from '../core/engine/advisorySynthesizer';
 import { serializeCockpitState } from '../core/ai/ragContextBuilder';
 import type { ActiveDashaState, KotaChakraState } from '../core/astro/types';
-import type { DailyBar } from '../core/data/types';
+import type { DailyBar, CorporateRegistryRecord, QuarterlyFundamental } from '../core/data/types';
+import pitFundamentalsData from '../core/data/fixtures/pitFundamentals.json';
+
+const pitFundamentals = pitFundamentalsData as Record<string, QuarterlyFundamental[]>;
 
 function LeftChartPanel({
   bars,
@@ -34,14 +38,14 @@ function LeftChartPanel({
 }: {
   bars: DailyBar[];
   currentIndex: number;
-  dashaState: ActiveDashaState;
+  dashaState: ActiveDashaState | null;
   activeDate: string;
 }): React.ReactElement {
   return (
     <section style={{ display: 'flex', flexDirection: 'column', borderRight: '1px solid #1E2638' }}>
       <DashaRibbon dashaState={dashaState} activeDate={activeDate} />
-      <div style={{ flex: 1, position: 'relative', background: '#0B0E14', padding: '10px' }}>
-        <PriceCandleCanvas bars={bars} currentIndex={currentIndex} width={800} height={420} />
+      <div style={{ flex: 1, position: 'relative', background: '#0B0E14', padding: '10px', minHeight: 0 }}>
+        <PriceCandleCanvas bars={bars} currentIndex={currentIndex} />
       </div>
       <ChartControls />
     </section>
@@ -99,21 +103,21 @@ function deriveTradeTicket(
   return synthesizeTradeTicket(bar, edge, sizing, '2026-12-31');
 }
 
+function deriveActiveDasha(meta: CorporateRegistryRecord | null, activeDate: string): ActiveDashaState | null {
+  if (!meta || !activeDate) return null;
+  const birthDateStr = `${meta.listing_date}T${meta.listing_time || '10:00:00'}+05:30`;
+  const birthMs = new Date(birthDateStr).getTime();
+  const mahadashas = generateMahadashas(birthMs, meta.moon_deg, meta.year_length_days);
+  const sessionMs = new Date(`${activeDate}T12:00:00+05:30`).getTime();
+  return resolveActive5FoldDasha(mahadashas, sessionMs);
+}
+
 function useCockpitTelemetryState() {
   const { currentIndex, activeDate } = useSimulationStore();
   const { bars, activeBar, metadata } = useStockStore();
   const { ledger, executeOrder } = usePortfolioStore();
 
-  const dashaState: ActiveDashaState = useMemo(() => ({
-    mahadasha: (metadata?.birth_md_lord?.toLowerCase() as 'jupiter') ?? 'jupiter',
-    antardasha: 'saturn',
-    pratyantardasha: 'mercury',
-    sookshmadasha: 'venus',
-    pranadasha: 'sun',
-    mdRemainingDays: 450,
-    adRemainingDays: 28,
-    pdRemainingDays: 5,
-  }), [metadata]);
+  const dashaState = useMemo(() => deriveActiveDasha(metadata, activeDate), [metadata, activeDate]);
 
   const kotaState = useMemo(() => evaluateKotaChakra(0, metadata?.moon_sign_id ?? 0, {
     jupiter: { nakshatraIndex: 0 },
@@ -127,7 +131,10 @@ function useCockpitTelemetryState() {
     ketu: { nakshatraIndex: 17 },
   }), [metadata]);
 
-  const auditResult = useMemo(() => auditBalanceSheetPIT([], activeDate), [activeDate]);
+  const auditResult = useMemo(() => {
+    const symFund = pitFundamentals[activeBar?.symbol ?? 'TCS'] ?? [];
+    return auditBalanceSheetPIT(symFund, activeDate);
+  }, [activeBar?.symbol, activeDate]);
 
   const tradeTicket = useMemo(
     () => deriveTradeTicket(activeBar, ledger.total_equity, auditResult.phiFinancial, kotaState.defenseScore < 0.35),
@@ -155,14 +162,7 @@ export const CockpitTerminal: React.FC = () => {
 
   const handleOrder = (ticket: MasterTradeTicket) => {
     if (ticket.action !== 'BUY' || ticket.shares <= 0) return;
-    void executeOrder(
-      ticket.symbol,
-      'BUY',
-      ticket.shares,
-      ticket.price,
-      ticket.provenance.reason,
-      activeDate
-    );
+    void executeOrder(ticket.symbol, 'BUY', ticket.shares, ticket.price, ticket.provenance.reason, activeDate);
   };
 
   return (
