@@ -1,137 +1,217 @@
-# Master Implementation Plan: Mock Trading App
+# Master Implementation Plan: Market Learning App
 
-**Document ID:** `MIP-MOCK-TRADER-v3.0`  
+**Document ID:** `MIP-MARKET-LEARN-v4.0`  
 **Status:** DRAFT  
 **Date:** 2026-10-26  
 **Directory:** [`docs/astro-trader-app/`](./)  
-**System Specification:** [`SYSTEM_SPECIFICATION_v1.md`](SYSTEM_SPECIFICATION_v1.md) (SSD v3.0)
+**System Specification:** [`SYSTEM_SPECIFICATION_v1.md`](SYSTEM_SPECIFICATION_v1.md) (SSD v4.0)  
+**User-facing description:** [`APP_FUNCTIONALITY.md`](APP_FUNCTIONALITY.md)
 
-> **Scope note (v3.0):** All astrology (jyothisham) features are removed. The app is a plain mock trading system: a breakout strategy on NSE EOD prices, five paper accounts, a dashboard and a strategy sandbox.
+> **Change from v3.0:** the goal is now a learning platform (Learn, Practise, Measure, with an AI tutor as guide) installed on Android as an APK and on a Windows laptop, each device working on its own. The v3.0 strategy engine and five automatic accounts become the "Strategy Lab and Robo accounts" in Stage 7.
 
 ---
 
-## 1. Roadmap
+## 1. Decisions Already Made
+
+| Topic | Decision |
+| :--- | :--- |
+| Goal | Single place to learn about the Indian market, for a complete beginner |
+| Platforms | Android APK (sideloaded) and Windows desktop app, from one TypeScript codebase |
+| Data sharing between devices | None automatic; Export / Import of a backup file |
+| Instrument order | Stocks, ETFs, mutual funds first; then futures and options; then currency, commodities (partial), bonds (calculator) |
+| Lesson content | Claude drafts; Sunil reviews; lessons marked draft until reviewed |
+| Robo accounts (v3.0 engine) | Kept, run on the device by catch-up when the app opens |
+| AI tutor | Core guide, with Off / Preview / On modes and per-feature switches; **Preview is the default at install** |
+| AI providers | Claude API (default model Haiku 5.5; Opus 5.5 offered for deep reviews) and a free-tier provider (initially Google Gemini free tier, after checking its current terms) |
+| AI cost control | Device-wide monthly rupee limit, default ₹200 when first switched On |
+
+---
+
+## 2. Roadmap
 
 ```mermaid
 graph LR
-    P0[Phase 0: Remove astrology code & reset state] --> P1[Phase 1: Config & ledger]
-    P1 --> P2[Phase 2: Market data pipeline]
-    P2 --> P3[Phase 3: Strategy, profiles, execution & backtest]
-    P3 --> P4[Phase 4: Daily runner & GitHub Actions]
-    P4 --> P5[Phase 5: Dashboard, Sandbox & local server]
-    P5 --> P6[Phase 6: Verification & user guide]
+    S0[0: Astrology removed - done] --> S1[1: Foundation]
+    S1 --> S2[2: Market data]
+    S2 --> S3[3: Trading engine - equity, ETF, MF]
+    S3 --> S4[4: Learn, coach, journal]
+    S4 --> S5[5: AI tutor]
+    S5 --> S6[6: Time Machine & Scenarios]
+    S6 --> R1((Release 1))
+    R1 --> S7[7: Charts, Strategy Lab, Robo accounts]
+    S7 --> S8[8: Futures & Options]
+    S8 --> R2((Release 2))
+    R2 --> S9[9: Other markets, tax, psychology]
+    S9 --> S10[10: Final verification]
+    S10 --> R3((Release 3))
 ```
 
-| Phase | Objective | Main deliverables |
+| Stage | Delivers | Size | Lessons added |
+| :--- | :--- | :--- | :--- |
+| **0** | Astrology removed, accounts reset | Done (`fcea9fd`) | — |
+| **1** | App shell on Android and Windows, database, profiles, settings, Export/Import | L | — |
+| **2** | Market data download, bundled history, data checks, instruments, holidays, corporate actions | L | — |
+| **3** | Trading engine for stocks, ETFs, mutual funds: orders, fills, charges, contract notes, ledger, performance figures; trading desk screens | L | — |
+| **4** | Lesson engine, glossary, quizzes, learning path, progress, built-in coach, mistake checker, journal | L | Levels 1–2 |
+| **5** | AI provider layer, Claude and free-tier providers, Preview samples, all AI features, settings, limits | M | — |
+| **6** | Time Machine, Scenarios (first set), Portfolio Builder | M | — |
+| **R1** | **First APK and Windows build for real use** | — | — |
+| **7** | Price charts and indicators, Strategy Lab, backtester, five Robo accounts with catch-up | M | Level 3 |
+| **8** | Futures and options: F&O data, lots, margin, mark-to-market, expiry, option chain, Greeks, Options Lab, F&O scenarios | XL | Level 4 |
+| **R2** | **Second release** | — | — |
+| **9** | Currency derivatives, commodities (partial), bond calculator, tax report, psychology tools | L | Levels 5–6 |
+| **10** | Full verification, content review sign-off, user guide | M | — |
+| **R3** | **Complete release** | — | — |
+
+Sizes are relative (S < M < L < XL). Each stage ends with a working app; nothing waits for the final release to be usable.
+
+---
+
+## 3. Current State and What Happens to It
+
+| Item | State after Stage 0 | Action |
 | :--- | :--- | :--- |
-| **0** | Remove all astrology code and the test trades in the ledgers | Cleaned `tools/live_agent/`, `app/`, reset `data/live_ledger/` |
-| **1** | Config files and a 5-account ledger with integrity checks | `config/*.json`, `ledger_manager.py` |
-| **2** | Daily EOD price download and history store | `market_data.py`, `data/market/eod/`, `nse_holidays.csv` |
-| **3** | Signals, profile sizing, fill simulation, backtest | `strategy.py`, `profiles.py`, `order_execution_sim.py`, `backtest.py` |
-| **4** | One-command daily cycle, scheduled on GitHub Actions | `daily_agent_runner.py`, `daily_paper_trading.yml` |
-| **5** | Dashboard and Sandbox pages, local server with API | `app/*`, `serve_app.py` |
-| **6** | End-to-end check and documentation | Verification report, `USER_GUIDE.md` |
+| `tools/live_agent/*.py` | Python ledger and placeholder runner | Rules ported to TypeScript in Stages 3 and 7; folder deleted in Stage 1 (kept in Git history) |
+| `app/` (HTML dashboard) | Static prototype | Replaced by the new app in Stage 1; deleted |
+| `data/live_ledger/` | Five seed accounts | Deleted in Stage 1; Robo accounts are created on the device in Stage 7 |
+| `.github/workflows/daily_paper_trading.yml` | Manual-only workflow | Replaced in Stage 1 by a build-and-test workflow (no trading) |
+| `docs/astro-trader-app/` | SSD v4.0, MIP v4.0, functionality guide | Kept as the project's documents |
 
 ---
 
-## 2. Current State (from commit `2b4e354`)
+## 4. Stage Details
 
-| Item | State | Action |
-| :--- | :--- | :--- |
-| `tools/live_agent/ephemeris_transit_live.py` | Astrology only | Delete (Phase 0) |
-| `tools/live_agent/master_router_v2.py` | Astrology tiers; also blocks the "control" trader | Delete; replaced by `strategy.py` + `profiles.py` (Phase 3) |
-| `tools/live_agent/ledger_manager.py` | Works for 4 traders; metadata holds moon sign, nakshatra, Indu Lagna | Remove astro fields; extend to 5 accounts; add costs and integrity checks (Phase 1) |
-| `tools/live_agent/daily_agent_runner.py` | Uses three hard-coded stocks with typed-in prices | Rewrite around real data (Phase 4) |
-| `data/live_ledger/*.json`, `master_trade_history.csv` | Contain test trades at made-up prices with astrology reasons | Replace with fresh seed files (Phase 0) |
-| `app/index.html`, `app.js`, `dashboard.css` | Astro dial, SBC grid, astro trade reasons | Remove those sections; rebuild per SSD §7.1 (Phases 0, 5) |
-| `.github/workflows/daily_paper_trading.yml` | Runs at 09:00 IST; installs `pyswisseph`; no write permission set | Move to after close, use `requirements.txt`, add `permissions: contents: write` (Phase 4) |
-| `tools/live_agent/__pycache__/*.pyc` | Committed to Git | Remove from Git, add to `.gitignore` (Phase 0) |
-
----
-
-## 3. Phase Details
-
-### Phase 0: Remove Astrology Code & Reset State
+### Stage 1: Foundation
 * **Tasks:**
-  1. Delete `ephemeris_transit_live.py` and `master_router_v2.py`.
-  2. Remove astrology fields (lagna, moon sign, nakshatra, Indu Lagna, "role" text) from `ledger_manager.py`.
-  3. Remove the Astro-Compass dial, SBC 81-grid and astro trade reasons from `app/index.html`, `app/js/app.js` and `app/css/dashboard.css`; rename the page title to "Mock Trading Dashboard".
-  4. Remove `pyswisseph` from the workflow and any dependency list.
-  5. Delete the existing ledger and trade files and create fresh seed files for the five accounts (₹10,00,000 cash each, no positions).
-  6. Untrack `__pycache__/` and add it to `.gitignore`.
-* **Exit gate:** `grep -riE "astro|moon|nakshatra|lagna|indu|dasha|kota|sbc|vedha|tithi|ephemeris|swisseph"` over `tools/live_agent/`, `app/`, `config/`, `data/live_ledger/` and `.github/` returns nothing (apart from the historical folder name `docs/astro-trader-app/`).
+  1. Create the TypeScript project (`mobile-app/` or similar): React + Vite UI, core engine package, Capacitor Android project, Electron Windows project.
+  2. SQLite integration on both platforms; schema migrations; database transactions for every write.
+  3. Profiles (create, rename, optional PIN, device owner); settings store; secure key storage (Android Keystore, Electron `safeStorage`).
+  4. Navigation shell: Home, Learn, Practise, Measure, Tutor, Settings; first-launch disclaimer.
+  5. Export / Import of a profile backup (no keys, no PINs); merge preview and confirmation.
+  6. Build-and-test GitHub workflow: unit tests, web build, Android debug APK as a build artifact.
+  7. Remove the superseded prototype folders.
+* **Exit gate:** the same app opens on an Android phone (APK) and on Windows; two profiles can be created; a profile exported on one device imports on the other with identical settings; tests pass in the workflow.
 
----
-
-### Phase 1: Config & Ledger
+### Stage 2: Market Data
 * **Tasks:**
-  1. Create `config/strategy.json`, `config/profiles.json`, `config/sandbox_config.json` (defaults equal to Account 2), `config/costs.json`, `config/watchlist.csv` (Nifty 100 symbols plus `NIFTYBEES`).
-  2. `ledger_manager.py`:
-     * Load and save the five account files (SSD §6 layout).
-     * Apply buy and sell fills with costs; track average price, highest close since entry and entry date.
-     * Daily mark-to-market and NAV series.
-     * Append to `trades.csv`; write `run_log.csv`.
-     * Integrity checks (cash ≥ 0, NAV reconciles, daily cash change reconciles, no negative quantity), raising an error on failure.
-     * Metrics: total return, CAGR, max drawdown, win rate, average win/loss, Sharpe, return vs. Account 1.
-* **Exit gate:** tests run a deposit → buy → mark-to-market → partial sell → full sell cycle on all five accounts and match hand-calculated cash, costs and NAV to 2 decimal places; a deliberately broken ledger fails the integrity check.
+  1. Downloaders (through the native HTTP layer) for the NSE daily price file and AMFI NAV file; Yahoo Finance fallback for prices; record source per day.
+  2. Instrument master (symbol, name, sector, ISIN, type, lot size where relevant).
+  3. Bundled history build script: Nifty 100 stocks, main ETFs and indices from 2015; selected mutual funds; compressed and loaded on first launch.
+  4. Trading-day calendar and corporate-action adjustments.
+  5. Data checks and a "data health" screen (last data date, gaps, rejected rows).
+  6. Catch-up on app open: download each missing trading day in order.
+* **Exit gate:** on a fresh install the bundled history loads offline; a catch-up over a week of missing days completes in under 30 seconds on Wi-Fi; data checks pass; a holiday is skipped.
 
----
-
-### Phase 2: Market Data Pipeline
+### Stage 3: Trading Engine (Stocks, ETFs, Mutual Funds)
 * **Tasks:**
-  1. `market_data.py`:
-     * Download the NSE daily bhavcopy for a date; parse open, high, low, close, volume for the watchlist.
-     * Fallback to Yahoo Finance (`.NS` symbols) if the bhavcopy is missing; record the source used.
-     * Store history in `data/market/eod/`; backfill from 2021-01-01 for the backtest.
-     * `is_trading_day(date)` using weekends and `config/nse_holidays.csv`.
-     * Split/bonus adjustment file applied to history and open positions.
-  2. Data checks: no duplicate dates, no zero or negative prices, high ≥ max(open, close), low ≤ min(open, close); flag gaps.
-* **Exit gate:** a one-day fetch for the watchlist finishes in under 60 seconds; the backfill passes all data checks; a known holiday returns "not a trading day".
+  1. `content/market_facts.json` with charges, mutual fund cut-off rules and other changeable facts, each with an as-of date and source note.
+  2. Order types: market, limit, SL, SL-M, GTT; mutual fund lump sum, SIP and redemption.
+  3. Fill engine per SSD §5.2, with slippage, whole units, cash checks, DAY/GTT validity.
+  4. Charges and contract note per fill.
+  5. Ledger: accounts, positions, NAV history; integrity checks after each processed day.
+  6. Performance figures per SSD §6.3.
+  7. Screens: watchlist, quote with daily chart, order ticket, orders, positions, holdings, contract notes, account summary.
+* **Exit gate:** at least 40 unit tests with hand-worked expected values (each order type, gaps through stops, partial cash, SIP dates on holidays, MF cut-off, split adjustment); a no-look-ahead test; integrity checks catch a deliberately broken ledger.
 
----
-
-### Phase 3: Strategy, Profiles, Execution & Backtest
+### Stage 4: Learn, Built-in Coach and Journal
 * **Tasks:**
-  1. `strategy.py`: breakout entry (close > highest high of previous N days and volume ≥ M × N-day average volume), ranking, re-entry cool-off, exit checks (stop-loss, trailing stop, max holding, profile time exit).
-  2. `profiles.py`: load profiles and sandbox config; validate ranges; turn signals into orders (size as % of NAV, max positions, market/limit, whole shares, cash limit). Account 1 buys `NIFTYBEES` once and holds.
-  3. `order_execution_sim.py`: fills at next day's open with slippage; limit fill rule (next day low ≤ limit, fill at limit, else expire); missing-price carry for up to 3 days; costs from `costs.json`.
-  4. `backtest.py`: runs the same functions day by day over stored history for any profile and returns NAV series, trades and metrics, plus the Nifty buy-and-hold comparison.
-* **Exit gate:** at least 25 unit tests covering edge cases (no signal, more signals than slots, insufficient cash, limit not reached, gap down through stop, missing price, time exit on day 10, re-entry blocked). A look-ahead test confirms that changing prices after day *T* does not change orders decided on *T*.
+  1. Lesson engine: Markdown with front matter (SSD §4.2), diagrams, "facts as of" display, "Try it" deep links into Practise.
+  2. Glossary with tap-to-define anywhere in the app.
+  3. Quiz engine (multiple choice, numeric), explanations, scoring per topic.
+  4. Learning path and progress tracker.
+  5. Trade journal prompts (before and after each trade).
+  6. Mistake checker per SSD §6.2 with settings and lesson links.
+  7. Built-in coach: screen hints, path suggestions, flag explanations.
+  8. **Content:** Level 1 and Level 2 lessons, quizzes and exercises drafted by Claude; reviewed by Sunil; status updated.
+* **Exit gate:** a new profile can complete Level 1 end to end (lessons, quizzes, "Try it" exercises) without AI; every Level 1–2 lesson is marked reviewed; mistake-checker rules each have a test.
 
----
-
-### Phase 4: Daily Runner & GitHub Actions
+### Stage 5: AI Tutor
 * **Tasks:**
-  1. `daily_agent_runner.py` performs one cycle (SSD §2): trading-day check → fetch data → fill queued orders → mark-to-market → exit checks → signals → size per account → queue orders → integrity checks → write files. Idempotent: a second run for the same date makes no changes.
-  2. `.github/workflows/daily_paper_trading.yml`:
-     * Schedule `cron: '0 13 * * 1-5'` (18:30 IST, after EOD files are published) plus `workflow_dispatch`.
-     * `permissions: contents: write`.
-     * Install from `requirements.txt`; run tests; run the runner; commit `data/` changes and push to `main` only if the run succeeded.
-  3. Confirm the repository is private (Settings → General) before the first scheduled run.
-* **Exit gate:** a manual workflow run on a trading day commits updated ledger files; a run on a holiday commits nothing; a forced data failure leaves the ledgers unchanged and logs the failure.
+  1. AI provider layer: one interface (send context + question, receive answer + usage), cost estimate before sending, one retry at most.
+  2. Claude provider with the official Anthropic TypeScript SDK: Haiku 5.5 default; Sonnet 5.5 and Opus 5.5 selectable per feature; cached fixed system prompt; refusal and error handling falling back to the built-in coach.
+  3. Free-tier provider (Google Gemini free tier) behind the same interface, after re-checking its current terms; in-app notice about data use before enabling.
+  4. Tutor system prompt and guardrails per SSD §7.6 (teaches, never tips; grounded in app data; facts with as-of dates).
+  5. Features per SSD §7.4, each with its own context builder and on/off switch.
+  6. Preview mode: a set of prepared sample conversations for every feature, bundled with the app.
+  7. Settings: mode, provider, model per feature, monthly rupee limit (device owner only), usage meter, key entry and **Test key**.
+* **Exit gate:** with no key, Preview works offline for every feature; with a key, each feature answers using the right context; the limit stops calls exactly at the cap; with network off or a bad key, the coach answer appears with a reason; a set of "give me a stock tip" prompts is declined by the tutor.
 
----
-
-### Phase 5: Dashboard, Sandbox & Local Server
+### Stage 6: Time Machine, Scenarios, Portfolio Builder
 * **Tasks:**
-  1. `serve_app.py`: serves `app/` and `data/` on `http://localhost:8000`; `POST /api/backtest` (runs `backtest.py` with the posted settings); `POST /api/sandbox-config` (validates and writes `config/sandbox_config.json`). Binds to localhost only.
-  2. `app/index.html` + `app.js`: header, five account cards, Chart.js equity curves, positions table, filterable trade history, today's signals (SSD §7.1).
-  3. `app/sandbox.html` + `sandbox.js` + `sandbox.css`: two panels (strategy; risk & execution), "selected stock today" signal check, Run Backtest, Save to Account 5 (SSD §7.2).
-  4. Disclaimer on both pages; works at phone width.
-* **Exit gate:** both pages load in under 1 second from the local server; a backtest over the full history returns in under 10 seconds; saving in the Sandbox changes `config/sandbox_config.json` exactly as shown on screen.
+  1. Time Machine sessions: start date, cash, allowed instruments; Next day / Next week; save and resume; end summary vs Nifty 50.
+  2. Scenario format (goal, date range, instruments, checkpoints, debrief text) and the first 6 scenarios for stocks, ETFs and mutual funds.
+  3. Portfolio Builder with historical behaviour of a mix and rebalancing.
+  4. AI scenario debrief connected (Stage 5).
+* **Exit gate:** a Time Machine session from 2020-01-01 can be played to 2020-12-31 with correct fills and no future data visible (tested); all 6 scenarios complete with debriefs.
 
----
+### Release 1
+* Signed release APK (own keystore, kept safely; losing it prevents future updates) and Windows installer; install notes for "install unknown apps" on Android and the Windows SmartScreen warning.
+* Sunil and family use it for real; feedback recorded before Stage 7.
 
-### Phase 6: Verification & User Guide
+### Stage 7: Charts, Strategy Lab, Robo Accounts
 * **Tasks:**
-  1. Run five consecutive trading days (live or replayed from history) and reconcile every account by hand for at least one day.
-  2. Change Sandbox settings, save, commit, run the next cycle, and confirm Account 5's orders follow the new settings.
-  3. Write `docs/astro-trader-app/USER_GUIDE.md`: setup, starting the server, reading the dashboard, using the Sandbox, editing profiles, what to do if a run fails.
-* **Exit gate:** all items in SSD §10 (Definition of Done) are met.
+  1. Candlestick charts with moving averages, RSI and volume; drawing support and resistance lines.
+  2. Strategy engine and backtester (port of v3.0 rules) on the same trading engine and charges.
+  3. Strategy Lab screen: settings, backtest results, comparison with Nifty buy-and-hold.
+  4. Five Robo accounts (SSD §6.4) with catch-up on app open; Sandbox uses Strategy Lab settings.
+  5. **Content:** Level 3 lessons, quizzes, exercises; reviewed.
+* **Exit gate:** at least 25 strategy tests (from the v3.0 plan: slots, cash limits, gaps through stops, missing prices, time exits, re-entry cool-off); a no-look-ahead test for backtests and catch-up; Robo accounts process a missed fortnight correctly.
+
+### Stage 8: Futures and Options
+* **Tasks:**
+  1. NSE F&O daily file download; contract master (underlying, expiry, strike, type, lot size); bundled two-year index options history.
+  2. Futures: margin (simplified percentages from the facts file, labelled approximate), daily mark-to-market, expiry settlement, rollover.
+  3. Options: buying and writing, premium flows, margin for written options, expiry settlement; IV and Greeks (Black–Scholes on the app side).
+  4. Option chain screen; F&O order ticket with lot handling.
+  5. Options Lab (payoff today and at expiry, breakevens, Greeks, time and IV sliders).
+  6. F&O scenarios (at least 4) and F&O mistake-checker rules (leverage, naked writing).
+  7. **Content:** Level 4 lessons, quizzes, exercises; reviewed.
+* **Exit gate:** hand-worked tests for margin, mark-to-market, expiry and option payoffs pass; Greeks match a reference calculator within a stated tolerance; F&O scenarios complete.
+
+### Release 2
+* Release APK and installer with F&O; Export/Import compatibility with Release 1 backups verified.
+
+### Stage 9: Other Markets, Tax, Psychology
+* **Tasks:**
+  1. Currency derivatives from the NSE daily currency file (USD-INR futures and options).
+  2. Commodities: lessons, plus a simplified simulator for a small set of contracts if usable data is found; otherwise lessons and calculators only.
+  3. Bond and G-sec calculator (price, yield, duration) and bond lessons.
+  4. Tax report per profile and financial year from practice trades (capital gains split, F&O as business income), using the facts file.
+  5. Psychology tools: weekly reflection prompts, emotion tags in the journal, review of patterns.
+  6. **Content:** Level 5 and 6 lessons, quizzes, exercises; reviewed.
+* **Exit gate:** tax report matches hand-worked examples for a sample year; currency trades follow the same engine tests as equity; Levels 5–6 reviewed.
+
+### Stage 10: Final Verification
+* **Tasks:**
+  1. Run every item in SSD §13 (Definition of Done) on a real Android phone and on Windows.
+  2. Facts file review: every as-of date checked and updated.
+  3. User guide inside the app and in `docs/astro-trader-app/USER_GUIDE.md`.
+* **Exit gate:** all Definition-of-Done items pass and are recorded in a verification report.
+
+### Release 3
+* Complete release. Sharing with others (hosted version) is a separate later project.
 
 ---
 
-## 4. Open Decisions
+## 5. Content Workflow (all stages)
 
-1. **Profiles for Sunil, Neil and Shine:** the defaults in SSD §4 (standard, conservative, short-horizon) are starting points; each owner can change them in `config/profiles.json`.
-2. **Folder name:** this plan keeps `docs/astro-trader-app/` and `tools/live_agent/` to avoid breaking links; renaming (for example to `docs/mock-trader-app/`) can be done in Phase 0 if preferred.
+1. Claude drafts a lesson, its quiz and its "Try it" exercise, using the facts file for any changeable rule.
+2. The lesson is committed with status `draft`; the app shows a "Draft" label.
+3. Sunil reads it in the app and notes changes; Claude revises.
+4. When accepted, status becomes `reviewed` with reviewer and date.
+5. Whenever a fact in the facts file changes, every lesson that uses it is listed for re-review.
+
+---
+
+## 6. Risks and Mitigations
+
+| Risk | Mitigation |
+| :--- | :--- |
+| NSE blocks automated downloads from a phone | Native HTTP with browser-like headers, retries, Yahoo fallback, bundled history so the app always works |
+| Facts go out of date (charges, tax, lot sizes, expiry rules) | Single facts file with as-of dates, re-review list, lot sizes taken from exchange files rather than typed |
+| Wrong lesson content | Draft/reviewed status; tutor shows the facts it used |
+| AI cost overrun | Device-wide rupee limit, cost estimate before each call, Haiku default |
+| Free-tier terms change | Terms checked at build time and shown in the app; provider can be switched off |
+| Losing the APK signing key | Keystore backed up in two places; documented in the release notes |
+| Scope size (Stage 8 especially) | Each release usable on its own; F&O split across Release 2 only |
+| Data licence if shared later | Recorded as a condition before any sharing project starts |
