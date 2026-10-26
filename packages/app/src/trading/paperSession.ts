@@ -6,7 +6,7 @@ import {
   istToUtcMillis,
   winLossReport,
 } from '@trading/core';
-import type { OrderRecord, Position, WinLossReport } from '@trading/core';
+import type { Fill, OrderRecord, Position, ReplayConfig, WinLossReport } from '@trading/core';
 import { REQUESTS_KEY } from '../backup/backupService';
 import type { StoredOrder } from '../backup/backupService';
 import { formatPaise } from '../format/rupees';
@@ -18,6 +18,7 @@ import { demoMarket, requestsKey } from './market';
 import type { Market } from './market';
 import { makeOrderRequest } from './orderRequest';
 import { describeOrder, reasonText } from './orderText';
+import { shareNoteLines } from './shareNote';
 import type { OrderForm } from './orderRequest';
 
 export { REQUESTS_KEY } from '../backup/backupService';
@@ -28,7 +29,7 @@ type Stored = StoredOrder;
 export interface SessionView {
   cash: string;
   positions: Array<{ instrumentId: string; symbol: string; quantity: number; basis: string }>;
-  orders: Array<{ id: string; line: string; state: OrderRecord['state']; reason: string | null }>;
+  orders: Array<{ id: string; line: string; state: OrderRecord['state']; reason: string | null; note: Array<[string, string]> | null }>;
 }
 
 export type PlaceOutcome =
@@ -140,6 +141,8 @@ export class PaperSession {
       this.adapter.getCashBalance(),
     ]);
     const byId = new Map(this.stored.map((s) => [s.request.order.id, s.request]));
+    const fills = new Map(this.adapter.result().fills.map((f) => [f.orderId, f]));
+    const symbolOf = (id: string): string => this.market.symbols[id] ?? id;
     return {
       cash: formatPaise(cash),
       positions: positions.map((p) => ({
@@ -154,8 +157,13 @@ export class PaperSession {
           line: describeOrder(o, byId.get(o.orderId), (id) => this.market.symbols[id] ?? id),
           state: o.state,
           reason: reasonText(o.reason),
+          note: noteOf(fills.get(o.orderId), symbolOf, this.market.config),
         }))
         .reverse(),
     };
   }
+}
+
+function noteOf(fill: Fill | undefined, symbolOf: (id: string) => string, cfg: ReplayConfig): Array<[string, string]> | null {
+  return fill === undefined ? null : shareNoteLines(fill, symbolOf(fill.instrumentId), cfg);
 }

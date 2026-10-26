@@ -59,7 +59,8 @@ function ExportSection(props: { device: KeyValueStore; profileKv: KeyValueStore;
 }
 
 function previewText(p: ImportPreview): string {
-  const what = `${p.ordersInFile} orders${p.settings ? ' and its settings' : ''}`;
+  const funds = p.fundOrdersInFile > 0 ? `, ${p.fundOrdersInFile} fund orders` : '';
+  const what = `${p.ordersInFile} orders${funds}${p.settings ? ' and its settings' : ''}`;
   if (p.target === 'new') return `This adds a new profile, ${p.profileName}, with ${what}.`;
   if (p.target === 'fresh')
     return `This device has only its empty starting profile, ${p.replaces ?? ''}. It is replaced by ${p.profileName} from the file, with ${what}.`;

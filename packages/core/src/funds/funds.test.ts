@@ -186,3 +186,22 @@ describe('account figures', () => {
     );
   });
 });
+
+describe('no look-ahead in the fund account', () => {
+  const f = fund('F', 'equity', [['2026-10-19', 1_000_000], ['2026-10-21', 1_100_000], ['2026-10-22', 2_000_000]]);
+  const buy = order({ id: 'o1', action: 'buy', date: '2026-10-19', amountPaise: 1_000_000 });
+
+  it('values the units at the last NAV on or before the as-of date, never a later one', () => {
+    const early = run(f, [buy], '2026-10-21');
+    expect(early.holdings[0]).toMatchObject({ navDate: '2026-10-21', navE4: 1_100_000 });
+    const late = run(f, [buy], '2026-10-22');
+    expect(late.holdings[0]?.navE4).toBe(2_000_000);
+    expect(early.txns).toEqual(late.txns); // the purchase itself is the same
+  });
+
+  it('an order for a day the data has not reached waits instead of using another day', () => {
+    const r = run(f, [order({ id: 'o2', action: 'buy', date: '2026-10-22', beforeCutoff: false, amountPaise: 1_000_000 })]);
+    expect(r.txns[0]).toMatchObject({ status: 'pending', reason: 'nav_not_published_yet', unitsMilli: 0 });
+    expect(r.cashPaise).toBe(CAPITAL);
+  });
+});

@@ -49,6 +49,7 @@ export function checkLog(): {
 /** Where each screen lives since the learning-app navigation (D42): sub-tabs sit inside a main section. */
 const PARENT: Record<string, string> = {
   Trade: 'Practise',
+  Funds: 'Practise',
   Ledger: 'Practise',
   Universe: 'Practise',
   Compare: 'Practise',

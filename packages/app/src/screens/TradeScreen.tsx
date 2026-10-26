@@ -31,7 +31,7 @@ const TYPE_LABELS = {
 const WHEN_LABELS = { at_or_below: 'Price falls to', at_or_above: 'Price rises to' } as const;
 const VALIDITY_LABELS = { day: 'One day', gtt: 'Good till triggered (GTT)' } as const;
 
-function Choice<T extends string>(props: {
+export function Choice<T extends string>(props: {
   label: string;
   value: T;
   options: readonly T[];
@@ -61,7 +61,7 @@ function Choice<T extends string>(props: {
   );
 }
 
-function Field(props: {
+export function Field(props: {
   label: string;
   value: string;
   onChange: (v: string) => void;
@@ -84,6 +84,7 @@ function Field(props: {
 }
 
 function Book({ view, onCancel }: { view: SessionView; onCancel: (id: string) => void }) {
+  const [open, setOpen] = useState<string | null>(null);
   return (
     <>
       <Section title="Cash and positions">
@@ -98,11 +99,21 @@ function Book({ view, onCancel }: { view: SessionView; onCancel: (id: string) =>
         ))}
       </Section>
       <Section title="Orders">
+        <Note>Tap an order to see its contract note once it has filled.</Note>
         {view.orders.length === 0 ? <Note>No orders yet.</Note> : null}
         <View testID="order-list">
           {view.orders.map((o) => (
             <View key={o.id}>
-              <Row label={`${o.line}${o.reason ? ` (${o.reason})` : ''}`} value={o.state} />
+              <Pressable accessibilityRole="button" onPress={() => setOpen(open === o.id ? null : o.id)} testID={`order-${o.id}`}>
+                <Row label={`${o.line}${o.reason ? ` (${o.reason})` : ''}`} value={o.state} />
+              </Pressable>
+              {open === o.id && o.note !== null ? (
+                <View style={styles.contractNote} testID={`note-${o.id}`}>
+                  {o.note.map(([k, v]) => (
+                    <Row key={k} label={k} value={v} />
+                  ))}
+                </View>
+              ) : null}
               {o.state === 'pending' ? (
                 <Pressable accessibilityRole="button" onPress={() => onCancel(o.id)} style={styles.cancel} testID={`cancel-${o.id}`}>
                   <Text style={styles.choiceTextOn}>Cancel this order</Text>
@@ -374,4 +385,5 @@ const styles = StyleSheet.create({
   placeText: { color: '#fff', fontWeight: '600' },
   message: { marginTop: 8, color: colors.text },
   cancel: { minHeight: 44, justifyContent: 'center', marginBottom: 6 },
+  contractNote: { paddingLeft: 12, marginBottom: 8 },
 });

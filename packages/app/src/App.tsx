@@ -16,6 +16,7 @@ import { PinScreen } from './screens/PinScreen';
 import { ProfilesScreen } from './screens/ProfilesScreen';
 import { ReportScreen } from './screens/ReportScreen';
 import { SettingsScreen } from './screens/SettingsScreen';
+import { FundsScreen } from './screens/FundsScreen';
 import { TradeScreen } from './screens/TradeScreen';
 import { UniverseScreen } from './screens/UniverseScreen';
 import { loadDeviceSettings, saveDeviceSettings } from './settings/settings';
@@ -25,13 +26,14 @@ import { fundsNote, useFunds } from './trading/useFunds';
 import { useMarkets } from './trading/useMarkets';
 import type { Markets } from './trading/useMarkets';
 import { MarketSwitch } from './ui/MarketSwitch';
+import type { FundsMarket } from '@trading/core';
 import type { KeyValueStore } from './store/kv';
 import { colors } from './ui/Section';
 import { RootErrorBoundary } from './ui/RootErrorBoundary';
 import { TabStrip } from './ui/TabStrip';
 
 type SectionId = 'home' | 'learn' | 'practise' | 'measure' | 'tutor' | 'settings';
-type PractiseId = 'trade' | 'ledger' | 'universe' | 'compare' | 'report';
+type PractiseId = 'trade' | 'funds' | 'ledger' | 'universe' | 'compare' | 'report';
 type SettingsId = 'general' | 'profiles' | 'backup' | 'data';
 
 const SECTIONS = [
@@ -44,6 +46,7 @@ const SECTIONS = [
 ] as const;
 const PRACTISE = [
   ['trade', 'Trade'],
+  ['funds', 'Funds'],
   ['ledger', 'Ledger'],
   ['universe', 'Universe'],
   ['compare', 'Compare'],
@@ -107,9 +110,9 @@ function useDevice() {
   return { device, profile, settings, setSettings, locked, setLocked, reload, open };
 }
 
-function Practise(props: { kv: KeyValueStore; now: () => number; markets: Markets }) {
+function Practise(props: { kv: KeyValueStore; now: () => number; markets: Markets; funds: FundsMarket | null }) {
   const [tab, setTab] = useState<PractiseId>('trade');
-  const { kv, now, markets } = props;
+  const { kv, now, markets, funds } = props;
   const market = markets.market;
   return (
     <>
@@ -117,6 +120,7 @@ function Practise(props: { kv: KeyValueStore; now: () => number; markets: Market
       <TabStrip tabs={PRACTISE} active={tab} onSelect={setTab} small />
       <View style={styles.body} key={market.id}>
         {tab === 'trade' ? <TradeScreen kv={kv} now={now} market={market} /> : null}
+        {tab === 'funds' ? <FundsScreen kv={kv} now={now} funds={funds} /> : null}
         {tab === 'ledger' ? <LedgerScreen kv={kv} now={now} /> : null}
         {tab === 'universe' ? <UniverseScreen /> : null}
         {tab === 'compare' ? <CompareScreen kv={kv} now={now} market={market} /> : null}
@@ -200,7 +204,7 @@ function Main(props: {
         <HomeScreen profile={profile} kv={profileKv} now={now} market={markets.market} onGo={props.setSection} />
       ) : null}
       {section === 'learn' ? <ComingScreen title="Learn" lines={LEARN} testID="learn-screen" /> : null}
-      {section === 'practise' ? <Practise kv={profileKv} now={now} markets={markets} /> : null}
+      {section === 'practise' ? <Practise kv={profileKv} now={now} markets={markets} funds={funds} /> : null}
       {section === 'measure' ? <ComingScreen title="Measure" lines={MEASURE} testID="measure-screen" /> : null}
       {section === 'tutor' ? <ComingScreen title="Tutor" lines={TUTOR} testID="tutor-screen" /> : null}
       {section === 'settings' ? (

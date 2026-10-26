@@ -107,6 +107,7 @@ describe('profile backup (FR-X1, FR-X2, MIP Stage 1.9)', () => {
       target: 'new',
       profileName: 'Sunil',
       ordersInFile: 3,
+      fundOrdersInFile: 0,
       ordersNow: 0,
       settings: true,
     });
