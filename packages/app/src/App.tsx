@@ -17,6 +17,8 @@ import { ProfilesScreen } from './screens/ProfilesScreen';
 import { ReportScreen } from './screens/ReportScreen';
 import { SettingsScreen } from './screens/SettingsScreen';
 import { FundsScreen } from './screens/FundsScreen';
+import { LearnScreen } from './screens/LearnScreen';
+import { MeasureScreen } from './screens/MeasureScreen';
 import { TradeScreen } from './screens/TradeScreen';
 import { UniverseScreen } from './screens/UniverseScreen';
 import { loadDeviceSettings, saveDeviceSettings } from './settings/settings';
@@ -159,8 +161,6 @@ function Settings(props: {
   );
 }
 
-const LEARN = ['Lessons in six levels, from how the market works to options, tax and habits', 'A glossary you can open from any highlighted word', 'Quizzes with an explanation for every answer'];
-const MEASURE = ['A journal that asks why before each trade and what you learnt after', 'A mistake checker that flags habits such as averaging down or oversized positions', 'Your results against simply holding the Nifty 50'];
 const TUTOR = ['A built-in coach on every screen, free and offline', 'An AI tutor you can switch Off, Preview or On, with a monthly limit', 'It teaches; it never gives tips'];
 
 function Header(props: { profile: Profile | null; online: boolean; onProfile: () => void }) {
@@ -203,9 +203,9 @@ function Main(props: {
       {section === 'home' ? (
         <HomeScreen profile={profile} kv={profileKv} now={now} market={markets.market} onGo={props.setSection} />
       ) : null}
-      {section === 'learn' ? <ComingScreen title="Learn" lines={LEARN} testID="learn-screen" /> : null}
+      {section === 'learn' ? <LearnScreen kv={profileKv} now={now} /> : null}
       {section === 'practise' ? <Practise kv={profileKv} now={now} markets={markets} funds={funds} /> : null}
-      {section === 'measure' ? <ComingScreen title="Measure" lines={MEASURE} testID="measure-screen" /> : null}
+      {section === 'measure' ? <MeasureScreen kv={profileKv} now={now} market={markets.market} /> : null}
       {section === 'tutor' ? <ComingScreen title="Tutor" lines={TUTOR} testID="tutor-screen" /> : null}
       {section === 'settings' ? (
         <Settings d={d} profile={profile} settings={settings} now={now} client={props.client} prices={prices} onImported={props.onImported} />

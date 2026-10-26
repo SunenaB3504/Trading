@@ -1,4 +1,5 @@
 import { buildBundle, keyIdOf, verifyBundle } from '@trading/core';
+import type { Progress } from '@trading/content';
 import type { Bundle, FundOrder, OrderRequest, RefusalReason } from '@trading/core';
 import { profileSchema } from '../profiles/profiles';
 import type { Profile, ProfileIdentity, ProfileStore } from '../profiles/profiles';
@@ -6,6 +7,9 @@ import { loadProfileSettings, profileSettingsSchema, saveProfileSettings } from 
 import type { ProfileSettings } from '../settings/settings';
 import { getStamped, putStamped } from '../store/kv';
 import type { KeyValueStore } from '../store/kv';
+import { isEntry, loadJournal, saveJournal } from '../journal/journalStore';
+import type { JournalEntry } from '../journal/journalStore';
+import { isProgress, loadProgress, saveProgress } from '../learn/progressStore';
 import { FUND_ORDERS_KEY } from '../trading/fundSession';
 import { demoMarket, requestsKey } from '../trading/market';
 
@@ -33,6 +37,8 @@ export type BackupItem =
   | { t: 'profile'; profile: ProfileIdentity }
   | { t: 'settings'; settings: ProfileSettings }
   | { t: 'fund'; order: FundOrder }
+  | { t: 'learn'; progress: Progress }
+  | { t: 'journal'; entry: JournalEntry }
   | ({ t: 'order'; m?: string } & StoredOrder);
 
 const byPlacement = (a: StoredOrder, b: StoredOrder): number =>
@@ -91,6 +97,8 @@ export async function exportProfile(d: ExportDeps): Promise<Exported> {
     { t: 'profile', profile: { id: d.profile.id, name: d.profile.name, createdAt: d.profile.createdAt } },
     { t: 'settings', settings: await loadProfileSettings(d.profileKv) },
     ...(await fundOrdersOf(d.profileKv)).map((order): BackupItem => ({ t: 'fund', order })),
+    { t: 'learn', progress: await loadProgress(d.profileKv) },
+    ...(await loadJournal(d.profileKv)).map((entry): BackupItem => ({ t: 'journal', entry })),
     ...orders.sort(byPlacement),
   ];
   const bundle = buildBundle({
@@ -133,6 +141,10 @@ export interface ReadBackup {
   books: Record<string, StoredOrder[]>;
   /** The mutual fund orders in the file. */
   funds: FundOrder[];
+  /** Learn progress, or null when the file has none. */
+  progress: Progress | null;
+  /** Trade journal entries. */
+  journal: JournalEntry[];
 }
 
 const SHAPE = 'The orders in the bundle are not in the expected form.';
@@ -170,16 +182,19 @@ function header(tagged: Array<Record<string, unknown>>): Pick<ReadBackup, 'profi
 
 function contents(items: unknown[]): Omit<ReadBackup, 'level' | 'unsigned'> | string {
   if (items.every(isOrder))
-    return { profile: null, settings: null, orders: items, books: byMarket(items, []), funds: [] };
+    return { profile: null, settings: null, orders: items, books: byMarket(items, []), funds: [], progress: null, journal: [] };
   const tagged = items as Array<Record<string, unknown>>;
-  if (!tagged.every((i) => i.t === 'profile' || i.t === 'settings' || i.t === 'order' || i.t === 'fund')) return SHAPE;
+  if (!tagged.every((i) => i.t === 'profile' || i.t === 'settings' || i.t === 'order' || i.t === 'fund' || i.t === 'learn' || i.t === 'journal')) return SHAPE;
   const head = header(tagged);
   const orderItems = tagged.filter((i) => i.t === 'order');
   const markets = orderItems.map((i) => (typeof i.m === 'string' ? i.m : demoMarket().id));
   const orders: unknown[] = orderItems.map(withoutTag);
   const funds = tagged.filter((i) => i.t === 'fund').map((i) => i.order);
+  const learn = tagged.filter((i) => i.t === 'learn').map((i) => i.progress);
+  const journal = tagged.filter((i) => i.t === 'journal').map((i) => i.entry);
   if (head === null || !orders.every(isOrder) || !funds.every(isFundOrder)) return SHAPE;
-  return { ...head, orders, books: byMarket(orders, markets), funds };
+  if (learn.length > 1 || !learn.every(isProgress) || !journal.every(isEntry)) return SHAPE;
+  return { ...head, orders, books: byMarket(orders, markets), funds, progress: learn[0] ?? null, journal };
 }
 
 /** The key to check a bundle against: the one typed in, else this device's key if it is the one that signed. */
@@ -270,8 +285,12 @@ export async function previewImport(b: ReadBackup, profiles: ProfileStore): Prom
 }
 
 /** Replaces the profile's books with the file's: books the file does not hold are emptied, as a full restore. */
-async function putBooks(kv: KeyValueStore, books: Record<string, StoredOrder[]>, now: number, funds?: FundOrder[]): Promise<void> {
-  if (funds !== undefined) await putStamped(kv, FUND_ORDERS_KEY, funds, now);
+async function putBooks(kv: KeyValueStore, books: Record<string, StoredOrder[]>, now: number, extra?: Pick<ReadBackup, 'funds' | 'progress' | 'journal'>): Promise<void> {
+  if (extra !== undefined) {
+    await putStamped(kv, FUND_ORDERS_KEY, extra.funds, now);
+    await saveJournal(kv, extra.journal, now);
+    if (extra.progress !== null) await saveProgress(kv, extra.progress, now);
+  }
   const markets = new Set([...(await booksOf(kv)).keys(), ...Object.keys(books)]);
   for (const m of markets)
     await putStamped(kv, requestsKey(m, REQUESTS_KEY), [...(books[m] ?? [])].sort(byPlacement), now);
@@ -299,7 +318,7 @@ export async function applyImport(b: ReadBackup, profiles: ProfileStore, now: nu
   if (fresh !== null) await profiles.rename(fresh.id, `${fresh.name.slice(0, 30)} (old)`);
   let target = (await profiles.adopt(b.profile)).profile;
   const kv = profiles.scope(target.id);
-  await putBooks(kv, b.books, now, b.funds);
+  await putBooks(kv, b.books, now, b);
   if (b.settings !== null) await saveProfileSettings(kv, b.settings);
   if (fresh !== null) {
     await profiles.makeOwner(target.id);

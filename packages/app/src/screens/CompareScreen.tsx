@@ -5,6 +5,7 @@ import type { Market } from '../trading/market';
 import { PaperSession } from '../trading/paperSession';
 import { Note, Section, colors } from '../ui/Section';
 import type { ComparisonLine, ComparisonView } from '../viewModels/comparisonView';
+import { CoachHint } from '../ui/CoachHint';
 
 function Line({ line }: { line: ComparisonLine }) {
   return (
@@ -40,6 +41,7 @@ export function CompareScreen({
   if (view === null) return <Note>Loading...</Note>;
   return (
     <ScrollView contentContainerStyle={styles.page} testID="compare-screen">
+      <CoachHint screen="compare" />
       <Note>{`Data snapshot ${view.snapshotId}. Benchmark: ${view.benchmark}.`}</Note>
       <Section title="Portfolio">
         {view.portfolio.length === 0 ? (

@@ -50,6 +50,10 @@ export function checkLog(): {
 const PARENT: Record<string, string> = {
   Trade: 'Practise',
   Funds: 'Practise',
+  Path: 'Learn',
+  Glossary: 'Learn',
+  Mistakes: 'Measure',
+  Journal: 'Measure',
   Ledger: 'Practise',
   Universe: 'Practise',
   Compare: 'Practise',

@@ -7,6 +7,7 @@ import { PaperSession } from '../trading/paperSession';
 import { Note, Row, Section, colors } from '../ui/Section';
 import { toWinLossView, tradeCount } from '../viewModels/winLossView';
 import type { BreakdownTable } from '../viewModels/winLossView';
+import { CoachHint } from '../ui/CoachHint';
 
 function Table({ t }: { t: BreakdownTable }) {
   if (t.rows.length === 0) return null;
@@ -65,6 +66,7 @@ export function ReportScreen({
   if (text === null) return <Note>Loading...</Note>;
   return (
     <ScrollView contentContainerStyle={styles.page} testID="report-screen">
+      <CoachHint screen="report" />
       <ViewToggle view={view} onChange={setView} />
       <Section title="Win and loss">
         {text.headline.map((r) => (

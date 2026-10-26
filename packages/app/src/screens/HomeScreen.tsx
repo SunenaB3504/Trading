@@ -8,6 +8,7 @@ import type { SessionView } from '../trading/paperSession';
 import { Button } from '../ui/Button';
 import { Note, Row, Section, colors } from '../ui/Section';
 import { AppText as Text } from '../ui/typography';
+import { CoachHint } from '../ui/CoachHint';
 
 export const DISCLAIMER =
   'Practice and learning only. No real money, no broker, no real orders. Nothing in this app is investment advice.';
@@ -48,6 +49,7 @@ export function HomeScreen(props: {
   const view = usePractice(props.kv, props.now, props.market);
   return (
     <ScrollView contentContainerStyle={styles.page} testID="home-screen">
+      <CoachHint screen="home" />
       <Text style={styles.hello}>{`Hello, ${props.profile.name}`}</Text>
       <Section title={`Your practice account (${props.market.label.toLowerCase()})`}>
         <Row label="Cash" value={view?.cash ?? '...'} />

@@ -5,6 +5,7 @@ import type { UniverseEntry, UniverseSource } from '../universe/types';
 import { toUniverseRows } from '../universe/universeView';
 import type { Filter, UniverseRow } from '../universe/universeView';
 import { Note, Section, colors } from '../ui/Section';
+import { CoachHint } from '../ui/CoachHint';
 
 const FILTERS: ReadonlyArray<readonly [Filter, string]> = [
   ['all', 'All'],
@@ -98,6 +99,7 @@ export function UniverseScreen({ source = seededUniverse }: { source?: UniverseS
   if (entries === null) return <Note>Loading...</Note>;
   return (
     <ScrollView contentContainerStyle={styles.page} testID="universe-screen">
+      <CoachHint screen="universe" />
       <Note>{`${source.description} As of ${source.asOf}.`}</Note>
       <FilterBar value={filter} onChange={setFilter} />
       <Section title={`${rows.length} instruments`}>

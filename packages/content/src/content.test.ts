@@ -5,9 +5,13 @@ import { generatedSource } from './build';
 import { HINTS } from './hints';
 import { parseBlocks, spansOf } from './markdown';
 import { parseGlossary, parseLesson, parseQuiz } from './parse';
+import type { Lesson, Quiz } from './parse';
 import { EMPTY_PROGRESS, levelStatus, markLesson, nextStep, recordQuiz } from './progress';
+import type { Level } from './index';
 import { GLOSSARY, LEVELS, LESSONS, PATH, QUIZZES, glossaryFor, lessonById, searchGlossary } from './index';
 
+const L1 = LEVELS[0] as Level;
+const L2 = LEVELS[1] as Level;
 const ROOT = join(import.meta.dirname, '..');
 const read = (dir: string): Record<string, string> =>
   Object.fromEntries(
@@ -104,15 +108,16 @@ describe('learning path and progress', () => {
   });
 
   it('asks for the self-check after the last lesson of a level, then goes to the next level', () => {
+    const ids = L1.lessons.map((l) => l.id);
+    const questions = (L1.quiz as Quiz).questions.map((x) => x.id);
     let p = EMPTY_PROGRESS;
-    for (const l of LEVELS[0]?.lessons ?? []) p = markLesson(p, l.id, true, 1);
+    for (const id of ids) p = markLesson(p, id, true, 1);
     expect(nextStep(p, PATH)).toEqual({ kind: 'quiz', id: 'level-1' });
-    expect(levelStatus(p, LEVELS[0]?.lessons.map((l) => l.id) ?? [], 'level-1')).toMatchObject({ complete: false, quizDone: false, lessonsDone: 8 });
-    const q = LEVELS[0]?.quiz;
-    p = recordQuiz(p, 'level-1', q?.questions.map((x) => x.id) ?? [], { [q?.questions[0]?.id ?? '']: true }, 9);
+    expect(levelStatus(p, ids, 'level-1')).toMatchObject({ complete: false, quizDone: false, lessonsDone: 8 });
+    p = recordQuiz(p, 'level-1', questions, { [questions[0] as string]: true }, 9);
     expect(p.quizzes['level-1']).toMatchObject({ right: 1, total: 8, at: 9 });
-    expect(levelStatus(p, LEVELS[0]?.lessons.map((l) => l.id) ?? [], 'level-1').complete).toBe(true);
-    expect(nextStep(p, PATH)).toEqual({ kind: 'lesson', id: LEVELS[1]?.lessons[0]?.id });
+    expect(levelStatus(p, ids, 'level-1').complete).toBe(true);
+    expect(nextStep(p, PATH)).toEqual({ kind: 'lesson', id: (L2.lessons[0] as Lesson).id });
   });
 
   it('says done when everything is finished', () => {

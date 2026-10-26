@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { addBefore } from '../journal/journalStore';
+import type { BeforeFields } from '../journal/journalStore';
 import type { KeyValueStore } from '../store/kv';
 import { previewCosts } from '../trading/costPreview';
 import type { OrderForm } from '../trading/orderRequest';
@@ -7,6 +9,7 @@ import type { Market } from '../trading/market';
 import { PaperSession } from '../trading/paperSession';
 import type { SessionView } from '../trading/paperSession';
 import { Note, Row, Section, colors } from '../ui/Section';
+import { CoachHint } from '../ui/CoachHint';
 
 /** Where the form starts: the first stock and a date whose next session has prices, so a first order fills. */
 const firstForm = (market: Market): OrderForm => ({
@@ -104,7 +107,7 @@ function Book({ view, onCancel }: { view: SessionView; onCancel: (id: string) =>
         <View testID="order-list">
           {view.orders.map((o) => (
             <View key={o.id}>
-              <Pressable accessibilityRole="button" onPress={() => setOpen(open === o.id ? null : o.id)} testID={`order-${o.id}`}>
+              <Pressable accessibilityRole="button" onPress={() => setOpen(open === o.id ? null : o.id)} style={styles.tapRow} testID={`order-${o.id}`}>
                 <Row label={`${o.line}${o.reason ? ` (${o.reason})` : ''}`} value={o.state} />
               </Pressable>
               {open === o.id && o.note !== null ? (
@@ -149,6 +152,7 @@ function useTrade(kv: KeyValueStore, now: () => number, market: Market) {
   const [view, setView] = useState<SessionView | null>(null);
   const [form, setForm] = useState<OrderForm>(() => firstForm(market));
   const [message, setMessage] = useState<string | null>(null);
+  const [journal, setJournal] = useState<BeforeFields>(NO_JOURNAL);
   useEffect(() => {
     void PaperSession.open(kv, now, market).then(async (s) => {
       setSession(s);
@@ -160,8 +164,12 @@ function useTrade(kv: KeyValueStore, now: () => number, market: Market) {
     if (session === null) return;
     const r = await session.place(form);
     setMessage(r.ok ? placedMessage(r, market, form) : r.error);
+    if (r.ok) {
+      await addBefore(kv, market.id, r.orderId, journal, now());
+      setJournal(NO_JOURNAL);
+    }
     setView(await session.view());
-  }, [session, form, market]);
+  }, [session, form, market, journal, kv, now]);
   const cancel = useCallback(
     async (id: string) => {
       if (session === null) return;
@@ -171,7 +179,24 @@ function useTrade(kv: KeyValueStore, now: () => number, market: Market) {
     },
     [session],
   );
-  return { view, form, message, set, submit, cancel };
+  return { view, form, message, set, submit, cancel, journal, setJournal };
+}
+
+const NO_JOURNAL: BeforeFields = { why: '', target: '', exitPlan: '', confidence: null };
+const CONFIDENCE = ['1', '2', '3', '4', '5'] as const;
+
+/** The note before an order (SSD v4.1 §6.1): optional, but the mistake checker looks for an exit plan. */
+function JournalFields(props: { value: BeforeFields; onChange: (v: BeforeFields) => void }) {
+  const { value, onChange } = props;
+  return (
+    <View testID="journal-fields">
+      <Note>Journal (optional): write down your thinking before you trade.</Note>
+      <Field label="Why this trade?" value={value.why} onChange={(why) => onChange({ ...value, why })} testID="journal-why" />
+      <Field label="Target: where will you take profit?" value={value.target} onChange={(target) => onChange({ ...value, target })} testID="journal-target" />
+      <Field label="Exit if wrong: at what price or reason will you sell?" value={value.exitPlan} onChange={(exitPlan) => onChange({ ...value, exitPlan })} testID="journal-exit" />
+      <Choice label="Confidence (1 low, 5 high)" value={value.confidence === null ? '' : String(value.confidence)} options={CONFIDENCE} onChange={(c) => onChange({ ...value, confidence: Number(c) })} testID="journal-confidence" />
+    </View>
+  );
 }
 
 /** A few instruments are buttons; a longer list gets a search box and shows the matches as buttons. */
@@ -325,11 +350,13 @@ function CostSection({ market, form }: { market: Market; form: OrderForm }) {
 }
 
 export function TradeScreen({ kv, now, market }: { kv: KeyValueStore; now: () => number; market: Market }) {
-  const { view, form, message, set, submit, cancel } = useTrade(kv, now, market);
+  const { view, form, message, set, submit, cancel, journal, setJournal } = useTrade(kv, now, market);
   return (
     <ScrollView contentContainerStyle={styles.page} testID="trade-screen">
+      <CoachHint screen="trade" />
       <Section title="New order (virtual money)">
         <OrderFields market={market} form={form} set={set} />
+        <JournalFields value={journal} onChange={setJournal} />
         <Pressable
           accessibilityRole="button"
           onPress={() => void submit()}
@@ -369,6 +396,8 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     paddingHorizontal: 14,
     minHeight: 44,
+    minWidth: 44,
+    alignItems: 'center',
     justifyContent: 'center',
   },
   choiceOn: { borderColor: colors.accent, backgroundColor: '#e8f0fe' },
@@ -386,4 +415,5 @@ const styles = StyleSheet.create({
   message: { marginTop: 8, color: colors.text },
   cancel: { minHeight: 44, justifyContent: 'center', marginBottom: 6 },
   contractNote: { paddingLeft: 12, marginBottom: 8 },
+  tapRow: { minHeight: 44, justifyContent: 'center' },
 });

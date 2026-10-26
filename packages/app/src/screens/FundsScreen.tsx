@@ -8,6 +8,7 @@ import { fundNoteLines } from '../trading/fundNote';
 import { Button } from '../ui/Button';
 import { Note, Row, Section, colors } from '../ui/Section';
 import { Choice, Field } from './TradeScreen';
+import { CoachHint } from '../ui/CoachHint';
 
 const ACTIONS = { buy: 'Buy once', sip: 'Start a SIP', redeem: 'Sell' } as const;
 const CUTOFF = { before: 'Before 3 pm', after: 'After 3 pm' } as const;
@@ -42,7 +43,7 @@ function Txns({ view }: { view: FundView }) {
       <View testID="fund-txns">
         {view.txns.map((t) => (
           <View key={t.key}>
-            <Pressable accessibilityRole="button" onPress={() => setOpen(open === t.key ? null : t.key)} testID={`txn-${t.key}`}>
+            <Pressable accessibilityRole="button" onPress={() => setOpen(open === t.key ? null : t.key)} style={styles.tapRow} testID={`txn-${t.key}`}>
               <Row label={`${t.line}${t.reason ? ` (${t.reason})` : ''}`} value={t.status} />
             </Pressable>
             {open === t.key ? (
@@ -125,6 +126,7 @@ export function FundsScreen({ kv, now, funds }: { kv: KeyValueStore; now: () => 
   };
   return (
     <ScrollView contentContainerStyle={styles.page} testID="funds-screen">
+      <CoachHint screen="funds" />
       <Note>Funds are bought at the day's NAV (net asset value per unit), not at a live price. An order before 3 pm on a business day gets that day's NAV; later, or on a holiday, the next business day's.</Note>
       <Order form={form} market={funds} set={(k, v) => setForm({ ...form, [k]: v })} />
       <Button label="Place fund order" onPress={place} testID="place-fund-order" />
@@ -143,4 +145,5 @@ const styles = StyleSheet.create({
   page: { padding: 16, maxWidth: 720, width: '100%', alignSelf: 'center' },
   message: { marginTop: 8, color: colors.text },
   note: { paddingLeft: 12, marginBottom: 8 },
+  tapRow: { minHeight: 44, justifyContent: 'center' },
 });

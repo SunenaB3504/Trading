@@ -1,12 +1,13 @@
 import {
   FixedClock,
+  checkMistakes,
   PaperExecutionAdapter,
   computeLedgerB,
   createRng,
   istToUtcMillis,
   winLossReport,
 } from '@trading/core';
-import type { Fill, OrderRecord, Position, ReplayConfig, WinLossReport } from '@trading/core';
+import type { Fill, Flag, MistakeLimits, OrderRecord, Position, ReplayConfig, WinLossReport } from '@trading/core';
 import { REQUESTS_KEY } from '../backup/backupService';
 import type { StoredOrder } from '../backup/backupService';
 import { formatPaise } from '../format/rupees';
@@ -118,6 +119,19 @@ export class PaperSession {
     await putStamped(this.kv, requestsKey(this.market.id, REQUESTS_KEY), this.stored, this.now());
     this.adapter = PaperSession.rebuild(this.stored, this.market);
     return { ok: true };
+  }
+
+  /**
+   * The mistake checker over this book (SSD v4.1 §6.2): every order that was not cancelled or refused, and every fill.
+   * `journalExit` holds the ids of orders whose journal note names an exit plan.
+   */
+  async mistakes(journalExit: ReadonlySet<string>, limits: MistakeLimits): Promise<Flag[]> {
+    const states = new Map((await this.adapter.getOrders()).map((o) => [o.orderId, o.state]));
+    const orders = this.stored
+      .filter((s) => s.cancelled !== true && states.get(s.request.order.id) !== 'rejected')
+      .map((s) => ({ id: s.request.order.id, instrumentId: s.request.order.instrumentId, side: s.request.order.side, type: s.request.order.type, date: s.request.order.tradingDate }));
+    const fills = this.adapter.result().fills.map((f) => ({ orderId: f.orderId, instrumentId: f.instrumentId, side: f.side, quantity: f.quantity, pricePaise: f.pricePaise, date: f.tradingDate }));
+    return checkMistakes({ orders, fills, journalExit, capitalPaise: this.market.config.capitalPaise, limits });
   }
 
   /** Ledger A beside Ledger B for this book, from the same snapshot (FR-L3). */

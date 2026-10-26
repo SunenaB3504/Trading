@@ -6,6 +6,7 @@ import type { KeyValueStore } from '../store/kv';
 import { Note, Row, Section, colors } from '../ui/Section';
 import { toLedgerView } from '../viewModels/ledgerView';
 import type { PositionRow } from '../viewModels/ledgerView';
+import { CoachHint } from '../ui/CoachHint';
 
 export const LEDGER_KEY = 'ledger-view/demo';
 
@@ -108,6 +109,7 @@ export function LedgerScreen({ kv, now }: { kv: KeyValueStore; now: () => number
   }, [kv, now, view]);
   return (
     <ScrollView contentContainerStyle={styles.page} testID="ledger-screen">
+      <CoachHint screen="ledger" />
       <Section title="Own trades (Ledger A), demo scenario">
         {view.totals.map((r) => (
           <Row key={r.label} label={r.label} value={r.value} />
