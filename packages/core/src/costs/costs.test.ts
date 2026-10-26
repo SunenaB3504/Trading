@@ -145,3 +145,22 @@ describe('guards and properties', () => {
     );
   });
 });
+
+describe('exchange-traded funds that pay no STT (MIP v4.1 Stage 3)', () => {
+  const input = (side: 'buy' | 'sell') => ({
+    date: '2026-10-19',
+    exchange: 'NSE' as const,
+    side,
+    product: 'delivery' as const,
+    turnoverPaise: 5_000_000,
+    chargeDp: side === 'sell',
+  });
+  it.each(['buy', 'sell'] as const)('a %s has no STT and every other charge unchanged', (side) => {
+    const normal = computeCosts(input(side));
+    const free = computeCosts({ ...input(side), sttExempt: true });
+    expect(normal.stt).toBeGreaterThan(0);
+    expect(free.stt).toBe(0);
+    expect(free.total).toBe(normal.total - normal.stt);
+    expect({ ...free, stt: 0, total: 0 }).toEqual({ ...normal, stt: 0, total: 0 });
+  });
+});

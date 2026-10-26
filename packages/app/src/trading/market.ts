@@ -18,6 +18,8 @@ export interface Market {
   instruments: string[];
   /** What to show for an instrument id: its trading symbol. */
   symbols: Readonly<Record<string, string>>;
+  /** `etf` for an exchange-traded fund; absent means an ordinary share. */
+  kinds: Readonly<Record<string, 'equity' | 'etf'>>;
   /** Last date with prices. */
   lastDate: string;
   /** First date an order may be placed (the cost schedule starts then). */
@@ -45,6 +47,7 @@ export function demoMarket(): Market {
     snapshot: s.snapshot,
     instruments,
     symbols: Object.fromEntries(instruments.map((i) => [i, i])),
+    kinds: {},
     lastDate: dates.reduce((a, b) => (a > b ? a : b)),
     firstTradeDate: dates.reduce((a, b) => (a < b ? a : b)),
     config: s.config,
@@ -67,9 +70,16 @@ export function realMarket(file: LearningMarket): Market {
     snapshot: marketSnapshot(file),
     instruments: byName.map((i) => i.id),
     symbols: Object.fromEntries(byName.map((i) => [i.id, i.symbol])),
+    kinds: Object.fromEntries(byName.filter((i) => i.kind === 'etf').map((i) => [i.id, 'etf' as const])),
     lastDate: file.to,
     firstTradeDate: file.tradableFrom,
-    config: { capitalPaise: PRACTICE_CAPITAL_PAISE, startAt: 0, endDate: file.to, actions: file.actions },
+    config: {
+      capitalPaise: PRACTICE_CAPITAL_PAISE,
+      startAt: 0,
+      endDate: file.to,
+      actions: file.actions,
+      sttExempt: byName.filter((i) => i.sttFree === true).map((i) => i.id),
+    },
     defaultDate: previousRegularTradingDay(file.to),
   };
   real.set(file, market);

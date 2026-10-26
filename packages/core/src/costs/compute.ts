@@ -15,6 +15,8 @@ export interface CostInput {
   turnoverPaise: number;
   /** Charge the per-scrip-per-day DP charge on this fill (first delivery sell of the day). */
   chargeDp: boolean;
+  /** Gold, silver and debt/liquid exchange-traded funds pay no securities transaction tax. */
+  sttExempt?: boolean;
 }
 
 export interface CostBreakdown {
@@ -61,6 +63,7 @@ function brokerage(rule: BrokerageRule, turnover: number): number {
 }
 
 function sttRate(input: CostInput, flags: string[]): number {
+  if (input.sttExempt === true) return 0;
   if (input.product === 'delivery') return rateAt(S.STT_DELIVERY, input.date, flags);
   return input.side === 'sell' ? rateAt(S.STT_INTRADAY_SELL, input.date, flags) : 0;
 }

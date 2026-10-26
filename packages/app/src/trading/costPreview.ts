@@ -44,7 +44,7 @@ export interface CostPreview {
  */
 export function previewCosts(
   snapshot: ReplaySnapshot,
-  args: { instrumentId: string; side: 'buy' | 'sell'; quantity: number; date: string },
+  args: { instrumentId: string; side: 'buy' | 'sell'; quantity: number; date: string; sttExempt?: boolean },
 ): CostPreview | null {
   // The date box is typed into character by character, so a half-typed or impossible date is normal
   // input and must give "no preview", never an error (found in UAT C5: Backspace crashed the screen).
@@ -65,6 +65,7 @@ export function previewCosts(
         product: 'delivery',
         turnoverPaise: price * args.quantity,
         chargeDp: args.side === 'sell',
+        sttExempt: args.sttExempt === true,
       },
       GENERIC_DISCOUNT_BROKER,
     );

@@ -22,6 +22,8 @@ export const fundSchema = z.object({
   /** A plain-language group such as "Index fund" or "Liquid fund". */
   kind: z.string().min(1),
   isin: z.string().nullable(),
+  /** Which charges and exit-load rules the fund follows (see `funds/facts.ts`); absent means `other`. */
+  rules: z.enum(['equity', 'debt', 'liquid', 'other']).optional(),
   firstDate: tradingDateSchema,
   lastDate: tradingDateSchema,
 });

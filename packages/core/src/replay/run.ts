@@ -109,6 +109,7 @@ function buildFill(
       product: 'delivery',
       turnoverPaise: rec.pricePaise * quantity,
       chargeDp: dpFirst,
+      sttExempt: run.cfg.sttExempt?.includes(o.instrumentId) === true,
     },
     run.cfg.broker ?? GENERIC_DISCOUNT_BROKER,
   );

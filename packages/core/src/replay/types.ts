@@ -36,6 +36,8 @@ export interface ReplayConfig {
   broker?: BrokerProfile;
   limits?: RiskLimits;
   fillOptions?: FillOptions;
+  /** Instruments that pay no STT (gold, silver and liquid exchange-traded funds). */
+  sttExempt?: readonly string[];
 }
 
 export type OutcomeStatus = 'filled' | 'expired' | 'rejected';

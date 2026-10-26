@@ -47,6 +47,25 @@ export function identityFor(
   return hits.sort((a, b) => (lastSeen(a) < lastSeen(b) ? 1 : -1))[0];
 }
 
+/**
+ * Exchange-traded funds in the learning list. Equity-index ETFs pay STT like shares; gold, silver and liquid ETFs do not
+ * (facts as of 2026-10-26, from the exchange's STT rules for non-equity-oriented funds; check before relying on them).
+ */
+export const ETFS: Readonly<Record<string, { sttFree: boolean }>> = {
+  NIFTYBEES: { sttFree: false },
+  JUNIORBEES: { sttFree: false },
+  BANKBEES: { sttFree: false },
+  ITBEES: { sttFree: false },
+  GOLDBEES: { sttFree: true },
+  SILVERBEES: { sttFree: true },
+  LIQUIDBEES: { sttFree: true },
+};
+
+const etfFields = (requested: string): Pick<MarketInstrument, 'kind' | 'sttFree'> => {
+  const etf = ETFS[requested];
+  return etf === undefined ? {} : { kind: 'etf', sttFree: etf.sttFree };
+};
+
 export function describeInstrument(
   requested: string,
   identity: InstrumentIdentity,
@@ -61,6 +80,7 @@ export function describeInstrument(
     isin: isin === '' ? null : isin,
     firstDate: bars[0]?.date ?? '',
     lastDate: bars[bars.length - 1]?.date ?? '',
+    ...etfFields(requested),
   };
 }
 

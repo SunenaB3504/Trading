@@ -1,4 +1,5 @@
-import { LEARNING_MARKET_FORMAT, LEARNING_MARKET_VERSION } from '@trading/core';
+import { GENERIC_DISCOUNT_BROKER, LEARNING_MARKET_FORMAT, LEARNING_MARKET_VERSION, computeCosts } from '@trading/core';
+import { formatPaise } from '../format/rupees';
 import type { CompactBar, LearningMarket } from '@trading/core';
 import { describe, expect, it } from 'vitest';
 import { exportProfile, readBackup, applyImport } from '../backup/backupService';
@@ -41,6 +42,39 @@ const form = (over: Partial<OrderForm> = {}): OrderForm => ({
   stop: '',
   date: '2026-10-14',
   ...over,
+});
+
+describe('exchange-traded funds (MIP v4.1 Stage 3)', () => {
+  const etf: LearningMarket = {
+    ...file,
+    instruments: [
+      ...file.instruments,
+      { id: 'GOLDBEES', symbol: 'GOLDBEES', requested: 'GOLDBEES', isin: 'INF204KB17I5', firstDate: '2026-10-12', lastDate: '2026-10-16', kind: 'etf', sttFree: true },
+      { id: 'NIFTYBEES', symbol: 'NIFTYBEES', requested: 'NIFTYBEES', isin: 'INF204KB14I2', firstDate: '2026-10-12', lastDate: '2026-10-16', kind: 'etf', sttFree: false },
+    ],
+    bars: { ...file.bars, GOLDBEES: series(50_000), NIFTYBEES: series(25_000) },
+  };
+  const m = realMarket(etf);
+
+  it('marks the funds and lists the STT-free ones', () => {
+    expect(m.kinds).toEqual({ GOLDBEES: 'etf', NIFTYBEES: 'etf' });
+    expect(m.config.sttExempt).toEqual(['GOLDBEES']);
+    expect(realMarket(file).kinds).toEqual({});
+  });
+
+  it('charges no STT on a gold ETF and the usual STT on an equity ETF, in the preview and in the book', async () => {
+    const args = { side: 'buy' as const, quantity: 10, date: '2026-10-14' };
+    const row = (id: string, free: boolean) =>
+      previewCosts(m.snapshot, { ...args, instrumentId: id, sttExempt: free })?.rows.find((r) => r.label === 'STT')?.value;
+    expect(row('GOLDBEES', true)).toBe('₹0.00');
+    expect(row('NIFTYBEES', false)).not.toBe('₹0.00');
+    // the book: cash = capital - turnover - charges, with the gold ETF's charges computed without STT
+    const s = await PaperSession.open(new MemoryKv(), () => NOW, m);
+    expect((await s.place(form({ instrumentId: 'GOLDBEES' }))).ok).toBe(true);
+    const turnover = 53_000 * 10;
+    const costs = computeCosts({ date: '2026-10-15', exchange: 'NSE', side: 'buy', product: 'delivery', turnoverPaise: turnover, chargeDp: false, sttExempt: true }, GENERIC_DISCOUNT_BROKER);
+    expect((await s.view()).cash).toBe(formatPaise(PRACTICE_CAPITAL_PAISE - turnover - costs.total));
+  });
 });
 
 describe('real-price market (MIP v4.1 Stage 2, laptop slice)', () => {

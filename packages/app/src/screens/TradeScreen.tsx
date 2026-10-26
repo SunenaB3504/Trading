@@ -179,8 +179,10 @@ function StockPicker(props: { market: Market; value: string; onChange: (id: stri
       />
     );
   const q = query.trim().toUpperCase();
-  const name = (id: string): string => market.symbols[id] ?? id;
-  const matches = market.instruments.filter((id) => q === '' || name(id).includes(q)).slice(0, 12);
+  const base = (id: string): string => market.symbols[id] ?? id;
+  const name = (id: string): string => (market.kinds[id] === 'etf' ? `${base(id)} (ETF)` : base(id));
+  const labels = Object.fromEntries(market.instruments.map((id) => [id, name(id)]));
+  const matches = market.instruments.filter((id) => q === '' || name(id).includes(q) || (q === 'ETF' && market.kinds[id] === 'etf')).slice(0, 12);
   const shown = matches.includes(props.value) ? matches : [props.value, ...matches.slice(0, 11)];
   return (
     <>
@@ -189,7 +191,7 @@ function StockPicker(props: { market: Market; value: string; onChange: (id: stri
         label={`Selected: ${name(props.value)}`}
         value={props.value}
         options={shown}
-        labels={market.symbols}
+        labels={labels}
         onChange={props.onChange}
         testID="pick-instrument"
       />
@@ -289,6 +291,7 @@ function CostSection({ market, form }: { market: Market; form: OrderForm }) {
         side: form.side,
         quantity: Number(form.quantity) || 0,
         date: form.date,
+        sttExempt: market.config.sttExempt?.includes(form.instrumentId) === true,
       }),
     [market, form],
   );

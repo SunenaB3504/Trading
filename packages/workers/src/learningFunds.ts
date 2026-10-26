@@ -49,7 +49,10 @@ export function amfiLatest(text: string): Map<string, { date: string; nav: numbe
 export interface FundSpec {
   code: string;
   kind: string;
+  rules: NonNullable<Fund['rules']>;
 }
+
+const ruleOf = (t: string): FundSpec['rules'] => (t === 'equity' || t === 'debt' || t === 'liquid' ? t : 'other');
 
 export function readSpecs(text: string): FundSpec[] {
   return text
@@ -57,8 +60,8 @@ export function readSpecs(text: string): FundSpec[] {
     .map((l) => l.trim())
     .filter((l) => l !== '' && !l.startsWith('#'))
     .map((l) => {
-      const [code, kind] = l.split(';');
-      return { code: (code ?? '').trim(), kind: (kind ?? '').trim() };
+      const [code, kind, rules] = l.split(';');
+      return { code: (code ?? '').trim(), kind: (kind ?? '').trim(), rules: ruleOf((rules ?? '').trim()) };
     });
 }
 
@@ -77,7 +80,7 @@ export function assembleFunds(
     const first = rows[0];
     const last = rows[rows.length - 1];
     if (h === undefined || first === undefined || last === undefined) continue;
-    funds.push({ id: s.code, name: h.meta.scheme_name, kind: s.kind, isin: h.meta.isin_growth, firstDate: first[0], lastDate: last[0] });
+    funds.push({ id: s.code, name: h.meta.scheme_name, kind: s.kind, isin: h.meta.isin_growth, rules: s.rules, firstDate: first[0], lastDate: last[0] });
     navs[s.code] = rows;
     const a = latest.get(s.code);
     const same = a === undefined ? undefined : rows.find((r) => r[0] === a.date);

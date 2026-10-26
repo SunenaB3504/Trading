@@ -71,3 +71,11 @@ describe('learning market build (pnpm market:build)', () => {
     expect(Object.keys(m.bars)).toEqual(['RELIANCE', 'TATAMOTORS', 'DCHL']);
   });
 });
+
+describe('exchange-traded funds in the learning list (MIP v4.1 Stage 3)', () => {
+  it('marks the funds, and only gold, silver and liquid ones as STT-free', async () => {
+    const { ETFS } = await import('./learningMarket');
+    expect(Object.keys(ETFS).sort()).toEqual(['BANKBEES', 'GOLDBEES', 'ITBEES', 'JUNIORBEES', 'LIQUIDBEES', 'NIFTYBEES', 'SILVERBEES']);
+    expect(Object.entries(ETFS).filter(([, v]) => v.sttFree).map(([k]) => k).sort()).toEqual(['GOLDBEES', 'LIQUIDBEES', 'SILVERBEES']);
+  });
+});

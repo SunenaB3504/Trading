@@ -22,14 +22,18 @@ describe('fund NAV build (MIP v4.1 Stage 2)', () => {
 
   it('reads AMFI latest NAVs and spec lines', () => {
     expect(amfiLatest(amfi).get('120716')).toEqual({ date: '2026-10-23', nav: 1_591_770 });
-    expect(readSpecs('# c\n120716;Index fund\n\n')).toEqual([{ code: '120716', kind: 'Index fund' }]);
+    expect(readSpecs('# c\n120716;Index fund;equity\n119800;Liquid;liquid\n1;Odd;whatever\n\n')).toEqual([
+      { code: '120716', kind: 'Index fund', rules: 'equity' },
+      { code: '119800', kind: 'Liquid', rules: 'liquid' },
+      { code: '1', kind: 'Odd', rules: 'other' },
+    ]);
   });
 
   it('assembles funds and flags a NAV that disagrees with AMFI', () => {
-    const specs = [{ code: '120716', kind: 'Index fund' }, { code: '999', kind: 'Gone' }];
+    const specs = [{ code: '120716', kind: 'Index fund', rules: 'equity' as const }, { code: '999', kind: 'Gone', rules: 'other' as const }];
     const ok = assembleFunds(specs, new Map([['120716', h]]), amfiLatest(amfi), 7);
     expect(ok.funds.map((f) => f.id)).toEqual(['120716']);
-    expect(ok.funds[0]).toMatchObject({ firstDate: '2026-10-22', lastDate: '2026-10-23' });
+    expect(ok.funds[0]).toMatchObject({ rules: 'equity', firstDate: '2026-10-22', lastDate: '2026-10-23' });
     expect(ok.disputed).toEqual([]);
     const bad = assembleFunds(specs, new Map([['120716', h]]), new Map([['120716', { date: '2026-10-23', nav: 1 }]]), 7);
     expect(bad.disputed).toEqual(['120716']);

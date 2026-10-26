@@ -49,3 +49,12 @@ ICICIBANK
 NTPC
 COALINDIA
 HAL
+
+# Exchange-traded funds (Stage 3): they trade on the exchange like shares
+NIFTYBEES
+JUNIORBEES
+BANKBEES
+ITBEES
+GOLDBEES
+SILVERBEES
+LIQUIDBEES

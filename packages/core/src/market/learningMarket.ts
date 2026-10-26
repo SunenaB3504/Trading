@@ -33,6 +33,10 @@ export const marketInstrumentSchema = z.object({
   isin: z.string().nullable(),
   firstDate: tradingDateSchema,
   lastDate: tradingDateSchema,
+  /** An exchange-traded fund trades like a share; absent means an ordinary share. */
+  kind: z.enum(['equity', 'etf']).optional(),
+  /** True for ETFs that pay no securities transaction tax (gold, silver, liquid). */
+  sttFree: z.boolean().optional(),
 });
 export type MarketInstrument = z.infer<typeof marketInstrumentSchema>;
 
