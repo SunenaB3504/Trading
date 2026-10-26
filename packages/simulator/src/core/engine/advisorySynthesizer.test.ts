@@ -65,4 +65,26 @@ describe('Trade Advisory Ticket Synthesizer', () => {
     expect(ticket.provenance.thetaAstro).toBe(0.75);
     expect(ticket.provenance.isVetoed).toBe(false);
   });
+
+  it('sets action to BLOCKED when fundamental circuit breaker trips (phiFinancial = 0)', () => {
+    const vetoSizing: SizingResult = {
+      allocationRupees: 0.0,
+      shares: 0,
+      actualInvestedRupees: 0.0,
+      isVetoed: true,
+      vetoReason: 'Financial Risk Veto: D/E > 2.0',
+      multipliers: {
+        omegaTrader: 1.0,
+        phiFinancial: 0.0,
+        thetaAstro: 0.75,
+        compositeFraction: 0.0,
+      },
+    };
+
+    const ticket = synthesizeTradeTicket(mockBar, mockEdge, vetoSizing, '2026-12-15');
+    expect(ticket.action).toBe('BLOCKED');
+    expect(ticket.shares).toBe(0);
+    expect(ticket.provenance.isVetoed).toBe(true);
+    expect(ticket.provenance.vetoReason).toContain('Financial Risk Veto');
+  });
 });

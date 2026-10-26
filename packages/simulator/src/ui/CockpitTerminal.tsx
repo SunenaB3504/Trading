@@ -14,6 +14,7 @@ import { PriceCandleCanvas } from './components/chart/PriceCandleCanvas';
 import { ChartControls } from './components/chart/ChartControls';
 import { DashaRibbon } from './components/chart/DashaRibbon';
 import { KotaRadarCard } from './components/astro/KotaRadarCard';
+import { TrikonaNathansBadge } from './components/astro/TrikonaNathansBadge';
 import { FinancialAuditCard } from './components/financial/FinancialAuditCard';
 import { MasterTradeTicketCard } from './components/advisory/MasterTradeTicketCard';
 import { CopilotChatCard } from './components/copilot/CopilotChatCard';
@@ -37,15 +38,18 @@ function LeftChartPanel({
   currentIndex,
   dashaState,
   activeDate,
+  metadata,
 }: {
   bars: DailyBar[];
   currentIndex: number;
   dashaState: ActiveDashaState | null;
   activeDate: string;
+  metadata: CorporateRegistryRecord | null;
 }): React.ReactElement {
   return (
     <section style={{ display: 'flex', flexDirection: 'column', borderRight: '1px solid #1E2638' }}>
       <DashaRibbon dashaState={dashaState} activeDate={activeDate} />
+      <TrikonaNathansBadge metadata={metadata} />
       <div style={{ flex: 1, position: 'relative', background: '#0B0E14', padding: '10px', minHeight: 0 }}>
         <PriceCandleCanvas bars={bars} currentIndex={currentIndex} />
       </div>
@@ -152,11 +156,11 @@ function useCockpitTelemetryState() {
     portfolio: ledger,
   }), [activeBar, activeDate, dashaState, auditResult, kotaState, ledger]);
 
-  return { currentIndex, activeDate, bars, dashaState, kotaState, auditResult, tradeTicket, telemetry, executeOrder };
+  return { currentIndex, activeDate, bars, dashaState, kotaState, auditResult, tradeTicket, telemetry, executeOrder, metadata };
 }
 
 export const CockpitTerminal: React.FC = () => {
-  const { currentIndex, activeDate, bars, dashaState, kotaState, auditResult, tradeTicket, telemetry, executeOrder } =
+  const { currentIndex, activeDate, bars, dashaState, kotaState, auditResult, tradeTicket, telemetry, executeOrder, metadata } =
     useCockpitTelemetryState();
 
   const handleOrder = (ticket: MasterTradeTicket) => {
@@ -168,7 +172,7 @@ export const CockpitTerminal: React.FC = () => {
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', backgroundColor: '#07090E', color: '#F1F5F9' }}>
       <TopNavigationBar />
       <main style={{ flex: 1, display: 'grid', gridTemplateColumns: '1.6fr 1.2fr', overflow: 'hidden' }}>
-        <LeftChartPanel bars={bars} currentIndex={currentIndex} dashaState={dashaState} activeDate={activeDate} />
+        <LeftChartPanel bars={bars} currentIndex={currentIndex} dashaState={dashaState} activeDate={activeDate} metadata={metadata} />
         <RightTelemetryPanel ticket={tradeTicket} onOrder={handleOrder} auditResult={auditResult} kotaState={kotaState} telemetry={telemetry} />
       </main>
       <BottomStatusBar />

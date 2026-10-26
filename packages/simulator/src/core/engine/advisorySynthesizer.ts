@@ -18,11 +18,13 @@ export interface ExitRules {
   fortressBreachTrigger: boolean;
 }
 
+export type TicketAction = 'BUY' | 'SELL' | 'HOLD' | 'BLOCKED';
+
 export interface MasterTradeTicket {
   ticketId: string;
   symbol: string;
   timestamp: string;
-  action: 'BUY' | 'SELL' | 'HOLD';
+  action: TicketAction;
   shares: number;
   price: number;
   targetAllocationRupees: number;
@@ -65,11 +67,25 @@ export function synthesizeTradeTicket(
   const exitRules = buildExitRules(bar.close, cuspExitDate);
   const ticketId = `TKT-${bar.symbol}-${bar.date.replace(/-/g, '')}-${Date.now().toString().slice(-4)}`;
 
+  const isVetoed = sizing.isVetoed || sizing.shares === 0 || sizing.multipliers.phiFinancial <= 0 || sizing.multipliers.omegaTrader <= 0;
+  const action: TicketAction = isVetoed ? 'BLOCKED' : edge.action;
+
+  let vetoReason = sizing.vetoReason;
+  if (isVetoed && !vetoReason) {
+    if (sizing.multipliers.phiFinancial <= 0) {
+      vetoReason = 'Financial Risk Veto: Balance-sheet circuit breaker tripped (D/E > 2.0 or ICR < 1.5)';
+    } else if (sizing.multipliers.omegaTrader <= 0) {
+      vetoReason = 'Trader Veto: Chandrashtama personal risk stop active';
+    } else {
+      vetoReason = 'Risk Veto: Zero allocation permitted';
+    }
+  }
+
   return {
     ticketId,
     symbol: bar.symbol,
     timestamp: bar.date,
-    action: edge.action,
+    action,
     shares: sizing.shares,
     price: bar.close,
     targetAllocationRupees: sizing.allocationRupees,
@@ -81,8 +97,8 @@ export function synthesizeTradeTicket(
       omegaTrader: sizing.multipliers.omegaTrader,
       phiFinancial: sizing.multipliers.phiFinancial,
       thetaAstro: sizing.multipliers.thetaAstro,
-      isVetoed: sizing.isVetoed,
-      vetoReason: sizing.vetoReason,
+      isVetoed,
+      vetoReason,
     },
   };
 }

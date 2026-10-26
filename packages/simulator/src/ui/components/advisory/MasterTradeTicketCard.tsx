@@ -38,13 +38,18 @@ function TicketHeader({
   ticketId,
   isVetoed,
 }: {
-  action: 'BUY' | 'SELL' | 'HOLD';
+  action: 'BUY' | 'SELL' | 'HOLD' | 'BLOCKED';
   symbol: string;
   price: number;
   ticketId: string;
   isVetoed: boolean;
 }): React.ReactElement {
   const isBuy = action === 'BUY';
+  const isBlocked = action === 'BLOCKED' || isVetoed;
+  const badgeBg = isBlocked ? '#7F1D1D' : isBuy ? '#065F46' : '#991B1B';
+  const badgeColor = isBlocked ? '#FECACA' : '#ECFDF5';
+  const badgeText = isBlocked ? 'BLOCKED: RISK VETO' : action;
+
   return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -54,11 +59,11 @@ function TicketHeader({
             borderRadius: '6px',
             fontSize: '12px',
             fontWeight: 800,
-            backgroundColor: isVetoed ? '#334155' : isBuy ? '#065F46' : '#991B1B',
-            color: isVetoed ? '#94A3B8' : '#ECFDF5',
+            backgroundColor: badgeBg,
+            color: badgeColor,
           }}
         >
-          {action}
+          {badgeText}
         </span>
         <span style={{ color: '#F8FAFC', fontWeight: 700, fontSize: '13px' }}>
           {symbol} @ ₹{price.toFixed(2)}
@@ -142,6 +147,11 @@ export const MasterTradeTicketCard: React.FC<MasterTradeTicketCardProps> = ({ ti
         <MultiplierTag label="Θ Astro" val={p.thetaAstro} />
       </div>
       <TicketMetricsGrid shares={ticket.shares} actualInvested={ticket.actualInvestedRupees} targetPrice={ticket.exitRules.profitTargetPrice} stopPrice={ticket.exitRules.stopLossPrice} />
+      {isVetoed && p.vetoReason && (
+        <div style={{ padding: '8px 10px', borderRadius: '6px', backgroundColor: '#450A0A', border: '1px solid #7F1D1D', color: '#FECACA', fontSize: '11px', fontWeight: 600 }}>
+          ⛔ {p.vetoReason}
+        </div>
+      )}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <span style={{ fontSize: '10px', color: '#64748B' }}>Cusp Exit: <strong>{ticket.exitRules.calendarCuspExitDate}</strong></span>
         {isBuy && !isVetoed && onExecuteOrder && (
