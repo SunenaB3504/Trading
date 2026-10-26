@@ -4,9 +4,7 @@ import { readThrough } from '../dataClient/readThrough';
 import type { Cached } from '../dataClient/readThrough';
 import type { DataServiceClient, Health } from '../dataClient/client';
 import type { KeyValueStore } from '../store/kv';
-import { SNAPSHOT_CONFIG } from '../snapshotClient';
 import { Note, Row, Section, colors } from '../ui/Section';
-import { SnapshotSection } from './SnapshotSection';
 
 type State =
   | { kind: 'loading' }
@@ -38,17 +36,16 @@ export function DataScreen({
   }, [load]);
   return (
     <ScrollView contentContainerStyle={styles.page} testID="data-screen">
-      <Section title="Market data service">
-        {state.kind === 'loading' ? <Note>Checking the data service...</Note> : null}
+      <Section title="Data helper">
+        {state.kind === 'loading' ? <Note>Checking the data helper...</Note> : null}
         {state.kind === 'unavailable' ? (
-          <Note>{`The data service cannot be reached and nothing is saved yet (${state.reason}). Ledger views still work.`}</Note>
+          <Note>{`The data helper cannot be reached and nothing is saved yet (${state.reason}). Ledger views still work.`}</Note>
         ) : null}
         {state.kind === 'ready' ? <Ready health={state.health} now={now()} /> : null}
         <Pressable onPress={() => void load()} accessibilityRole="button" style={styles.button}>
           <Text style={styles.buttonText}>Check again</Text>
         </Pressable>
       </Section>
-      <SnapshotSection config={SNAPSHOT_CONFIG} kv={kv} now={now} />
     </ScrollView>
   );
 }

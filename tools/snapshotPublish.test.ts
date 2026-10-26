@@ -4,19 +4,19 @@ import type { AddressInfo } from 'node:net';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
-import { MemoryKv } from '../packages/app/src/store/kv';
+import { MemoryKv } from '../packages/workers/src/snapshotClient/kv';
 import {
   LATEST_KEY,
   auditedFetch,
   pinnedEd25519,
   pullSnapshot,
   readVerified,
-} from '../packages/app/src/snapshotClient/index';
-import type { RawFetch } from '../packages/app/src/snapshotClient/index';
+} from '../packages/workers/src/snapshotClient/index';
+import type { RawFetch } from '../packages/workers/src/snapshotClient/index';
 import { buildEnvelopeText, fileNameFor } from '../packages/workers/src/publishSnapshot';
 import { snapshotServer } from '../packages/workers/src/serveSnapshots';
 
-/** The publisher, the local host and the app's snapshot client, run against each other with a throwaway key. */
+/** The publisher, the local host and the snapshot client, run against each other with a throwaway key. */
 const dir = mkdtempSync(join(tmpdir(), 'snap-'));
 afterAll(() => rmSync(dir, { recursive: true, force: true }));
 

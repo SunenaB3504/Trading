@@ -1,28 +1,56 @@
-import { Suspense, lazy, useEffect, useMemo, useRef, useState } from 'react';
-import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
-import type { ScrollViewInstance } from 'react-native';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { DataServiceClient } from './dataClient/client';
 import type { FetchLike } from './dataClient/client';
-import { ASTRO_FEATURE } from './astro/feature';
-import { EntitlementProvider, useEntitlementService, useFeatureAccess } from './entitlement/react';
-import { SwitchedEntitlements, resolveLayerSwitch } from './entitlement/switched';
 import { useOnline } from './hooks/useOnline';
+import { openDeviceStores, removeRetiredStores, secureRandomHex } from './platform/device';
+import { prepareDevice } from './profiles/migrate';
+import { ProfileStore } from './profiles/profiles';
+import type { Profile } from './profiles/profiles';
 import { BackupScreen } from './screens/BackupScreen';
 import { CompareScreen } from './screens/CompareScreen';
 import { DataScreen } from './screens/DataScreen';
+import { ComingScreen, Disclaimer, HomeScreen } from './screens/HomeScreen';
 import { LedgerScreen } from './screens/LedgerScreen';
+import { PinScreen } from './screens/PinScreen';
+import { ProfilesScreen } from './screens/ProfilesScreen';
 import { ReportScreen } from './screens/ReportScreen';
-import { UniverseScreen } from './screens/UniverseScreen';
+import { SettingsScreen } from './screens/SettingsScreen';
 import { TradeScreen } from './screens/TradeScreen';
-import { IndexedDbKv } from './store/indexedDbKv';
+import { UniverseScreen } from './screens/UniverseScreen';
+import { loadDeviceSettings, saveDeviceSettings } from './settings/settings';
+import type { DeviceSettings } from './settings/settings';
+import type { SecureStore } from './secure/secureStore';
 import type { KeyValueStore } from './store/kv';
-import { MoreHint, useScrollHint } from './ui/ScrollHint';
 import { colors } from './ui/Section';
+import { RootErrorBoundary } from './ui/RootErrorBoundary';
+import { TabStrip } from './ui/TabStrip';
 
-type Tab = 'ledger' | 'universe' | 'trade' | 'compare' | 'report' | 'backup' | 'data' | 'profile';
+type SectionId = 'home' | 'learn' | 'practise' | 'measure' | 'tutor' | 'settings';
+type PractiseId = 'trade' | 'ledger' | 'universe' | 'compare' | 'report';
+type SettingsId = 'general' | 'profiles' | 'backup' | 'data';
 
-/** Fetched only when the tab is opened and access is granted, so a locked device never downloads it. */
-const ProfileScreen = lazy(() => import('./astro/ProfileScreen'));
+const SECTIONS = [
+  ['home', 'Home'],
+  ['learn', 'Learn'],
+  ['practise', 'Practise'],
+  ['measure', 'Measure'],
+  ['tutor', 'Tutor'],
+  ['settings', 'Settings'],
+] as const;
+const PRACTISE = [
+  ['trade', 'Trade'],
+  ['ledger', 'Ledger'],
+  ['universe', 'Universe'],
+  ['compare', 'Compare'],
+  ['report', 'Report'],
+] as const;
+const SETTINGS = [
+  ['general', 'General'],
+  ['profiles', 'Profiles'],
+  ['backup', 'Backup'],
+  ['data', 'Data'],
+] as const;
 
 /** `fetch` must be called as a plain function; calling it as a method of another object throws "Illegal invocation". */
 const browserFetch: FetchLike = (url, init) => fetch(url, init);
@@ -35,181 +63,202 @@ function serviceUrl(): string {
   return new URLSearchParams(window.location.search).get('service') ?? DEFAULT_SERVICE;
 }
 
-function searchOf(): string {
-  return typeof window === 'undefined' || typeof window.location?.search !== 'string'
-    ? ''
-    : window.location.search;
-}
-
-/** The Profile tab exists only when the entitlement service grants it (FR-P10 b). */
-function ProfileTab(props: { active: Tab; onSelect: (t: Tab) => void; onSpot: Spot }) {
-  const allowed = useFeatureAccess(ASTRO_FEATURE) === true;
-  return allowed ? (
-    <TabButton id="profile" active={props.active} onSelect={props.onSelect} onSpot={props.onSpot}>
-      Profile
-    </TabButton>
-  ) : null;
-}
-
-function ProfileSlot(props: { kv: KeyValueStore; now: () => number }) {
-  const allowed = useFeatureAccess(ASTRO_FEATURE) === true;
-  const entitlements = useEntitlementService();
-  if (!allowed) return null;
-  return (
-    <Suspense fallback={null}>
-      <ProfileScreen kv={props.kv} entitlements={entitlements} now={props.now} />
-    </Suspense>
-  );
-}
-
-type Spot = (id: Tab, x: number, width: number) => void;
-
-function TabButton(props: {
-  id: Tab;
-  active: Tab;
-  onSelect: (t: Tab) => void;
-  onSpot?: Spot;
-  children: string;
-}) {
-  const selected = props.id === props.active;
-  return (
-    <Pressable
-      accessibilityRole="tab"
-      accessibilityState={{ selected }}
-      onPress={() => props.onSelect(props.id)}
-      onLayout={(e) => props.onSpot?.(props.id, e.nativeEvent.layout.x, e.nativeEvent.layout.width)}
-      style={[styles.tab, selected ? styles.tabActive : null]}
-    >
-      <Text style={selected ? styles.tabTextActive : styles.tabText}>{props.children}</Text>
-    </Pressable>
-  );
-}
-
-const TABS: Array<[Exclude<Tab, 'profile'>, string]> = [
-  ['ledger', 'Ledger'],
-  ['universe', 'Universe'],
-  ['trade', 'Trade'],
-  ['compare', 'Compare'],
-  ['report', 'Report'],
-  ['backup', 'Backup'],
-  ['data', 'Data'],
-];
-
-function TabStrip(props: { active: Tab; onSelect: (t: Tab) => void }) {
-  const ref = useRef<ScrollViewInstance>(null);
-  const spots = useRef<Partial<Record<Tab, { x: number; width: number }>>>({});
-  const hint = useScrollHint();
-  const view = useRef(hint.box);
-  view.current = hint.box;
-  // Selecting a tab that is cut off by the edge slides it fully into view.
-  useEffect(() => {
-    const spot = spots.current[props.active];
-    const b = view.current;
-    if (spot === undefined || b.view === 0) return;
-    if (spot.x < b.x || spot.x + spot.width > b.x + b.view) {
-      ref.current?.scrollTo({ x: Math.max(0, spot.x - 16), animated: true });
-    }
-  }, [props.active]);
-  const onSpot: Spot = (id, x, width) => {
-    spots.current[id] = { x, width };
-  };
-  return (
-    <View style={styles.tabsWrap}>
-      <ScrollView
-        ref={ref}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={styles.tabsScroll}
-        contentContainerStyle={styles.tabs}
-        accessibilityRole="tablist"
-        onLayout={hint.onLayout}
-        onContentSizeChange={hint.onContentSizeChange}
-        onScroll={hint.onScroll}
-        scrollEventThrottle={16}
-      >
-        {TABS.map(([id, label]) => (
-          <TabButton
-            key={id}
-            id={id}
-            active={props.active}
-            onSelect={props.onSelect}
-            onSpot={onSpot}
-          >
-            {label}
-          </TabButton>
-        ))}
-        <ProfileTab active={props.active} onSelect={props.onSelect} onSpot={onSpot} />
-      </ScrollView>
-      <MoreHint show={hint.showMore} />
-    </View>
-  );
-}
-
-function Screens(props: {
-  tab: Tab;
+interface Device {
   kv: KeyValueStore;
-  now: () => number;
-  client: DataServiceClient;
-}) {
-  const { tab, kv, now, client } = props;
+  secure: SecureStore;
+  profiles: ProfileStore;
+}
+
+/** Opens the device's stores, upgrades a single-user device to profiles, and loads the open profile. */
+function useDevice() {
+  const device = useMemo((): Device => {
+    const { kv, secure } = openDeviceStores();
+    return { kv, secure, profiles: new ProfileStore(kv, secure, () => Date.now(), secureRandomHex) };
+  }, []);
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [settings, setSettings] = useState<DeviceSettings | null>(null);
+  const [locked, setLocked] = useState(true);
+  useEffect(() => {
+    void (async () => {
+      await removeRetiredStores();
+      const open = await prepareDevice(device.kv, device.profiles);
+      setSettings(await loadDeviceSettings(device.kv));
+      setProfile(open);
+      setLocked(open.hasPin);
+    })();
+  }, [device]);
+  const reload = useCallback(async () => {
+    const open = await device.profiles.current();
+    if (open !== null) setProfile(open);
+  }, [device]);
+  const open = useCallback(
+    async (id: string) => {
+      await device.profiles.select(id);
+      const p = await device.profiles.current();
+      setProfile(p);
+      setLocked(p?.hasPin ?? false);
+    },
+    [device],
+  );
+  return { device, profile, settings, setSettings, locked, setLocked, reload, open };
+}
+
+function Practise(props: { kv: KeyValueStore; now: () => number }) {
+  const [tab, setTab] = useState<PractiseId>('trade');
+  const { kv, now } = props;
   return (
     <>
+      <TabStrip tabs={PRACTISE} active={tab} onSelect={setTab} small />
+      {tab === 'trade' ? <TradeScreen kv={kv} now={now} /> : null}
       {tab === 'ledger' ? <LedgerScreen kv={kv} now={now} /> : null}
       {tab === 'universe' ? <UniverseScreen /> : null}
-      {tab === 'trade' ? <TradeScreen kv={kv} now={now} /> : null}
       {tab === 'compare' ? <CompareScreen kv={kv} now={now} /> : null}
       {tab === 'report' ? <ReportScreen kv={kv} now={now} /> : null}
-      {tab === 'backup' ? <BackupScreen kv={kv} now={now} /> : null}
-      {tab === 'data' ? <DataScreen client={client} kv={kv} now={now} /> : null}
-      {tab === 'profile' ? <ProfileSlot kv={kv} now={now} /> : null}
     </>
   );
 }
 
-/** The entitlement service for this device: everything except the optional layer, which follows the owner's switch. */
-function useLayerEntitlements(kv: KeyValueStore): SwitchedEntitlements {
-  const [layerOn, setLayerOn] = useState(false);
+function Settings(props: {
+  d: ReturnType<typeof useDevice>;
+  profile: Profile;
+  settings: DeviceSettings;
+  now: () => number;
+  client: DataServiceClient;
+  onImported: (p: Profile) => void;
+}) {
+  const [tab, setTab] = useState<SettingsId>('general');
+  const { d, profile, now } = props;
+  const profileKv = useMemo(() => d.device.profiles.scope(profile.id), [d.device, profile.id]);
+  return (
+    <>
+      <TabStrip tabs={SETTINGS} active={tab} onSelect={setTab} small />
+      {tab === 'general' ? (
+        <SettingsScreen profile={profile} profileKv={profileKv} deviceKv={d.device.kv} device={props.settings} onDevice={d.setSettings} />
+      ) : null}
+      {tab === 'profiles' ? (
+        <ProfilesScreen profiles={d.device.profiles} open={profile} onSwitch={(id) => void d.open(id)} onChanged={() => void d.reload()} />
+      ) : null}
+      {tab === 'backup' ? (
+        <BackupScreen device={d.device.kv} profiles={d.device.profiles} profile={profile} now={now} onImported={props.onImported} />
+      ) : null}
+      {tab === 'data' ? <DataScreen client={props.client} kv={d.device.kv} now={now} /> : null}
+    </>
+  );
+}
+
+const LEARN = ['Lessons in six levels, from how the market works to options, tax and habits', 'A glossary you can open from any highlighted word', 'Quizzes with an explanation for every answer'];
+const MEASURE = ['A journal that asks why before each trade and what you learnt after', 'A mistake checker that flags habits such as averaging down or oversized positions', 'Your results against simply holding the Nifty 50'];
+const TUTOR = ['A built-in coach on every screen, free and offline', 'An AI tutor you can switch Off, Preview or On, with a monthly limit', 'It teaches; it never gives tips'];
+
+function Header(props: { profile: Profile | null; online: boolean; onProfile: () => void }) {
+  return (
+    <View style={styles.header}>
+      <Text style={styles.brand}>Market Learning</Text>
+      {props.profile !== null ? (
+        <Pressable accessibilityRole="button" onPress={props.onProfile} testID="profile-badge" style={styles.badge}>
+          <Text style={styles.profile}>{props.profile.name}</Text>
+        </Pressable>
+      ) : null}
+      <Text style={props.online ? styles.online : styles.offline}>{props.online ? 'Online' : 'Offline'}</Text>
+    </View>
+  );
+}
+
+function Main(props: {
+  d: ReturnType<typeof useDevice>;
+  profile: Profile;
+  settings: DeviceSettings;
+  profileKv: KeyValueStore;
+  section: SectionId;
+  setSection: (s: SectionId) => void;
+  now: () => number;
+  client: DataServiceClient;
+  onImported: (p: Profile) => void;
+}) {
+  const { d, profile, settings, profileKv, section, now } = props;
+  const accept = () => {
+    const next = { ...settings, disclaimerAcceptedAt: Date.now() };
+    void saveDeviceSettings(d.device.kv, next).then(() => d.setSettings(next));
+  };
+  return (
+    <>
+      {settings.disclaimerAcceptedAt === null ? <Disclaimer onAccept={accept} /> : null}
+      <TabStrip tabs={SECTIONS} active={section} onSelect={props.setSection} />
+      {section === 'home' ? <HomeScreen profile={profile} kv={profileKv} now={now} onGo={props.setSection} /> : null}
+      {section === 'learn' ? <ComingScreen title="Learn" lines={LEARN} testID="learn-screen" /> : null}
+      {section === 'practise' ? <Practise kv={profileKv} now={now} /> : null}
+      {section === 'measure' ? <ComingScreen title="Measure" lines={MEASURE} testID="measure-screen" /> : null}
+      {section === 'tutor' ? <ComingScreen title="Tutor" lines={TUTOR} testID="tutor-screen" /> : null}
+      {section === 'settings' ? (
+        <Settings d={d} profile={profile} settings={settings} now={now} client={props.client} onImported={props.onImported} />
+      ) : null}
+    </>
+  );
+}
+
+/** The other profiles, for the PIN screen's "open another profile". */
+function useOthers(d: ReturnType<typeof useDevice>): Profile[] {
+  const [others, setOthers] = useState<Profile[]>([]);
+  const { device, profile, locked } = d;
   useEffect(() => {
-    void resolveLayerSwitch(kv, searchOf()).then(setLayerOn);
-  }, [kv]);
-  return useMemo(() => new SwitchedEntitlements(layerOn), [layerOn]);
+    void device.profiles.list().then((l) => setOthers(l.filter((p) => p.id !== profile?.id)));
+  }, [device, profile, locked]);
+  return others;
+}
+
+function AppBody() {
+  const [section, setSection] = useState<SectionId>('home');
+  const online = useOnline();
+  const client = useMemo(() => new DataServiceClient(browserFetch, serviceUrl()), []);
+  const now = useMemo(() => () => Date.now(), []);
+  const d = useDevice();
+  const others = useOthers(d);
+  const { profile, settings } = d;
+  const profileKv = useMemo(
+    () => (profile === null ? null : d.device.profiles.scope(profile.id)),
+    [d.device, profile],
+  );
+  // Screens read their data when they open and when the open profile changes, so a reload is enough here.
+  const onImported = () => void d.reload();
+  let body = null;
+  if (profile !== null && settings !== null && profileKv !== null) {
+    body = d.locked ? (
+      <PinScreen
+        profile={profile}
+        others={others}
+        check={(pin) => d.device.profiles.checkPin(profile.id, pin)}
+        onUnlock={() => d.setLocked(false)}
+        onSwitch={(id) => void d.open(id)}
+      />
+    ) : (
+      <View style={styles.body}>
+        <Main d={d} profile={profile} settings={settings} profileKv={profileKv} section={section} setSection={setSection} now={now} client={client} onImported={onImported} />
+      </View>
+    );
+  }
+  return (
+    <SafeAreaView style={styles.root}>
+      <Header profile={profile} online={online} onProfile={() => setSection('settings')} />
+      {body}
+    </SafeAreaView>
+  );
 }
 
 export default function App() {
-  const [tab, setTab] = useState<Tab>('ledger');
-  const online = useOnline();
-  const kv: KeyValueStore = useMemo(() => new IndexedDbKv(), []);
-  const client = useMemo(() => new DataServiceClient(browserFetch, serviceUrl()), []);
-  const now = useMemo(() => () => Date.now(), []);
-  const entitlements = useLayerEntitlements(kv);
   return (
-    <EntitlementProvider service={entitlements}>
-      <SafeAreaView style={styles.root}>
-        <View style={styles.header}>
-          <Text style={styles.brand}>Mock trading</Text>
-          <Text style={online ? styles.online : styles.offline}>
-            {online ? 'Online' : 'Offline'}
-          </Text>
-        </View>
-        <TabStrip active={tab} onSelect={setTab} />
-        <Screens tab={tab} kv={kv} now={now} client={client} />
-      </SafeAreaView>
-    </EntitlementProvider>
+    <RootErrorBoundary>
+      <AppBody />
+    </RootErrorBoundary>
   );
 }
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.background },
-  header: { flexDirection: 'row', justifyContent: 'space-between', padding: 16, flexShrink: 0 },
-  brand: { fontSize: 18, fontWeight: '700', color: colors.text },
+  body: { flex: 1 },
+  header: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 16, flexShrink: 0 },
+  brand: { fontSize: 18, fontWeight: '700', color: colors.text, flex: 1 },
+  badge: { minHeight: 44, minWidth: 44, justifyContent: 'center', paddingHorizontal: 8 },
+  profile: { color: colors.accent, fontWeight: '600' },
   online: { color: '#0a7d33', fontWeight: '600' },
   offline: { color: colors.warn, fontWeight: '600' },
-  // flexShrink 0: a long screen below must never squeeze the tab strip to nothing (found in UAT, G1)
-  tabsWrap: { flexShrink: 0 },
-  tabsScroll: { flexGrow: 0, flexShrink: 0, borderBottomWidth: 1, borderBottomColor: colors.line },
-  tabs: { flexDirection: 'row' },
-  tab: { paddingHorizontal: 20, minHeight: 44, justifyContent: 'center' },
-  tabActive: { borderBottomWidth: 2, borderBottomColor: colors.accent },
-  tabText: { color: colors.muted },
-  tabTextActive: { color: colors.accent, fontWeight: '600' },
 });

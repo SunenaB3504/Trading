@@ -8,13 +8,13 @@
 import type { AddressInfo } from 'node:net';
 import { chromium } from 'playwright-core';
 import type { Page } from 'playwright-core';
-import { checkLog, serveStatic } from './support';
+import { checkLog, openTab, serveStatic } from './support';
 
 const { checks, check } = checkLog();
 
 async function openTrade(page: Page, url: string): Promise<void> {
   await page.goto(url);
-  await page.getByRole('tab', { name: 'Trade' }).click();
+  await openTab(page, 'Trade');
   await page.getByText('New order (virtual money)').waitFor({ timeout: 30_000 });
 }
 
@@ -40,7 +40,7 @@ async function place(page: Page): Promise<void> {
 }
 
 async function compare(page: Page): Promise<void> {
-  await page.getByRole('tab', { name: 'Compare' }).click();
+  await openTab(page, 'Compare');
   await page.getByTestId('compare-screen').waitFor({ timeout: 10_000 });
   const text = await page.getByTestId('compare-screen').innerText();
   check('the compare tab names the snapshot', /Data snapshot fixture-v1/.test(text));
@@ -50,12 +50,12 @@ async function compare(page: Page): Promise<void> {
       /LEDGER B \(MARKET\)/i.test(text) &&
       /AAA, 10 shares, since 2026-03-04, open/.test(text),
   );
-  await page.getByRole('tab', { name: 'Trade' }).click();
+  await openTab(page, 'Trade');
   await page.getByText('New order (virtual money)').waitFor();
 }
 
 async function report(page: Page): Promise<void> {
-  await page.getByRole('tab', { name: 'Report' }).click();
+  await openTab(page, 'Report');
   await page.getByTestId('report-screen').waitFor({ timeout: 10_000 });
   const net = await page.getByTestId('report-screen').innerText();
   check(
@@ -65,7 +65,7 @@ async function report(page: Page): Promise<void> {
   await page.getByRole('tab', { name: 'Gross of costs' }).click();
   await page.getByText(/Gross view: before brokerage/).waitFor({ timeout: 10_000 });
   check('the gross view can be switched on', true);
-  await page.getByRole('tab', { name: 'Trade' }).click();
+  await openTab(page, 'Trade');
   await page.getByText('New order (virtual money)').waitFor();
 }
 

@@ -1,9 +1,0 @@
-{
-  "expo": {
-    "name": "Mock trading",
-    "slug": "mock-trading",
-    "version": "0.0.0",
-    "orientation": "portrait",
-    "web": { "bundler": "metro", "output": "single" }
-  }
-}

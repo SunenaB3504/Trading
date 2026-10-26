@@ -1,6 +1,6 @@
 /// <reference lib="dom" />
 /**
- * Phone-layout and accessibility check for the web app (WP-3.7, NFR-9). Opens every tab (and the Profile tab, switched on) at 360 px and 320 px wide
+ * Phone-layout and accessibility check for the web app (WP-3.7, NFR-9). Opens every screen at 360 px and 320 px wide
  * and measures: no horizontal page scroll, every control at least 44 px square, every field named for a
  * screen reader, a 16 px side gutter, tab roles in place, and no text below 12 px.
  *
@@ -9,10 +9,11 @@
 import type { AddressInfo } from 'node:net';
 import { chromium } from 'playwright-core';
 import type { Page } from 'playwright-core';
-import { checkLog, serveStatic } from './support';
+import { appReady, checkLog, openTab, serveStatic } from './support';
 
 const { checks, check } = checkLog();
-const TABS = ['Ledger', 'Universe', 'Trade', 'Compare', 'Report', 'Backup', 'Data'];
+/** Every screen: the main sections, then the screens inside Practise and Settings. */
+const TABS = ['Home', 'Learn', 'Measure', 'Tutor', 'Trade', 'Ledger', 'Universe', 'Compare', 'Report', 'General', 'Profiles', 'Backup', 'Data'];
 
 interface Measured {
   pageOverflow: number;
@@ -67,7 +68,7 @@ function measure(): Measured {
 }
 
 async function checkTab(page: Page, name: string, width: number, label = name): Promise<void> {
-  await page.getByRole('tab', { name, exact: true }).first().click();
+  await openTab(page, name);
   await page.waitForTimeout(400);
   const m = await page.evaluate(measure);
   check(
@@ -94,37 +95,31 @@ async function checkTab(page: Page, name: string, width: number, label = name): 
   check(`${width}px ${label}: side gutter of at least 16 px`, m.gutter >= 16, `${m.gutter}px`);
 }
 
-/** The tab row must hint that more tabs are hidden, and selecting a far tab must slide it fully into view (UAT H1). */
+/** The main tab row must hint that more sections are hidden, and selecting a far one must slide it into view (UAT H1). */
 async function tabCue(page: Page, width: number): Promise<void> {
-  await page.getByRole('tab', { name: 'Ledger', exact: true }).first().click();
+  await openTab(page, 'Home');
   await page.waitForTimeout(500);
   check(
-    `${width}px: an edge marker shows that more tabs are hidden`,
-    await page.getByTestId('tabs-more').isVisible(),
+    `${width}px: an edge marker shows that more sections are hidden`,
+    await page.getByTestId('tabs-more').first().isVisible(),
   );
-  await page.getByRole('tab', { name: 'Data', exact: true }).first().click();
+  await openTab(page, 'Settings');
   await page.waitForTimeout(900);
-  const box = await page.getByRole('tab', { name: 'Data', exact: true }).first().boundingBox();
+  const box = await page.getByRole('tab', { name: 'Settings', exact: true }).first().boundingBox();
   check(
-    `${width}px: selecting the last tab slides it fully into view`,
+    `${width}px: selecting the last section slides it fully into view`,
     box !== null && box.x >= 0 && box.x + box.width <= width + 1,
     JSON.stringify(box),
   );
-  check(
-    `${width}px: the marker goes away at the end of the row`,
-    (await page.getByTestId('tabs-more').count()) === 0,
+  const strip = await page.getByRole('tablist').first().boundingBox();
+  const markers = await page.getByTestId('tabs-more').evaluateAll((els) =>
+    els.map((e) => e.getBoundingClientRect().top),
   );
-}
-
-/** The optional Profile tab, switched on, must meet the same size and spacing rules as the others. */
-async function profileTab(page: Page, url: string, width: number): Promise<void> {
-  await page.goto(`${url}?layer=on`);
-  await page.getByRole('tab', { name: 'Profile', exact: true }).waitFor({ timeout: 30_000 });
-  await checkTab(page, 'Profile', width);
-  // the same screen in Malayalam: longer words must still fit, with the Malayalam font loaded
-  await page.getByTestId('lang-ml').click();
-  await page.waitForFunction(() => document.fonts.check('16px NotoSansMalayalam-Regular'));
-  await checkTab(page, 'Profile', width, 'Profile in Malayalam');
+  check(
+    `${width}px: the marker on the main row goes away at its end`,
+    strip !== null && markers.every((top) => top >= strip.y + strip.height - 1),
+    JSON.stringify({ strip, markers }),
+  );
 }
 
 async function runWidth(url: string, width: number): Promise<string[]> {
@@ -136,12 +131,11 @@ async function runWidth(url: string, width: number): Promise<string[]> {
   await page.addInitScript('window.__name = (f) => f;');
   try {
     await page.goto(url);
-    await page.getByRole('tab', { name: 'Ledger' }).waitFor({ timeout: 30_000 });
+    await appReady(page);
     const roles = await page.getByRole('tab').count();
-    check(`${width}px: tabs are exposed with the tab role`, roles >= TABS.length, `${roles} tabs`);
+    check(`${width}px: tabs are exposed with the tab role`, roles >= 6, `${roles} tabs`);
     for (const t of TABS) await checkTab(page, t, width);
     await tabCue(page, width);
-    await profileTab(page, url, width);
     check(`${width}px: no page errors`, errors.length === 0, errors.join(' | '));
   } finally {
     await browser.close();

@@ -8,7 +8,7 @@
 import type { AddressInfo } from 'node:net';
 import { chromium } from 'playwright-core';
 import type { Page } from 'playwright-core';
-import { checkLog, serveStatic } from './support';
+import { checkLog, openTab, serveStatic } from './support';
 
 const { checks, check } = checkLog();
 
@@ -59,7 +59,7 @@ async function main(): Promise<void> {
   page.on('pageerror', (e) => errors.push(String(e)));
   try {
     await page.goto(url);
-    await page.getByRole('tab', { name: 'Universe' }).click();
+    await openTab(page, 'Universe');
     await page.getByTestId('universe-screen').waitFor({ timeout: 30_000 });
     const all = await page.getByTestId('universe-screen').innerText();
     check(

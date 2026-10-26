@@ -1,7 +1,7 @@
 /**
- * Backup check for the web app (WP-3.6). Places an order, exports the signed bundle, confirms that a
- * bundle with one changed character is refused and leaves the book alone, clears the browser store,
- * and restores the book from the bundle (with and without the signing key).
+ * Backup check for the web app (WP-3.6, MIP Stage 1.9). Places an order, exports the profile's signed bundle, confirms
+ * that a bundle with one changed character is refused and leaves the book alone, clears the browser store, and
+ * restores the profile from the bundle onto the fresh device (with and without the signing key).
  *
  * Usage:  pnpm --filter @trading/app export:web && pnpm tsx tools/e2e/backup.ts
  */
@@ -9,12 +9,12 @@
 import type { AddressInfo } from 'node:net';
 import { chromium } from 'playwright-core';
 import type { Page } from 'playwright-core';
-import { checkLog, serveStatic } from './support';
+import { checkLog, openTab, serveStatic } from './support';
 
 const { checks, check } = checkLog();
 
 async function tab(page: Page, name: string): Promise<void> {
-  await page.getByRole('tab', { name }).click();
+  await openTab(page, name);
 }
 
 async function placeOrder(page: Page, url: string): Promise<void> {
@@ -26,7 +26,7 @@ async function placeOrder(page: Page, url: string): Promise<void> {
 
 async function exportText(page: Page): Promise<{ text: string; key: string }> {
   await tab(page, 'Backup');
-  await page.getByText('Export your book now').waitFor({ timeout: 10_000 });
+  await page.getByText('Export this profile now').waitFor({ timeout: 10_000 });
   check('a reminder is shown before the first export', true);
   await page.getByTestId('export-button').click();
   const box = page.getByTestId('bundle-text');
@@ -42,13 +42,16 @@ async function exportText(page: Page): Promise<{ text: string; key: string }> {
   return { text, key };
 }
 
+/** The first press checks the file and shows what will change; only a file that passed asks for a second press. */
 async function importText(page: Page, text: string, key: string): Promise<string> {
   await page.getByTestId('import-text').fill(text);
   await page.getByTestId('import-key').fill(key);
   await page.getByTestId('import-button').click();
-  await page.getByText(/Press the button again to confirm/).waitFor({ timeout: 10_000 });
-  await page.getByTestId('import-button').click();
   const msg = page.getByTestId('import-message');
+  await msg.waitFor({ timeout: 10_000 });
+  const first = await msg.innerText();
+  if (!/Press the button again to confirm/.test(first)) return first;
+  await page.getByTestId('import-button').click();
   await page.waitForFunction(
     () =>
       !/Press the button again/.test(
@@ -110,7 +113,7 @@ async function main(): Promise<void> {
     const restored = await importText(page, text, '');
     check(
       'the book is restored from the bundle without the key, with a note that the signature was not checked',
-      /Imported 1 orders/.test(restored) && /could not be checked without the key/.test(restored),
+      /Imported 1 orders/.test(restored) && /signature could not be checked/.test(restored),
       restored,
     );
     check('the restored book shows the filled order again', await bookHasOrder(page));

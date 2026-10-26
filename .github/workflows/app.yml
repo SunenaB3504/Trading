@@ -1,0 +1,83 @@
+name: App checks and Android preview APK
+
+# MIP v4.1 Stage 1.13. Runs the workspace checks, exports the web build and builds the sideload APK for the
+# `preview` profile (arm64 only, runbook R1). No trading or data download happens here.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Type check
+        run: pnpm typecheck
+      # The research scripts at the top of tools/ (Phase 1 universe scripts, tools/dasha-collapse) do not pass
+      # the lint rules yet; lint covers the packages and the test tools until they are fixed.
+      - name: Lint (packages and test tools)
+        run: npx eslint packages tools/e2e "tools/*.ts"
+      - name: File size caps
+        run: pnpm size
+      - name: Dependency rules
+        run: pnpm cycles
+      - name: Tests
+        run: pnpm test
+      - name: Web export
+        run: pnpm --filter @trading/app export:web
+
+  android:
+    runs-on: ubuntu-latest
+    needs: checks
+    env:
+      EAS_BUILD_PROFILE: preview
+      NODE_ENV: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - run: pnpm install --frozen-lockfile
+      - name: Resolved app config (preview)
+        working-directory: packages/app
+        run: npx expo config --type public
+      - name: No buildArchs restriction in production (runbook R1)
+        working-directory: packages/app
+        run: |
+          if EAS_BUILD_PROFILE=production npx expo config --type public | grep -q buildArchs; then
+            echo "production must not restrict buildArchs"; exit 1
+          fi
+      - name: Native project
+        working-directory: packages/app
+        run: npx expo prebuild --platform android --no-install
+      - name: Build the preview APK
+        working-directory: packages/app/android
+        run: ./gradlew assembleRelease --console=plain
+      - name: Size budget (runbook R3)
+        run: |
+          apk=packages/app/android/app/build/outputs/apk/release/app-release.apk
+          max=$(node -p "require('./docs/size-budget.json')['preview-apk-arm64'].maxBytes")
+          size=$(stat -c %s "$apk")
+          echo "APK is $size bytes (budget $max)"
+          test "$size" -le "$max"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: market-learning-preview-apk
+          path: packages/app/android/app/build/outputs/apk/release/app-release.apk

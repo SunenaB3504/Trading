@@ -28,3 +28,8 @@ data/publish/
 # Python bytecode
 __pycache__/
 *.pyc
+
+# generated native projects (Expo prebuild); the app config is the source
+packages/app/android/
+packages/app/ios/
+packages/app/build-apk/

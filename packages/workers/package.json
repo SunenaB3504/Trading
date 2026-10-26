@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@trading/core": "workspace:*",
-    "@trading/data-service": "workspace:*"
+    "@trading/data-service": "workspace:*",
+    "zod": "^4.6.7"
   }
 }

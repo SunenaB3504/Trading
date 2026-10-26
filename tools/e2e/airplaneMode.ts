@@ -10,7 +10,7 @@ import type { Server } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import { chromium } from 'playwright-core';
 import type { BrowserContext, Page } from 'playwright-core';
-import { checkLog, serveStatic } from './support';
+import { appReady, checkLog, openTab, serveStatic } from './support';
 import { FixedClock } from '../../packages/core/src/index';
 import {
   SeriesStore,
@@ -64,12 +64,14 @@ function savedKeys(page: Page): Promise<string[]> {
 
 async function online(page: Page, url: string): Promise<void> {
   await page.goto(url);
+  await appReady(page);
+  await openTab(page, 'Ledger');
   await page.getByText(LEDGER_TITLE).waitFor({ timeout: 30_000 });
   const body = await page.locator('body').innerText();
   check('ledger shows the golden report hash', body.includes(GOLDEN));
   check('ledger shows rupee figures', /₹[\d,]+\.\d\d/.test(body));
   check('badge says Online', body.includes('Online'));
-  await page.getByRole('tab', { name: 'Data' }).click();
+  await openTab(page, 'Data');
   await page.getByText('Connected').waitFor({ timeout: 15_000 });
   check('data screen connects to the data service', true);
 }
@@ -82,7 +84,7 @@ async function offline(page: Page, context: BrowserContext, service: Server): Pr
   await page.getByRole('button', { name: 'Check again' }).click();
   await page.getByText('Offline, showing last saved').waitFor({ timeout: 15_000 });
   check('data screen falls back to the last saved answer', true);
-  await page.getByRole('tab', { name: 'Ledger' }).click();
+  await openTab(page, 'Ledger');
   await page.getByText(LEDGER_TITLE).waitFor({ timeout: 10_000 });
   const body = await page.locator('body').innerText();
   check('ledger still opens offline with the same hash', body.includes(GOLDEN));

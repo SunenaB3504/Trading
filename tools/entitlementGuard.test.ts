@@ -44,17 +44,6 @@ describe('entitlement guard', () => {
     }
   });
 
-  it('keeps the entitlement seam in the app: no other package refers to it', () => {
-    for (const pkg of packages.filter((p) => p !== 'app')) {
-      for (const file of sourceOf(pkg)) {
-        const text = readFileSync(file, 'utf8');
-        expect(/IEntitlementService|hasFeatureAccess|GrantAllEntitlements/.test(text), file).toBe(
-          false,
-        );
-      }
-    }
-  });
-
   it('has no SKU, tier or store-listing wording in source before the legal review', () => {
     const banned = /\b(sku|subscription tier|in-app purchase|play billing|app store connect)\b/i;
     for (const pkg of packages) {

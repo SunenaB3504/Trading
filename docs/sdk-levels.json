@@ -1,0 +1,8 @@
+{
+  "minSdkVersion": 24,
+  "compileSdkVersion": 37,
+  "targetSdkVersion": 36,
+  "verifiedOn": null,
+  "source": "Not yet checked against Google Play's target-API rule. Only sideloaded APKs are made (runbook section 1), so no store requirement applies; check before any store submission (runbook R2).",
+  "note": "compileSdkVersion 37 because the Expo SDK 58 libraries require it (first Android build, 2026-10-26); targetSdkVersion stays 36."
+}

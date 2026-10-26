@@ -1,7 +1,7 @@
 # Master Implementation Plan: Market Learning App
 
 **Document ID:** `MIP-MARKET-LEARN-v4.1`  
-**Status:** DRAFT — Stage 1 awaiting owner approval  
+**Status:** Stage 1 built 2026-10-26; owner device checks pending  
 **Date:** 2026-10-26  
 **Directory:** [`docs/astro-trader-app/`](./)  
 **System Specification:** [`SYSTEM_SPECIFICATION_v1.md`](SYSTEM_SPECIFICATION_v1.md) (SSD v4.1)  
@@ -134,6 +134,23 @@ Baseline on 2026-10-26: `pnpm test` passes **1,039 tests in 104 files**. UAT rou
 7. No outbound request other than those in the allowlist (airplane and host checks).
 
 **Owner actions in Stage 1:** install the APK on your phone (allow "install unknown apps"); run the exit-gate checks 3–5 on your devices; approve D42.
+
+#### Stage 1 result (2026-10-26, built by the assistant; owner checks pending)
+
+| Exit gate | Result |
+| :--- | :--- |
+| 1. Checks | Type check, size caps (0 errors), dependency rules (incl. new `app-no-astro`) and **986 tests** pass. Lint passes for `packages/` and the test tools; the research scripts at the top of `tools/` (Phase 1 universe scripts, `tools/dasha-collapse/`) already failed lint before Stage 1 and still do, so `pnpm verify` as a whole stops at lint. CI lints the packages and test tools only until those scripts are fixed |
+| 2. Browser checks on the web export | All pass: airplane mode 9, order entry 14, backup (incl. restore onto a cleared browser), universe 9, lots popup 17, phone width 166 (360 and 320 px, every screen), no-astro 37 |
+| 4. Two profiles, PIN | New browser check `tools/e2e/profiles.ts` passes (12 checks): separate books, PIN asked after reload, wrong PIN refused, PIN screen opens another profile; unit tests cover ids, owner hand-over, delete and migration |
+| 6. Old bundle imports into "Owner" | Unit test passes |
+| 7. No outbound request outside the allowlist | No-astro check: no request leaves the machine; `docs/network-allowlist.md` created |
+| 3. Preview APK | Built locally on the laptop and kept at `packages/app/build-apk/market-learning-0.1.0-preview-arm64.apk` (git-ignored), about 25 MB (budget 150 MB), arm64-v8a only, compile API 37 / target API 36 / min API 24, cleartext off, permissions: internet (plus vibrate from React Native). Signed with the standard debug key (a preview; the owner's release keystore comes at Release 1). **Installing on the owner's phone and the cold-start check: owner to run** |
+| Emulator smoke test (assistant) | The arm64 APK installs on the laptop's x86_64 emulator but cannot load its native libraries there (expected: no x86_64 libraries in an arm64 build). A separate x86_64 test build ran on the emulator (Android 15 image): first start made the "Owner" profile in SQLite, the note and Home screen showed, an order placed under Practise was still there after a full restart (cash ₹9,89,030.43, one position), no crash in the log. Not a substitute for the real-phone check |
+| 5. Laptop → phone transfer | **Owner to run** |
+
+Build notes (Windows laptop): the Android SDK's default CMake 3.22.1 loops on "build.ninja still dirty" for `expo-modules-core`; CMake 3.31.6 (installed through the SDK manager, chosen in the generated `android/local.properties`) builds it. The Expo SDK 58 libraries need compile API 37, recorded in `docs/sdk-levels.json`. CI builds on Linux and has not run yet (it runs on the first push).
+
+Changes beyond the task table: the app's snapshot client moved to `packages/workers/src/snapshotClient` (research keeps its end-to-end test); restoring a backup onto a device whose only profile is the empty starting one replaces that profile (found by the backup check); `docs/sdk-levels.json`, `docs/size-budget.json` and `docs/native-deps.md` record runbook R2–R4.
 
 ---
 

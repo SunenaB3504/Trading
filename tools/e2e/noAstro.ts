@@ -1,7 +1,7 @@
 /// <reference lib="dom" />
 /**
- * No-astro check for the web app (UAT I1, FR-P10). Opens the exported build in Chrome and confirms that
- * nothing astro-derived reaches a user whose paid layer is locked: not in the text, labels or placeholders
+ * No-astro check for the web app (UAT I1; D42: the app holds no astro layer at all). Opens the exported build in
+ * Chrome and confirms that nothing astro-derived reaches the user: not in the text, labels or placeholders
  * of any tab (before and after placing an order), not in an exported bundle, not in anything saved on the
  * device, not in any network request, and that the code served to a locked device holds no ephemeris library and none of the layer's words.
  *
@@ -10,11 +10,12 @@
 import type { AddressInfo } from 'node:net';
 import { chromium } from 'playwright-core';
 import type { Page } from 'playwright-core';
-import { checkLog, serveStatic } from './support';
+import { appReady, checkLog, openTab, serveStatic } from './support';
 
 const { checks, check } = checkLog();
 
-const TABS = ['Ledger', 'Universe', 'Trade', 'Compare', 'Report', 'Backup', 'Data'];
+/** Every screen: the main sections, then the screens inside Practise and Settings. */
+const TABS = ['Home', 'Learn', 'Measure', 'Tutor', 'Trade', 'Ledger', 'Universe', 'Compare', 'Report', 'General', 'Profiles', 'Backup', 'Data'];
 
 /** The words of the UAT list plus the gate's own list and a few near neighbours. */
 const ASTRO =
@@ -44,7 +45,7 @@ function readable(): string {
 
 async function scanTabs(page: Page, label: string): Promise<void> {
   for (const name of TABS) {
-    await page.getByRole('tab', { name, exact: true }).first().click();
+    await openTab(page, name);
     await page.waitForTimeout(500);
     const found = hits(await page.evaluate(readable));
     check(`${label}: no astro words on the ${name} tab`, found.length === 0, found.join(', '));
@@ -52,10 +53,10 @@ async function scanTabs(page: Page, label: string): Promise<void> {
 }
 
 async function placeOrderAndExport(page: Page): Promise<string> {
-  await page.getByRole('tab', { name: 'Trade', exact: true }).first().click();
+  await openTab(page, 'Trade');
   await page.getByTestId('place-order').click();
   await page.getByText(/Order h-0001 placed/).waitFor({ timeout: 15_000 });
-  await page.getByRole('tab', { name: 'Backup', exact: true }).first().click();
+  await openTab(page, 'Backup');
   await page.getByTestId('export-button').click();
   const box = page.getByTestId('bundle-text');
   await box.waitFor({ timeout: 10_000 });
@@ -135,7 +136,7 @@ async function main(): Promise<void> {
   try {
     detectorSelfTest();
     await page.goto(url);
-    await page.getByRole('tab', { name: 'Ledger' }).waitFor({ timeout: 30_000 });
+    await appReady(page);
     await scanTabs(page, 'before an order');
     const bundle = await placeOrderAndExport(page);
     await scanTabs(page, 'after an order and an export');

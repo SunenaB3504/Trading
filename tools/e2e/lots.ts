@@ -9,13 +9,13 @@
 import type { AddressInfo } from 'node:net';
 import { chromium } from 'playwright-core';
 import type { Page } from 'playwright-core';
-import { checkLog, serveStatic } from './support';
+import { checkLog, openTab, serveStatic } from './support';
 
 const { checks, check } = checkLog();
 
 async function openLedger(page: Page, url: string): Promise<void> {
   await page.goto(url);
-  await page.getByRole('tab', { name: 'Ledger', exact: true }).first().click();
+  await openTab(page, 'Ledger');
   await page.getByTestId('ledger-screen').waitFor({ timeout: 30_000 });
 }
 

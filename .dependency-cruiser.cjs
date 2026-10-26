@@ -31,6 +31,13 @@ module.exports = {
       to: { path: '^packages/(data-service|workers)/' },
     },
     {
+      name: 'app-no-astro',
+      severity: 'error',
+      comment: 'D42: the learning app holds no astro layer; the astro engine stays in research.',
+      from: { path: '^packages/app/src' },
+      to: { path: '^packages/astro-engine/' },
+    },
+    {
       name: 'public-api-only',
       severity: 'error',
       comment: 'Cross-package imports go through the package entry point.',

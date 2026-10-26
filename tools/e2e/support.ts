@@ -45,3 +45,33 @@ export function checkLog(): {
     },
   };
 }
+
+/** Where each screen lives since the learning-app navigation (D42): sub-tabs sit inside a main section. */
+const PARENT: Record<string, string> = {
+  Trade: 'Practise',
+  Ledger: 'Practise',
+  Universe: 'Practise',
+  Compare: 'Practise',
+  Report: 'Practise',
+  General: 'Settings',
+  Profiles: 'Settings',
+  Backup: 'Settings',
+  Data: 'Settings',
+};
+
+/** Opens a screen by its tab name, selecting its main section first when it has one. */
+export async function openTab(
+  page: { getByRole: (r: 'tab', o: { name: string; exact: boolean }) => { first: () => { click: () => Promise<void> } } },
+  name: string,
+): Promise<void> {
+  const parent = PARENT[name];
+  if (parent !== undefined) await page.getByRole('tab', { name: parent, exact: true }).first().click();
+  await page.getByRole('tab', { name, exact: true }).first().click();
+}
+
+/** Waits until the app has opened a profile and shows its main sections. */
+export async function appReady(page: {
+  getByRole: (r: 'tab', o: { name: string; exact: boolean }) => { first: () => { waitFor: (o: { timeout: number }) => Promise<void> } };
+}): Promise<void> {
+  await page.getByRole('tab', { name: 'Home', exact: true }).first().waitFor({ timeout: 30_000 });
+}
