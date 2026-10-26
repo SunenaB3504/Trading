@@ -4,6 +4,8 @@ import { formatPaise } from '../format/rupees';
 /** Plain-language wording for the Orders list, so two orders of the same kind can be told apart. */
 const REASONS: Record<string, string> = {
   limit_not_reached: 'the price never reached your limit',
+  trigger_not_reached: 'the price never reached your trigger',
+  still_waiting_at_end_of_data: 'still waiting when the prices end',
   circuit_upper: 'locked at the upper price limit, so a buy could not fill',
   circuit_lower: 'locked at the lower price limit, so a sell could not fill',
   non_trading_day: 'the exchange was closed that day',
@@ -23,6 +25,18 @@ export function reasonText(reason: string | null): string | null {
   return reason;
 }
 
+/** The order type in plain words: a market order, a limit, or a stop with its trigger and lifetime. */
+export function priceWords(o: OrderRequest['order']): string {
+  const limit = o.limitPaise === null ? '' : formatPaise(o.limitPaise);
+  const trigger = o.triggerPaise == null ? '' : formatPaise(o.triggerPaise);
+  const dir = o.triggerWhen === 'at_or_above' ? 'rises to' : 'falls to';
+  const life = o.validity === 'gtt' ? `, good till triggered${o.validUntil != null ? ` to ${o.validUntil}` : ''}` : '';
+  if (o.type === 'limit') return `limit ${limit}${life}`;
+  if (o.type === 'stop') return `stop-loss market (SL-M) when the price ${dir} ${trigger}${life}`;
+  if (o.type === 'stop_limit') return `stop-loss limit (SL) when the price ${dir} ${trigger}, then limit ${limit}${life}`;
+  return 'market';
+}
+
 /** One line per order: what it was, at what price, decided on which day, and its id. */
 export function describeOrder(
   o: OrderRecord,
@@ -30,12 +44,10 @@ export function describeOrder(
   name: (instrumentId: string) => string = (id) => id,
 ): string {
   if (req === undefined) return `${o.requestedQuantity}`;
-  const { side, instrumentId, type, limitPaise, tradingDate, id } = req.order;
+  const { side, instrumentId, tradingDate, id } = req.order;
   const qty =
     o.state === 'filled'
       ? `${o.filledQuantity} of ${o.requestedQuantity}`
       : `${o.requestedQuantity}`;
-  const price =
-    type === 'limit' && limitPaise !== null ? `limit ${formatPaise(limitPaise)}` : 'market';
-  return `${side} ${qty} ${name(instrumentId)}, ${price}, decided ${tradingDate} (${id})`;
+  return `${side} ${qty} ${name(instrumentId)}, ${priceWords(req.order)}, decided ${tradingDate} (${id})`;
 }

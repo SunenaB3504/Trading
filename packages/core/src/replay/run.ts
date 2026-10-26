@@ -129,13 +129,15 @@ function buildFill(
   };
 }
 
-export function processOrder(run: Run, ro: ReplayOrder): void {
+/** Simulates one order and posts it; false when the order is a GTT that the data has not yet settled. */
+export function processOrder(run: Run, ro: ReplayOrder): boolean {
   const sim = fillOrder(
     ro.order,
     ro.intent,
     contextProvider(run.snapshot),
     run.cfg.fillOptions ?? DEFAULT_FILL_OPTIONS,
   );
+  if (sim.status === 'open') return false;
   if (sim.status !== 'filled' || sim.fill === null) {
     run.outcomes.push(
       outcome(ro, {
@@ -144,7 +146,7 @@ export function processOrder(run: Run, ro: ReplayOrder): void {
         exitBlockedSessions: sim.exitBlockedSessions,
       }),
     );
-    return;
+    return true;
   }
   applyDue(run, sim.fill.tradingDate);
   const { quantity, reasons } = sized(run, ro, sim.fill);
@@ -155,7 +157,7 @@ export function processOrder(run: Run, ro: ReplayOrder): void {
   };
   if (quantity <= 0) {
     run.outcomes.push(outcome(ro, { ...base, reason: 'risk' }));
-    return;
+    return true;
   }
   const { fill, dpKey } = buildFill(run, ro, sim.fill, quantity);
   try {
@@ -167,6 +169,7 @@ export function processOrder(run: Run, ro: ReplayOrder): void {
     if (!(e instanceof LedgerError)) throw e;
     run.outcomes.push(outcome(ro, { ...base, reason: `ledger: ${e.message}` }));
   }
+  return true;
 }
 
 export function newRun(snapshot: ReplaySnapshot, cfg: ReplayConfig): Run {
@@ -210,6 +213,8 @@ export function runReplay(
   cfg: ReplayConfig,
 ): ReplayResult {
   const run = newRun(snapshot, cfg);
-  for (const ro of [...orders].sort(byPlacement)) processOrder(run, ro);
+  for (const ro of [...orders].sort(byPlacement)) {
+    if (!processOrder(run, ro)) run.outcomes.push(outcome(ro, { status: 'expired', reason: 'still_waiting_at_end_of_data' }));
+  }
   return finishRun(run);
 }

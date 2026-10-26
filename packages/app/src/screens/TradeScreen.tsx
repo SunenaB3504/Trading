@@ -16,8 +16,20 @@ const firstForm = (market: Market): OrderForm => ({
   quantity: '10',
   limit: '',
   stop: '',
+  trigger: '',
+  validity: 'day',
+  until: '',
   date: market.defaultDate,
 });
+
+const TYPE_LABELS = {
+  market: 'Market',
+  limit: 'Limit',
+  stop: 'Stop-loss market (SL-M)',
+  stop_limit: 'Stop-loss limit (SL)',
+} as const;
+const WHEN_LABELS = { at_or_below: 'Price falls to', at_or_above: 'Price rises to' } as const;
+const VALIDITY_LABELS = { day: 'One day', gtt: 'Good till triggered (GTT)' } as const;
 
 function Choice<T extends string>(props: {
   label: string;
@@ -71,7 +83,7 @@ function Field(props: {
   );
 }
 
-function Book({ view }: { view: SessionView }) {
+function Book({ view, onCancel }: { view: SessionView; onCancel: (id: string) => void }) {
   return (
     <>
       <Section title="Cash and positions">
@@ -89,11 +101,14 @@ function Book({ view }: { view: SessionView }) {
         {view.orders.length === 0 ? <Note>No orders yet.</Note> : null}
         <View testID="order-list">
           {view.orders.map((o) => (
-            <Row
-              key={o.id}
-              label={`${o.line}${o.reason ? ` (${o.reason})` : ''}`}
-              value={o.state}
-            />
+            <View key={o.id}>
+              <Row label={`${o.line}${o.reason ? ` (${o.reason})` : ''}`} value={o.state} />
+              {o.state === 'pending' ? (
+                <Pressable accessibilityRole="button" onPress={() => onCancel(o.id)} style={styles.cancel} testID={`cancel-${o.id}`}>
+                  <Text style={styles.choiceTextOn}>Cancel this order</Text>
+                </Pressable>
+              ) : null}
+            </View>
           ))}
         </View>
       </Section>
@@ -104,7 +119,11 @@ function Book({ view }: { view: SessionView }) {
 type SetField = <K extends keyof OrderForm>(k: K, v: OrderForm[K]) => void;
 
 /** What to tell the person after an order is accepted: the next open, or why it will wait. */
-function placedMessage(r: { orderId: string; state: string }, market: Market, instrumentId: string): string {
+function placedMessage(r: { orderId: string; state: string }, market: Market, form: OrderForm): string {
+  const instrumentId = form.instrumentId;
+  if (r.state === 'pending' && form.validity === 'gtt') {
+    return `Order ${r.orderId} placed and waiting: a good-till-triggered order is checked against each new trading day and fills when its trigger is reached. It can be cancelled until then.`;
+  }
   if (r.state === 'pending') {
     const bars = market.snapshot.bars[instrumentId] ?? [];
     const ends = bars[bars.length - 1]?.date ?? market.lastDate;
@@ -129,10 +148,19 @@ function useTrade(kv: KeyValueStore, now: () => number, market: Market) {
   const submit = useCallback(async () => {
     if (session === null) return;
     const r = await session.place(form);
-    setMessage(r.ok ? placedMessage(r, market, form.instrumentId) : r.error);
+    setMessage(r.ok ? placedMessage(r, market, form) : r.error);
     setView(await session.view());
   }, [session, form, market]);
-  return { view, form, message, set, submit };
+  const cancel = useCallback(
+    async (id: string) => {
+      if (session === null) return;
+      const r = await session.cancel(id);
+      setMessage(r.ok ? `Order ${id} cancelled.` : r.error);
+      setView(await session.view());
+    },
+    [session],
+  );
+  return { view, form, message, set, submit, cancel };
 }
 
 /** A few instruments are buttons; a longer list gets a search box and shows the matches as buttons. */
@@ -169,6 +197,52 @@ function StockPicker(props: { market: Market; value: string; onChange: (id: stri
   );
 }
 
+/** The trigger direction and price of a stop order. */
+function TriggerFields({ form, set }: { form: OrderForm; set: SetField }) {
+  const sell = form.side === 'sell';
+  const when = form.when ?? (sell ? 'at_or_below' : 'at_or_above');
+  return (
+    <>
+      <Choice
+        label={sell ? 'Sell when (stop-loss falls, target rises)' : 'Buy when (breakout rises, dip falls)'}
+        value={when}
+        options={['at_or_below', 'at_or_above'] as const}
+        labels={WHEN_LABELS}
+        onChange={(v) => set('when', v)}
+        testID="pick-when"
+      />
+      <Field label="Trigger price (₹)" value={form.trigger ?? ''} onChange={(v) => set('trigger', v)} testID="trigger-input" keyboard="decimal-pad" />
+    </>
+  );
+}
+
+/** How long a limit or stop order lives: one day, or good till triggered with an optional last day. */
+function LifetimeFields({ form, set }: { form: OrderForm; set: SetField }) {
+  return (
+    <>
+      <Choice label="How long" value={form.validity ?? 'day'} options={['day', 'gtt'] as const} labels={VALIDITY_LABELS} onChange={(v) => set('validity', v)} testID="pick-validity" />
+      {form.validity === 'gtt' ? (
+        <Field label="Last valid day (YYYY-MM-DD), empty for the longest (250 sessions)" value={form.until ?? ''} onChange={(v) => set('until', v)} testID="until-input" />
+      ) : null}
+    </>
+  );
+}
+
+/** Trigger, limit and lifetime fields, shown only for the order types that use them. */
+function PriceFields({ form, set }: { form: OrderForm; set: SetField }) {
+  const stop = form.type === 'stop' || form.type === 'stop_limit';
+  const limit = form.type === 'limit' || form.type === 'stop_limit';
+  return (
+    <>
+      {stop ? <TriggerFields form={form} set={set} /> : null}
+      {limit ? (
+        <Field label="Limit price (₹)" value={form.limit} onChange={(v) => set('limit', v)} testID="limit-input" keyboard="decimal-pad" />
+      ) : null}
+      {form.type !== 'market' ? <LifetimeFields form={form} set={set} /> : null}
+    </>
+  );
+}
+
 function OrderFields(props: { market: Market; form: OrderForm; set: SetField }) {
   const { market, form, set } = props;
   return (
@@ -184,7 +258,8 @@ function OrderFields(props: { market: Market; form: OrderForm; set: SetField }) 
       <Choice
         label="Type"
         value={form.type}
-        options={['market', 'limit'] as const}
+        options={['market', 'limit', 'stop', 'stop_limit'] as const}
+        labels={TYPE_LABELS}
         onChange={(v) => set('type', v)}
         testID="pick-type"
       />
@@ -195,15 +270,7 @@ function OrderFields(props: { market: Market; form: OrderForm; set: SetField }) 
         testID="qty-input"
         keyboard="numeric"
       />
-      {form.type === 'limit' ? (
-        <Field
-          label="Limit price (₹)"
-          value={form.limit}
-          onChange={(v) => set('limit', v)}
-          testID="limit-input"
-          keyboard="decimal-pad"
-        />
-      ) : null}
+      <PriceFields form={form} set={set} />
       <Field
         label="Decision date (placed after the close)"
         value={form.date}
@@ -244,7 +311,7 @@ function CostSection({ market, form }: { market: Market; form: OrderForm }) {
 }
 
 export function TradeScreen({ kv, now, market }: { kv: KeyValueStore; now: () => number; market: Market }) {
-  const { view, form, message, set, submit } = useTrade(kv, now, market);
+  const { view, form, message, set, submit, cancel } = useTrade(kv, now, market);
   return (
     <ScrollView contentContainerStyle={styles.page} testID="trade-screen">
       <Section title="New order (virtual money)">
@@ -264,7 +331,7 @@ export function TradeScreen({ kv, now, market }: { kv: KeyValueStore; now: () =>
         ) : null}
       </Section>
       <CostSection market={market} form={form} />
-      {view !== null ? <Book view={view} /> : <Note>Loading the book...</Note>}
+      {view !== null ? <Book view={view} onCancel={(id) => void cancel(id)} /> : <Note>Loading the book...</Note>}
     </ScrollView>
   );
 }
@@ -303,4 +370,5 @@ const styles = StyleSheet.create({
   },
   placeText: { color: '#fff', fontWeight: '600' },
   message: { marginTop: 8, color: colors.text },
+  cancel: { minHeight: 44, justifyContent: 'center', marginBottom: 6 },
 });

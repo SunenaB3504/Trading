@@ -64,7 +64,10 @@ export class PaperSession {
         (a.request.order.id < b.request.order.id ? -1 : 1),
     );
     // The adapter takes requests synchronously inside its promises, so queueing them here is safe.
-    for (const item of inOrder) void adapter.placeOrder(item.request, item.key);
+    for (const item of inOrder) {
+      void adapter.placeOrder(item.request, item.key);
+      if (item.cancelled === true) void adapter.cancelOrder(item.request.order.id);
+    }
     adapter.settle();
     return adapter;
   }
@@ -102,6 +105,18 @@ export class PaperSession {
       state: placed?.state ?? 'pending',
       dataEnds: this.market.lastDate,
     };
+  }
+
+  /** Cancels an order that is still waiting; a filled, expired or rejected order cannot be cancelled. */
+  async cancel(orderId: string): Promise<{ ok: true } | { ok: false; error: string }> {
+    const item = this.stored.find((s) => s.request.order.id === orderId);
+    const state = (await this.adapter.getOrders()).find((o) => o.orderId === orderId)?.state;
+    if (item === undefined || state !== 'pending')
+      return { ok: false, error: 'Only an order that is still waiting can be cancelled.' };
+    item.cancelled = true;
+    await putStamped(this.kv, requestsKey(this.market.id, REQUESTS_KEY), this.stored, this.now());
+    this.adapter = PaperSession.rebuild(this.stored, this.market);
+    return { ok: true };
   }
 
   /** Ledger A beside Ledger B for this book, from the same snapshot (FR-L3). */

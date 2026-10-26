@@ -21,11 +21,28 @@ interface Remembered {
 
 const fingerprintOf = (r: OrderRequest): string => sha256Hex(canonicalJson(r));
 
+/** A stop-limit's limit must lie on the safe side of its trigger, or the order could never fill after it is set off. */
+function limitFitsTrigger(o: OrderRequest['order']): boolean {
+  const limit = o.limitPaise ?? 0;
+  const trigger = o.triggerPaise ?? 0;
+  return o.side === 'sell' ? limit <= trigger : limit >= trigger;
+}
+
+/** Problems with a stop or GTT order's trigger and validity, or null. */
+function triggerProblem(o: OrderRequest['order']): string | null {
+  const stop = o.type === 'stop' || o.type === 'stop_limit';
+  if (stop !== (o.triggerPaise != null && o.triggerWhen != null)) return 'trigger_mismatch';
+  if (o.validity === 'gtt' && o.type === 'market') return 'market_order_cannot_be_gtt';
+  if (o.type === 'stop_limit' && !limitFitsTrigger(o)) return 'limit_beyond_trigger';
+  return null;
+}
+
 function structuralProblem(r: OrderRequest): string | null {
   const o = r.order;
   if (!Number.isSafeInteger(o.quantity) || o.quantity <= 0) return 'invalid_quantity';
-  if ((o.type === 'limit') !== (o.limitPaise !== null)) return 'limit_price_mismatch';
-  return null;
+  if ((o.type === 'limit' || o.type === 'stop_limit') !== (o.limitPaise !== null))
+    return 'limit_price_mismatch';
+  return triggerProblem(o);
 }
 
 function recordOf(r: OrderRequest, state: 'pending' | 'cancelled'): OrderRecord {
@@ -119,9 +136,9 @@ export class PaperExecutionAdapter implements IExecutionAdapter {
     const snap = this.snapshot();
     const ready = this.pending.filter((p) => dataReady(snap, p)).sort(byPlacement);
     this.run.snapshot = snap;
-    for (const r of ready) processOrder(this.run, r);
-    this.pending = this.pending.filter((p) => !ready.includes(p));
-    return ready.length;
+    const settled = ready.filter((r) => processOrder(this.run, r));
+    this.pending = this.pending.filter((p) => !settled.includes(p));
+    return settled.length;
   }
 
   getOrders(): Promise<OrderRecord[]> {

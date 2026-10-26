@@ -64,6 +64,34 @@ function finish(
   return { status, fill, blockedReason, attempts, exitBlockedSessions: blocked };
 }
 
+/** A GTT order stays alive for at most this many sessions (about a year). */
+export const GTT_MAX_SESSIONS = 250;
+
+/**
+ * A good-till-triggered order is tried on every session until it fills or runs out. A missing bar means the data has
+ * not reached that session yet, so the order is reported `open` and is tried again when more data arrives.
+ */
+function fillGtt(
+  order: Order,
+  p: Plan,
+  provider: ContextProvider,
+  opts: FillOptions,
+): FillResult {
+  const attempts: Attempt[] = [];
+  let date = p.firstDate;
+  for (let n = 0; n < GTT_MAX_SESSIONS; n += 1) {
+    if (order.validUntil != null && date > order.validUntil) return finish('expired', attempts, null, 0);
+    const ctx = provider(order.instrumentId, date);
+    if (ctx.bar === null) return finish('open', attempts, null, 0);
+    const out = attemptOnDate(order, date, p.mode, ctx, opts);
+    attempts.push({ date, result: out.result, reason: out.result === 'filled' ? null : out.reason });
+    if (out.result === 'filled') return finish('filled', attempts, out, 0);
+    if (out.result === 'rejected' && out.reason === 'ineligible') return finish('rejected', attempts, out, 0);
+    date = nextRegularTradingDay(date);
+  }
+  return finish('expired', attempts, null, 0);
+}
+
 /**
  * Simulates one order against daily bars. Entries that hit a circuit lock expire; exits carry
  * over to the next session at its open, up to `maxCarrySessions` (D19). A limit that is not reached
@@ -76,6 +104,7 @@ export function fillOrder(
   opts: FillOptions = DEFAULT_FILL_OPTIONS,
 ): FillResult {
   const p = plan(order);
+  if (order.validity === 'gtt') return fillGtt(order, p, provider, opts);
   const attempts: Attempt[] = [];
   const late = lateReason(order, p);
   if (late !== null) {

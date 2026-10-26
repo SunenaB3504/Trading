@@ -20,6 +20,8 @@ export const EXPORT_EVERY_DAYS = 7;
 export interface StoredOrder {
   key: string;
   request: OrderRequest;
+  /** The person cancelled it while it was still waiting; it is then kept but never takes effect. */
+  cancelled?: boolean;
 }
 
 /**

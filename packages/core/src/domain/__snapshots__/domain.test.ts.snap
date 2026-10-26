@@ -842,6 +842,7 @@ exports[`JSON schemas > matches the committed snapshot 1`] = `
               "circuit_lower",
               "outside_day_range",
               "limit_not_reached",
+              "trigger_not_reached",
               "non_trading_day",
               "halted",
               "ineligible",
@@ -928,16 +929,56 @@ exports[`JSON schemas > matches the committed snapshot 1`] = `
         "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
         "type": "string",
       },
+      "triggerPaise": {
+        "anyOf": [
+          {
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991,
+            "type": "integer",
+          },
+          {
+            "type": "null",
+          },
+        ],
+      },
+      "triggerWhen": {
+        "anyOf": [
+          {
+            "enum": [
+              "at_or_below",
+              "at_or_above",
+            ],
+            "type": "string",
+          },
+          {
+            "type": "null",
+          },
+        ],
+      },
       "type": {
         "enum": [
           "market",
           "limit",
+          "stop",
+          "stop_limit",
         ],
         "type": "string",
+      },
+      "validUntil": {
+        "anyOf": [
+          {
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "type": "string",
+          },
+          {
+            "type": "null",
+          },
+        ],
       },
       "validity": {
         "enum": [
           "day",
+          "gtt",
         ],
         "type": "string",
       },

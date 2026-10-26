@@ -48,7 +48,7 @@ export function attemptOnDate(
   const bar = ctx.bar;
   if (bar === null) return reject('non_trading_day');
   const priced = executionPrice(order, bar, mode, ctx.tickPaise, opts.limitRule);
-  if (priced.price === null) return { result: 'not-filled', reason: 'limit_not_reached' };
+  if (priced.price === null) return { result: 'not-filled', reason: priced.reason };
   if (priced.price < bar.low || priced.price > bar.high) return reject('outside_day_range');
   const at = sessionInstant(date, mode);
   if (at === undefined) return reject('non_trading_day');
