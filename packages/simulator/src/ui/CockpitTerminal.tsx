@@ -104,6 +104,13 @@ function deriveTradeTicket(
     sessionsToCusp: 2,
     isVry: false,
     isFortressBreached: isBreached,
+    lords: dashaState
+      ? {
+          md: dashaState.mahadasha,
+          ad: dashaState.antardasha,
+          pd: dashaState.pratyantardasha,
+        }
+      : undefined,
   });
 
   const sizing = calculatePositionSize({

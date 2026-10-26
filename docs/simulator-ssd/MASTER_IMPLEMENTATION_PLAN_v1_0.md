@@ -358,15 +358,21 @@ packages/app/src/
   * `ui/components/advisory/MasterTradeTicketCard.tsx` (`< 350 LOC`).
 * **Acceptance Criteria:** Loading distressed tickers like `YESBANK` or `SUZLON` displays `BLOCKED: FINANCIAL RISK VETO` with ₹0 allocation and disables buy/sell order triggers.
 
-#### WP-4.4: Lagna Trikona Nathans (1H, 5H, 9H Lords) Persona Widget
-* **Objective:** Expose the foundational auspicious astrological rulers of the corporate natal chart directly in the workstation interface.
+#### WP-4.4: Lagna Trikona Nathans, Dual Lordship Resolution & Dynamic Triad Telemetry
+* **Objective:** Expose the foundational auspicious and inauspicious astrological rulers ([T] Set and [D] Set) and resolve Parashari Dual Lordship (*Dvi-Rashi Adhipatya*) to classify the active Dasha Triad code (`[D-T-D]`, `[T-T-T]`, `[D-T-T]`, etc.).
 * **Key Tasks:**
-  1. Derive the 1st (Lagna), 5th (Purva Punya), and 9th (Bhagya) house signs and their planetary rulers from `corporateRegistry.json`.
-  2. Render a sleek header badge: `Trikona Nathans: { Lord1, Lord5, Lord9 }` so traders can transparently see why an active Dasha is labeled as `[T]` in Triple Trikona `[T-T-T]` harvest signals.
+  1. Derive the 1st (Lagna), 5th (Purva Punya), and 9th (Bhagya) house signs and their planetary rulers from `corporateRegistry.json` using Parashari Moolatrikona precedence ($70\%$ weight) and Lagnesha immunity (*Ashtamadhipati dosha na vidyate lagneshasya*).
+  2. Render a sleek header badge under the Dasha Ribbon displaying both `[T] Set` and `[D] Set`.
+  3. Dynamically evaluate the active Mahadasha, Antardasha, and Pratyantardasha lords into an explicit Triad Code (e.g. `[D-T-D]`).
+  4. Render the Triad Code prominently in the Master Trade Ticket header, the provenance multiplier row, and annotate the signal reason with the running lords (e.g. `Signal: NONE — [D-T-D] (ketu-venus-jupiter)`).
 * **Deliverables:**
-  * `ui/components/chart/DashaRibbon.tsx` (`< 300 LOC`).
+  * `core/astro/trikonaNathans.ts` (`< 200 LOC`).
+  * `core/engine/edgeDetector.ts` (`< 200 LOC`).
   * `ui/components/astro/TrikonaNathansBadge.tsx` (`< 150 LOC`).
-* **Acceptance Criteria:** Inspecting TCS displays `Trikona Nathans: { Venus, Saturn, Mercury }` with their respective houses (1H, 5H, 9H).
+  * `ui/components/advisory/MasterTradeTicketCard.tsx` (`< 300 LOC`).
+* **Acceptance Criteria:**
+  * Inspecting TCS displays `[T] Set: {venus, saturn, mercury}` and `[D] Set: {jupiter, sun, rahu, ketu}`.
+  * On 2005-08-24 (Ketu-Venus-Jupiter), ticket header prominently displays `[D-T-D]`, the multiplier row shows `Triad: [D-T-D]`, and signal shows `[D-T-D] (ketu-venus-jupiter)`.
 
 #### WP-4.5: AI Copilot API Settings, Encryption & Diagnostic Health Monitor
 * **Objective:** Provide a user-facing settings modal to configure and persist the Google Gemini API key and monitor connection health.

@@ -33,6 +33,7 @@ export interface MasterTradeTicket {
   provenance: {
     signal: string;
     reason: string;
+    triadCode: string;
     omegaTrader: number;
     phiFinancial: number;
     thetaAstro: number;
@@ -94,6 +95,7 @@ export function synthesizeTradeTicket(
     provenance: {
       signal: edge.signal,
       reason: edge.reason,
+      triadCode: edge.triadCode,
       omegaTrader: sizing.multipliers.omegaTrader,
       phiFinancial: sizing.multipliers.phiFinancial,
       thetaAstro: sizing.multipliers.thetaAstro,

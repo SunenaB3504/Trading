@@ -37,12 +37,14 @@ function TicketHeader({
   price,
   ticketId,
   isVetoed,
+  triadCode,
 }: {
   action: 'BUY' | 'SELL' | 'HOLD' | 'BLOCKED';
   symbol: string;
   price: number;
   ticketId: string;
   isVetoed: boolean;
+  triadCode?: string;
 }): React.ReactElement {
   const isBuy = action === 'BUY';
   const isBlocked = action === 'BLOCKED' || isVetoed;
@@ -68,6 +70,22 @@ function TicketHeader({
         <span style={{ color: '#F8FAFC', fontWeight: 700, fontSize: '13px' }}>
           {symbol} @ ₹{price.toFixed(2)}
         </span>
+        {triadCode && (
+          <span
+            style={{
+              padding: '2px 8px',
+              borderRadius: '4px',
+              fontSize: '11px',
+              fontWeight: 700,
+              fontFamily: 'monospace',
+              backgroundColor: '#1E293B',
+              color: '#38BDF8',
+              border: '1px solid #0284C7',
+            }}
+          >
+            {triadCode}
+          </span>
+        )}
       </div>
       <span style={{ fontSize: '11px', color: '#64748B', fontFamily: 'monospace' }}>{ticketId}</span>
     </div>
@@ -114,6 +132,79 @@ function TicketMetricsGrid({
   );
 }
 
+function TicketFooter({
+  cuspExitDate,
+  isBuy,
+  isVetoed,
+  onExecute,
+}: {
+  cuspExitDate: string;
+  isBuy: boolean;
+  isVetoed: boolean;
+  onExecute?: (() => void) | undefined;
+}): React.ReactElement {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <span style={{ fontSize: '10px', color: '#64748B' }}>
+        Cusp Exit: <strong>{cuspExitDate}</strong>
+      </span>
+      {isBuy && !isVetoed && onExecute && (
+        <button
+          onClick={onExecute}
+          style={{
+            padding: '6px 14px',
+            borderRadius: '6px',
+            backgroundColor: '#059669',
+            color: '#FFF',
+            fontSize: '11px',
+            fontWeight: 700,
+            border: 'none',
+            cursor: 'pointer',
+          }}
+        >
+          Execute Paper Trade
+        </button>
+      )}
+    </div>
+  );
+}
+
+function MultipliersRow({
+  omegaTrader,
+  phiFinancial,
+  thetaAstro,
+  triadCode,
+}: {
+  omegaTrader: number;
+  phiFinancial: number;
+  thetaAstro: number;
+  triadCode?: string;
+}): React.ReactElement {
+  return (
+    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+      <MultiplierTag label="Ω Trader" val={omegaTrader} />
+      <MultiplierTag label="Φ Financial" val={phiFinancial} />
+      <MultiplierTag label="Θ Astro" val={thetaAstro} />
+      {triadCode && (
+        <span
+          style={{
+            padding: '2px 6px',
+            borderRadius: '4px',
+            fontSize: '10px',
+            fontFamily: 'monospace',
+            fontWeight: 600,
+            backgroundColor: '#1E1B4B',
+            color: '#C7D2FE',
+            border: '1px solid #4338CA',
+          }}
+        >
+          Triad: {triadCode}
+        </span>
+      )}
+    </div>
+  );
+}
+
 export const MasterTradeTicketCard: React.FC<MasterTradeTicketCardProps> = ({ ticket, onExecuteOrder }) => {
   if (!ticket) {
     return (
@@ -139,27 +230,21 @@ export const MasterTradeTicketCard: React.FC<MasterTradeTicketCardProps> = ({ ti
         borderRadius: '8px',
       }}
     >
-      <TicketHeader action={ticket.action} symbol={ticket.symbol} price={ticket.price} ticketId={ticket.ticketId} isVetoed={isVetoed} />
+      <TicketHeader action={ticket.action} symbol={ticket.symbol} price={ticket.price} ticketId={ticket.ticketId} isVetoed={isVetoed} triadCode={p.triadCode} />
       <div style={{ fontSize: '11px', color: '#CBD5E1' }}><strong>Signal:</strong> {p.signal} — {p.reason}</div>
-      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-        <MultiplierTag label="Ω Trader" val={p.omegaTrader} />
-        <MultiplierTag label="Φ Financial" val={p.phiFinancial} />
-        <MultiplierTag label="Θ Astro" val={p.thetaAstro} />
-      </div>
+      <MultipliersRow omegaTrader={p.omegaTrader} phiFinancial={p.phiFinancial} thetaAstro={p.thetaAstro} triadCode={p.triadCode} />
       <TicketMetricsGrid shares={ticket.shares} actualInvested={ticket.actualInvestedRupees} targetPrice={ticket.exitRules.profitTargetPrice} stopPrice={ticket.exitRules.stopLossPrice} />
       {isVetoed && p.vetoReason && (
         <div style={{ padding: '8px 10px', borderRadius: '6px', backgroundColor: '#450A0A', border: '1px solid #7F1D1D', color: '#FECACA', fontSize: '11px', fontWeight: 600 }}>
           ⛔ {p.vetoReason}
         </div>
       )}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <span style={{ fontSize: '10px', color: '#64748B' }}>Cusp Exit: <strong>{ticket.exitRules.calendarCuspExitDate}</strong></span>
-        {isBuy && !isVetoed && onExecuteOrder && (
-          <button onClick={() => onExecuteOrder(ticket)} style={{ padding: '6px 14px', borderRadius: '6px', backgroundColor: '#059669', color: '#FFF', fontSize: '11px', fontWeight: 700, border: 'none', cursor: 'pointer' }}>
-            Execute Paper Trade
-          </button>
-        )}
-      </div>
+      <TicketFooter
+        cuspExitDate={ticket.exitRules.calendarCuspExitDate}
+        isBuy={isBuy}
+        isVetoed={isVetoed}
+        onExecute={onExecuteOrder ? () => onExecuteOrder(ticket) : undefined}
+      />
     </div>
   );
 };

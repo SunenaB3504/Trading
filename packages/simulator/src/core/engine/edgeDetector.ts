@@ -14,6 +14,7 @@ export interface CuspContext {
   sessionsToCusp: number; // Positive if approaching cusp, negative if past
   isVry: boolean; // Viparita Raja Yoga active
   isFortressBreached: boolean;
+  lords?: { md: string; ad: string; pd: string } | undefined;
 }
 
 export type EdgeSignalType =
@@ -27,9 +28,26 @@ export interface EdgeDetectionResult {
   signal: EdgeSignalType;
   action: 'BUY' | 'SELL' | 'HOLD';
   thetaAstro: number; // Astro confluence factor (0.0 to 1.0)
+  triadCode: string; // e.g. [D-T-D] or [T-T-T]
   reason: string;
   isSilencedByQualityGate: boolean;
   qualityGateReason?: string | undefined;
+}
+
+export function formatTriadCode(
+  md: BhavaCategory,
+  ad: BhavaCategory,
+  pd: BhavaCategory
+): string {
+  const map: Record<BhavaCategory, string> = {
+    trikona: 'T',
+    dusthana: 'D',
+    kendra: 'K',
+    maraka: 'M',
+    upachaya: 'U',
+    neutral: 'N',
+  };
+  return `[${map[md] ?? 'N'}-${map[ad] ?? 'N'}-${map[pd] ?? 'N'}]`;
 }
 
 export function evaluateExAnteQualityGate(bar: DailyBar): {
@@ -45,43 +63,45 @@ export function evaluateExAnteQualityGate(bar: DailyBar): {
   return { isSilenced: false };
 }
 
-function checkTurnaroundEdge(ctx: CuspContext): EdgeDetectionResult | null {
-  // [D-T-T] Turnaround with VRY at cusp +/- 3 sessions
+function checkTurnaroundEdge(ctx: CuspContext, triadCode: string, label: string): EdgeDetectionResult | null {
   const isDtt = ctx.mdCategory === 'dusthana' && ctx.adCategory === 'trikona' && ctx.pdCategory === 'trikona';
   if (isDtt && ctx.isVry && Math.abs(ctx.sessionsToCusp) <= 3) {
     return {
       signal: 'TURNAROUND_INCEPTION',
       action: 'BUY',
       thetaAstro: 0.75,
-      reason: 'VRY Cusp Turnaround [D-T-T]: Ingress within ±3 sessions',
+      triadCode,
+      reason: `VRY Cusp Turnaround ${label}: Ingress within ±3 sessions`,
       isSilencedByQualityGate: false,
     };
   }
   return null;
 }
 
-function checkDefensiveEdge(ctx: CuspContext): EdgeDetectionResult | null {
+function checkDefensiveEdge(ctx: CuspContext, triadCode: string, label: string): EdgeDetectionResult | null {
   const isTdt = ctx.mdCategory === 'trikona' && ctx.adCategory === 'dusthana' && ctx.pdCategory === 'trikona';
   if (isTdt && ctx.sessionsToCusp <= 10 && ctx.sessionsToCusp >= 0) {
     return {
       signal: 'DEFENSIVE_EXIT',
       action: 'SELL',
       thetaAstro: 0.0,
-      reason: 'Pre-emptive Defensive Exit [T-D-T]: Impending Dusthana ingress in <= 10 sessions',
+      triadCode,
+      reason: `Pre-emptive Defensive Exit ${label}: Impending Dusthana ingress in <= 10 sessions`,
       isSilencedByQualityGate: false,
     };
   }
   return null;
 }
 
-function checkHarvestEdge(ctx: CuspContext): EdgeDetectionResult | null {
+function checkHarvestEdge(ctx: CuspContext, triadCode: string, label: string): EdgeDetectionResult | null {
   const isTtt = ctx.mdCategory === 'trikona' && ctx.adCategory === 'trikona' && ctx.pdCategory === 'trikona';
   if (isTtt && ctx.sessionsToCusp <= 3 && ctx.sessionsToCusp >= 0) {
     return {
       signal: 'BULL_HARVEST',
       action: 'SELL',
       thetaAstro: 1.0,
-      reason: 'Triple Trikona [T-T-T] completion harvest zone',
+      triadCode,
+      reason: `Triple Trikona ${label} completion harvest zone`,
       isSilencedByQualityGate: false,
     };
   }
@@ -89,17 +109,24 @@ function checkHarvestEdge(ctx: CuspContext): EdgeDetectionResult | null {
 }
 
 export function detectEdgeSignals(bar: DailyBar, ctx: CuspContext): EdgeDetectionResult {
+  const triadCode = formatTriadCode(ctx.mdCategory, ctx.adCategory, ctx.pdCategory);
+  const lordsStr = ctx.lords
+    ? ` (${ctx.lords.md}-${ctx.lords.ad}-${ctx.lords.pd})`
+    : '';
+  const label = `${triadCode}${lordsStr}`;
+
   if (ctx.isFortressBreached) {
     return {
       signal: 'FORTRESS_BREACH_EXIT',
       action: 'SELL',
       thetaAstro: 0.0,
-      reason: 'Fortress breach emergency exit: Malefics penetrated Stambha',
+      triadCode,
+      reason: `Fortress breach emergency exit ${label}: Malefics penetrated Stambha`,
       isSilencedByQualityGate: false,
     };
   }
 
-  const turnaround = checkTurnaroundEdge(ctx);
+  const turnaround = checkTurnaroundEdge(ctx, triadCode, label);
   if (turnaround) {
     const qg = evaluateExAnteQualityGate(bar);
     if (qg.isSilenced) {
@@ -114,10 +141,10 @@ export function detectEdgeSignals(bar: DailyBar, ctx: CuspContext): EdgeDetectio
     return turnaround;
   }
 
-  const defensive = checkDefensiveEdge(ctx);
+  const defensive = checkDefensiveEdge(ctx, triadCode, label);
   if (defensive) return defensive;
 
-  const harvest = checkHarvestEdge(ctx);
+  const harvest = checkHarvestEdge(ctx, triadCode, label);
   if (harvest) return harvest;
 
   // Default state: Triple Trikona running bull trend or neutral
@@ -128,7 +155,8 @@ export function detectEdgeSignals(bar: DailyBar, ctx: CuspContext): EdgeDetectio
     signal: 'NONE',
     action: 'HOLD',
     thetaAstro: theta,
-    reason: 'Normal progression; no cusp edge boundary detected',
+    triadCode,
+    reason: `${label}: Normal progression; no cusp edge boundary detected`,
     isSilencedByQualityGate: false,
   };
 }

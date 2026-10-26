@@ -311,11 +311,15 @@ $$\mathbf{Trade Ticket} = \Big\{ \text{When to Invest}, \quad \text{Quantity / R
 |  Where:                                                                                            |
 |  - Omega_Trader:   Buyer Kundli Scalar (1.0 = Safe, 0.5 = Personal 6/8/12, 0.0 = Chandrashtama)   |
 |  - Phi_Financial:  Fundamental Quality Score (0.0 to 1.0 based on Debt, FCF, ROCE, Pledging)       |
-|  - Theta_Astro:    Confluence Weight (1.0 = [T-T-T], 0.5 = [D-T-T] VRY Turnaround, 0.0 = [T-D-T])  |
+|  - Theta_Astro:    Confluence Weight (1.0 = [T-T-T], 0.75 = [D-T-T] VRY, 0.50 = Neutral/Hold, 0.00 = [T-D-T]/Breach) |
 |                                                                                                    |
 +----------------------------------------------------------------------------------------------------+
 ```
 
+* **Dynamic Dasha Triad Classification & Provenance Telemetry:**
+  * Active MD, AD, and PD lords are evaluated in real time against the stock's Lagna chart using Parashari Dual Lordship resolution (`classifyLordRole`), producing the active Triad Code (e.g. `[D-T-D]`, `[T-T-T]`, `[D-T-T]`, `[T-D-T]`).
+  * The ticket header renders a distinct monospace cyan badge displaying the active triad pattern (e.g. `[D-T-D]`), and the provenance multiplier row features a `Triad: [D-T-D]` tag.
+  * The signal descriptor dynamically annotates the running lords (e.g. `Signal: NONE — [D-T-D] (ketu-venus-jupiter): Normal progression; no cusp edge boundary detected`) to ensure 100% transparency into the causal astrological engine state.
 * **Risk Veto State Machine & Zero-Allocation Guard:**
   * When hard balance-sheet circuit breakers trip ($\Phi_{\text{Financial}} = 0.00$) or Chandrashtama is active ($\Omega_{\text{Trader}} = 0.00$), final calculated allocation evaluates to $\mathbf{₹0.00}$ ($0 \text{ shares}$).
   * **Deterministic State Resolution:** In such conditions, the ticket automatically suppresses active `BUY` or `SELL` trade action buttons.

@@ -27,6 +27,7 @@ describe('Trade Advisory Ticket Synthesizer', () => {
     signal: 'TURNAROUND_INCEPTION',
     action: 'BUY',
     thetaAstro: 0.75,
+    triadCode: '[D-T-T]',
     reason: 'VRY Cusp Turnaround',
     isSilencedByQualityGate: false,
   };
