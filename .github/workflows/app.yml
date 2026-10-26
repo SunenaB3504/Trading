@@ -64,6 +64,8 @@ jobs:
           if EAS_BUILD_PROFILE=production npx expo config --type public | grep -q buildArchs; then
             echo "production must not restrict buildArchs"; exit 1
           fi
+      - name: Bundled prices file (empty in CI: the real file is built on the laptop)
+        run: pnpm market:bundle
       - name: Native project
         working-directory: packages/app
         run: npx expo prebuild --platform android --no-install

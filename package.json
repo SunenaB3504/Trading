@@ -34,6 +34,7 @@
     "universe:freeze": "tsx packages/workers/src/freezeUniverse.ts",
     "universe:snapshot": "tsx packages/workers/src/universeSnapshot.ts",
     "market:build": "tsx packages/workers/src/learningMarket.ts",
+    "market:bundle": "tsx tools/bundleMarket.ts",
     "ots:probe": "tsx packages/workers/src/otsProbe.ts",
     "ots:upgrade": "tsx packages/workers/src/otsUpgrade.ts",
     "ots:verify": "tsx packages/workers/src/otsVerify.ts",

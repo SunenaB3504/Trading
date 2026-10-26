@@ -4,6 +4,7 @@ import type { LearningMarket } from '@trading/core';
 import type { DataServiceClient } from '../dataClient/client';
 import { getStamped, putStamped } from '../store/kv';
 import type { KeyValueStore } from '../store/kv';
+import { bundledMarket } from './bundledMarket';
 import { demoMarket, realMarket } from './market';
 import type { Market } from './market';
 
@@ -31,7 +32,7 @@ async function savedReal(device: KeyValueStore): Promise<LearningMarket | null> 
 
 /**
  * Loads the real-price market: the saved copy at once, then a fresh one from the data helper, kept only when it is
- * newer. On the phone there is no helper yet (Stage 2), so real prices appear only once they were saved there.
+ * newer. The history shipped inside the app comes first, so the phone has real prices with no helper at all.
  */
 export function useMarkets(
   device: KeyValueStore,
@@ -46,8 +47,13 @@ export function useMarkets(
     let live = true;
     void (async () => {
       const choice = await profile.get(MARKET_CHOICE_KEY);
-      const saved = await savedReal(device);
+      let saved = await savedReal(device);
+      const bundled = await bundledMarket();
       if (!live) return;
+      if (bundled !== null && (saved === null || bundled.builtAt > saved.builtAt)) {
+        await putStamped(device, REAL_MARKET_KEY, bundled, now());
+        saved = bundled;
+      }
       if (saved !== null) setFile(saved);
       setKind(choice === 'real' ? 'real' : 'demo');
       const r = await client.market();
@@ -74,7 +80,7 @@ export function useMarkets(
     real === null
       ? fresh === 'checking'
         ? 'Looking for real prices...'
-        : 'Real NSE prices come from the data helper on the laptop (pnpm market:build, then pnpm uat:start).'
+        : 'This build carries no real prices. Build them with pnpm market:build, then pnpm market:bundle.'
       : `${real.instruments.length} NSE stocks, prices to ${real.lastDate}${fresh === 'saved' ? ' (saved copy; the data helper is not reachable)' : ''}.`;
   return { market: kind === 'real' && real !== null ? real : demoMarket(), real, realNote, choose };
 }

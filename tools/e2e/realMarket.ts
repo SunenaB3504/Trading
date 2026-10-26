@@ -81,6 +81,13 @@ async function main(): Promise<void> {
     await page.getByTestId('market-real').click();
     await page.getByText(/RELIANCE, 10 shares/).waitFor({ timeout: 30_000 });
     check('without the data helper the saved real prices and the real book still open', true);
+    // a brand-new browser with no data helper: the history shipped inside the app serves (MIP v4.1 Stage 2)
+    const fresh = await (await browser.newContext({ viewport: { width: 390, height: 900 } })).newPage();
+    await fresh.goto(appOrigin);
+    await appReady(fresh);
+    await openTab(fresh, 'Trade');
+    await fresh.getByTestId('market-switch').getByText(`prices to ${market.to}`).waitFor({ timeout: 60_000 });
+    check('a new install with no data helper still has the bundled real prices', true);
     check('no page errors', errors.length === 0, errors.join(' | '));
   } finally {
     await browser.close();
