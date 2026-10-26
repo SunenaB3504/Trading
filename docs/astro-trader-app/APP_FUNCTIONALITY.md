@@ -2,8 +2,8 @@
 
 **Date:** 2026-10-26  
 **Describes:** the app as it will work after Release 3 in [`MASTER_IMPLEMENTATION_PLAN.md`](MASTER_IMPLEMENTATION_PLAN.md)  
-**Technical detail:** [`SYSTEM_SPECIFICATION_v1.md`](SYSTEM_SPECIFICATION_v1.md) (SSD v4.0)  
-**Current status:** only Stage 0 (astrology removed) is done. Nothing described here is built yet.
+**Technical detail:** [`SYSTEM_SPECIFICATION_v1.md`](SYSTEM_SPECIFICATION_v1.md) (SSD v4.1)  
+**Current status:** the app is built on the existing mock-trading app in `packages/app`, whose trade, ledger, report and backup screens already work in the browser on demo data. Everything else described here is not built yet.
 
 > Practice and learning only. No real money, no broker, no real orders. Not investment advice.
 
@@ -22,13 +22,13 @@ It is organised in three parts plus a guide:
 | **Measure** | Your journal, your mistakes, your results, and automatic strategy accounts to compare against |
 | **Tutor** | A built-in coach that is always there, and an AI tutor you can switch on |
 
-It works on an **Android phone** (installed from an APK file) and on a **Windows laptop** (installed as a normal program).
+It works on an **Android phone** (installed from an APK file) and on a **Windows laptop** (in your web browser, with a small data helper running alongside it).
 
 ---
 
 ## 2. Getting started
 
-1. **Install.** On Android, open the APK and allow "install unknown apps" when asked. On Windows, run the installer; if Windows shows a SmartScreen warning, choose "Run anyway".
+1. **Install.** On Android, open the APK and allow "install unknown apps" when asked. On the laptop, double-click the **Market Learning** desktop shortcut: it starts the data helper and opens the app in your browser. (The helper is needed because browsers aren't allowed to download NSE's files directly.)
 2. **First launch.** Read and accept the "learning only, not advice" note. The app loads its built-in price history, so it works even without internet.
 3. **Create your profile.** Name, optional 4-digit PIN. Each family member can have their own profile on the same device. One profile is the **device owner** and controls the AI settings and spending limit.
 4. **Pick your starting point.** "I'm completely new" starts at Level 1. "I know the basics" runs a short quiz and suggests where to begin.
@@ -225,7 +225,7 @@ Costs are rough estimates and depend on question and answer length.
 
 ## 7. Market data and updates
 - The app comes with stored price history (main stocks, ETFs and indices from 2015; selected mutual funds; two years of index options), so most features work offline from day one.
-- Each time you open it with internet, it downloads the trading days it's missing from NSE (and AMFI for mutual funds), with Yahoo Finance as a backup for prices.
+- Each time you open it with internet, it downloads the trading days it's missing from NSE (and AMFI for mutual funds), with Yahoo Finance as a backup for prices. The phone downloads them itself; on the laptop the data helper does it for the browser.
 - A **data health** screen shows the latest data date and any problems.
 - If a download fails, nothing in your accounts changes; it simply tries again next time.
 
