@@ -6,6 +6,7 @@ import { ProfileStore } from '../profiles/profiles';
 import { MemorySecureStore } from '../secure/secureStore';
 import { MemoryKv } from '../store/kv';
 import { PRACTICE_CAPITAL_PAISE, demoMarket, realMarket, requestsKey } from './market';
+import { previewCosts } from './costPreview';
 import type { OrderForm } from './orderRequest';
 import { PaperSession, REQUESTS_KEY } from './paperSession';
 
@@ -67,6 +68,21 @@ describe('real-price market (MIP v4.1 Stage 2, laptop slice)', () => {
     const r = await s.place(form({ date: '2026-10-14' }));
     expect(r).toMatchObject({ ok: false });
     expect(r.ok ? '' : r.error).toMatch(/from 2026-10-15/);
+  });
+
+  it('gives no cost preview, and no error, for a date before the charges table starts (UAT-6 R5)', () => {
+    const old = realMarket({
+      ...file,
+      instruments: [{ id: 'GITANJALI', symbol: 'GITANJALI', requested: 'GITANJALI', isin: null, firstDate: '2018-01-01', lastDate: '2019-04-01' }],
+      bars: { GITANJALI: [['2018-01-01', 6_000, 6_200, 5_900, 6_100, 1_000, 0], ['2019-04-01', 2_000, 2_100, 1_900, 2_050, 1_000, 0]] },
+    });
+    for (const date of ['2018-01-02', '2019-04-01', '2026-10-15']) {
+      const args = { instrumentId: 'GITANJALI', side: 'buy' as const, quantity: 10, date };
+      expect(() => previewCosts(old.snapshot, args), date).not.toThrow();
+    }
+    expect(previewCosts(old.snapshot, { instrumentId: 'GITANJALI', side: 'buy', quantity: 10, date: '2018-01-02' })).toBeNull();
+    // after the table starts, the last price before the date is used (here the 2019 close)
+    expect(previewCosts(old.snapshot, { instrumentId: 'GITANJALI', side: 'buy', quantity: 10, date: '2026-10-15' })?.estimatedPricePaise).toBe(2_050);
   });
 
   it('keeps the demo book and the real book apart, the demo one under its old key', async () => {

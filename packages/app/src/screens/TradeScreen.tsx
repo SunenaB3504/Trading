@@ -228,7 +228,7 @@ function CostSection({ market, form }: { market: Market; form: OrderForm }) {
   return (
     <Section title="Cost preview">
       {preview === null ? (
-        <Note>Enter a quantity and a valid date to see the estimated charges.</Note>
+        <Note>Enter a quantity and a valid date (from 2020-04-01, when the charges table starts) to see the estimated charges.</Note>
       ) : null}
       {preview?.rows.map((r) => (
         <Row key={r.label} label={r.label} value={r.value} />

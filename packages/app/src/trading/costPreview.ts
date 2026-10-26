@@ -1,4 +1,9 @@
-import { GENERIC_DISCOUNT_BROKER, computeCosts, nextRegularTradingDay } from '@trading/core';
+import {
+  GENERIC_DISCOUNT_BROKER,
+  SCHEDULE_START,
+  computeCosts,
+  nextRegularTradingDay,
+} from '@trading/core';
 import type { ReplaySnapshot } from '@trading/core';
 import { formatPaise } from '../format/rupees';
 import type { LedgerRow } from '../viewModels/ledgerView';
@@ -47,17 +52,25 @@ export function previewCosts(
   const price = lastCloseOnOrBefore(snapshot, args.instrumentId, args.date);
   const fillDate = nextSession(args.date);
   if (price === null || fillDate === null || args.quantity < 1) return null;
-  const costs = computeCosts(
-    {
-      date: fillDate,
-      exchange: 'NSE',
-      side: args.side,
-      product: 'delivery',
-      turnoverPaise: price * args.quantity,
-      chargeDp: args.side === 'sell',
-    },
-    GENERIC_DISCOUNT_BROKER,
-  );
+  // Real prices reach back to 2011 but the charges table starts in 2020, so an early date is normal input too:
+  // no preview, never an error (found in UAT-6 R5: an early date crashed the Trade screen).
+  if (fillDate < SCHEDULE_START) return null;
+  let costs: ReturnType<typeof computeCosts>;
+  try {
+    costs = computeCosts(
+      {
+        date: fillDate,
+        exchange: 'NSE',
+        side: args.side,
+        product: 'delivery',
+        turnoverPaise: price * args.quantity,
+        chargeDp: args.side === 'sell',
+      },
+      GENERIC_DISCOUNT_BROKER,
+    );
+  } catch {
+    return null;
+  }
   return {
     estimatedPricePaise: price,
     rows: [

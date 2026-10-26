@@ -38,6 +38,13 @@ module.exports = {
       to: { path: '^packages/astro-engine/' },
     },
     {
+      name: 'app-no-simulator',
+      severity: 'error',
+      comment: 'The learning app does not use the astro trade simulator (owner, 2026-10-26).',
+      from: { path: '^packages/app/src' },
+      to: { path: '^packages/simulator/' },
+    },
+    {
       name: 'public-api-only',
       severity: 'error',
       comment: 'Cross-package imports go through the package entry point.',
