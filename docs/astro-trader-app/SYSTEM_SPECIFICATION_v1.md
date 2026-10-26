@@ -1,175 +1,235 @@
-# System Architecture & Software Specification Document (SSD v1.0)
-## Astro-Compass Dashboard & Automated 4-Trader Live Execution Agent
+# System Specification (SSD v3.0)
+## Mock Trading App: 5-Account Paper-Trading Engine, Dashboard & Strategy Sandbox
 
-**Document ID:** `SSD-ASTRO-TRADER-v1.0`  
-**Status:** DRAFT SPECIFICATION (Pre-Development Approval)  
-**Date:** 2026-10-25  
-**Directory:** [`docs/astro-trader-app/`](file:///c:/Users/Admin/Sunil/Trading/docs/astro-trader-app/)  
-**Foundation Standards:** [FINAL_MASTER_THESIS.md](file:///c:/Users/Admin/Sunil/Trading/docs/jathakam-dasha-study/FINAL_MASTER_THESIS.md), [MASTER_REVERIFICATION_SYNTHESIS_REPORT.md](file:///c:/Users/Admin/Sunil/Trading/docs/buyer-kundli-reverification/MASTER_REVERIFICATION_SYNTHESIS_REPORT.md)
+**Document ID:** `SSD-MOCK-TRADER-v3.0`  
+**Status:** DRAFT SPECIFICATION  
+**Date:** 2026-10-26  
+**Directory:** [`docs/astro-trader-app/`](./)  
+**Implementation Plan:** [`MASTER_IMPLEMENTATION_PLAN.md`](MASTER_IMPLEMENTATION_PLAN.md)
 
----
-
-## 1. Executive Vision & Objectives
-
-The **Astro-Compass Dashboard & 4-Trader Automated Paper-Trading Engine** is an institutional-grade, zero-cost, serverless trading ecosystem. 
-
-It executes systematic quantitative and astro-financial trading strategies daily at market open, simultaneously managing **four distinct parallel portfolios**:
-1. **Trader 1 (Pure AI Control):** Unbiased asset signals (baseline benchmark).
-2. **Trader 2 (Sunil - Father):** Sagittarius Moon / Pisces Lagna (Protected by Jupiter Exaltation Shield in Cancer).
-3. **Trader 3 (Neil - Son):** Leo Moon / Gemini Lagna (Subject to 50% sizing cut & limit orders during Moon in Pisces, $p = 0.029$).
-4. **Trader 4 (Shine - Brother):** Libra Moon / Aries Lagna (Enforced 10-day strict trailing stop during Moon in Taurus).
-
-### Key Architectural Tenets:
-* **Option B Serverless Cloud Deployment:** Hosted completely on GitHub via **GitHub Actions** (daily cron triggers at 09:00 AM IST) and **GitHub Pages** (interactive HTML/CSS/JS dashboard).
-* **Zero Infrastructure Cost:** No rented cloud servers or persistent VPS subscriptions required.
-* **Audit-Proof State Management:** All trade logs, ledger balances, order fills, and equity curves are stored in cryptographically signed JSON/CSV files committed directly to the Git repository.
+> **Scope note (v3.0):** All astrology (jyothisham) logic has been removed from the product. The app is a plain mock (paper) trading system on NSE equities. No real orders are placed and no broker is connected.
 
 ---
 
-## 2. High-Level System Architecture
+## 1. Purpose & Objectives
+
+The Mock Trading App runs a simple, rule-based trading strategy on daily NSE prices and keeps **five independent paper-trading accounts**, each starting with **₹10,00,000 (10 lakh) virtual cash**:
+
+1. **Account 1 – Index Benchmark:** buys and holds a Nifty 50 index ETF. Answers "did the strategy beat just holding the index?"
+2. **Account 2 – Sunil (Standard profile):** the strategy with standard size and exits.
+3. **Account 3 – Neil (Conservative profile):** half position size, limit orders only.
+4. **Account 4 – Shine (Short-horizon profile):** standard size, every position closed after at most 10 trading days.
+5. **Account 5 – Sandbox:** strategy and risk settings chosen by the user in the Sandbox page.
+
+### Key principles
+* **Mock only:** simulated fills from public end-of-day (EOD) prices. Nothing is sent to an exchange or broker.
+* **Zero infrastructure cost:** runs on **GitHub Actions** in the repository; viewed on the local machine through a small local web server.
+* **No look-ahead:** every decision uses only data available before the fill. Orders decided after day *T*'s close are filled at day *T+1*'s prices.
+* **Auditable state:** ledgers, trades and daily signals are plain JSON/CSV files committed to Git. The Git history is the audit trail.
+* **Configurable, not hard-coded:** strategy, profiles, costs and the watchlist live in `config/` files.
+
+---
+
+## 2. High-Level Architecture
 
 ```mermaid
 graph TD
-    Cron[GitHub Actions Daily Cron: 09:00 AM IST] --> Runner[Headless Python Agent Runner]
-    
-    subgraph Market & Astro Pipeline
-        Runner --> D1[Fetch NSE Bhavcopy / Yahoo Live Feed]
-        Runner --> D2[Swiss Ephemeris Transit Engine: Lahiri Ayanamsa]
-        D1 & D2 --> Engine[Master Signal Router v2.0]
+    Cron[GitHub Actions: weekdays 18:30 IST, after EOD files are published] --> Runner[daily_agent_runner.py]
+
+    subgraph Data
+        Runner --> MD[market_data.py: NSE bhavcopy EOD, Yahoo fallback]
+        MD --> Hist[data/market/eod/ price history]
+        Runner --> Cal{NSE trading day?}
+        Cal -->|No| Stop[Exit, no changes]
     end
-    
-    subgraph 4-Tier Decision Cascading
-        Engine --> T1{Tier 1: Dasha Confluence Check}
-        T1 -->|DDD / TDT Toxic Confluence| B1[🔴 Hard Block Asset]
-        T1 -->|Pass| T2{Tier 2: Kota & SBC Defense}
-        T2 -->|Nirgama Malefic Ingress / Papa Vedha| B2[🔴 Emergency Exit / Tighten Stop]
-        T2 -->|Fortress Clear| T3{Tier 3: 4-Way Sizing Router}
+
+    subgraph Daily cycle
+        Hist --> Fill[1. Fill yesterday's queued orders at today's prices]
+        Fill --> MTM[2. Mark all accounts to today's close]
+        MTM --> Exits[3. Check exits: stop-loss, trailing stop, time exit]
+        Exits --> Sig[4. Strategy signals from today's close]
+        Sig --> Prof[5. Size orders per account profile]
+        Prof --> Queue[6. Queue orders for tomorrow]
     end
-    
-    subgraph Parallel Multi-Trader Execution
-        T3 --> P1[Trader 1: Pure AI 100% Size]
-        T3 --> P2[Trader 2: Sunil 100% Size / Cancer Neutral]
-        T3 --> P3[Trader 3: Neil 50% Sizing in Pisces]
-        T3 --> P4[Trader 4: Shine 10-Day Time Exit in Taurus]
-        
-        T3 --> T4{Tier 4: Indu Lagna 1.5x Booster}
-        T4 --> P1 & P2 & P3 & P4
-    end
-    
-    subgraph State Ledger & Web Dashboard
-        P1 & P2 & P3 & P4 --> Ledger[Update Portfolios: positions.json & trades.csv]
-        Ledger --> Commit[Git Auto-Commit & Push to Main]
-        Commit --> Pages[GitHub Pages: Astro-Compass Dashboard SPA]
+
+    subgraph State & UI
+        Queue --> Ledger[data/live_ledger/*.json, trades.csv, signals.json]
+        Ledger --> Commit[Git commit & push]
+        Commit --> Pull[User git pull]
+        Pull --> Server[serve_app.py on localhost]
+        Server --> Dash[index.html: Dashboard]
+        Server --> Sand[sandbox.html: Sandbox]
     end
 ```
 
 ---
 
-## 3. The 4-Trader Cohort Specification
+## 3. Trading Strategy (shared by Accounts 2–5)
 
-Each trader operates with an independent virtual ledger balance of **₹1,000,000 (10 Lakhs)**:
+| Item | Default | Configurable in |
+| :--- | :--- | :--- |
+| Universe | Nifty 100 constituents (`config/watchlist.csv`) | watchlist file |
+| Entry signal | Close above the highest high of the previous **20** trading days **and** volume ≥ **1.5×** its 20-day average | `config/strategy.json` |
+| Ranking (more signals than slots) | Strongest volume ratio first | `config/strategy.json` |
+| Stop-loss | **5%** below entry price | profile |
+| Trailing stop | **8%** below the highest close since entry | profile |
+| Maximum holding period | **60** trading days | profile |
+| Re-entry | Not on the same stock within 5 trading days of an exit | `config/strategy.json` |
 
-| Cohort | Profile Name | Astrological Parameters | Behavioral Execution Rule | Max Single Position |
-| :--- | :--- | :--- | :--- | :--- |
-| **Trader 1** | **Pure AI Agent** | None (Control Group) | Executes pure asset breakout signals blindly. No personal astrological filtering. | ₹100,000 (10% max) |
-| **Trader 2** | **Sunil (Father)** | Lagna: Pisces<br>Moon: Sagittarius (*Mula*)<br>Indu Lagna: Scorpio | **Full 100% Sizing.** Moon in Cancer is protected by Jupiter's Exaltation Shield ($p = 0.966$). Alpha boost (1.5x) when Jupiter/Venus transits Scorpio/Pisces/Cancer. | ₹100,000 (₹150,000 on Indu Boost) |
-| **Trader 3** | **Neil (Son)** | Lagna: Gemini<br>Moon: Leo (*Magha*)<br>Indu Lagna: Aquarius | **Defensive Sizing.** Moon in Pisces triggers automated **50% size reduction** and mandatory limit orders ($p = 0.029$). Alpha boost (1.5x) when Jupiter/Venus transits Aquarius/Gemini/Libra. | ₹50,000 (in Pisces)<br>₹100,000 (Normal) |
-| **Trader 4** | **Shine (Brother)** | Lagna: Aries<br>Moon: Libra (*Swati*)<br>Indu Lagna: Pisces | **Horizon Decay Protection.** Moon in Taurus enforces strict **10-day time exit** to prevent observed 20d return decay. Alpha boost (1.5x) when Jupiter/Venus transits Pisces/Cancer/Scorpio. | ₹100,000 (10-day exit lock) |
-
----
-
-## 4. Master Signal Router v2.0 Logic
-
-Every trading morning at 09:15 AM IST, the engine evaluates candidates using the empirically verified four tiers:
-
-### Tier 1: Asset Dasha Confluence Check (Macro Filter)
-* **Rule:** If the company is currently transiting through a Triple Dusthana (`[D-D-D]`) or Wealth Destroyer (`[T-D-T]`) sub-period, the stock is marked 🔴 **RED HARD BLOCK**. Zero buying permitted.
-
-### Tier 2: Kota Chakra & SBC Papa Vedha (Flash-Crash Defense)
-* **Rule:** If natural malefics (Saturn or Mars) breach the 10th or 19th Nakshatras (*Nirgama Nadis*) in the company's Kota Chakra, or if heavy *Papa Vedha* rays target the corporate ticker without benefic relief ($p = 8.86 \times 10^{-6}$):
-  * Existing open positions: Trigger trailing stop tightening to $-2\%$.
-  * New buy signals: Blocked immediately.
-
-### Tier 3: Personalized Buyer Kundli Sizing (Human Factor Protection)
-* Evaluates the Moon's transit sign at 09:15 AM IST:
-  * If Moon is in **Pisces**, cut Neil's allocated quantity by $50\%$ and convert market orders to limit orders at $Close_{T-1}$.
-  * If Moon is in **Taurus**, attach an auto-exit countdown timer ($T + 10$ trading days) to Shine's portfolio.
-  * If Moon is in **Cancer**, Sunil trades at standard $100\%$ size.
-
-### Tier 4: Indu Lagna & SBC Subha Vedha (The Wealth Booster)
-* **Rule:** When transit Jupiter or Venus occupies 1, 4, 5, 7, 9, 10 relative to the company's Indu Lagna and/or the Trader's personal Indu Lagna ($p = 6.38 \times 10^{-13}$), allocation size scales from $1.0\text{x}$ to $1.5\text{x}$ (High-Conviction Alpha Entry).
+Exit checks run on closing prices; exit orders are queued and filled at the next open (same as entries). No short selling, no leverage, no intraday trading.
 
 ---
 
-## 5. System Components & File Layout
+## 4. Account Profiles
+
+| Account | ID | Position size | Max open positions | Order type | Exit rules |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| 1 – Index Benchmark | `acct1_benchmark` | 100% of cash into `NIFTYBEES` on day one | 1 | Market | Never sells |
+| 2 – Sunil | `acct2_sunil` | 10% of NAV | 10 | Market | Strategy defaults |
+| 3 – Neil | `acct3_neil` | 5% of NAV | 10 | Limit at previous close | Strategy defaults |
+| 4 – Shine | `acct4_shine` | 10% of NAV | 10 | Market | Strategy defaults + forced exit after 10 trading days |
+| 5 – Sandbox | `acct5_sandbox` | From Sandbox (2–20% of NAV) | From Sandbox (1–20) | From Sandbox | From Sandbox |
+
+Profiles live in `config/profiles.json`. Owners can change their own profile; a change takes effect from the next run and is recorded in Git.
+
+---
+
+## 5. Order Execution Simulation (`order_execution_sim.py`)
+
+* **Market order:** fills at day *T+1* open, plus slippage.
+* **Limit buy (Account 3, or Sandbox):** limit = day *T* close. Fills at the limit price if day *T+1* low ≤ limit; otherwise the order expires unfilled.
+* **Quantity:** whole shares, `floor(allocation / fill price)`. An order that would make cash negative is cut down or skipped.
+* **Missing price** (suspended or no trade): order is carried for at most 3 days, then cancelled and logged.
+* **Costs** (`config/costs.json`, defaults for equity delivery):
+  * STT 0.1% on buy and sell value
+  * Stamp duty 0.015% on buy value
+  * Exchange and SEBI charges, GST: configurable small percentages
+  * Brokerage: ₹0 by default (configurable flat fee per order)
+  * Slippage: 0.05% against the trader on market orders
+* **Corporate actions:** splits and bonuses adjust position quantity and cost on the ex-date (from an adjustment file); dividends are ignored in v3.0.
+
+---
+
+## 6. Ledger & Bookkeeping (`ledger_manager.py`)
+
+Each account file `data/live_ledger/<id>.json` holds: metadata (name, owner, profile id), `initial_cash`, `cash_balance`, open positions (qty, average price, entry date, highest close, stop levels), pending orders, realized and unrealized P&L, and a daily NAV series.
+
+Shared files:
+* `data/live_ledger/trades.csv` – append-only log of every fill: date, account, symbol, side, qty, price, costs, order type, reason (for example "20-day breakout entry", "Trailing stop exit", "10-day time exit").
+* `data/live_ledger/signals.json` – today's signals and queued orders per account.
+* `data/live_ledger/run_log.csv` – one row per run: date, status, number of fills, data source used.
+
+**Integrity rules (checked at the end of every run; the run fails without committing if any is broken):**
+1. Cash ≥ 0 for every account.
+2. NAV = cash + Σ(qty × close), to 2 decimal places.
+3. Cash change for the day = −buys + sells − costs, to 2 decimal places.
+4. No position quantity below zero.
+
+**Metrics (computed from the NAV series):** total return, CAGR, max drawdown, win rate, average win/loss, number of trades, Sharpe ratio (daily returns, risk-free rate configurable), and return vs. Account 1.
+
+---
+
+## 7. Web Interface
+
+Static HTML/CSS/vanilla JavaScript, served by `tools/live_agent/serve_app.py` on `http://localhost:8000`. A local server is needed because browsers block reading local JSON files from `file://` pages, and because the Sandbox has to save its settings.
+
+### 7.1 Dashboard (`app/index.html`)
+* **Header:** last run date, data source, market status (trading day / holiday).
+* **Account cards (5):** NAV, total return, today's change, open positions, cash.
+* **Equity curves:** Chart.js line chart of all five accounts.
+* **Positions table:** per account, with entry price, current price, P&L, stop level, days held.
+* **Trade history:** filterable by account, symbol, side and date; shows the reason for each trade.
+* **Today's signals:** the stocks that triggered and the orders queued for each account.
+
+### 7.2 Strategy Sandbox (`app/sandbox.html`)
+
+```
++---------------------------------------------------------------------------------+
+|                         ACCOUNT 5: STRATEGY SANDBOX                             |
++---------------------------------------------------------------------------------+
+|  [PANEL A: STRATEGY]                     |  [PANEL B: RISK & EXECUTION]         |
+|  * Stock to inspect: [ RELIANCE    v ]   |  * Position size:   [==|====] 10%    |
+|  * Breakout period : [===|=====] 20 days |  * Max positions:   [===|===] 10     |
+|  * Volume filter   : [=====|===] 1.5x    |  * Order type:      [ Market     v ] |
+|  * Universe        : [ Nifty 100   v ]   |  * Stop-loss:       [===|===] -5%    |
+|                                          |  * Trailing stop:   [====|==] -8%    |
+|                                          |  * Max holding:     [==|====] 60 d   |
++---------------------------------------------------------------------------------+
+|                 [ RUN BACKTEST ]        [ SAVE TO ACCOUNT 5 ]                   |
++---------------------------------------------------------------------------------+
+|  SELECTED STOCK TODAY: Buy signal (close 2,955 > 20-day high 2,940, vol 1.8x)   |
+|  BACKTEST (2021-01-01 to last close): Return +X% | Max DD -Y% | Win rate Z%     |
+|  vs. Nifty 50 buy-and-hold: +W%     (Past results, not a forecast.)             |
++---------------------------------------------------------------------------------+
+```
+
+* **Panel A – Strategy:** stock picker (watchlist), breakout period (5–50 days), volume multiplier (1.0–3.0×), universe.
+* **Panel B – Risk & execution:** position size (2–20% of NAV), max positions (1–20), market or limit orders, stop-loss (1–10%), trailing stop (2–20%), max holding period (5–120 days).
+* **Selected stock today:** whether the current settings give a signal on the chosen stock, with the numbers behind it.
+* **Run Backtest:** calls `POST /api/backtest`; the server runs `backtest.py` with the same strategy, profile and cost code as the live engine, over the stored price history. Shows equity curve, return, max drawdown, win rate, trade count, and the index comparison.
+* **Save to Account 5:** calls `POST /api/sandbox-config`, which validates the values and writes `config/sandbox_config.json`. The user commits and pushes it; the next daily run uses it. The page shows the last saved settings and their date.
+
+---
+
+## 8. Components & File Layout
 
 ```
 Trading/
-├── .github/
-│   └── workflows/
-│       └── daily_paper_trading.yml   # GitHub Actions automation workflow
-├── app/                              # Astro-Compass Dashboard SPA (Vanilla Web)
-│   ├── index.html                    # Single Page Application
-│   ├── css/
-│   │   └── dashboard.css             # Heritage-Gold & Deep Navy modern dark UI
-│   ├── js/
-│   │   ├── app.js                    # SPA state and live chart controller
-│   │   ├── astro_compass.js          # Interactive 81-grid SBC & Kota visualizer
-│   │   └── portfolio_viewer.js       # 4-trader performance comparator
-│   └── assets/
-│       └── logo.svg
+├── .github/workflows/
+│   └── daily_paper_trading.yml   # Weekday run after close; commits state
+├── app/
+│   ├── index.html                # Dashboard
+│   ├── sandbox.html              # Strategy Sandbox
+│   ├── css/dashboard.css, sandbox.css
+│   └── js/app.js, sandbox.js
+├── config/
+│   ├── strategy.json             # Shared strategy settings
+│   ├── profiles.json             # Accounts 1–4 profiles
+│   ├── sandbox_config.json       # Account 5 settings (written by Sandbox)
+│   ├── costs.json                # Charges and slippage
+│   ├── watchlist.csv             # Universe
+│   └── nse_holidays.csv          # Trading holiday calendar
 ├── data/
-│   └── live_ledger/                  # Persistent Git-committed ledger
-│       ├── trader1_ai.json
-│       ├── trader2_sunil.json
-│       ├── trader3_neil.json
-│       ├── trader4_shine.json
-│       ├── master_trade_history.csv
-│       └── daily_signals.json
-├── tools/
-│   └── live_agent/
-│       ├── daily_market_feed.py      # EOD / Live price fetcher
-│       ├── ephemeris_transit_live.py # Daily planetary coordinates
-│       ├── master_router_v2.py       # Core decision logic
-│       ├── order_execution_sim.py    # Simulated limit/market fills & slippage
-│       └── ledger_manager.py         # Balance, NAV, and PnL bookkeeper
-└── docs/
-    └── astro-trader-app/
-        └── SYSTEM_SPECIFICATION_v1.md
+│   ├── market/eod/               # Stored daily price history (CSV per day or per symbol)
+│   └── live_ledger/
+│       ├── acct1_benchmark.json … acct5_sandbox.json
+│       ├── trades.csv
+│       ├── signals.json
+│       └── run_log.csv
+├── tools/live_agent/
+│   ├── market_data.py            # Fetch and store EOD prices, trading-day check
+│   ├── strategy.py               # Breakout signals and exit checks
+│   ├── profiles.py               # Load profiles, size orders
+│   ├── order_execution_sim.py    # Fills, limits, costs, slippage
+│   ├── ledger_manager.py         # Accounts, NAV, integrity checks, metrics
+│   ├── backtest.py               # Historical run using the same code
+│   ├── daily_agent_runner.py     # Orchestrates one daily cycle
+│   └── serve_app.py              # Local server + /api/backtest, /api/sandbox-config
+├── tests/live_agent/             # Unit and integration tests
+└── docs/astro-trader-app/
+    ├── SYSTEM_SPECIFICATION_v1.md
+    ├── MASTER_IMPLEMENTATION_PLAN.md
+    └── USER_GUIDE.md
 ```
 
 ---
 
-## 6. Frontend Dashboard Design Specification
+## 9. Non-Functional Requirements
 
-The dashboard will be a state-of-the-art Single Page Application (SPA) built using **HTML5, Vanilla CSS3 (Custom Design System with Heritage Gold accents), and Vanilla JavaScript**:
-
-### Visual & Functional Modules:
-1. **The Daily Astro-Compass Ring:**
-   * Visualizes the current day's Panchanga, Moon Nakshatra, and transit degree.
-   * Color-coded status rings for all 4 traders (🟢 Green = Clean / Indu Boost, 🟡 Yellow = Chandrashtama Alert, 🔴 Red = Dasha Block).
-2. **Interactive Sarvatobhadra Chakra (SBC) 81-Grid:**
-   * A 9x9 interactive matrix highlighting active planetary rays (*Agra, Pashchaat, Vaama, Dakshina Vedha*) on watched tickers.
-3. **4-Trader Equity Curve & Metric Leaderboard:**
-   * Live comparative charting comparing Cumulative Return (%), Sharpe Ratio, Win Rate (%), and Maximum Drawdown across all four portfolios.
-4. **Daily Action Feed (Buy/Sell/Hold Alerts):**
-   * Clear, transparent logs showing why a trade was taken, which Tier authorized it, and how the sizing was modified.
+* **Run time:** daily run under 2 minutes on a GitHub-hosted runner.
+* **Robustness:** if NSE bhavcopy is unavailable, fall back to Yahoo Finance and record the source; if both fail, the run exits without changing state and records the failure in `run_log.csv`. Re-running the same day must not double-fill (runs are idempotent by date).
+* **Privacy:** the repository should be private; ledgers carry first names only. No credentials are needed or stored.
+* **Dependencies:** Python 3.11, `pandas`, `numpy`, `requests` (plus `yfinance` for the fallback). Versions pinned in `requirements.txt`.
+* **Disclaimer:** shown on both pages: "Mock trading for learning only. Not investment advice."
 
 ---
 
-## 7. Implementation Roadmap & Milestones
+## 10. Definition of Done
 
-| Milestone | Deliverable | Timeline | Acceptance Test |
-| :--- | :--- | :--- | :--- |
-| **M1: Core Execution Engine** | `tools/live_agent/master_router_v2.py` & ledger manager | Day 1–2 | Offline dry-run creates valid mock trade orders for 4 traders |
-| **M2: GitHub Actions Workflow** | `.github/workflows/daily_paper_trading.yml` | Day 3 | Automatic daily execution at 09:00 AM IST commits fresh JSON |
-| **M3: Astro-Compass Dashboard** | `app/index.html`, `dashboard.css`, `app.js` | Day 4–5 | Responsive, premium UI loads data dynamically from repo JSON |
-| **M4: GitHub Pages Deployment** | Live URL deployment | Day 6 | User can open mobile/desktop URL anytime to see live paper trades |
-
----
-
-## 8. Safety & Compliance Constraints
-
-1. **Paper-Trading Only:** The application operates exclusively with simulated mock capital. Zero live brokerage API keys (Zerodha, Upstox, etc.) are connected.
-2. **Immutable Audit Trail:** All state changes are committed to Git with commit messages timestamped in IST. No trade can be modified after the market open timestamp.
-3. **Fail-Safe Sizing:** Even under maximum Tier 4 Alpha Boost, no single trade may exceed 15% of a trader's net liquid capital.
+1. **Autonomy:** the workflow runs every NSE trading day without manual steps and skips holidays.
+2. **Correct fills:** fills, limit behaviour and costs match hand-calculated examples in the test suite.
+3. **Ledger integrity:** all integrity rules in §6 pass on every run; no cash is created or lost.
+4. **No look-ahead:** a test shows that orders decided on day *T* use only data up to *T*'s close and fill on *T+1*.
+5. **Same code path:** the Sandbox backtest and the live engine use the same strategy, profile and cost functions.
+6. **Transparency:** every trade on the dashboard shows its reason, price and costs.
+7. **Usable locally:** the user can start the server, open both pages, change Sandbox settings, save them, and see Account 5 follow them after the next run.

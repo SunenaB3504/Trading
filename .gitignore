@@ -24,3 +24,7 @@ data/derived/*
 !data/derived/jathakam-dasha-study/
 data/publish/
 
+
+# Python bytecode
+__pycache__/
+*.pyc

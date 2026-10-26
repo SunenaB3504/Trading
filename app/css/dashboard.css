@@ -89,14 +89,6 @@ body {
 .dot-yellow { background-color: var(--color-yellow); box-shadow: 0 0 8px var(--color-yellow); }
 .dot-red { background-color: var(--color-red); box-shadow: 0 0 8px var(--color-red); }
 
-/* Astro Dial & Cohort Row */
-.grid-top {
-  display: grid;
-  grid-template-columns: 360px 1fr;
-  gap: 24px;
-  margin-bottom: 24px;
-}
-
 .card {
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
@@ -114,62 +106,10 @@ body {
   justify-content: space-between;
 }
 
-/* Astro Compass Box */
-.compass-box {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 12px;
-}
-
-.compass-ring {
-  width: 180px;
-  height: 180px;
-  border: 2px dashed var(--gold-primary);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 16px;
-  position: relative;
-  background: radial-gradient(circle, rgba(212,175,55,0.08) 0%, rgba(10,14,23,0) 70%);
-}
-
-.compass-center {
-  text-align: center;
-}
-
-.compass-sign {
-  font-size: 20px;
-  font-weight: 700;
-  color: #fff;
-}
-
-.compass-nak {
-  font-size: 13px;
-  color: var(--gold-primary);
-}
-
-.astro-meta {
-  width: 100%;
-  font-size: 13px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.meta-row {
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
-  padding-bottom: 4px;
-}
-
 /* Cohort Cards Grid */
 .cohort-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 16px;
 }
 
@@ -232,13 +172,6 @@ body {
 .pill-yellow { background: rgba(245, 158, 11, 0.15); color: var(--color-yellow); }
 .pill-red { background: rgba(239, 68, 68, 0.15); color: var(--color-red); }
 
-/* Bottom Grid */
-.grid-bottom {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-}
-
 /* Tables */
 .trade-table {
   width: 100%;
@@ -259,38 +192,15 @@ body {
   border-bottom: 1px solid rgba(255,255,255,0.04);
 }
 
-/* 81-Grid Visualizer */
-.sbc-grid-container {
-  display: grid;
-  grid-template-columns: repeat(9, 1fr);
-  gap: 4px;
-  background: #0d131f;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid var(--border-subtle);
-}
-
-.sbc-cell {
-  aspect-ratio: 1;
-  background: #141c2b;
-  border: 1px solid rgba(255,255,255,0.05);
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 9px;
-  font-weight: 600;
+.disclaimer {
+  margin-top: 24px;
+  font-size: 12px;
   color: var(--text-muted);
+  text-align: center;
 }
 
-.sbc-cell.active-subha {
-  background: rgba(16, 185, 129, 0.2);
-  border-color: var(--color-green);
-  color: var(--color-green);
-}
-
-.sbc-cell.active-papa {
-  background: rgba(239, 68, 68, 0.2);
-  border-color: var(--color-red);
-  color: var(--color-red);
+@media (max-width: 640px) {
+  body { padding: 16px; }
+  .header-bar { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .system-status { flex-wrap: wrap; }
 }

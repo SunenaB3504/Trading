@@ -3,225 +3,148 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Astro-Compass Dashboard | 4-Trader Automated Paper-Trading</title>
+  <title>Mock Trading Dashboard</title>
   <link rel="stylesheet" href="css/dashboard.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <!-- Chart.js for Equity Curves -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 <body>
   <div class="dashboard-container">
-    
+
     <!-- Header -->
     <header class="header-bar">
       <div class="brand-title">
-        <span>⚡ ASTRO-COMPASS</span>
-        <span class="brand-badge">4-Trader Live Engine</span>
+        <span>MOCK TRADING</span>
+        <span class="brand-badge">5 Paper Accounts</span>
       </div>
       <div class="system-status">
         <div class="status-item">
-          <span class="status-dot dot-green"></span>
-          <span>Engine: Active (Option 2)</span>
-        </div>
-        <div class="status-item">
-          <span>Cron: 09:00 AM IST (GitHub Actions)</span>
+          <span class="status-dot dot-yellow"></span>
+          <span>Daily run: not scheduled yet</span>
         </div>
         <div class="status-item" id="last-updated">
-          <span>Updated: Today 09:15 AM</span>
+          <span>Updated: —</span>
         </div>
       </div>
     </header>
 
-    <!-- Top Row: Astro Dial & Cohort Grid -->
-    <div class="grid-top">
-      
-      <!-- Astro Dial Card -->
-      <div class="card">
-        <div class="card-title">
-          <span>ASTRO-COMPASS DIAL</span>
-          <span class="brand-badge">Lahiri Sidereal</span>
-        </div>
-        <div class="compass-box">
-          <div class="compass-ring">
-            <div class="compass-center">
-              <div class="compass-sign" id="dial-moon-sign">Meena</div>
-              <div class="compass-nak" id="dial-moon-nak">Revati Nakshatra</div>
-            </div>
-          </div>
-          <div class="astro-meta">
-            <div class="meta-row">
-              <span style="color:var(--text-muted)">Current Tithi:</span>
-              <span id="dial-tithi" style="font-weight:600">Shukla 14</span>
-            </div>
-            <div class="meta-row">
-              <span style="color:var(--text-muted)">Jupiter Ingress:</span>
-              <span style="color:var(--color-green)">Cancer (Kataka) [Exalted]</span>
-            </div>
-            <div class="meta-row">
-              <span style="color:var(--text-muted)">Saturn Ingress:</span>
-              <span style="color:var(--color-yellow)">Pisces (Meena) [Retro]</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 4-Trader Cohort Cards -->
-      <div class="card">
-        <div class="card-title">
-          <span>4-TRADER PARALLEL COHORT STATUS</span>
-          <span style="font-size:12px;color:var(--text-muted)">Seed: ₹10,00,000 Each</span>
-        </div>
-        <div class="cohort-grid">
-          
-          <!-- Trader 1 -->
-          <div class="trader-card">
-            <div class="trader-header">
-              <div>
-                <div class="trader-name">Trader 1: Pure AI</div>
-                <div class="trader-role">Control Benchmark</div>
-              </div>
-              <span class="trader-pill pill-green">ACTIVE</span>
-            </div>
-            <div class="trader-nav" id="t1-nav">₹10,00,000</div>
-            <div class="trader-pnl pnl-green" id="t1-pnl">+0.00% (₹0)</div>
-            <div style="font-size:11px;color:var(--text-muted);margin-top:8px;">Rules: 100% Unbiased Momentum</div>
-          </div>
-
-          <!-- Trader 2 -->
-          <div class="trader-card">
-            <div class="trader-header">
-              <div>
-                <div class="trader-name">Trader 2: Sunil</div>
-                <div class="trader-role">Father (Dhanu Moon)</div>
-              </div>
-              <span class="trader-pill pill-green">SHIELDED</span>
-            </div>
-            <div class="trader-nav" id="t2-nav">₹10,00,000</div>
-            <div class="trader-pnl pnl-green" id="t2-pnl">+0.00% (₹0)</div>
-            <div style="font-size:11px;color:var(--text-muted);margin-top:8px;">Cancer Exaltation Shield Active</div>
-          </div>
-
-          <!-- Trader 3 -->
-          <div class="trader-card">
-            <div class="trader-header">
-              <div>
-                <div class="trader-name">Trader 3: Neil</div>
-                <div class="trader-role">Son (Simha Moon)</div>
-              </div>
-              <span class="trader-pill pill-yellow">50% SIZING</span>
-            </div>
-            <div class="trader-nav" id="t3-nav">₹10,00,000</div>
-            <div class="trader-pnl pnl-green" id="t3-pnl">+0.00% (₹0)</div>
-            <div style="font-size:11px;color:var(--text-muted);margin-top:8px;">Moon in Pisces: Limit Only</div>
-          </div>
-
-          <!-- Trader 4 -->
-          <div class="trader-card">
-            <div class="trader-header">
-              <div>
-                <div class="trader-name">Trader 4: Shine</div>
-                <div class="trader-role">Brother (Tula Moon)</div>
-              </div>
-              <span class="trader-pill pill-green">ACTIVE</span>
-            </div>
-            <div class="trader-nav" id="t4-nav">₹10,00,000</div>
-            <div class="trader-pnl pnl-green" id="t4-pnl">+0.00% (₹0)</div>
-            <div style="font-size:11px;color:var(--text-muted);margin-top:8px;">Taurus 10-Day Lock Standby</div>
-          </div>
-
-        </div>
-      </div>
-
-    </div>
-
-    <!-- Middle Row: Equity Curve Comparison -->
+    <!-- Account Cards -->
     <div class="card" style="margin-bottom:24px;">
       <div class="card-title">
-        <span>4-TRADER COMPARATIVE EQUITY CURVES (NAV OVER TIME)</span>
-        <span style="font-size:12px;color:var(--text-muted)">Normalized Baseline ₹10,00,000</span>
+        <span>ACCOUNTS</span>
+        <span style="font-size:12px;color:var(--text-muted)">Seed: ₹10,00,000 Each</span>
+      </div>
+      <div class="cohort-grid">
+
+        <!-- Account 1 -->
+        <div class="trader-card">
+          <div class="trader-header">
+            <div>
+              <div class="trader-name">Account 1: Benchmark</div>
+              <div class="trader-role">Nifty 50 ETF buy-and-hold</div>
+            </div>
+            <span class="trader-pill pill-yellow">NOT STARTED</span>
+          </div>
+          <div class="trader-nav" id="a1-nav">₹10,00,000</div>
+          <div class="trader-pnl" id="a1-pnl">+0.00% (₹0)</div>
+        </div>
+
+        <!-- Account 2 -->
+        <div class="trader-card">
+          <div class="trader-header">
+            <div>
+              <div class="trader-name">Account 2: Sunil</div>
+              <div class="trader-role">Standard profile</div>
+            </div>
+            <span class="trader-pill pill-yellow">NOT STARTED</span>
+          </div>
+          <div class="trader-nav" id="a2-nav">₹10,00,000</div>
+          <div class="trader-pnl" id="a2-pnl">+0.00% (₹0)</div>
+        </div>
+
+        <!-- Account 3 -->
+        <div class="trader-card">
+          <div class="trader-header">
+            <div>
+              <div class="trader-name">Account 3: Neil</div>
+              <div class="trader-role">Conservative profile</div>
+            </div>
+            <span class="trader-pill pill-yellow">NOT STARTED</span>
+          </div>
+          <div class="trader-nav" id="a3-nav">₹10,00,000</div>
+          <div class="trader-pnl" id="a3-pnl">+0.00% (₹0)</div>
+        </div>
+
+        <!-- Account 4 -->
+        <div class="trader-card">
+          <div class="trader-header">
+            <div>
+              <div class="trader-name">Account 4: Shine</div>
+              <div class="trader-role">Short-horizon profile</div>
+            </div>
+            <span class="trader-pill pill-yellow">NOT STARTED</span>
+          </div>
+          <div class="trader-nav" id="a4-nav">₹10,00,000</div>
+          <div class="trader-pnl" id="a4-pnl">+0.00% (₹0)</div>
+        </div>
+
+        <!-- Account 5 -->
+        <div class="trader-card">
+          <div class="trader-header">
+            <div>
+              <div class="trader-name">Account 5: Sandbox</div>
+              <div class="trader-role">Sandbox settings</div>
+            </div>
+            <span class="trader-pill pill-yellow">NOT STARTED</span>
+          </div>
+          <div class="trader-nav" id="a5-nav">₹10,00,000</div>
+          <div class="trader-pnl" id="a5-pnl">+0.00% (₹0)</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Equity Curve Comparison -->
+    <div class="card" style="margin-bottom:24px;">
+      <div class="card-title">
+        <span>EQUITY CURVES (NAV OVER TIME)</span>
+        <span style="font-size:12px;color:var(--text-muted)">Baseline ₹10,00,000</span>
       </div>
       <div style="height: 280px; width: 100%;">
         <canvas id="equityChart"></canvas>
       </div>
     </div>
 
-    <!-- Bottom Row: Sarvatobhadra Chakra & Trade History -->
-    <div class="grid-bottom">
-      
-      <!-- SBC 81-Grid Visualizer -->
-      <div class="card">
-        <div class="card-title">
-          <span>SARVATOBHADRA CHAKRA (81-GRID MATRIX)</span>
-          <span style="font-size:11px;color:var(--color-green)">🟢 Subha Vedha Active</span>
-        </div>
-        <div class="sbc-grid-container" id="sbc-matrix">
-          <!-- 81 squares generated dynamically via app.js -->
-        </div>
-        <div style="font-size:11px;color:var(--text-muted);margin-top:12px;display:flex;justify-content:space-between;">
-          <span>Green = Subha Vedha (Alpha Boost)</span>
-          <span>Red = Papa Vedha (Risk Lock)</span>
-        </div>
+    <!-- Trade History Table -->
+    <div class="card">
+      <div class="card-title">
+        <span>TRADE HISTORY</span>
       </div>
-
-      <!-- Trade History Table -->
-      <div class="card">
-        <div class="card-title">
-          <span>TODAY'S AUTOMATED PAPER-TRADING FILLS</span>
-          <span class="brand-badge">Audit-Proof Ledger</span>
-        </div>
-        <div style="max-height: 280px; overflow-y: auto;">
-          <table class="trade-table">
-            <thead>
-              <tr>
-                <th>Trader</th>
-                <th>Symbol</th>
-                <th>Qty</th>
-                <th>Price</th>
-                <th>Type</th>
-                <th>Reason</th>
-              </tr>
-            </thead>
-            <tbody id="trade-history-rows">
-              <tr>
-                <td style="color:var(--gold-primary)">Trader 1</td>
-                <td>DIVISLAB</td>
-                <td>28</td>
-                <td>₹5,240.00</td>
-                <td><span class="trader-pill pill-green">MARKET</span></td>
-                <td>Indu Lagna 1.5x Boost</td>
-              </tr>
-              <tr>
-                <td style="color:var(--gold-primary)">Trader 2</td>
-                <td>DIVISLAB</td>
-                <td>28</td>
-                <td>₹5,240.00</td>
-                <td><span class="trader-pill pill-green">MARKET</span></td>
-                <td>Indu Lagna 1.5x Boost</td>
-              </tr>
-              <tr>
-                <td style="color:var(--gold-primary)">Trader 3</td>
-                <td>DIVISLAB</td>
-                <td>9</td>
-                <td>₹5,240.00</td>
-                <td><span class="trader-pill pill-yellow">LIMIT</span></td>
-                <td>Neil 50% Cut (Pisces Moon)</td>
-              </tr>
-              <tr>
-                <td style="color:var(--gold-primary)">Trader 4</td>
-                <td>DIVISLAB</td>
-                <td>28</td>
-                <td>₹5,240.00</td>
-                <td><span class="trader-pill pill-green">MARKET</span></td>
-                <td>Indu Lagna 1.5x Boost</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <div style="max-height: 280px; overflow-y: auto;">
+        <table class="trade-table">
+          <thead>
+            <tr>
+              <th>Account</th>
+              <th>Symbol</th>
+              <th>Qty</th>
+              <th>Price</th>
+              <th>Type</th>
+              <th>Reason</th>
+            </tr>
+          </thead>
+          <tbody id="trade-history-rows">
+            <tr>
+              <td colspan="6" style="color:var(--text-muted)">No trades yet.</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-
     </div>
+
+    <footer class="disclaimer">Mock trading for learning only. Not investment advice.</footer>
 
   </div>
 

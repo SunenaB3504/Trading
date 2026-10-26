@@ -1,11 +1,12 @@
 """
-Multi-Trader Ledger Management Engine (Phase 1)
-Handles double-entry virtual cash balances, open positions, PnL calculations,
-and transaction logs across 4 parallel portfolios:
-  - Trader 1: Pure AI Benchmark
-  - Trader 2: Sunil (Father)
-  - Trader 3: Neil (Son)
-  - Trader 4: Shine (Brother)
+Multi-Account Ledger Management Engine (Phase 1)
+Handles virtual cash balances, open positions, PnL calculations,
+and transaction logs across 5 parallel mock-trading accounts:
+  - Account 1: Index Benchmark (Nifty 50 ETF buy-and-hold)
+  - Account 2: Sunil (Standard profile)
+  - Account 3: Neil (Conservative profile)
+  - Account 4: Shine (Short-horizon profile)
+  - Account 5: Sandbox (settings from the Sandbox page)
 """
 
 import os
@@ -13,44 +14,38 @@ import json
 import datetime
 import pandas as pd
 
-DEFAULT_SEED_CASH = 1000000.0  # ₹10 Lakhs per trader
+DEFAULT_SEED_CASH = 1000000.0  # ₹10 Lakhs per account
 
-TRADER_PROFILES = {
-    "trader1_ai": {
-        "id": "trader1_ai",
-        "name": "Trader 1: Pure AI Control",
-        "role": "Benchmark Control (Asset Signals Only)",
-        "lagna": None,
-        "moon_sign": None,
-        "nakshatra": None,
-        "indu_lagna": None
+ACCOUNT_PROFILES = {
+    "acct1_benchmark": {
+        "id": "acct1_benchmark",
+        "name": "Account 1: Index Benchmark",
+        "owner": None,
+        "profile": "benchmark"
     },
-    "trader2_sunil": {
-        "id": "trader2_sunil",
-        "name": "Trader 2: Sunil (Father)",
-        "role": "Sagittarius Moon / Pisces Lagna (Cancer Exaltation Shield)",
-        "lagna": "Pisces",
-        "moon_sign": "Sagittarius",
-        "nakshatra": "Mula",
-        "indu_lagna": "Scorpio"
+    "acct2_sunil": {
+        "id": "acct2_sunil",
+        "name": "Account 2: Sunil",
+        "owner": "Sunil",
+        "profile": "standard"
     },
-    "trader3_neil": {
-        "id": "trader3_neil",
-        "name": "Trader 3: Neil (Son)",
-        "role": "Leo Moon / Gemini Lagna (Pisces 50% Sizing Filter)",
-        "lagna": "Gemini",
-        "moon_sign": "Leo",
-        "nakshatra": "Magha",
-        "indu_lagna": "Aquarius"
+    "acct3_neil": {
+        "id": "acct3_neil",
+        "name": "Account 3: Neil",
+        "owner": "Neil",
+        "profile": "conservative"
     },
-    "trader4_shine": {
-        "id": "trader4_shine",
-        "name": "Trader 4: Shine (Brother)",
-        "role": "Libra Moon / Aries Lagna (Taurus 10-Day Time Exit)",
-        "lagna": "Aries",
-        "moon_sign": "Libra",
-        "nakshatra": "Swati",
-        "indu_lagna": "Pisces"
+    "acct4_shine": {
+        "id": "acct4_shine",
+        "name": "Account 4: Shine",
+        "owner": "Shine",
+        "profile": "short_horizon"
+    },
+    "acct5_sandbox": {
+        "id": "acct5_sandbox",
+        "name": "Account 5: Sandbox",
+        "owner": None,
+        "profile": "sandbox"
     }
 }
 
@@ -58,16 +53,16 @@ class MultiTraderLedger:
     def __init__(self, ledger_dir="data/live_ledger"):
         self.ledger_dir = ledger_dir
         os.makedirs(self.ledger_dir, exist_ok=True)
-        self.history_csv = os.path.join(self.ledger_dir, "master_trade_history.csv")
+        self.history_csv = os.path.join(self.ledger_dir, "trades.csv")
         self._init_ledgers()
 
     def _init_ledgers(self):
         """Initializes portfolio state files if not present."""
-        for tid, meta in TRADER_PROFILES.items():
+        for tid, meta in ACCOUNT_PROFILES.items():
             fpath = os.path.join(self.ledger_dir, f"{tid}.json")
             if not os.path.exists(fpath):
                 state = {
-                    "trader_id": tid,
+                    "account_id": tid,
                     "metadata": meta,
                     "initial_cash": DEFAULT_SEED_CASH,
                     "cash_balance": DEFAULT_SEED_CASH,
@@ -93,7 +88,7 @@ class MultiTraderLedger:
 
         if not os.path.exists(self.history_csv):
             df = pd.DataFrame(columns=[
-                "timestamp", "trader_id", "symbol", "action", "qty",
+                "timestamp", "account_id", "symbol", "action", "qty",
                 "price", "order_type", "total_val", "reason", "pnl"
             ])
             df.to_csv(self.history_csv, index=False)
@@ -112,7 +107,7 @@ class MultiTraderLedger:
         total_val = round(qty * price, 2)
         row = {
             "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            "trader_id": trader_id,
+            "account_id": trader_id,
             "symbol": symbol,
             "action": action.upper(),
             "qty": int(qty),
@@ -188,7 +183,7 @@ class MultiTraderLedger:
         today_str = datetime.date.today().strftime("%Y-%m-%d")
         summary = {}
         
-        for tid in TRADER_PROFILES.keys():
+        for tid in ACCOUNT_PROFILES.keys():
             state = self.load_portfolio(tid)
             unrealized = 0.0
             equity_val = 0.0
@@ -242,4 +237,4 @@ class MultiTraderLedger:
 
 if __name__ == "__main__":
     ledger = MultiTraderLedger()
-    print("MultiTraderLedger initialized successfully with 4 trader portfolios.")
+    print("MultiTraderLedger initialized successfully with 5 account portfolios.")
