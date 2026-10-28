@@ -96,3 +96,31 @@ export const SIGN_LORDS: Readonly<Record<number, PlanetKey>> = {
   10: 'saturn', // Aquarius
   11: 'jupiter', // Pisces
 } as const;
+
+export const MALAYALAM_SIGN_NAMES: readonly string[] = [
+  'മേടം', // Aries
+  'ഇടവം', // Taurus
+  'മിഥുനം', // Gemini
+  'കർക്കടകം', // Cancer
+  'ചിങ്ങം', // Leo
+  'കന്നി', // Virgo
+  'തുലാം', // Libra
+  'വൃശ്ചികം', // Scorpio
+  'ധനു', // Sagittarius
+  'മകരം', // Capricorn
+  'കുംഭം', // Aquarius
+  'മീനം', // Pisces
+] as const;
+
+export const MALAYALAM_PLANET_NAMES: Readonly<Record<PlanetKey, string>> = {
+  sun: 'സൂര്യൻ',
+  moon: 'ചന്ദ്രൻ',
+  mars: 'ചൊവ്വ',
+  mercury: 'ബുധൻ',
+  jupiter: 'വ്യാഴം',
+  venus: 'ശുക്രൻ',
+  saturn: 'ശനി',
+  rahu: 'രാഹു',
+  ketu: 'കേതു',
+} as const;
+

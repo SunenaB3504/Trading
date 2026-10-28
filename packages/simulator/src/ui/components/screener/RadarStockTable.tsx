@@ -2,42 +2,52 @@
  * packages/simulator/src/ui/components/screener/RadarStockTable.tsx
  * Tabular constituent view for Market Universe Radar.
  * Displays Dasha Triads, Special Yogas, 4-fold Vedic Confluence badges, and execution actions.
+ * Supports bilingual display (English / Malayalam script).
  * Enforces strict modularity (< 250 LOC, functions < 60 LOC, complexity <= 10).
  */
 
 import React from 'react';
 import type { UniverseStockScanItem } from '../../../core/engine/universeScanner';
+import { MALAYALAM_SIGN_NAMES, MALAYALAM_PLANET_NAMES } from '../../../core/astro/constants';
 
 export interface RadarStockTableProps {
   items: UniverseStockScanItem[];
   onSelect: (sym: string) => void;
   onResetFilters: () => void;
+  language?: 'ML' | 'EN';
 }
 
-export const RadarStockTable: React.FC<RadarStockTableProps> = ({ items, onSelect, onResetFilters }) => {
+export const RadarStockTable: React.FC<RadarStockTableProps> = ({
+  items,
+  onSelect,
+  onResetFilters,
+  language = 'ML',
+}) => {
   if (items.length === 0) {
     return <EmptyState onResetFilters={onResetFilters} />;
   }
+
+  const isMl = language === 'ML';
 
   return (
     <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '11px' }}>
       <thead>
         <tr style={{ color: '#94A3B8', borderBottom: '1px solid #1E2638', textAlign: 'left' }}>
           <th style={{ padding: '8px' }}>Symbol</th>
-          <th style={{ padding: '8px' }}>Lagna</th>
-          <th style={{ padding: '8px' }}>Triad</th>
-          <th style={{ padding: '8px' }}>Lords (MD-AD-PD)</th>
-          <th style={{ padding: '8px' }}>Special Yogas</th>
-          <th style={{ padding: '8px' }}>Confluence (4-Fold)</th>
-          <th style={{ padding: '8px' }}>Cusp</th>
-          <th style={{ padding: '8px' }}>Signal / Action</th>
-          <th style={{ padding: '8px' }}>Sizing</th>
-          <th style={{ padding: '8px', textAlign: 'right' }}>Cockpit</th>
+          <th style={{ padding: '8px' }}>{isMl ? 'ലഗ്നം (Lagna)' : 'Lagna'}</th>
+          <th style={{ padding: '8px' }}>{isMl ? 'ത്രിതയം (Triad)' : 'Triad'}</th>
+          <th style={{ padding: '8px' }}>{isMl ? 'ദശാധിപന്മാർ (MD-AD-PD)' : 'Lords (MD-AD-PD)'}</th>
+          <th style={{ padding: '8px' }}>{isMl ? 'വിശേഷ യോഗങ്ങൾ' : 'Special Yogas'}</th>
+          <th style={{ padding: '8px' }}>{isMl ? 'സംഗമം (4-Fold)' : 'Confluence (4-Fold)'}</th>
+          <th style={{ padding: '8px' }}>{isMl ? 'സന്ധി (Cusp)' : 'Cusp'}</th>
+          <th style={{ padding: '8px' }}>{isMl ? 'സിഗ്നൽ (Action)' : 'Signal / Action'}</th>
+          <th style={{ padding: '8px' }}>{isMl ? 'വലിപ്പം (Sizing)' : 'Sizing'}</th>
+          <th style={{ padding: '8px', textAlign: 'right' }}>{isMl ? 'ടെർമിനൽ' : 'Cockpit'}</th>
         </tr>
       </thead>
       <tbody>
         {items.map((item) => (
-          <StockTableRow key={item.symbol} item={item} onSelect={onSelect} />
+          <StockTableRow key={item.symbol} item={item} onSelect={onSelect} language={language} />
         ))}
       </tbody>
     </table>
@@ -116,8 +126,25 @@ function ConfluencePillGroup({ item }: { item: UniverseStockScanItem }) {
   );
 }
 
-function StockTableRow({ item, onSelect }: { item: UniverseStockScanItem; onSelect: (sym: string) => void }) {
+function StockTableRow({
+  item,
+  onSelect,
+  language = 'ML',
+}: {
+  item: UniverseStockScanItem;
+  onSelect: (sym: string) => void;
+  language?: 'ML' | 'EN';
+}) {
+  const isMl = language === 'ML';
+  const lagnaRashi = isMl ? (MALAYALAM_SIGN_NAMES[item.lagnaSignId] ?? item.lagnaSignName) : item.lagnaSignName;
+  const lagnaLord = isMl ? (MALAYALAM_PLANET_NAMES[item.lagnaLord] ?? item.lagnaLord) : item.lagnaLord;
+
+  const mdLord = isMl ? (MALAYALAM_PLANET_NAMES[item.mdLord] ?? item.mdLord) : item.mdLord;
+  const adLord = isMl ? (MALAYALAM_PLANET_NAMES[item.adLord] ?? item.adLord) : item.adLord;
+  const pdLord = isMl ? (MALAYALAM_PLANET_NAMES[item.pdLord] ?? item.pdLord) : item.pdLord;
+
   const actionColor = item.isBlocked ? '#EF4444' : item.action === 'BUY' ? '#10B981' : item.action === 'SELL' ? '#F59E0B' : '#64748B';
+
   return (
     <tr
       onClick={() => onSelect(item.symbol)}
@@ -126,9 +153,14 @@ function StockTableRow({ item, onSelect }: { item: UniverseStockScanItem; onSele
       onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
     >
       <td style={{ padding: '8px', fontWeight: 800, color: '#D4AF37' }}>{item.symbol}</td>
-      <td style={{ padding: '8px', color: '#CBD5E1' }}>{item.lagnaSignName} (1L {item.lagnaLord})</td>
+      <td style={{ padding: '8px', color: '#CBD5E1' }} title={`${item.lagnaSignName} (1L ${item.lagnaLord})`}>
+        <span style={{ fontWeight: isMl ? 700 : 500, color: '#F1F5F9' }}>{lagnaRashi}</span>{' '}
+        <span style={{ opacity: 0.75, fontSize: isMl ? '10px' : '11px' }}>({isMl ? `1L ${lagnaLord}` : `1L ${lagnaLord}`})</span>
+      </td>
       <td style={{ padding: '8px', fontFamily: 'monospace', fontWeight: 700, color: '#00F2FE' }}>{item.triadCode}</td>
-      <td style={{ padding: '8px', color: '#94A3B8', fontFamily: 'monospace' }}>{item.mdLord}-{item.adLord}-{item.pdLord}</td>
+      <td style={{ padding: '8px', color: isMl ? '#F1F5F9' : '#94A3B8', fontFamily: isMl ? 'sans-serif' : 'monospace', fontSize: isMl ? '10px' : '11px' }}>
+        {mdLord} - {adLord} - {pdLord}
+      </td>
       <td style={{ padding: '8px' }}>
         {item.activeYogas.length > 0 ? (
           <span style={{ color: '#38BDF8', fontWeight: 600 }}>{item.activeYogas.slice(0, 2).join(', ')}</span>
@@ -152,10 +184,9 @@ function StockTableRow({ item, onSelect }: { item: UniverseStockScanItem; onSele
           }}
           style={{ padding: '3px 8px', borderRadius: '4px', backgroundColor: '#1E2638', color: '#00F2FE', border: 'none', cursor: 'pointer', fontSize: '10px', fontWeight: 700 }}
         >
-          Deep Dive ↗
+          {isMl ? 'ടെർമിനൽ ↗' : 'Deep Dive ↗'}
         </button>
       </td>
     </tr>
   );
 }
-

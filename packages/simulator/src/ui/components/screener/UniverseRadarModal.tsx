@@ -55,6 +55,7 @@ export const UniverseRadarModal: React.FC<UniverseRadarModalProps> = ({
   const initialDate = activeDate && activeDate.length >= 10 ? activeDate : '2005-01-01';
   const [scanDate, setScanDate] = useState<string>(initialDate);
   const [filters, setFilters] = useState<RadarFiltersState>(INITIAL_FILTERS);
+  const [language, setLanguage] = useState<'ML' | 'EN'>('ML');
 
   useEffect(() => {
     if (activeDate && activeDate.length >= 10) {
@@ -139,6 +140,8 @@ export const UniverseRadarModal: React.FC<UniverseRadarModalProps> = ({
           total={summary.totalScanned}
           matchedCount={filteredItems.length}
           onClose={onClose}
+          language={language}
+          onLanguageChange={setLanguage}
         />
         <RadarFiltersBar
           filters={filters}
@@ -154,6 +157,7 @@ export const UniverseRadarModal: React.FC<UniverseRadarModalProps> = ({
               onClose();
             }}
             onResetFilters={() => setFilters(INITIAL_FILTERS)}
+            language={language}
           />
         </div>
       </div>
@@ -170,6 +174,8 @@ function RadarHeader({
   total,
   matchedCount,
   onClose,
+  language,
+  onLanguageChange,
 }: {
   scanDate: string;
   activeDate: string;
@@ -179,6 +185,8 @@ function RadarHeader({
   total: number;
   matchedCount: number;
   onClose: () => void;
+  language: 'ML' | 'EN';
+  onLanguageChange: (lang: 'ML' | 'EN') => void;
 }) {
   const isFuture = scanDate > activeDate;
 
@@ -238,20 +246,58 @@ function RadarHeader({
         </span>
       </div>
 
-      <button
-        onClick={onClose}
-        style={{
-          padding: '4px 10px',
-          borderRadius: '4px',
-          backgroundColor: '#1E2638',
-          color: '#94A3B8',
-          border: 'none',
-          cursor: 'pointer',
-          fontWeight: 700,
-        }}
-      >
-        ✕ Close
-      </button>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        {/* Language Switcher (Option C) */}
+        <div style={{ display: 'flex', alignItems: 'center', backgroundColor: '#111827', borderRadius: '4px', border: '1px solid #1E2638', padding: '2px' }}>
+          <button
+            onClick={() => onLanguageChange('ML')}
+            style={{
+              padding: '2px 8px',
+              borderRadius: '3px',
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: '11px',
+              fontWeight: 700,
+              backgroundColor: language === 'ML' ? '#D4AF37' : 'transparent',
+              color: language === 'ML' ? '#07090E' : '#94A3B8',
+              transition: 'all 0.15s ease',
+            }}
+          >
+            മലയാളം
+          </button>
+          <button
+            onClick={() => onLanguageChange('EN')}
+            style={{
+              padding: '2px 8px',
+              borderRadius: '3px',
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: '10px',
+              fontWeight: 700,
+              backgroundColor: language === 'EN' ? '#D4AF37' : 'transparent',
+              color: language === 'EN' ? '#07090E' : '#94A3B8',
+              transition: 'all 0.15s ease',
+            }}
+          >
+            English
+          </button>
+        </div>
+
+        <button
+          onClick={onClose}
+          style={{
+            padding: '4px 10px',
+            borderRadius: '4px',
+            backgroundColor: '#1E2638',
+            color: '#94A3B8',
+            border: 'none',
+            cursor: 'pointer',
+            fontWeight: 700,
+          }}
+        >
+          ✕ Close
+        </button>
+      </div>
     </div>
   );
 }

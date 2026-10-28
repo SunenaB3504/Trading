@@ -26,7 +26,13 @@ export interface RadarFiltersBarProps {
   filters: RadarFiltersState;
   onChange: <K extends keyof RadarFiltersState>(key: K, value: RadarFiltersState[K]) => void;
   onReset: () => void;
-  summary: { strongBuyCount: number; turnaroundBuyCount: number; blockedCount: number };
+  summary: {
+    strongBuyCount: number;
+    turnaroundBuyCount: number;
+    blockedCount: number;
+    triadDistribution?: Record<string, number> | undefined;
+    totalScanned?: number | undefined;
+  };
 }
 
 export const RadarFiltersBar: React.FC<RadarFiltersBarProps> = ({
@@ -35,7 +41,12 @@ export const RadarFiltersBar: React.FC<RadarFiltersBarProps> = ({
   onReset,
   summary,
 }) => {
-  const triads = ['ALL', '[T-T-T]', '[D-T-T]', '[D-D-D]', '[T-D-T]', '[K-T-T]'];
+  const availableTriads = React.useMemo(() => {
+    const dist = summary.triadDistribution ?? {};
+    const keys = Object.keys(dist).filter((k) => (dist[k] ?? 0) > 0);
+    keys.sort((a, b) => (dist[b] ?? 0) - (dist[a] ?? 0));
+    return ['ALL', ...keys];
+  }, [summary.triadDistribution]);
   const hasActiveFilter =
     filters.selectedTriad !== 'ALL' ||
     filters.selectedYoga !== 'ALL' ||
@@ -61,27 +72,53 @@ export const RadarFiltersBar: React.FC<RadarFiltersBarProps> = ({
     >
       {/* Row 1: Macro Filters (Triad, Yoga, Action, MD Lord, AD Lord, Reset) */}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '5px', flexWrap: 'wrap' }}>
           <span style={{ color: '#94A3B8', fontSize: '11px', fontWeight: 700 }}>Triad:</span>
-          {triads.map((t) => (
-            <button
-              key={t}
-              onClick={() => onChange('selectedTriad', t)}
+          {availableTriads.slice(0, 7).map((t) => {
+            const count = t === 'ALL' ? summary.totalScanned : summary.triadDistribution?.[t];
+            return (
+              <button
+                key={t}
+                onClick={() => onChange('selectedTriad', t)}
+                style={{
+                  padding: '2px 7px',
+                  borderRadius: '4px',
+                  fontSize: '11px',
+                  fontFamily: 'monospace',
+                  fontWeight: 700,
+                  backgroundColor: filters.selectedTriad === t ? '#D4AF37' : '#111827',
+                  color: filters.selectedTriad === t ? '#07090E' : '#CBD5E1',
+                  border: '1px solid #1E2638',
+                  cursor: 'pointer',
+                }}
+              >
+                {t} {count !== undefined && count > 0 && <span style={{ opacity: 0.7, fontSize: '9px' }}>({count})</span>}
+              </button>
+            );
+          })}
+          {availableTriads.length > 7 && (
+            <select
+              value={filters.selectedTriad}
+              onChange={(e) => onChange('selectedTriad', e.target.value)}
               style={{
-                padding: '2px 7px',
+                padding: '2px 6px',
+                backgroundColor: '#111827',
+                border: '1px solid #1E2638',
+                color: '#00F2FE',
                 borderRadius: '4px',
                 fontSize: '11px',
                 fontFamily: 'monospace',
                 fontWeight: 700,
-                backgroundColor: filters.selectedTriad === t ? '#D4AF37' : '#111827',
-                color: filters.selectedTriad === t ? '#07090E' : '#CBD5E1',
-                border: '1px solid #1E2638',
-                cursor: 'pointer',
               }}
             >
-              {t}
-            </button>
-          ))}
+              <option value="ALL">More Triads ({availableTriads.length - 1} total)...</option>
+              {availableTriads.slice(1).map((t) => (
+                <option key={t} value={t}>
+                  {t} ({summary.triadDistribution?.[t] ?? 0})
+                </option>
+              ))}
+            </select>
+          )}
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
