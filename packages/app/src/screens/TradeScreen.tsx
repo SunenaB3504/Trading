@@ -9,6 +9,9 @@ import type { Market } from '../trading/market';
 import { PaperSession } from '../trading/paperSession';
 import type { SessionView } from '../trading/paperSession';
 import { Note, Row, Section, colors } from '../ui/Section';
+import { preTrade } from '@trading/tutor';
+import { AskPanel } from '../tutor/AskPanel';
+import type { TutorEnv } from '../tutor/run';
 import { CoachHint } from '../ui/CoachHint';
 
 /** Where the form starts: the first stock and a date whose next session has prices, so a first order fills. */
@@ -349,7 +352,9 @@ function CostSection({ market, form }: { market: Market; form: OrderForm }) {
   );
 }
 
-export function TradeScreen({ kv, now, market }: { kv: KeyValueStore; now: () => number; market: Market }) {
+const orderText = (f: OrderForm): string => `${f.side} ${f.quantity || '?'} of ${f.instrumentId || '(no stock chosen)'}, ${f.type} order`;
+
+export function TradeScreen({ kv, now, market, env }: { kv: KeyValueStore; now: () => number; market: Market; env: TutorEnv }) {
   const { view, form, message, set, submit, cancel, journal, setJournal } = useTrade(kv, now, market);
   return (
     <ScrollView contentContainerStyle={styles.page} testID="trade-screen">
@@ -357,6 +362,7 @@ export function TradeScreen({ kv, now, market }: { kv: KeyValueStore; now: () =>
       <Section title="New order (virtual money)">
         <OrderFields market={market} form={form} set={set} />
         <JournalFields value={journal} onChange={setJournal} />
+        <AskPanel env={env} label="Check my plan before I trade" testID="pre-trade" build={() => preTrade({ order: orderText(form), facts: [{ key: 'side', label: 'side', value: form.side }, { key: 'quantity', label: 'quantity', value: form.quantity || 'not set' }], flags: [], journal, symbols: form.instrumentId === '' ? [] : [form.instrumentId], names: env.names, lessonIds: ['habits-that-help', 'types-of-risk'] })} />
         <Pressable
           accessibilityRole="button"
           onPress={() => void submit()}

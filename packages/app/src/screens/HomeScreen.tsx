@@ -8,6 +8,9 @@ import type { SessionView } from '../trading/paperSession';
 import { Button } from '../ui/Button';
 import { Note, Row, Section, colors } from '../ui/Section';
 import { AppText as Text } from '../ui/typography';
+import { AskPanel } from '../tutor/AskPanel';
+import { guideContext } from '../tutor/guide';
+import type { TutorEnv } from '../tutor/run';
 import { CoachHint } from '../ui/CoachHint';
 
 export const DISCLAIMER =
@@ -44,6 +47,7 @@ export function HomeScreen(props: {
   kv: KeyValueStore;
   now: () => number;
   market: Market;
+  env: TutorEnv;
   onGo: (section: 'practise' | 'learn' | 'settings') => void;
 }) {
   const view = usePractice(props.kv, props.now, props.market);
@@ -62,26 +66,9 @@ export function HomeScreen(props: {
         </Note>
         <Button label="Go to Practise" onPress={() => props.onGo('practise')} quiet />
       </Section>
-      <Section title="What is here, and what is coming">
-        <Row label="Practise: trade, ledger, report" value="Ready (demo or real prices)" />
-        <Row label="Learn: lessons and quizzes" value="Coming" />
-        <Row label="Measure: journal and mistakes" value="Coming" />
-        <Row label="Tutor: guide and AI tutor" value="Coming" />
+      <Section title="Learning guide">
+        <AskPanel env={props.env} label="What should I learn next?" testID="home-guide" build={() => guideContext(props.kv)} />
         <Button label="Profiles and backup" onPress={() => props.onGo('settings')} quiet />
-      </Section>
-    </ScrollView>
-  );
-}
-
-/** A section that is planned but not built yet; it says plainly what will be there. */
-export function ComingScreen(props: { title: string; lines: string[]; testID: string }) {
-  return (
-    <ScrollView contentContainerStyle={styles.page} testID={props.testID}>
-      <Section title={props.title}>
-        {props.lines.map((l) => (
-          <Text key={l} style={styles.line}>{`• ${l}`}</Text>
-        ))}
-        <Note>Not built yet. This page shows what will be here.</Note>
       </Section>
     </ScrollView>
   );

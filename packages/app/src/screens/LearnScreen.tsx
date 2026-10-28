@@ -13,6 +13,9 @@ import {
   searchGlossary,
 } from '@trading/content';
 import type { Lesson, Progress, Quiz } from '@trading/content';
+import { quizFeedback } from '@trading/tutor';
+import { AskPanel } from '../tutor/AskPanel';
+import type { TutorEnv } from '../tutor/run';
 import { loadProgress, saveProgress } from '../learn/progressStore';
 import type { KeyValueStore } from '../store/kv';
 import { Button } from '../ui/Button';
@@ -49,7 +52,7 @@ function LessonView(props: { lesson: Lesson; done: boolean; onToggle: () => void
   );
 }
 
-function QuizView(props: { quiz: Quiz; onFinish: (marks: Record<string, boolean>) => void; onBack: () => void }) {
+function QuizView(props: { env: TutorEnv; quiz: Quiz; onFinish: (marks: Record<string, boolean>) => void; onBack: () => void }) {
   const { quiz } = props;
   const [at, setAt] = useState(0);
   const [shown, setShown] = useState(false);
@@ -72,6 +75,7 @@ function QuizView(props: { quiz: Quiz; onFinish: (marks: Record<string, boolean>
       {shown ? (
         <>
           <Text style={styles.answer} testID="quiz-answer">{q.answer}</Text>
+          <AskPanel env={props.env} label="Explain this another way" testID="quiz-explain" build={() => quizFeedback({ question: q.question, modelAnswer: q.answer, lessonIds: q.lessons })} />
           <Button label="I had it right" onPress={() => mark(true)} testID="quiz-right" />
           <View style={styles.gap} />
           <Button label="Not yet" quiet onPress={() => mark(false)} testID="quiz-wrong" />
@@ -137,7 +141,7 @@ function GlossaryView() {
   );
 }
 
-function PathTab(props: { progress: Progress; view: View_; setView: (v: View_) => void; save: (p: Progress) => void; now: () => number }) {
+function PathTab(props: { env: TutorEnv; progress: Progress; view: View_; setView: (v: View_) => void; save: (p: Progress) => void; now: () => number }) {
   const { progress, view, now } = props;
   const lesson = view.v === 'lesson' ? lessonById(view.id) : null;
   const quiz = view.v === 'quiz' ? (LEVELS.find((l) => l.quiz?.id === view.id)?.quiz ?? null) : null;
@@ -147,6 +151,7 @@ function PathTab(props: { progress: Progress; view: View_; setView: (v: View_) =
   if (quiz !== null)
     return (
       <QuizView
+        env={props.env}
         quiz={quiz}
         onBack={back}
         onFinish={(marks) => {
@@ -158,7 +163,7 @@ function PathTab(props: { progress: Progress; view: View_; setView: (v: View_) =
   return <Path progress={progress} onOpen={props.setView} />;
 }
 
-export function LearnScreen({ kv, now }: { kv: KeyValueStore; now: () => number }) {
+export function LearnScreen({ kv, now, env }: { kv: KeyValueStore; now: () => number; env: TutorEnv }) {
   const [tab, setTab] = useState<(typeof TABS)[number][0]>('path');
   const [view, setView] = useState<View_>({ v: 'path' });
   const [progress, setProgress] = useState<Progress | null>(null);
@@ -186,7 +191,7 @@ export function LearnScreen({ kv, now }: { kv: KeyValueStore; now: () => number 
     <ScrollView contentContainerStyle={styles.page} testID="learn-screen">
       <TabStrip tabs={TABS} active={tab} onSelect={(t) => { setTab(t); setView({ v: 'path' }); }} small />
       <CoachHint screen="learn" />
-      {tab === 'glossary' ? <GlossaryView /> : <PathTab progress={progress} view={view} setView={setView} save={save} now={now} />}
+      {tab === 'glossary' ? <GlossaryView /> : <PathTab env={env} progress={progress} view={view} setView={setView} save={save} now={now} />}
     </ScrollView>
   );
 }

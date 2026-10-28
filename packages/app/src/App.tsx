@@ -10,12 +10,15 @@ import type { Profile } from './profiles/profiles';
 import { BackupScreen } from './screens/BackupScreen';
 import { CompareScreen } from './screens/CompareScreen';
 import { DataScreen } from './screens/DataScreen';
-import { ComingScreen, Disclaimer, HomeScreen } from './screens/HomeScreen';
+import { Disclaimer, HomeScreen } from './screens/HomeScreen';
 import { LedgerScreen } from './screens/LedgerScreen';
 import { PinScreen } from './screens/PinScreen';
 import { ProfilesScreen } from './screens/ProfilesScreen';
 import { ReportScreen } from './screens/ReportScreen';
 import { SettingsScreen } from './screens/SettingsScreen';
+import { AskScreenBar } from './tutor/AskScreenBar';
+import { TutorScreen } from './screens/TutorScreen';
+import type { TutorEnv } from './tutor/run';
 import { FundsScreen } from './screens/FundsScreen';
 import { LearnScreen } from './screens/LearnScreen';
 import { MeasureScreen } from './screens/MeasureScreen';
@@ -112,16 +115,16 @@ function useDevice() {
   return { device, profile, settings, setSettings, locked, setLocked, reload, open };
 }
 
-function Practise(props: { kv: KeyValueStore; now: () => number; markets: Markets; funds: FundsMarket | null }) {
+function Practise(props: { env: TutorEnv; kv: KeyValueStore; now: () => number; markets: Markets; funds: FundsMarket | null }) {
   const [tab, setTab] = useState<PractiseId>('trade');
-  const { kv, now, markets, funds } = props;
+  const { kv, now, markets, funds, env } = props;
   const market = markets.market;
   return (
     <>
       <MarketSwitch markets={markets} />
       <TabStrip tabs={PRACTISE} active={tab} onSelect={setTab} small />
       <View style={styles.body} key={market.id}>
-        {tab === 'trade' ? <TradeScreen kv={kv} now={now} market={market} /> : null}
+        {tab === 'trade' ? <TradeScreen kv={kv} now={now} market={market} env={env} /> : null}
         {tab === 'funds' ? <FundsScreen kv={kv} now={now} funds={funds} /> : null}
         {tab === 'ledger' ? <LedgerScreen kv={kv} now={now} /> : null}
         {tab === 'universe' ? <UniverseScreen /> : null}
@@ -161,8 +164,6 @@ function Settings(props: {
   );
 }
 
-const TUTOR = ['A built-in coach on every screen, free and offline', 'An AI tutor you can switch Off, Preview or On, with a monthly limit', 'It teaches; it never gives tips'];
-
 function Header(props: { profile: Profile | null; online: boolean; onProfile: () => void }) {
   return (
     <View style={styles.header}>
@@ -192,6 +193,7 @@ function Main(props: {
   const markets = useMarkets(d.device.kv, profileKv, props.client, now);
   const funds = useFunds(d.device.kv, props.client, now);
   const prices = [markets.realNote, fundsNote(funds)];
+  const env = useMemo((): TutorEnv => ({ device: d.device.kv, profile: profileKv, secure: d.device.secure, settings, names: [profile.name], now }), [d.device, profileKv, settings, profile.name, now]);
   const accept = () => {
     const next = { ...settings, disclaimerAcceptedAt: Date.now() };
     void saveDeviceSettings(d.device.kv, next).then(() => d.setSettings(next));
@@ -200,13 +202,14 @@ function Main(props: {
     <>
       {settings.disclaimerAcceptedAt === null ? <Disclaimer onAccept={accept} /> : null}
       <TabStrip tabs={SECTIONS} active={section} onSelect={props.setSection} />
+      <AskScreenBar env={env} screen={section} label={SECTIONS.find((s) => s[0] === section)?.[1] ?? section} />
       {section === 'home' ? (
-        <HomeScreen profile={profile} kv={profileKv} now={now} market={markets.market} onGo={props.setSection} />
+        <HomeScreen profile={profile} kv={profileKv} now={now} market={markets.market} env={env} onGo={props.setSection} />
       ) : null}
-      {section === 'learn' ? <LearnScreen kv={profileKv} now={now} /> : null}
-      {section === 'practise' ? <Practise kv={profileKv} now={now} markets={markets} funds={funds} /> : null}
-      {section === 'measure' ? <MeasureScreen kv={profileKv} now={now} market={markets.market} /> : null}
-      {section === 'tutor' ? <ComingScreen title="Tutor" lines={TUTOR} testID="tutor-screen" /> : null}
+      {section === 'learn' ? <LearnScreen kv={profileKv} now={now} env={env} /> : null}
+      {section === 'practise' ? <Practise env={env} kv={profileKv} now={now} markets={markets} funds={funds} /> : null}
+      {section === 'measure' ? <MeasureScreen kv={profileKv} now={now} market={markets.market} env={env} /> : null}
+      {section === 'tutor' ? <TutorScreen env={env} owner={profile.owner} deviceKv={d.device.kv} profileKv={profileKv} onDevice={d.setSettings} /> : null}
       {section === 'settings' ? (
         <Settings d={d} profile={profile} settings={settings} now={now} client={props.client} prices={prices} onImported={props.onImported} />
       ) : null}

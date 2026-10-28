@@ -35,7 +35,7 @@ function AiSection(props: { device: DeviceSettings; owner: boolean; save: (d: De
     <Section title="AI tutor (whole device)">
       <View style={styles.choices}>
         {AI_MODES.map((m) => {
-          const usable = props.owner && m !== 'on';
+          const usable = props.owner;
           const on = props.device.aiMode === m;
           return (
             <Pressable
@@ -52,7 +52,7 @@ function AiSection(props: { device: DeviceSettings; owner: boolean; save: (d: De
           );
         })}
       </View>
-      <Note>Preview shows sample tutor conversations with no cost. Live AI ("On") arrives with the tutor itself.</Note>
+      <Note>Preview shows sample tutor answers with no cost and no network. On uses your own Claude API key (set in the Tutor section) and stops at the monthly limit.</Note>
       <Text style={styles.label}>Monthly AI limit for this device, in rupees</Text>
       <TextInput
         value={limit}

@@ -91,7 +91,7 @@ function ActionFeedRow({ item, onSelect }: { item: UniverseStockScanItem; onSele
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
         {item.hasVry && <span style={{ color: '#A855F7', fontSize: '9px', fontWeight: 700 }}>VRY</span>}
         {item.hasNbry && <span style={{ color: '#EC4899', fontSize: '9px', fontWeight: 700 }}>NBRY</span>}
-        <span style={{ color: '#94A3B8', fontSize: '10px' }}>{item.daysToCusp}d to cusp</span>
+        <span style={{ color: '#94A3B8', fontSize: '10px' }}>{Math.round(item.daysToCusp)}d to cusp</span>
         <span style={{ color: '#38BDF8', fontSize: '10px', fontWeight: 700 }}>Jump ↗</span>
       </div>
     </div>

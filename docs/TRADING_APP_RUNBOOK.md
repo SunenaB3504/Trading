@@ -93,7 +93,7 @@ module.exports = ({ config }) => ({
 
 - **Rule.** Replay mode makes no network requests. Live-paper, the event-exposure layer and AI synthesis (R16) may contact only hosts listed in `docs/network-allowlist.md`, each with: purpose, data sent, data received, licence tag, and whether it can be disabled.
   - No analytics, advertising or crash-reporting SDK that sends data off the device.
-  - The AI host is an allowlist entry: purpose = synthesis, data sent = the fact pack only (R16), can be disabled = yes. Call it with plain HTTPS requests, not a vendor SDK, so nothing else is sent.
+  - The AI host is an allowlist entry: purpose = synthesis, data sent = the fact pack only (R16), can be disabled = yes. Call it with plain HTTPS requests, not a vendor SDK, so nothing else is sent. *(Learning app, Stage 5: the official Anthropic SDK is used instead; the headers it adds are listed in the allowlist entry. See 7A.)*
   - Cleartext traffic disabled, and the Android network security config is checked in CI so a dependency's manifest merge cannot re-enable it.
   - Responses are stored as `data_snapshot` rows with a checksum and licence tag (CN §10). Order is fetch, checksum, persist, then hand to the engine. A decision never reads a live response directly.
 - **Failure semantics.** The network is required, so its failure modes are specified:
@@ -223,6 +223,8 @@ schema_version, ruleset_id, ruleset_hash, build_hash
 ---
 
 ## 7A. AI synthesis layer
+
+> **Revised for the learning app (MIP v4.1 Stage 5, 2026-10-28).** For this app R15 to R17 are read as SSD v4.1 §7.6 sets out, and where the two differ §7.6 governs. In short: **R15.1 kept** (boundary rules in `.dependency-cruiser.cjs` stop core, content, data-service, workers and the order, backup, journal, store, profile and settings code from importing `packages/tutor`; a test runs the same orders with AI off and on and compares a hash of the account). **R15.2 kept** for downloaded market files; lesson text and the user's own journal text may be sent, with profile names and key-like strings removed first. **R15.3 kept** (no tools, no browsing; each call is stateless in this build). **R15.5 relaxed:** the tutor may explain general concepts; changeable facts come from the context with their as-of dates. **R16.1 to R16.2 kept for the user's own figures:** the model writes `{{fact:key}}` placeholders and code fills them. **R16.4 adapted:** the verifier is code and rejects advice phrases, predictions about a named stock, tickers outside the context, rupee figures outside the context, empty or over-long text and unfilled placeholders; a failure shows the coach answer. **R16.5 and R16.6 kept.** **R17 simplified:** each live answer is kept with model id, template version, context hash and verifier result so it can be reopened without a new call. Cost is estimated before each call, the call stops at the monthly limit, and a passing failure is retried once.
 
 AI is a **synthesiser only**. Code collects, parses, validates and computes. AI turns an already-verified result into readable text. It never supplies a fact, a signal, a decision or a number. These rules make hallucination, context drift and silent summarisation detectable and blocked, rather than merely discouraged.
 

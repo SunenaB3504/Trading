@@ -28,6 +28,10 @@ export const deviceSettingsSchema = z.object({
   aiMonthlyLimitRupees: z.number().int().min(0).max(100_000),
   /** When the "learning only, not advice" note was accepted on this device, or null. */
   disclaimerAcceptedAt: z.number().int().nullable(),
+  /** Which model each tutor feature uses; a feature not listed uses the default (Haiku). */
+  aiModels: z.record(z.string(), z.string()),
+  /** Which tutor features are switched off; a feature not listed is on. */
+  aiFeatures: z.record(z.string(), z.boolean()),
 });
 export type DeviceSettings = z.infer<typeof deviceSettingsSchema>;
 
@@ -46,6 +50,8 @@ export const DEFAULT_DEVICE_SETTINGS: DeviceSettings = {
   aiMode: 'preview',
   aiMonthlyLimitRupees: 200,
   disclaimerAcceptedAt: null,
+  aiModels: {},
+  aiFeatures: {},
 };
 
 function readJson(raw: string | null): Record<string, unknown> {

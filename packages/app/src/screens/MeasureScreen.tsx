@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { lessonById } from '@trading/content';
+import { tradeReview, weeklyReview } from '@trading/tutor';
+import type { JournalText } from '@trading/tutor';
 import type { Flag, MistakeRule } from '@trading/core';
 import { EMOTIONS, addAfter, exitPlanIds, loadJournal } from '../journal/journalStore';
 import type { Emotion, JournalEntry } from '../journal/journalStore';
@@ -8,6 +10,8 @@ import { loadProfileSettings } from '../settings/settings';
 import type { KeyValueStore } from '../store/kv';
 import type { Market } from '../trading/market';
 import { PaperSession } from '../trading/paperSession';
+import { AskPanel } from '../tutor/AskPanel';
+import type { TutorEnv } from '../tutor/run';
 import { Button } from '../ui/Button';
 import { CoachHint } from '../ui/CoachHint';
 import { Note, Row, Section, colors } from '../ui/Section';
@@ -28,6 +32,16 @@ const RULES: Record<MistakeRule, { title: string; lesson: string }> = {
   holding_losers: { title: 'Holding losers, cutting winners', lesson: 'behavioural-traps' },
 };
 
+const WEEK_MS = 7 * 24 * 3600 * 1000;
+const recentEntries = (all: JournalEntry[], now: number): JournalEntry[] => all.filter((e) => now - e.at <= WEEK_MS);
+const toText = (e: JournalEntry): JournalText => ({
+  why: e.why,
+  target: e.target,
+  exitPlan: e.exitPlan,
+  confidence: e.confidence,
+  ...(e.after === undefined ? {} : { what: e.after.what, learned: e.after.learned }),
+});
+
 function FlagCard({ flag }: { flag: Flag }) {
   const rule = RULES[flag.rule];
   return (
@@ -39,14 +53,18 @@ function FlagCard({ flag }: { flag: Flag }) {
   );
 }
 
-function Mistakes({ kv, now, market }: { kv: KeyValueStore; now: () => number; market: Market }) {
+function Mistakes({ kv, now, market, env }: { kv: KeyValueStore; now: () => number; market: Market; env: TutorEnv }) {
   const [flags, setFlags] = useState<Flag[] | null>(null);
+  const [entries, setEntries] = useState<JournalEntry[]>([]);
   useEffect(() => {
     let live = true;
     void (async () => {
       const [session, settings, journal] = await Promise.all([PaperSession.open(kv, now, market), loadProfileSettings(kv), loadJournal(kv)]);
       const found = await session.mistakes(exitPlanIds(journal, market.id), settings.mistakes);
-      if (live) setFlags(found);
+      if (live) {
+        setEntries(journal.filter((e) => e.market === market.id));
+        setFlags(found);
+      }
     })();
     return () => {
       live = false;
@@ -60,6 +78,7 @@ function Mistakes({ kv, now, market }: { kv: KeyValueStore; now: () => number; m
         {flags.map((f, i) => (
           <FlagCard key={`${f.rule}-${f.orderId ?? ''}-${String(i)}`} flag={f} />
         ))}
+        <AskPanel env={env} label="Weekly coach review" testID="weekly-review" build={() => weeklyReview({ facts: [{ key: 'flags', label: 'flags', value: String(flags.length) }], flags: flags.map((f) => `${RULES[f.rule].title}: ${f.detail}`), entries: recentEntries(entries, now()).map(toText), symbols: [], names: env.names })} />
         <Note>These are habits to look at, not verdicts. Thresholds are your profile settings. Leverage and sector checks come with futures and sector data.</Note>
       </Section>
     </View>
@@ -80,7 +99,7 @@ function ReviewForm({ onSave }: { onSave: (a: { what: string; learned: string; e
   );
 }
 
-function Entry(props: { entry: JournalEntry; onSave: (a: { what: string; learned: string; emotion: Emotion | null }) => void }) {
+function Entry(props: { env: TutorEnv; entry: JournalEntry; onSave: (a: { what: string; learned: string; emotion: Emotion | null }) => void }) {
   const { entry } = props;
   const [open, setOpen] = useState(false);
   return (
@@ -90,6 +109,7 @@ function Entry(props: { entry: JournalEntry; onSave: (a: { what: string; learned
       <Row label="Target" value={entry.target || 'not written'} />
       <Row label="Exit if wrong" value={entry.exitPlan || 'not written'} />
       <Row label="Confidence" value={entry.confidence === null ? 'not given' : `${String(entry.confidence)} of 5`} />
+      <AskPanel env={props.env} label="Review this trade" testID={`review-ai-${entry.orderId}`} build={() => tradeReview({ trade: `Order ${entry.orderId}`, facts: [{ key: 'order', label: 'order', value: entry.orderId }], journal: toText(entry), symbols: [], names: props.env.names })} />
       {entry.after !== undefined ? (
         <>
           <Row label="What happened" value={entry.after.what || 'not written'} />
@@ -105,7 +125,7 @@ function Entry(props: { entry: JournalEntry; onSave: (a: { what: string; learned
   );
 }
 
-function Journal({ kv, now, market }: { kv: KeyValueStore; now: () => number; market: Market }) {
+function Journal({ kv, now, market, env }: { kv: KeyValueStore; now: () => number; market: Market; env: TutorEnv }) {
   const [entries, setEntries] = useState<JournalEntry[] | null>(null);
   const reload = useCallback(() => loadJournal(kv).then((all) => setEntries(all.filter((e) => e.market === market.id).sort((a, b) => b.at - a.at))), [kv, market.id]);
   useEffect(() => {
@@ -118,6 +138,7 @@ function Journal({ kv, now, market }: { kv: KeyValueStore; now: () => number; ma
         {entries.length === 0 ? <Note>No entries yet. Fill in the journal fields on the Trade screen before you place an order.</Note> : null}
         {entries.map((e) => (
           <Entry
+            env={env}
             key={e.orderId}
             entry={e}
             onSave={(a) => {
@@ -130,13 +151,13 @@ function Journal({ kv, now, market }: { kv: KeyValueStore; now: () => number; ma
   );
 }
 
-export function MeasureScreen({ kv, now, market }: { kv: KeyValueStore; now: () => number; market: Market }) {
+export function MeasureScreen({ kv, now, market, env }: { kv: KeyValueStore; now: () => number; market: Market; env: TutorEnv }) {
   const [tab, setTab] = useState<(typeof TABS)[number][0]>('mistakes');
   return (
     <ScrollView contentContainerStyle={styles.page} testID="measure-screen">
       <TabStrip tabs={TABS} active={tab} onSelect={setTab} small />
       <CoachHint screen="measure" />
-      {tab === 'mistakes' ? <Mistakes kv={kv} now={now} market={market} /> : <Journal kv={kv} now={now} market={market} />}
+      {tab === 'mistakes' ? <Mistakes kv={kv} now={now} market={market} env={env} /> : <Journal kv={kv} now={now} market={market} env={env} />}
     </ScrollView>
   );
 }
