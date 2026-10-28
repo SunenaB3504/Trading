@@ -10,6 +10,7 @@ import type { DailyBar } from '../../../core/data/types';
 export interface PriceCandleCanvasProps {
   bars: DailyBar[];
   currentIndex: number;
+  activeDate?: string;
 }
 
 interface PriceBounds {
@@ -122,10 +123,19 @@ function drawCursor(
   ctx.fillText(`₹${bar.close.toFixed(1)}`, chartW + 6, y + 4);
 }
 
-export const PriceCandleCanvas: React.FC<PriceCandleCanvasProps> = ({ bars, currentIndex }) => {
+export const PriceCandleCanvas: React.FC<PriceCandleCanvasProps> = ({
+  bars,
+  currentIndex,
+  activeDate,
+}) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [dims, setDims] = useState<{ w: number; h: number }>({ w: 700, h: 420 });
+
+  const latestTradedBar = bars.length > 0 ? bars[Math.min(bars.length - 1, Math.max(0, currentIndex))] : null;
+  const isFutureEvaluation = Boolean(
+    activeDate && latestTradedBar && activeDate > latestTradedBar.date
+  );
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -153,7 +163,7 @@ export const PriceCandleCanvas: React.FC<PriceCandleCanvasProps> = ({ bars, curr
     ctx.fillStyle = '#0B0E14';
     ctx.fillRect(0, 0, dims.w, dims.h);
 
-    const activeEnd = Math.min(bars.length, currentIndex + 1);
+    const activeEnd = Math.min(bars.length, Math.max(1, currentIndex + 1));
     const visibleBars = bars.slice(Math.max(0, activeEnd - 80), activeEnd);
     if (visibleBars.length === 0) return;
 
@@ -180,6 +190,35 @@ export const PriceCandleCanvas: React.FC<PriceCandleCanvasProps> = ({ bars, curr
 
   return (
     <div ref={containerRef} style={{ width: '100%', height: '100%', position: 'relative' }}>
+      {isFutureEvaluation && latestTradedBar && (
+        <div
+          style={{
+            position: 'absolute',
+            top: '12px',
+            left: '12px',
+            zIndex: 10,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            backgroundColor: 'rgba(11, 14, 20, 0.94)',
+            border: '1px solid #D4AF37',
+            borderRadius: '6px',
+            padding: '6px 12px',
+            boxShadow: '0 4px 16px rgba(0,0,0,0.7)',
+            backdropFilter: 'blur(4px)',
+            fontSize: '11px',
+            fontFamily: 'monospace',
+          }}
+        >
+          <span style={{ color: '#94A3B8' }}>📌 ANCHORED AT LATEST CLOSE:</span>
+          <span style={{ color: '#38BDF8', fontWeight: 'bold' }}>
+            ₹{latestTradedBar.close.toFixed(1)} ({latestTradedBar.date})
+          </span>
+          <span style={{ color: '#64748B' }}>|</span>
+          <span style={{ color: '#FCD34D' }}>🔮 EVALUATING FUTURE ASTROLOGY:</span>
+          <span style={{ color: '#4ADE80', fontWeight: 'bold' }}>{activeDate}</span>
+        </div>
+      )}
       <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block', borderRadius: '8px' }} />
     </div>
   );

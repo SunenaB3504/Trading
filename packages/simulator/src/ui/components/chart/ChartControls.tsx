@@ -23,16 +23,35 @@ const SessionInfo: React.FC<{ activeDate: string; currentIndex: number; totalSes
   activeDate,
   currentIndex,
   totalSessions,
-}) => (
-  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-    <span style={{ color: '#D4AF37', fontWeight: 'bold' }}>
-      {activeDate || 'Session Pending'}
-    </span>
-    <span style={{ color: '#64748B', fontSize: '11px' }}>
-      [{currentIndex + 1} / {totalSessions || 0}]
-    </span>
-  </div>
-);
+}) => {
+  const isFuture = totalSessions > 0 && currentIndex >= totalSessions - 1;
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+      <span style={{ color: '#D4AF37', fontWeight: 'bold' }}>
+        {activeDate || 'Session Pending'}
+      </span>
+      {isFuture && (
+        <span
+          style={{
+            padding: '1px 6px',
+            borderRadius: '4px',
+            fontSize: '9px',
+            fontWeight: 700,
+            letterSpacing: '0.04em',
+            backgroundColor: '#3B0764',
+            color: '#F0ABFC',
+            border: '1px solid #A855F7',
+          }}
+        >
+          🔮 FORWARD
+        </span>
+      )}
+      <span style={{ color: '#64748B', fontSize: '11px' }}>
+        [{currentIndex + 1} / {totalSessions || 0}]
+      </span>
+    </div>
+  );
+};
 
 const PlaybackButtons: React.FC<{
   isPlaying: boolean;

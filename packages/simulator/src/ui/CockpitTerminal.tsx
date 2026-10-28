@@ -58,7 +58,7 @@ function LeftChartPanel({
       <DashaRibbon dashaState={dashaState} activeDate={activeDate} />
       <TrikonaNathansBadge metadata={metadata} />
       <div style={{ flex: 1, position: 'relative', background: '#0B0E14', padding: '10px', minHeight: 0 }}>
-        <PriceCandleCanvas bars={bars} currentIndex={currentIndex} />
+        <PriceCandleCanvas bars={bars} currentIndex={currentIndex} activeDate={activeDate} />
       </div>
       <ChartControls />
     </section>
@@ -104,7 +104,8 @@ function deriveTradeTicket(
   phiFinancial: number,
   isBreached: boolean,
   dashaState: ActiveDashaState | null,
-  metadata: CorporateRegistryRecord | null
+  metadata: CorporateRegistryRecord | null,
+  activeDate?: string
 ): MasterTradeTicket | null {
   if (!bar) return null;
 
@@ -138,7 +139,21 @@ function deriveTradeTicket(
     currentPrice: bar.close,
   });
 
-  return synthesizeTradeTicket(bar, edge, sizing, '2026-12-31');
+  const cuspExitDate = activeDate && activeDate > bar.date ? activeDate : '2026-12-31';
+  const ticket = synthesizeTradeTicket(bar, edge, sizing, cuspExitDate);
+
+  if (activeDate && activeDate > bar.date) {
+    return {
+      ...ticket,
+      timestamp: activeDate,
+      provenance: {
+        ...ticket.provenance,
+        reason: `[FORWARD ASTRO EVALUATION for ${activeDate}] ${ticket.provenance.reason}`,
+      },
+    };
+  }
+
+  return ticket;
 }
 
 function deriveActiveDasha(meta: CorporateRegistryRecord | null, activeDate: string): ActiveDashaState | null {
@@ -152,32 +167,42 @@ function deriveActiveDasha(meta: CorporateRegistryRecord | null, activeDate: str
 
 function useCockpitTelemetryState() {
   const { currentIndex, activeDate } = useSimulationStore();
-  const { bars, activeBar, metadata } = useStockStore();
+  const { bars, activeBar, metadata, activeSymbol } = useStockStore();
   const { ledger, executeOrder } = usePortfolioStore();
 
-  const dashaState = useMemo(() => deriveActiveDasha(metadata, activeDate), [metadata, activeDate]);
+  const resolvedMeta = metadata ?? corporateRegistry[activeSymbol] ?? corporateRegistry['TCS'] ?? null;
+
+  const dashaState = useMemo(() => deriveActiveDasha(resolvedMeta, activeDate), [resolvedMeta, activeDate]);
 
   const kotaState = useMemo(() => {
     const transits = calculateTransitNakshatras(activeDate || '2005-01-01');
-    const janmaNak = metadata?.moon_nakshatra
-      ? Math.max(0, (NAKSHATRAS as readonly string[]).indexOf(metadata.moon_nakshatra))
+    const janmaNak = resolvedMeta?.moon_nakshatra
+      ? Math.max(0, (NAKSHATRAS as readonly string[]).indexOf(resolvedMeta.moon_nakshatra))
       : 0;
-    const moonSign = metadata?.moon_sign_id ?? 0;
+    const moonSign = resolvedMeta?.moon_sign_id ?? 0;
     return evaluateKotaChakra(janmaNak, moonSign, transits);
-  }, [metadata, activeDate]);
+  }, [resolvedMeta, activeDate]);
 
   const auditResult = useMemo(() => {
-    const symFund = pitFundamentals[activeBar?.symbol ?? 'TCS'] ?? [];
+    const symFund = pitFundamentals[activeBar?.symbol ?? activeSymbol ?? 'TCS'] ?? [];
     return auditBalanceSheetPIT(symFund, activeDate);
-  }, [activeBar?.symbol, activeDate]);
+  }, [activeBar?.symbol, activeSymbol, activeDate]);
 
   const tradeTicket = useMemo(
-    () => deriveTradeTicket(activeBar, ledger.total_equity, auditResult.phiFinancial, kotaState.defenseScore < 0.35, dashaState, metadata),
-    [activeBar, ledger.total_equity, auditResult.phiFinancial, kotaState.defenseScore, dashaState, metadata]
+    () => deriveTradeTicket(
+      activeBar,
+      ledger.total_equity,
+      auditResult.phiFinancial,
+      kotaState.defenseScore < 0.35,
+      dashaState,
+      resolvedMeta,
+      activeDate
+    ),
+    [activeBar, ledger.total_equity, auditResult.phiFinancial, kotaState.defenseScore, dashaState, resolvedMeta, activeDate]
   );
 
   const telemetry = useMemo(() => serializeCockpitState({
-    activeSymbol: activeBar?.symbol ?? 'TCS',
+    activeSymbol: activeBar?.symbol ?? activeSymbol ?? 'TCS',
     activeDate,
     currentBar: activeBar,
     dashaState,
@@ -186,15 +211,15 @@ function useCockpitTelemetryState() {
     kotaState,
     sbcState: null,
     portfolio: ledger,
-  }), [activeBar, activeDate, dashaState, auditResult, kotaState, ledger]);
+  }), [activeBar, activeSymbol, activeDate, dashaState, auditResult, kotaState, ledger]);
 
-  return { currentIndex, activeDate, bars, dashaState, kotaState, auditResult, tradeTicket, telemetry, executeOrder, metadata };
+  return { currentIndex, activeDate, bars, dashaState, kotaState, auditResult, tradeTicket, telemetry, executeOrder, metadata: resolvedMeta };
 }
 
 export const CockpitTerminal: React.FC = () => {
   const { currentIndex, activeDate, bars, dashaState, kotaState, auditResult, tradeTicket, telemetry, executeOrder, metadata } =
     useCockpitTelemetryState();
-  const { setActiveSymbol } = useStockStore();
+  const { loadStock } = useStockStore();
 
   const [isRadarOpen, setIsRadarOpen] = React.useState(false);
   const [isHoroscopeOpen, setIsHoroscopeOpen] = React.useState(false);
@@ -204,10 +229,7 @@ export const CockpitTerminal: React.FC = () => {
   const availableTickers = useMemo(() => Object.keys(corporateRegistry), []);
 
   const handleSelectStock = (sym: string, targetDate?: string) => {
-    setActiveSymbol(sym);
-    if (targetDate && targetDate.length >= 10) {
-      useSimulationStore.getState().setActiveDate(targetDate);
-    }
+    loadStock(sym, targetDate ?? activeDate);
   };
 
   const handleOrder = (ticket: MasterTradeTicket) => {
