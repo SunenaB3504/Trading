@@ -22,6 +22,8 @@ import { RoboScreen } from './screens/RoboScreen';
 import { StrategyLabScreen } from './screens/StrategyLabScreen';
 import { BuilderScreen } from './screens/BuilderScreen';
 import { FnoScreen } from './screens/FnoScreen';
+import { TaxScreen } from './screens/TaxScreen';
+import { BondScreen } from './screens/BondScreen';
 import { OptionsLabScreen } from './screens/OptionsLabScreen';
 import { TimeMachineScreen } from './screens/TimeMachineScreen';
 import { TutorScreen } from './screens/TutorScreen';
@@ -46,7 +48,7 @@ import { RootErrorBoundary } from './ui/RootErrorBoundary';
 import { TabStrip } from './ui/TabStrip';
 
 type SectionId = 'home' | 'learn' | 'practise' | 'measure' | 'tutor' | 'settings';
-type PractiseId = 'trade' | 'funds' | 'machine' | 'builder' | 'charts' | 'lab' | 'robo' | 'fno' | 'optlab' | 'ledger' | 'universe' | 'compare' | 'report';
+type PractiseId = 'trade' | 'funds' | 'machine' | 'builder' | 'charts' | 'lab' | 'robo' | 'fno' | 'optlab' | 'tax' | 'bonds' | 'ledger' | 'universe' | 'compare' | 'report';
 type SettingsId = 'general' | 'profiles' | 'backup' | 'data';
 
 const SECTIONS = [
@@ -67,6 +69,8 @@ const PRACTISE = [
   ['robo', 'Robo'],
   ['fno', 'F&O'],
   ['optlab', 'Options Lab'],
+  ['tax', 'Tax'],
+  ['bonds', 'Bonds'],
   ['ledger', 'Ledger'],
   ['universe', 'Universe'],
   ['compare', 'Compare'],
@@ -150,6 +154,8 @@ function Practise(props: { env: TutorEnv; kv: KeyValueStore; now: () => number; 
     robo: () => <RoboScreen kv={kv} now={now} real={markets.real} />,
     fno: () => <FnoScreen kv={kv} now={now} real={markets.real} />,
     optlab: () => <OptionsLabScreen spotOf={spotOf} />,
+    tax: () => <TaxScreen kv={kv} now={now} market={market} real={markets.real} />,
+    bonds: () => <BondScreen />,
     ledger: () => <LedgerScreen kv={kv} now={now} />,
     universe: () => <UniverseScreen />,
     compare: () => <CompareScreen kv={kv} now={now} market={market} />,

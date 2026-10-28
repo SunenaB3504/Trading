@@ -24,3 +24,5 @@ export * from './mistakes';
 export * from './portfolio';
 export * from './strategy';
 export * from './fno';
+export * from './tax';
+export * from './bonds';

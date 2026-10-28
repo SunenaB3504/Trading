@@ -23,6 +23,8 @@ export const HINTS: Record<string, Hint> = {
   robo: { text: 'These accounts follow fixed rules and are brought up to date session by session. Compare them with the Index Benchmark, not with each other only.', lesson: 'rules-and-overfitting' },
   fno: { text: 'A lot controls far more than you put up. Before you open a position, work out what a 5% move against you costs in rupees.', lesson: 'leverage-costs-and-tax' },
   optionslab: { text: 'The picture shows one moment. Slide the days and the volatility and watch how time and volatility change an option you did not touch.', lesson: 'option-price-and-greeks' },
+  tax: { text: 'Tax is a cost on your gains. How long you held, and whether you traded shares or futures and options, changes the rate.', lesson: 'leverage-costs-and-tax' },
+  bonds: { text: 'When yields rise, bond prices fall. The longer the bond, the bigger the move. Duration puts a number on it.', lesson: 'bonds-and-debt-funds' },
   measure: { text: 'Write down why you trade before you trade. Flags below are habits to look at, not verdicts.', lesson: 'behavioural-traps' },
 };
 

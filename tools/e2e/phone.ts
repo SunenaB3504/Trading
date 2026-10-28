@@ -13,7 +13,7 @@ import { appReady, checkLog, openTab, serveStatic } from './support';
 
 const { checks, check } = checkLog();
 /** Every screen: the main sections, then the screens inside Practise and Settings. */
-const TABS = ['Home', 'Learn', 'Measure', 'Tutor', 'Trade', 'Time Machine', 'Builder', 'Charts', 'Strategy Lab', 'Robo', 'F&O', 'Options Lab', 'Ledger', 'Universe', 'Compare', 'Report', 'General', 'Profiles', 'Backup', 'Data'];
+const TABS = ['Home', 'Learn', 'Measure', 'Tutor', 'Trade', 'Time Machine', 'Builder', 'Charts', 'Strategy Lab', 'Robo', 'F&O', 'Options Lab', 'Tax', 'Bonds', 'Ledger', 'Universe', 'Compare', 'Report', 'General', 'Profiles', 'Backup', 'Data'];
 
 interface Measured {
   pageOverflow: number;

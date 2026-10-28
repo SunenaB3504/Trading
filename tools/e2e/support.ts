@@ -57,6 +57,8 @@ const PARENT: Record<string, string> = {
   Robo: 'Practise',
   'F&O': 'Practise',
   'Options Lab': 'Practise',
+  Tax: 'Practise',
+  Bonds: 'Practise',
   Path: 'Learn',
   Glossary: 'Learn',
   Mistakes: 'Measure',

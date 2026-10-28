@@ -9,7 +9,7 @@ import {
   istToUtcMillis,
   winLossReport,
 } from '@trading/core';
-import type { Fill, Flag, MistakeLimits, OrderRecord, Position, ReplayConfig, WinLossReport } from '@trading/core';
+import type { Fill, Flag, MistakeLimits, OrderRecord, Position, ReplayConfig, Trade, WinLossReport } from '@trading/core';
 import { REQUESTS_KEY } from '../backup/backupService';
 import type { StoredOrder } from '../backup/backupService';
 import { formatPaise } from '../format/rupees';
@@ -149,6 +149,11 @@ export class PaperSession {
   equityPaise(): number {
     const { state } = this.adapter.result();
     return equityAt(state, marksAsOf(this.market.snapshot, this.market.config.actions, state, this.market.lastDate));
+  }
+
+  /** Round trips that have been closed, for the tax report. */
+  closedTrades(): Trade[] {
+    return this.adapter.result().state.trades.filter((t) => t.closedOn !== null);
   }
 
   /** Win/loss report with bootstrap intervals; the seed is fixed so the same book gives the same numbers. */
