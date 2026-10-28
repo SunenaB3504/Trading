@@ -203,6 +203,13 @@ export const CockpitTerminal: React.FC = () => {
 
   const availableTickers = useMemo(() => Object.keys(corporateRegistry), []);
 
+  const handleSelectStock = (sym: string, targetDate?: string) => {
+    setActiveSymbol(sym);
+    if (targetDate && targetDate.length >= 10) {
+      useSimulationStore.getState().setActiveDate(targetDate);
+    }
+  };
+
   const handleOrder = (ticket: MasterTradeTicket) => {
     if (ticket.action !== 'BUY' || ticket.shares <= 0) return;
     void executeOrder(ticket.symbol, 'BUY', ticket.shares, ticket.price, ticket.provenance.reason, activeDate);
@@ -225,7 +232,7 @@ export const CockpitTerminal: React.FC = () => {
           kotaState={kotaState}
           telemetry={telemetry}
           activeDate={activeDate}
-          onSelectStock={setActiveSymbol}
+          onSelectStock={handleSelectStock}
         />
       </main>
       <BottomStatusBar />
@@ -234,7 +241,7 @@ export const CockpitTerminal: React.FC = () => {
         isOpen={isRadarOpen}
         onClose={() => setIsRadarOpen(false)}
         activeDate={activeDate}
-        onSelectStock={setActiveSymbol}
+        onSelectStock={handleSelectStock}
         registry={corporateRegistry}
         fundamentalsMap={pitFundamentals}
       />

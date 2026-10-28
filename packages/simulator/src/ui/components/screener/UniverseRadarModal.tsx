@@ -1,11 +1,11 @@
 /**
  * packages/simulator/src/ui/components/screener/UniverseRadarModal.tsx
- * Market Universe Radar & Screener Modal with 4-fold Vedic Confluence and Dasha Filters.
- * Integrates Triads, Yogas, Dasha Lords, Kota Chakra, SBC, Indu Lagna, and Tara Bala.
- * Enforces strict modularity (< 200 LOC, functions < 60 LOC, complexity <= 10).
+ * Market Universe Radar & Forward Astrological Screener Modal.
+ * Supports past, present, and future date evaluation (+1M, +6M, +1Y forward forecasting).
+ * Enforces strict modularity (< 220 LOC, functions < 60 LOC, complexity <= 10).
  */
 
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import type { CorporateRegistryRecord, QuarterlyFundamental } from '../../../core/data/types';
 import {
   scanUniverse,
@@ -24,7 +24,7 @@ export interface UniverseRadarModalProps {
   isOpen: boolean;
   onClose: () => void;
   activeDate: string;
-  onSelectStock: (symbol: string) => void;
+  onSelectStock: (symbol: string, targetDate?: string) => void;
   registry: Record<string, CorporateRegistryRecord>;
   fundamentalsMap?: Record<string, QuarterlyFundamental[]>;
 }
@@ -42,6 +42,8 @@ const INITIAL_FILTERS: RadarFiltersState = {
   adLordFilter: 'ALL',
 };
 
+const MS_PER_DAY = 86400000;
+
 export const UniverseRadarModal: React.FC<UniverseRadarModalProps> = ({
   isOpen,
   onClose,
@@ -50,12 +52,25 @@ export const UniverseRadarModal: React.FC<UniverseRadarModalProps> = ({
   registry,
   fundamentalsMap = {},
 }) => {
+  const initialDate = activeDate && activeDate.length >= 10 ? activeDate : '2005-01-01';
+  const [scanDate, setScanDate] = useState<string>(initialDate);
   const [filters, setFilters] = useState<RadarFiltersState>(INITIAL_FILTERS);
 
-  const effectiveDate = activeDate && activeDate.length >= 10 ? activeDate : '2005-01-01';
+  useEffect(() => {
+    if (activeDate && activeDate.length >= 10) {
+      setScanDate(activeDate);
+    }
+  }, [activeDate]);
+
+  const stepDate = (days: number) => {
+    const current = new Date(`${scanDate}T12:00:00+05:30`).getTime();
+    const next = new Date(current + days * MS_PER_DAY).toISOString().slice(0, 10);
+    setScanDate(next);
+  };
+
   const summary = useMemo(
-    () => scanUniverse(registry, effectiveDate, fundamentalsMap),
-    [registry, effectiveDate, fundamentalsMap]
+    () => scanUniverse(registry, scanDate, fundamentalsMap),
+    [registry, scanDate, fundamentalsMap]
   );
 
   const filteredItems = useMemo(() => {
@@ -83,10 +98,6 @@ export const UniverseRadarModal: React.FC<UniverseRadarModalProps> = ({
 
   const handleFilterChange = <K extends keyof RadarFiltersState>(key: K, value: RadarFiltersState[K]) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
-  };
-
-  const handleResetFilters = () => {
-    setFilters(INITIAL_FILTERS);
   };
 
   if (!isOpen) return null;
@@ -120,7 +131,11 @@ export const UniverseRadarModal: React.FC<UniverseRadarModalProps> = ({
         }}
       >
         <RadarHeader
+          scanDate={scanDate}
           activeDate={activeDate}
+          onDateChange={setScanDate}
+          onStepDate={stepDate}
+          onSyncSession={() => setScanDate(activeDate)}
           total={summary.totalScanned}
           matchedCount={filteredItems.length}
           onClose={onClose}
@@ -128,17 +143,17 @@ export const UniverseRadarModal: React.FC<UniverseRadarModalProps> = ({
         <RadarFiltersBar
           filters={filters}
           onChange={handleFilterChange}
-          onReset={handleResetFilters}
+          onReset={() => setFilters(INITIAL_FILTERS)}
           summary={summary}
         />
         <div style={{ flex: 1, overflowY: 'auto', padding: '12px' }}>
           <RadarStockTable
             items={filteredItems}
             onSelect={(sym) => {
-              onSelectStock(sym);
+              onSelectStock(sym, scanDate);
               onClose();
             }}
-            onResetFilters={handleResetFilters}
+            onResetFilters={() => setFilters(INITIAL_FILTERS)}
           />
         </div>
       </div>
@@ -147,34 +162,82 @@ export const UniverseRadarModal: React.FC<UniverseRadarModalProps> = ({
 };
 
 function RadarHeader({
+  scanDate,
   activeDate,
+  onDateChange,
+  onStepDate,
+  onSyncSession,
   total,
   matchedCount,
   onClose,
 }: {
+  scanDate: string;
   activeDate: string;
+  onDateChange: (d: string) => void;
+  onStepDate: (days: number) => void;
+  onSyncSession: () => void;
   total: number;
   matchedCount: number;
   onClose: () => void;
 }) {
+  const isFuture = scanDate > activeDate;
+
   return (
     <div
       style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: '12px 18px',
+        padding: '10px 18px',
         borderBottom: '1px solid #1E2638',
         backgroundColor: '#07090E',
+        gap: '12px',
+        flexWrap: 'wrap',
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-        <span style={{ color: '#D4AF37', fontSize: '14px', fontWeight: 900 }}>☵ MARKET UNIVERSE RADAR</span>
-        <span style={{ color: '#64748B', fontSize: '12px' }}>|</span>
-        <span style={{ color: '#94A3B8', fontSize: '12px', fontFamily: 'monospace' }}>
-          Date: <strong style={{ color: '#F8FAFC' }}>{activeDate}</strong> ({total} stocks scanned | <strong style={{ color: '#38BDF8' }}>{matchedCount}</strong> matched)
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+        <span style={{ color: '#D4AF37', fontSize: '13px', fontWeight: 900 }}>☵ MARKET UNIVERSE RADAR</span>
+        <span style={{ color: '#64748B' }}>|</span>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <span style={{ color: '#94A3B8', fontSize: '11px', fontWeight: 700 }}>Eval Date:</span>
+          <input
+            type="date"
+            value={scanDate}
+            onChange={(e) => onDateChange(e.target.value)}
+            style={{
+              padding: '2px 6px',
+              backgroundColor: '#111827',
+              border: '1px solid #1E2638',
+              color: '#F8FAFC',
+              borderRadius: '4px',
+              fontSize: '11px',
+              fontFamily: 'monospace',
+            }}
+          />
+
+          <button onClick={() => onStepDate(30)} style={stepBtnStyle}>+1M</button>
+          <button onClick={() => onStepDate(182)} style={stepBtnStyle}>+6M</button>
+          <button onClick={() => onStepDate(365)} style={stepBtnStyle}>+1Y</button>
+          {scanDate !== activeDate && (
+            <button onClick={onSyncSession} style={{ ...stepBtnStyle, color: '#38BDF8', borderColor: '#0284C7' }}>
+              ↺ Sync ({activeDate})
+            </button>
+          )}
+
+          {isFuture && (
+            <span style={{ fontSize: '9px', fontWeight: 800, padding: '2px 6px', borderRadius: '3px', backgroundColor: '#312E81', color: '#818CF8' }}>
+              🔮 FORWARD FORECAST
+            </span>
+          )}
+        </div>
+
+        <span style={{ color: '#64748B' }}>|</span>
+        <span style={{ color: '#94A3B8', fontSize: '11px', fontFamily: 'monospace' }}>
+          {total} scanned | <strong style={{ color: '#38BDF8' }}>{matchedCount}</strong> matched
         </span>
       </div>
+
       <button
         onClick={onClose}
         style={{
@@ -192,3 +255,14 @@ function RadarHeader({
     </div>
   );
 }
+
+const stepBtnStyle: React.CSSProperties = {
+  padding: '2px 6px',
+  borderRadius: '3px',
+  fontSize: '10px',
+  fontWeight: 700,
+  backgroundColor: '#111827',
+  color: '#CBD5E1',
+  border: '1px solid #1E2638',
+  cursor: 'pointer',
+};
