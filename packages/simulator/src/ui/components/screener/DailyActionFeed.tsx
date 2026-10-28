@@ -7,6 +7,7 @@
 import React, { useMemo } from 'react';
 import type { CorporateRegistryRecord, QuarterlyFundamental } from '../../../core/data/types';
 import { scanUniverse, getPrioritizedDailyActionFeed, type UniverseStockScanItem } from '../../../core/engine/universeScanner';
+import { useStrategyStore } from '../../../state/strategyStore';
 
 export interface DailyActionFeedProps {
   activeDate: string;
@@ -22,9 +23,10 @@ export const DailyActionFeed: React.FC<DailyActionFeedProps> = ({
   fundamentalsMap = {},
 }) => {
   const effectiveDate = activeDate && activeDate.length >= 10 ? activeDate : '2005-01-01';
+  const strategyParams = useStrategyStore((s) => s.parameters);
   const summary = useMemo(
-    () => scanUniverse(registry, effectiveDate, fundamentalsMap),
-    [registry, effectiveDate, fundamentalsMap]
+    () => scanUniverse(registry, effectiveDate, fundamentalsMap, strategyParams),
+    [registry, effectiveDate, fundamentalsMap, strategyParams]
   );
 
   const prioritized = useMemo(

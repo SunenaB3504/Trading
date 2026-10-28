@@ -19,6 +19,7 @@ import {
 } from '../../../core/engine/universeScanner';
 import { RadarFiltersBar, type RadarFiltersState } from './RadarFiltersBar';
 import { RadarStockTable } from './RadarStockTable';
+import { useStrategyStore } from '../../../state/strategyStore';
 
 export interface UniverseRadarModalProps {
   isOpen: boolean;
@@ -69,9 +70,11 @@ export const UniverseRadarModal: React.FC<UniverseRadarModalProps> = ({
     setScanDate(next);
   };
 
+  const strategyParams = useStrategyStore((s) => s.parameters);
+
   const summary = useMemo(
-    () => scanUniverse(registry, scanDate, fundamentalsMap),
-    [registry, scanDate, fundamentalsMap]
+    () => scanUniverse(registry, scanDate, fundamentalsMap, strategyParams),
+    [registry, scanDate, fundamentalsMap, strategyParams]
   );
 
   const filteredItems = useMemo(() => {

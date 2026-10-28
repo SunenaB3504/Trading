@@ -4,42 +4,38 @@
  * Enforces strict modularity (< 350 LOC, functions < 60 LOC, complexity <= 10).
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import {
+  useStrategyStore,
+  type StrategyParameters,
+  DEFAULT_STRATEGY_PARAMETERS,
+} from '../../../state/strategyStore';
 
-export interface StrategyParameters {
-  cuspWindowSessions: number;
-  kotaDefenseThreshold: number;
-  riskBudgetFraction: number;
-  minNominalPrice: number;
-  severeDrawdownPct: number;
-  enableVryTurnaround: boolean;
-  enableNbryTurnaround: boolean;
-}
-
-export const DEFAULT_STRATEGY_PARAMETERS: StrategyParameters = {
-  cuspWindowSessions: 3,
-  kotaDefenseThreshold: 0.35,
-  riskBudgetFraction: 0.1,
-  minNominalPrice: 20.0,
-  severeDrawdownPct: 0.75,
-  enableVryTurnaround: true,
-  enableNbryTurnaround: true,
-};
+export { DEFAULT_STRATEGY_PARAMETERS, type StrategyParameters };
 
 export interface StrategyParameterDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  parameters: StrategyParameters;
-  onSaveParameters: (params: StrategyParameters) => void;
+  parameters?: StrategyParameters | undefined;
+  onSaveParameters?: ((params: StrategyParameters) => void) | undefined;
 }
 
 export const StrategyParameterDrawer: React.FC<StrategyParameterDrawerProps> = ({
   isOpen,
   onClose,
-  parameters,
+  parameters: propParams,
   onSaveParameters,
 }) => {
-  const [params, setParams] = useState<StrategyParameters>(parameters);
+  const storeParams = useStrategyStore((s) => s.parameters);
+  const setStoreParams = useStrategyStore((s) => s.setParameters);
+  const resetStoreParams = useStrategyStore((s) => s.resetParameters);
+
+  const activeParams = propParams ?? storeParams;
+  const [params, setParams] = useState<StrategyParameters>(activeParams);
+
+  useEffect(() => {
+    setParams(activeParams);
+  }, [activeParams, isOpen]);
 
   if (!isOpen) return null;
 
@@ -131,9 +127,13 @@ export const StrategyParameterDrawer: React.FC<StrategyParameterDrawerProps> = (
           />
         </div>
         <DrawerFooter
-          onReset={() => setParams(DEFAULT_STRATEGY_PARAMETERS)}
+          onReset={() => {
+            setParams(DEFAULT_STRATEGY_PARAMETERS);
+            resetStoreParams();
+          }}
           onApply={() => {
-            onSaveParameters(params);
+            setStoreParams(params);
+            onSaveParameters?.(params);
             onClose();
           }}
         />

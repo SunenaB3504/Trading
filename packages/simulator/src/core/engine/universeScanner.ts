@@ -19,6 +19,7 @@ import { calculateTaraBala, mapConsonantToNakshatra, type TaraCategory } from '.
 import { auditBalanceSheetPIT } from '../financial/balanceSheetAudit';
 import { detectEdgeSignals, formatTriadCode, type EdgeSignalType } from './edgeDetector';
 import { calculatePositionSize } from './sizingCalculator';
+import type { StrategyParameters } from '../../state/strategyStore';
 
 export interface UniverseStockScanItem {
   symbol: string;
@@ -96,7 +97,8 @@ function evaluateConfluenceVectors(
   record: CorporateRegistryRecord,
   lagnaId: number,
   transitSigns: Record<PlanetKey, number>,
-  transitPositions: TransitPlanetaryPositions
+  transitPositions: TransitPlanetaryPositions,
+  defenseCutoff: number = 0.40
 ) {
   const janmaNak = calculateNakshatraAndBalance(record.moon_deg).nakshatraIndex;
   const moonSignId = record.moon_sign_id ?? 0;
@@ -105,7 +107,7 @@ function evaluateConfluenceVectors(
   const kota = evaluateKotaChakra(janmaNak, moonSignId, transitPositions);
   const isMaleficInStambha = kota.stambha.some((p) => NATURAL_MALEFICS.includes(p));
   const isKotaFortified = kota.defenseScore >= 0.60 && !isMaleficInStambha;
-  const isKotaBreached = kota.defenseScore < 0.40 || isMaleficInStambha;
+  const isKotaBreached = kota.defenseScore < defenseCutoff || isMaleficInStambha;
   const kotaStatus: 'FORTIFIED' | 'BREACHED' | 'NEUTRAL' = isKotaFortified
     ? 'FORTIFIED'
     : isKotaBreached
@@ -159,7 +161,8 @@ export function scanSingleStock(
   activeDate: string,
   transitSigns: Record<PlanetKey, number>,
   transitPositions: TransitPlanetaryPositions,
-  fundamentals: QuarterlyFundamental[] = []
+  fundamentals: QuarterlyFundamental[] = [],
+  strategyParams?: StrategyParameters
 ): UniverseStockScanItem {
   const lagnaId = record.lagna_sign_id ?? 0;
   const lagnaLord = SIGN_LORDS[lagnaId] ?? 'mars';
@@ -187,32 +190,48 @@ export function scanSingleStock(
     navamshaSigns: navSigns,
   });
 
-  const confluence = evaluateConfluenceVectors(record, lagnaId, transitSigns, transitPositions);
+  const defenseThreshold = strategyParams?.kotaDefenseThreshold ?? 0.40;
+  const confluence = evaluateConfluenceVectors(record, lagnaId, transitSigns, transitPositions, defenseThreshold);
   const audit = auditBalanceSheetPIT(fundamentals, activeDate);
   const isVetoed = audit.phiFinancial === 0.0;
   const bar = createSyntheticBar(record.symbol, activeDate);
+
+  const sessionsToCusp = strategyParams?.cuspWindowSessions ?? Math.min(dasha?.pdRemainingDays ?? 5, 10);
+  const allowVry = strategyParams ? strategyParams.enableVryTurnaround && yogas.vry.hasVry : yogas.vry.hasVry;
+  const allowNbry = strategyParams ? strategyParams.enableNbryTurnaround && yogas.nbry.hasNbry : yogas.nbry.hasNbry;
+  const riskBudget = strategyParams?.riskBudgetFraction ?? 0.1;
+  const minPrice = strategyParams?.minNominalPrice ?? 0;
+  const severeDrawdown = strategyParams?.severeDrawdownPct ?? 1.0;
 
   const edge = detectEdgeSignals(bar, {
     mdCategory: mdRole,
     adCategory: adRole,
     pdCategory: pdRole,
-    sessionsToCusp: Math.min(dasha?.pdRemainingDays ?? 5, 10),
-    isVry: yogas.vry.hasVry,
+    sessionsToCusp,
+    isVry: allowVry,
     isFortressBreached: confluence.isKotaBreached,
     lords: { md: mdLord, ad: adLord, pd: pdLord },
   });
 
   const sizing = calculatePositionSize({
     portfolioEquity: 1000000,
-    riskBudgetFraction: 0.1,
+    riskBudgetFraction: riskBudget,
     omegaTrader: 1.0,
     phiFinancial: audit.phiFinancial,
     thetaAstro: edge.thetaAstro,
     currentPrice: bar.close,
   });
 
-  const isBlocked = isVetoed || sizing.allocationRupees <= 0 && edge.action === 'BUY';
-  const blockReason = isVetoed ? 'BLOCKED: Balance-sheet financial risk veto' : undefined;
+  const isPenny = minPrice > 0 && bar.close < minPrice;
+  const isSevereDrawdown = severeDrawdown < 1.0 && bar.drawdown < -severeDrawdown;
+  const isBlocked = isVetoed || isPenny || isSevereDrawdown || (sizing.allocationRupees <= 0 && edge.action === 'BUY');
+  const blockReason = isVetoed
+    ? 'BLOCKED: Balance-sheet financial risk veto'
+    : isPenny
+    ? `BLOCKED: Ex-ante penny-stock filter (₹${bar.close} < ₹${minPrice})`
+    : isSevereDrawdown
+    ? `BLOCKED: Ex-ante severe drawdown limit (-${Math.round(severeDrawdown * 100)}%)`
+    : undefined;
 
   return {
     symbol: record.symbol,
@@ -227,8 +246,8 @@ export function scanSingleStock(
     pdLord,
     daysToCusp: dasha?.pdRemainingDays ?? 0,
     activeYogas: yogas.activeYogaNames,
-    hasVry: yogas.vry.hasVry,
-    hasNbry: yogas.nbry.hasNbry,
+    hasVry: allowVry,
+    hasNbry: allowNbry,
     phiFinancial: audit.phiFinancial,
     signal: edge.signal,
     action: isBlocked ? 'HOLD' : edge.action,
@@ -243,7 +262,8 @@ export function scanSingleStock(
 export function scanUniverse(
   registry: Record<string, CorporateRegistryRecord>,
   activeDate: string,
-  fundamentalsMap: Record<string, QuarterlyFundamental[]> = {}
+  fundamentalsMap: Record<string, QuarterlyFundamental[]> = {},
+  strategyParams?: StrategyParameters
 ): UniverseScanSummary {
   const safeDate = activeDate && activeDate.length >= 10 ? activeDate : '2005-01-01';
   const transitSigns = calculateTransitSigns(safeDate);
@@ -258,7 +278,7 @@ export function scanUniverse(
 
   for (const record of Object.values(registry)) {
     const funds = fundamentalsMap[record.symbol] ?? [];
-    const item = scanSingleStock(record, safeDate, transitSigns, transitPositions, funds);
+    const item = scanSingleStock(record, safeDate, transitSigns, transitPositions, funds, strategyParams);
     items.push(item);
 
     triadDist[item.triadCode] = (triadDist[item.triadCode] ?? 0) + 1;

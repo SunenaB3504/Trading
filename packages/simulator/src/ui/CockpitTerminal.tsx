@@ -8,6 +8,7 @@ import React, { useMemo } from 'react';
 import { useSimulationStore } from '../state/simulationStore';
 import { useStockStore } from '../state/stockStore';
 import { usePortfolioStore } from '../state/portfolioStore';
+import { useStrategyStore } from '../state/strategyStore';
 import { TopNavigationBar } from './layout/TopNavigationBar';
 import { BottomStatusBar } from './layout/BottomStatusBar';
 import { PriceCandleCanvas } from './components/chart/PriceCandleCanvas';
@@ -22,7 +23,7 @@ import { CopilotChatCard } from './components/copilot/CopilotChatCard';
 import { DailyActionFeed } from './components/screener/DailyActionFeed';
 import { UniverseRadarModal } from './components/screener/UniverseRadarModal';
 import { HoroscopeDossierModal } from './components/astro/HoroscopeDossierModal';
-import { StrategyParameterDrawer, DEFAULT_STRATEGY_PARAMETERS, type StrategyParameters } from './components/settings/StrategyParameterDrawer';
+import { StrategyParameterDrawer, type StrategyParameters } from './components/settings/StrategyParameterDrawer';
 import { evaluateKotaChakra } from '../core/astro/kotaChakra';
 import { calculateTransitNakshatras } from '../core/astro/ephemeris';
 import { NAKSHATRAS } from '../core/astro/constants';
@@ -116,7 +117,8 @@ function deriveTradeTicket(
   isBreached: boolean,
   dashaState: ActiveDashaState | null,
   metadata: CorporateRegistryRecord | null,
-  activeDate?: string
+  activeDate?: string,
+  strategyParams?: StrategyParameters
 ): MasterTradeTicket | null {
   if (!bar) return null;
 
@@ -129,7 +131,7 @@ function deriveTradeTicket(
     mdCategory,
     adCategory,
     pdCategory,
-    sessionsToCusp: 2,
+    sessionsToCusp: strategyParams?.cuspWindowSessions ?? 2,
     isVry: false,
     isFortressBreached: isBreached,
     lords: dashaState
@@ -143,7 +145,7 @@ function deriveTradeTicket(
 
   const sizing = calculatePositionSize({
     portfolioEquity: totalEquity,
-    riskBudgetFraction: 0.1,
+    riskBudgetFraction: strategyParams?.riskBudgetFraction ?? 0.1,
     omegaTrader: 1.0,
     phiFinancial,
     thetaAstro: edge.thetaAstro,
@@ -152,6 +154,14 @@ function deriveTradeTicket(
 
   const cuspExitDate = activeDate && activeDate > bar.date ? activeDate : '2026-12-31';
   const ticket = synthesizeTradeTicket(bar, edge, sizing, cuspExitDate);
+
+  if (strategyParams) {
+    if (bar.close < strategyParams.minNominalPrice) {
+      ticket.action = 'HOLD';
+      ticket.shares = 0;
+      ticket.provenance.reason = `[VETO: NOMINAL PRICE ₹${bar.close.toFixed(2)} < MIN ₹${strategyParams.minNominalPrice}] ${ticket.provenance.reason}`;
+    }
+  }
 
   if (activeDate && activeDate > bar.date) {
     return {
@@ -180,6 +190,7 @@ function useCockpitTelemetryState() {
   const { currentIndex, activeDate } = useSimulationStore();
   const { bars, activeBar, metadata, activeSymbol } = useStockStore();
   const { ledger, executeOrder } = usePortfolioStore();
+  const strategyParams = useStrategyStore((s) => s.parameters);
 
   const resolvedMeta = metadata ?? corporateRegistry[activeSymbol] ?? corporateRegistry['TCS'] ?? null;
 
@@ -199,17 +210,20 @@ function useCockpitTelemetryState() {
     return auditBalanceSheetPIT(symFund, activeDate);
   }, [activeBar?.symbol, activeSymbol, activeDate]);
 
+  const isFortressBreached = kotaState.defenseScore < strategyParams.kotaDefenseThreshold;
+
   const tradeTicket = useMemo(
     () => deriveTradeTicket(
       activeBar,
       ledger.total_equity,
       auditResult.phiFinancial,
-      kotaState.defenseScore < 0.35,
+      isFortressBreached,
       dashaState,
       resolvedMeta,
-      activeDate
+      activeDate,
+      strategyParams
     ),
-    [activeBar, ledger.total_equity, auditResult.phiFinancial, kotaState.defenseScore, dashaState, resolvedMeta, activeDate]
+    [activeBar, ledger.total_equity, auditResult.phiFinancial, isFortressBreached, dashaState, resolvedMeta, activeDate, strategyParams]
   );
 
   const telemetry = useMemo(() => serializeCockpitState({
@@ -235,7 +249,6 @@ export const CockpitTerminal: React.FC = () => {
   const [isRadarOpen, setIsRadarOpen] = React.useState(false);
   const [isHoroscopeOpen, setIsHoroscopeOpen] = React.useState(false);
   const [isStrategyOpen, setIsStrategyOpen] = React.useState(false);
-  const [strategyParams, setStrategyParams] = React.useState<StrategyParameters>(DEFAULT_STRATEGY_PARAMETERS);
 
   const availableTickers = useMemo(() => Object.keys(corporateRegistry), []);
 
@@ -300,8 +313,6 @@ export const CockpitTerminal: React.FC = () => {
       <StrategyParameterDrawer
         isOpen={isStrategyOpen}
         onClose={() => setIsStrategyOpen(false)}
-        parameters={strategyParams}
-        onSaveParameters={setStrategyParams}
       />
     </div>
   );
