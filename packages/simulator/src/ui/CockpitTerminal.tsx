@@ -13,6 +13,7 @@ import { BottomStatusBar } from './layout/BottomStatusBar';
 import { PriceCandleCanvas } from './components/chart/PriceCandleCanvas';
 import { ChartControls } from './components/chart/ChartControls';
 import { DashaRibbon } from './components/chart/DashaRibbon';
+import { ForwardRoadmapStrip } from './components/chart/ForwardRoadmapStrip';
 import { KotaRadarCard } from './components/astro/KotaRadarCard';
 import { TrikonaNathansBadge } from './components/astro/TrikonaNathansBadge';
 import { FinancialAuditCard } from './components/financial/FinancialAuditCard';
@@ -46,12 +47,16 @@ function LeftChartPanel({
   dashaState,
   activeDate,
   metadata,
+  onSelectDate,
+  onSyncLatestSession,
 }: {
   bars: DailyBar[];
   currentIndex: number;
   dashaState: ActiveDashaState | null;
   activeDate: string;
   metadata: CorporateRegistryRecord | null;
+  onSelectDate: (targetDate: string) => void;
+  onSyncLatestSession?: () => void;
 }): React.ReactElement {
   return (
     <section style={{ display: 'flex', flexDirection: 'column', borderRight: '1px solid #1E2638' }}>
@@ -60,6 +65,12 @@ function LeftChartPanel({
       <div style={{ flex: 1, position: 'relative', background: '#0B0E14', padding: '10px', minHeight: 0 }}>
         <PriceCandleCanvas bars={bars} currentIndex={currentIndex} activeDate={activeDate} />
       </div>
+      <ForwardRoadmapStrip
+        metadata={metadata}
+        activeDate={activeDate}
+        onSelectDate={onSelectDate}
+        onSyncLatestSession={onSyncLatestSession}
+      />
       <ChartControls />
     </section>
   );
@@ -246,7 +257,18 @@ export const CockpitTerminal: React.FC = () => {
         availableTickers={availableTickers}
       />
       <main style={{ flex: 1, display: 'grid', gridTemplateColumns: '1.6fr 1.2fr', overflow: 'hidden' }}>
-        <LeftChartPanel bars={bars} currentIndex={currentIndex} dashaState={dashaState} activeDate={activeDate} metadata={metadata} />
+        <LeftChartPanel
+          bars={bars}
+          currentIndex={currentIndex}
+          dashaState={dashaState}
+          activeDate={activeDate}
+          metadata={metadata}
+          onSelectDate={(d) => loadStock(metadata?.symbol ?? 'TCS', d)}
+          onSyncLatestSession={() => {
+            const latest = bars[bars.length - 1];
+            if (latest) loadStock(metadata?.symbol ?? 'TCS', latest.date);
+          }}
+        />
         <RightTelemetryPanel
           ticket={tradeTicket}
           onOrder={handleOrder}

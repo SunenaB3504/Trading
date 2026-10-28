@@ -65,3 +65,4 @@ describe('useStockStore & Forward Date Anchoring', () => {
     expect(stock.activeBar).not.toBeNull();
   });
 });
+
