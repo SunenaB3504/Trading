@@ -29,14 +29,30 @@ function AppBootstrap(): React.ReactElement {
     setMetadata(meta);
     setTotalSessions(bars.length);
 
-    // Position cursor around session 250 (approx 1 year into listing) so user can play immediately
-    const startIdx = Math.min(bars.length - 1, Math.max(0, 250));
-    setCurrentIndex(startIdx);
-    syncActiveBar(startIdx);
+    // Date Snapping: Snap cursor to current activeDate if available; fallback to session 250
+    const currentDate = useSimulationStore.getState().activeDate;
+    let targetIdx = -1;
 
-    const active = bars[startIdx];
-    if (active) {
-      setActiveDate(active.date);
+    if (currentDate && currentDate.length >= 10 && bars.length > 0) {
+      targetIdx = bars.findIndex((b) => b.date >= currentDate);
+      if (targetIdx === -1) {
+        // If current date is past the end of the stock's bars, position at the last available bar
+        targetIdx = bars.length - 1;
+      }
+    }
+
+    if (targetIdx === -1 && bars.length > 0) {
+      // Default to session 250 (~1 year into listing) for initial uninitialized launch
+      targetIdx = Math.min(bars.length - 1, Math.max(0, 250));
+    }
+
+    if (targetIdx >= 0) {
+      setCurrentIndex(targetIdx);
+      syncActiveBar(targetIdx);
+      const active = bars[targetIdx];
+      if (active) {
+        setActiveDate(active.date);
+      }
     }
   }, [activeSymbol, setBars, setMetadata, setTotalSessions, setCurrentIndex, syncActiveBar, setActiveDate]);
 

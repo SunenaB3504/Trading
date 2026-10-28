@@ -122,3 +122,4 @@ function KotaSummaryCard({ kota }: { kota: any }) {
     </div>
   );
 }
+

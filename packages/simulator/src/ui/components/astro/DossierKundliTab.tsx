@@ -132,3 +132,4 @@ function getDignityLabel(p: PlanetKey, sign: number): { text: string; style: Rea
   }
   return { text: 'NEUTRAL', style: { backgroundColor: '#1E293B', color: '#94A3B8' } };
 }
+

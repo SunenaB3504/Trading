@@ -160,3 +160,4 @@ function ScheduleTable({ entries }: { entries: DashaEpochScheduleEntry[] }) {
     </table>
   );
 }
+
