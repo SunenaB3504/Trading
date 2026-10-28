@@ -7,7 +7,7 @@ import type { Greeks } from './model';
 
 const TICK = 5;
 const RATE = FNO_FACTS.rateBps / 10_000;
-const roundTick = (paise: number): number => Math.round(paise / TICK) * TICK;
+const roundTick = (paise: number, tick: number = TICK): number => Math.round(paise / tick) * tick;
 
 /** Realised volatility of the last 20 daily moves, yearly, kept between 10% and 60%; 18% with too little history. */
 export function baseVol(data: FnoData, u: UnderlyingId, date: string): number {
@@ -49,8 +49,9 @@ export function quote(c: Contract, data: FnoData, date: string, field: SpotField
   const spot = data.spot(c.u, date, field);
   if (spot === null) return null;
   const years = yearsLeft(date, c.expiry, field);
-  const forward = spot * Math.exp(RATE * years);
-  if (c.kind === 'FUT') return { paise: roundTick(forward), spot, vol: null, greeks: null };
+  const spec = UNDERLYINGS[c.u];
+  const forward = spot * Math.exp((spec.carryBps / 10_000) * years);
+  if (c.kind === 'FUT') return { paise: roundTick(forward, spec.tickPaise), spot, vol: null, greeks: null };
   const strike = (c.strike as number) * 100;
   const prior = field === 'open' ? prevDate(data, date) : date;
   const base = baseVol(data, c.u, prior);

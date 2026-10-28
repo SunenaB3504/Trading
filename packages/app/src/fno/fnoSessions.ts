@@ -1,9 +1,10 @@
-import { FNO_FACTS, fnoDataFrom } from '@trading/core';
-import type { BarUnadj, FnoData, FnoOrder, UnderlyingId } from '@trading/core';
+import { FNO_FACTS, fnoDataFrom, withUnderlyings } from '@trading/core';
+import type { BarUnadj, FnoData, FnoOrder, PriceBar, UnderlyingId } from '@trading/core';
 import { TM_PREFIX } from '../backup/backupService';
 import { getStamped, putStamped } from '../store/kv';
 import type { KeyValueStore } from '../store/kv';
 import type { Market } from '../trading/market';
+import { USDINR_ROWS } from './usdinr.generated';
 
 /** The saved list of a profile's futures and options sessions, under the Time Machine prefix so a backup carries it. */
 export const FNO_KEY = `${TM_PREFIX}fno`;
@@ -64,7 +65,21 @@ export function fnoDataOf(real: Market | null): FnoData | null {
   };
   const nifty = barsOf('NIFTYBEES');
   const bank = barsOf('BANKBEES');
-  return nifty === null || bank === null ? null : fnoDataFrom({ NIFTY: nifty, BANKNIFTY: bank });
+  if (nifty === null || bank === null) return null;
+  const index = fnoDataFrom({ NIFTY: nifty, BANKNIFTY: bank });
+  return withUnderlyings(index, fnoDataFrom({ USDINR: usdInrOn(index.dates) }));
+}
+
+/** The dollar-rupee rate on each exchange session, in paise a dollar; a day with no rate takes the last one before it. */
+export function usdInrOn(dates: readonly string[]): PriceBar[] {
+  const out: PriceBar[] = [];
+  let at = -1;
+  for (const date of dates) {
+    while (at + 1 < USDINR_ROWS.length && (USDINR_ROWS[at + 1] as readonly [string, number, number])[0] <= date) at += 1;
+    const row = USDINR_ROWS[at];
+    if (row !== undefined) out.push({ date, open: Math.round(row[1] / 100), close: Math.round(row[2] / 100) });
+  }
+  return out;
 }
 
 /** The session `n` steps after `current`, never past `end`; `current` itself when there is none. */

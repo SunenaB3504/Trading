@@ -40,7 +40,7 @@ import { fundsNote, useFunds } from './trading/useFunds';
 import { useMarkets } from './trading/useMarkets';
 import type { Markets } from './trading/useMarkets';
 import { MarketSwitch } from './ui/MarketSwitch';
-import type { FundsMarket, UnderlyingId } from '@trading/core';
+import type { FundsMarket, IndexUnderlyingId } from '@trading/core';
 import { fnoDataOf } from './fno/fnoSessions';
 import type { KeyValueStore } from './store/kv';
 import { colors } from './ui/Section';
@@ -139,7 +139,7 @@ function Practise(props: { env: TutorEnv; kv: KeyValueStore; now: () => number; 
   const { kv, now, markets, funds, env } = props;
   const market = markets.market;
   const fnoData = useMemo(() => fnoDataOf(markets.real), [markets.real]);
-  const spotOf = (u: UnderlyingId): number | null => {
+  const spotOf = (u: IndexUnderlyingId): number | null => {
     const last = fnoData?.dates[fnoData.dates.length - 1];
     const level = last === undefined ? null : (fnoData?.spot(u, last, 'close') ?? null);
     return level === null ? null : level / 100;

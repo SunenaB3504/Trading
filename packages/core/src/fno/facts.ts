@@ -6,24 +6,37 @@ import type { BarUnadj } from '../domain/market';
  */
 export const FNO_FACTS_AS_OF = '2026-10-24';
 
-export type UnderlyingId = 'NIFTY' | 'BANKNIFTY';
+export type UnderlyingId = 'NIFTY' | 'BANKNIFTY' | 'USDINR';
+/** The underlyings with options as well as futures. */
+export type IndexUnderlyingId = Exclude<UnderlyingId, 'USDINR'>;
 
 export interface UnderlyingSpec {
   id: UnderlyingId;
   label: string;
+  /** Units in one lot: index units, or US dollars for USDINR. */
   lot: number;
-  /** Gap between strikes in rupees. */
+  /** Gap between strikes in rupees (0 when there are no options). */
   step: number;
   /** The exchange-traded fund whose price stands in for the index, and the multiple to turn it into index points. */
   etf: string;
   factor: number;
   /** Weekly contracts expire on this weekday (0 = Sunday); monthly contracts on its last one in the month. */
   weekly: boolean;
+  /** True when only futures are traded (currency). */
+  futuresOnly: boolean;
+  /** Smallest price step, in paise. */
+  tickPaise: number;
+  /** Futures margin as a share of contract value, in basis points. */
+  marginBps: number;
+  /** Yearly cost of carry for the futures price, in basis points. */
+  carryBps: number;
 }
 
 export const UNDERLYINGS: Readonly<Record<UnderlyingId, UnderlyingSpec>> = {
-  NIFTY: { id: 'NIFTY', label: 'Nifty 50', lot: 65, step: 50, etf: 'NIFTYBEES', factor: 100, weekly: true },
-  BANKNIFTY: { id: 'BANKNIFTY', label: 'Bank Nifty', lot: 30, step: 100, etf: 'BANKBEES', factor: 100, weekly: false },
+  NIFTY: { id: 'NIFTY', label: 'Nifty 50', lot: 65, step: 50, etf: 'NIFTYBEES', factor: 100, weekly: true, futuresOnly: false, tickPaise: 5, marginBps: 1_200, carryBps: 650 },
+  BANKNIFTY: { id: 'BANKNIFTY', label: 'Bank Nifty', lot: 30, step: 100, etf: 'BANKBEES', factor: 100, weekly: false, futuresOnly: false, tickPaise: 5, marginBps: 1_200, carryBps: 650 },
+  /** US dollar against the rupee: 1,000 dollars a lot, price in paise a dollar (the exchange tick is 0.25 paise; here one paisa). */
+  USDINR: { id: 'USDINR', label: 'USD/INR', lot: 1_000, step: 0, etf: '', factor: 1, weekly: false, futuresOnly: true, tickPaise: 1, marginBps: 300, carryBps: 250 },
 };
 
 /** Tuesday: the expiry weekday reported for 2026. */
@@ -48,11 +61,14 @@ export const FNO_FACTS = {
     gstPct: 18,
     futuresStampBuyPpm: 20,
     optionsStampBuyPpm: 30,
+    /** Currency futures: no STT; exchange charge and stamp duty, approximate. */
+    currencyExchangePpm: 4,
+    currencyStampBuyPpm: 1,
   },
 } as const;
 
 export const FNO_CAVEATS =
-  'Prices here are modelled from the closing and opening price of the Nifty and Bank Nifty exchange-traded funds with a volatility taken from recent moves. They are not exchange prices. Lot sizes, margins and charges are approximate values as of ' +
+  'Prices here are modelled from the closing and opening price of the Nifty and Bank Nifty exchange-traded funds with a volatility taken from recent moves. The USD/INR rate is the daily rate from a public data source, not the exchange. They are not exchange prices. Lot sizes, margins and charges are approximate values as of ' +
   FNO_FACTS_AS_OF +
   '.';
 
@@ -71,28 +87,44 @@ export interface FnoData {
   closes(u: UnderlyingId, date: string, count: number): number[];
 }
 
-/** Builds the data view from the bars of each underlying's fund. */
-export function fnoDataFrom(bars: Readonly<Record<UnderlyingId, readonly BarUnadj[]>>): FnoData {
-  const index = (u: UnderlyingId): Map<string, number> => new Map((bars[u] ?? []).map((b, i) => [b.date, i]));
-  const at = { NIFTY: index('NIFTY'), BANKNIFTY: index('BANKNIFTY') };
-  const dates = (bars.NIFTY ?? []).map((b) => b.date).filter((d) => at.BANKNIFTY.has(d));
+/** The two prices the model reads from a day's bar. */
+export type PriceBar = Pick<BarUnadj, 'date' | 'open' | 'close'>;
+
+/** Builds the data view from the bars of each underlying's fund or rate; the sessions are those every one of them has. */
+export function fnoDataFrom(bars: Readonly<Partial<Record<UnderlyingId, readonly PriceBar[]>>>): FnoData {
+  const given = (Object.keys(bars) as UnderlyingId[]).filter((u) => (bars[u]?.length ?? 0) > 0);
+  const at = new Map(given.map((u) => [u, new Map((bars[u] ?? []).map((b, i) => [b.date, i]))]));
+  const first = given[0];
+  const dates = first === undefined ? [] : (bars[first] ?? []).map((b) => b.date).filter((d) => given.every((u) => at.get(u)?.has(d) === true));
   return {
     dates,
     spot(u, date, field) {
-      const i = at[u].get(date);
-      const bar = i === undefined ? undefined : bars[u][i];
+      const i = at.get(u)?.get(date);
+      const bar = i === undefined ? undefined : bars[u]?.[i];
       return bar === undefined ? null : indexPaise(UNDERLYINGS[u], bar[field]);
     },
     closes(u, date, count) {
-      const list = bars[u];
+      const list = bars[u] ?? [];
       let hi = list.length;
       let lo = 0;
       while (lo < hi) {
         const mid = (lo + hi) >> 1;
-        if ((list[mid] as BarUnadj).date <= date) lo = mid + 1;
+        if ((list[mid] as PriceBar).date <= date) lo = mid + 1;
         else hi = mid;
       }
       return list.slice(Math.max(0, lo - count), lo).map((b) => indexPaise(UNDERLYINGS[u], b.close));
+    },
+  };
+}
+
+/** Two views joined: the sessions are the first one's, and a price comes from the second where it has one. */
+export function withUnderlyings(base: FnoData, extra: FnoData): FnoData {
+  return {
+    dates: base.dates,
+    spot: (u, date, field) => extra.spot(u, date, field) ?? base.spot(u, date, field),
+    closes: (u, date, count) => {
+      const e = extra.closes(u, date, count);
+      return e.length > 0 ? e : base.closes(u, date, count);
     },
   };
 }

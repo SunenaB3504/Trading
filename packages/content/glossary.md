@@ -84,3 +84,14 @@
 | Iron condor | A short strangle with bought options further out to cap the loss | options-and-payoffs |
 | Expiry | The last day a contract exists | expiry-and-settlement |
 | Cash settlement | Paying the difference in money, with no shares moving | expiry-and-settlement |
+| Currency future | A contract on an exchange rate, such as rupees per US dollar | currency-and-commodities |
+| USD/INR | The price of one US dollar in rupees | currency-and-commodities, global-forces |
+| Commodity | A traded good such as gold, silver or crude oil | currency-and-commodities |
+| Yield to maturity | The yearly return if you buy at today's price and hold the bond to maturity | rates-and-the-bond-seesaw |
+| Modified duration | The approximate percent change in a bond price for a one point change in yield | rates-and-the-bond-seesaw |
+| Capital gain | The profit when you sell an asset for more than you paid | tax-for-traders |
+| Cess | An extra percentage of tax added on top of the tax | tax-for-traders |
+| Carry forward | Using an unused loss against gains in later years | tax-for-traders |
+| Pump and dump | Hyping a small stock, then selling to the crowd | scams-and-false-promises |
+| Ponzi scheme | Returns paid out of new deposits, not from real profit | scams-and-false-promises |
+| SCORES | SEBI's online portal for investor complaints | scams-and-false-promises, investor-protection |

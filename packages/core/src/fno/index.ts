@@ -1,5 +1,5 @@
-export { FNO_CAVEATS, FNO_FACTS, FNO_FACTS_AS_OF, UNDERLYINGS, fnoDataFrom, indexPaise } from './facts';
-export type { FnoData, SpotField, UnderlyingId, UnderlyingSpec } from './facts';
+export { FNO_CAVEATS, FNO_FACTS, FNO_FACTS_AS_OF, UNDERLYINGS, fnoDataFrom, indexPaise, withUnderlyings } from './facts';
+export type { FnoData, IndexUnderlyingId, PriceBar, SpotField, UnderlyingId, UnderlyingSpec } from './facts';
 export { greeks, impliedVol, intrinsic, normCdf, price as optionPrice } from './model';
 export type { Greeks, Inputs as OptionInputs, OptionKind } from './model';
 export { contractId, contractName, daysTo, futureExpiries, isListed, optionExpiries, parseContract, strikesAround } from './contracts';

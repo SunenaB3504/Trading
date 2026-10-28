@@ -67,19 +67,17 @@ function Cell({ c, data, date, picked, onPick }: { c: Contract; data: FnoData; d
   );
 }
 
-function Chain({ session, data, picked, onPick }: { session: FnoSession; data: FnoData; picked: string | null; onPick: (id: string) => void }) {
-  const [u, setU] = useState<UnderlyingId>(session.underlyings[0] ?? 'NIFTY');
+function OptionRows({ u, session, data, picked, onPick }: { u: UnderlyingId; session: FnoSession; data: FnoData; picked: string | null; onPick: (id: string) => void }) {
   const expiries = optionExpiries(u, session.current);
   const [chosen, setExpiry] = useState<number | null>(null);
   const firstFar = Math.max(0, expiries.findIndex((x) => daysTo(session.current, x) >= 5));
   const e = expiries[Math.min(chosen ?? firstFar, expiries.length - 1)] ?? '';
   const spot = (data.spot(u, session.current, 'close') ?? 0) / 100;
   const labels = Object.fromEntries(expiries.map((x) => [x, `${x} (${String(daysTo(session.current, x))} d)`]));
+  if (UNDERLYINGS[u].futuresOnly) return null;
   return (
-    <Section title="Option chain (modelled prices)">
-      {session.underlyings.length > 1 ? <Choice label="Index" value={u} options={session.underlyings} labels={{ NIFTY: 'Nifty 50', BANKNIFTY: 'Bank Nifty' }} onChange={(x) => { setU(x); setExpiry(null); }} testID="chain-index" /> : null}
+    <>
       <Choice label="Expiry" value={e} options={expiries} labels={labels} onChange={(x) => setExpiry(expiries.indexOf(x))} testID="chain-expiry" />
-      <Text style={styles.spot} testID="chain-spot">{`${UNDERLYINGS[u].label} at the close: ${spot.toLocaleString('en-IN', { maximumFractionDigits: 2 })}. ${lotOf(u)} units a lot.`}</Text>
       <View style={styles.chainHead}><Text style={styles.cellHead}>Call (CE)</Text><Text style={styles.strike}>Strike</Text><Text style={styles.cellHead}>Put (PE)</Text></View>
       {strikesAround(u, spot, 5).map((k) => (
         <View key={k} style={styles.chainRow}>
@@ -88,8 +86,20 @@ function Chain({ session, data, picked, onPick }: { session: FnoSession; data: F
           <Cell c={{ u, kind: 'PE', expiry: e, strike: k }} data={data} date={session.current} picked={picked} onPick={onPick} />
         </View>
       ))}
+    </>
+  );
+}
+
+function Chain({ session, data, picked, onPick }: { session: FnoSession; data: FnoData; picked: string | null; onPick: (id: string) => void }) {
+  const [u, setU] = useState<UnderlyingId>(session.underlyings[0] ?? 'NIFTY');
+  const spot = (data.spot(u, session.current, 'close') ?? 0) / 100;
+  return (
+    <Section title={UNDERLYINGS[u].futuresOnly ? 'Futures (modelled prices)' : 'Option chain (modelled prices)'}>
+      {session.underlyings.length > 1 ? <Choice label="Underlying" value={u} options={session.underlyings} labels={{ NIFTY: 'Nifty 50', BANKNIFTY: 'Bank Nifty', USDINR: 'USD/INR' }} onChange={setU} testID="chain-index" /> : null}
+      <Text style={styles.spot} testID="chain-spot">{`${UNDERLYINGS[u].label} at the close: ${spot.toLocaleString('en-IN', { maximumFractionDigits: 2 })}. ${lotOf(u)} ${u === 'USDINR' ? 'dollars' : 'units'} a lot.`}</Text>
+      <OptionRows u={u} session={session} data={data} picked={picked} onPick={onPick} />
       <View style={styles.bar}>
-        {futureExpiries(session.current).map((x) => (
+        {futureExpiries(session.current, u).map((x) => (
           <Button key={x} label={`Future ${x}`} quiet onPress={() => onPick(contractId({ u, kind: 'FUT', expiry: x, strike: null }))} testID={`chain-FUT-${x}`} />
         ))}
       </View>

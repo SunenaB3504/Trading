@@ -1,5 +1,6 @@
 import { FNO_FACTS } from './facts';
 import type { ContractKind } from './contracts';
+import type { UnderlyingId } from './facts';
 
 export interface FnoCosts {
   brokeragePaise: number;
@@ -17,9 +18,15 @@ const ppm = (paise: number, parts: number): number => Math.round((paise * parts)
  * exchange charge, GST on brokerage and exchange charge, and stamp duty on the buy side. `turnoverPaise` is the
  * price times the units traded.
  */
-export function fnoCosts(kind: ContractKind, side: 'buy' | 'sell', turnoverPaise: number): FnoCosts {
+export function fnoCosts(kind: ContractKind, side: 'buy' | 'sell', turnoverPaise: number, u: UnderlyingId = 'NIFTY'): FnoCosts {
   const c = FNO_FACTS.costs;
   const fut = kind === 'FUT';
+  if (u === 'USDINR') {
+    const exchange = ppm(turnoverPaise, c.currencyExchangePpm);
+    const gst = Math.round(((c.brokeragePaise + exchange) * c.gstPct) / 100);
+    const stamp = side === 'buy' ? ppm(turnoverPaise, c.currencyStampBuyPpm) : 0;
+    return { brokeragePaise: c.brokeragePaise, sttPaise: 0, exchangePaise: exchange, gstPaise: gst, stampPaise: stamp, totalPaise: c.brokeragePaise + exchange + gst + stamp };
+  }
   const brokeragePaise = c.brokeragePaise;
   const sttPaise = side === 'sell' ? ppm(turnoverPaise, fut ? c.futuresSttSellPpm : c.optionsSttSellPpm) : 0;
   const exchangePaise = ppm(turnoverPaise, fut ? c.futuresExchangePpm : c.optionsExchangePpm);

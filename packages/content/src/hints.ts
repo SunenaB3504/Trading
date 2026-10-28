@@ -22,6 +22,7 @@ export const HINTS: Record<string, Hint> = {
   lab: { text: 'Test the rules on past prices, but do not keep changing the settings until the past looks good. That is overfitting.', lesson: 'rules-and-overfitting' },
   robo: { text: 'These accounts follow fixed rules and are brought up to date session by session. Compare them with the Index Benchmark, not with each other only.', lesson: 'rules-and-overfitting' },
   fno: { text: 'A lot controls far more than you put up. Before you open a position, work out what a 5% move against you costs in rupees.', lesson: 'leverage-costs-and-tax' },
+  currency: { text: 'A currency moves little each day, so the margin is small and the lots pile up. Size by what a two-rupee move costs.', lesson: 'currency-and-commodities' },
   optionslab: { text: 'The picture shows one moment. Slide the days and the volatility and watch how time and volatility change an option you did not touch.', lesson: 'option-price-and-greeks' },
   tax: { text: 'Tax is a cost on your gains. How long you held, and whether you traded shares or futures and options, changes the rate.', lesson: 'leverage-costs-and-tax' },
   bonds: { text: 'When yields rise, bond prices fall. The longer the bond, the bigger the move. Duration puts a number on it.', lesson: 'bonds-and-debt-funds' },

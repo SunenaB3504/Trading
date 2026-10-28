@@ -1,11 +1,11 @@
 import { FNO_FACTS, UNDERLYINGS, greeks, optionPrice, strategyLegs } from '@trading/core';
-import type { Leg, StrategyId, UnderlyingId } from '@trading/core';
+import type { IndexUnderlyingId, Leg, StrategyId } from '@trading/core';
 
 export const RATE = FNO_FACTS.rateBps / 10_000;
 
 export interface LabInputs {
   strategy: StrategyId;
-  index: UnderlyingId;
+  index: IndexUnderlyingId;
   spot: number;
   volPct: number;
   days: number;

@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { STRATEGIES, UNDERLYINGS, analyse, payoffAtExpiry, payoffToday } from '@trading/core';
-import type { Analysis, Leg, StrategyId, UnderlyingId } from '@trading/core';
+import type { Analysis, IndexUnderlyingId, Leg, StrategyId } from '@trading/core';
 import { RATE, labGreeks, labLegs } from '../fno/optionsLab';
 import type { LabInputs } from '../fno/optionsLab';
 import { Button } from '../ui/Button';
@@ -9,7 +9,7 @@ import { CoachHint } from '../ui/CoachHint';
 import { Note, Row, Section, colors } from '../ui/Section';
 import { Choice, Field } from './TradeScreen';
 
-const DEFAULT_SPOT: Record<UnderlyingId, number> = { NIFTY: 22_600, BANKNIFTY: 51_000 };
+const DEFAULT_SPOT: Record<IndexUnderlyingId, number> = { NIFTY: 22_600, BANKNIFTY: 51_000 };
 const POINTS = 41;
 const HEIGHT = 120;
 
@@ -48,9 +48,9 @@ function Summary({ a, legs, lot }: { a: Analysis; legs: readonly Leg[]; lot: num
 const numberOr = (text: string, fallback: number): number => (Number.isFinite(Number(text)) && text.trim() !== '' ? Number(text) : fallback);
 
 /** Practise, Options Lab (SSD v4.1 §5.6): payoff today and at expiry for a ready-made strategy, with Greeks. */
-export function OptionsLabScreen({ spotOf }: { spotOf?: (u: UnderlyingId) => number | null }) {
+export function OptionsLabScreen({ spotOf }: { spotOf?: (u: IndexUnderlyingId) => number | null }) {
   const [strategy, setStrategy] = useState<StrategyId>('long_call');
-  const [index, setIndex] = useState<UnderlyingId>('NIFTY');
+  const [index, setIndex] = useState<IndexUnderlyingId>('NIFTY');
   const [spotText, setSpotText] = useState(String(Math.round(spotOf?.('NIFTY') ?? DEFAULT_SPOT.NIFTY)));
   const [vol, setVol] = useState(18);
   const [days, setDays] = useState(30);
@@ -63,7 +63,7 @@ export function OptionsLabScreen({ spotOf }: { spotOf?: (u: UnderlyingId) => num
     const t = { days: Math.max(days, 0), vol: vol / 100, rate: RATE };
     return { legs, lot, a: analyse(legs, lot, inputs.spot), expiry: xs.map((x) => payoffAtExpiry(legs, x, lot)), today: xs.map((x) => payoffToday(legs, x, lot, t)), g: labGreeks(legs, inputs) };
   }, [strategy, index, spotText, vol, days, lotsText]);
-  const pickIndex = (u: UnderlyingId) => {
+  const pickIndex = (u: IndexUnderlyingId) => {
     setIndex(u);
     setSpotText(String(Math.round(spotOf?.(u) ?? DEFAULT_SPOT[u])));
   };

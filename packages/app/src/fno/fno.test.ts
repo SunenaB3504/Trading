@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { contractId, parseLearningMarket, simulateFno } from '@trading/core';
+import { contractId, futureExpiries, parseLearningMarket, simulateFno } from '@trading/core';
 import type { FnoOrder } from '@trading/core';
 import { FNO_SCENARIOS } from '@trading/content';
 import { describe, expect, it } from 'vitest';
@@ -131,5 +131,18 @@ describe('Options Lab numbers', () => {
 
   it('lots scale every leg', () => {
     expect(labLegs({ ...base, lots: 3 }).map((l) => l.qty)).toEqual([3, 3]);
+  });
+});
+
+describe('USD/INR sessions', () => {
+  it('a rupee future buys at the next open, marks each close, and a long lot moves with the rate', () => {
+    const sc = FNO_SCENARIOS.find((s) => s.id === 'fno-rupee-2022')!;
+    const r = snapRange(DATA, sc.start, sc.end)!;
+    const expiry = futureExpiries(r.start, 'USDINR')[1]!;
+    const fut = contractId({ u: 'USDINR', kind: 'FUT', expiry, strike: null });
+    const run = simulateFno(DATA, [{ id: 'o1', date: r.start, contract: fut, side: 'buy', lots: 2 }], r.start, r.end);
+    expect(run.outcomes.o1?.status).toBe('filled');
+    expect(run.curve.length).toBeGreaterThan(10);
+    expect(allMet(goalResults(sc, run, 100_000_000))).toBe(true);
   });
 });

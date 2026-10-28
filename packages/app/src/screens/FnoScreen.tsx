@@ -4,6 +4,7 @@ import { FNO_SCENARIOS } from '@trading/content';
 import type { FnoScenario } from '@trading/content';
 import { addDays } from '@trading/core';
 import type { FnoData } from '@trading/core';
+import { USDINR_FROM } from '../fno/usdinr.generated';
 import { createFno, deleteFno, fnoDataOf, listFno, saveFno, snapRange } from '../fno/fnoSessions';
 import type { FnoSession } from '../fno/fnoSessions';
 import type { KeyValueStore } from '../store/kv';
@@ -101,7 +102,7 @@ export function FnoScreen({ kv, now, real }: { kv: KeyValueStore; now: () => num
   const startFree = (from: string, to: string): string | null => {
     const range = snapRange(data, from, to);
     if (range === null) return 'There are fewer than two sessions with prices in that period.';
-    void start(`Free session ${range.start} to ${range.end}`, null, ['NIFTY', 'BANKNIFTY'], range);
+    void start(`Free session ${range.start} to ${range.end}`, null, range.start >= USDINR_FROM ? ['NIFTY', 'BANKNIFTY', 'USDINR'] : ['NIFTY', 'BANKNIFTY'], range);
     return null;
   };
   const startScenario = (s: FnoScenario) => {

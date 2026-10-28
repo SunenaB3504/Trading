@@ -87,7 +87,7 @@ export function applyFill(s: FnoState, c: Contract, side: 'buy' | 'sell', lots: 
   const dir = side === 'buy' ? 1 : -1;
   const old = positionOf(s, id);
   const held = old?.lots ?? 0;
-  const costs = fnoCosts(c.kind, side, price * units).totalPaise;
+  const costs = fnoCosts(c.kind, side, price * units, c.u).totalPaise;
   const position: Position = { id, lots: held + dir * lots, avgPaise: nextAverage(old, held, dir, lots, price), markPaise: price };
   const trade: FnoTrade = { date, id, side, lots, pricePaise: price, costsPaise: costs, grossPaise: closedGross(old, dir, lots, price, lotOf(c)), how };
   return { ...s, cashPaise: s.cashPaise + fillCash(c, old, dir, units, price) - costs, positions: withPosition(s, position), trades: [...s.trades, trade], costsPaise: s.costsPaise + costs };
@@ -125,7 +125,7 @@ export function marginOf(s: FnoState, spot: (u: Contract['u']) => number | null)
   for (const p of s.positions) {
     const c = contractOf(p.id);
     const sp = spot(c.u) ?? p.markPaise;
-    if (c.kind === 'FUT') total += (Math.abs(p.lots) * lotOf(c) * p.markPaise * FNO_FACTS.futuresMarginBps) / 10_000;
+    if (c.kind === 'FUT') total += (Math.abs(p.lots) * lotOf(c) * p.markPaise * UNDERLYINGS[c.u].marginBps) / 10_000;
     else if (p.lots < 0) total += (Math.abs(p.lots) * lotOf(c) * sp * FNO_FACTS.shortOptionMarginBps) / 10_000;
   }
   return Math.round(total);

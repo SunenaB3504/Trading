@@ -28,6 +28,8 @@ export const LEVEL_TITLES: Readonly<Record<number, string>> = {
   2: 'Level 2: Trading, costs and habits',
   3: 'Level 3: Charts and rules',
   4: 'Level 4: Futures and options',
+  5: 'Level 5: Currency, rates and the world',
+  6: 'Level 6: Tax, scams and protection',
 };
 
 export interface Level {

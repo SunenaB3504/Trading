@@ -28,7 +28,7 @@ describe('content files (MIP v4.1 Stage 4)', () => {
   });
 
   it('has three levels of lessons with unique ids and a self-check for each', () => {
-    expect(LEVELS.map((l) => [l.level, l.lessons.length, l.quiz?.questions.length])).toEqual([[1, 8, 8], [2, 7, 6], [3, 4, 8], [4, 6, 8]]);
+    expect(LEVELS.map((l) => [l.level, l.lessons.length, l.quiz?.questions.length])).toEqual([[1, 8, 8], [2, 7, 6], [3, 4, 8], [4, 6, 8], [5, 3, 6], [6, 4, 7]]);
     expect(new Set(LESSONS.map((l) => l.id)).size).toBe(LESSONS.length);
     for (const l of LEVELS) expect(l.lessons.map((x) => x.order)).toEqual(l.lessons.map((_, i) => i + 1));
   });

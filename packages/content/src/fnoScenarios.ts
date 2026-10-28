@@ -18,7 +18,7 @@ export interface FnoScenario {
   start: string;
   end: string;
   /** Index codes the person may trade. */
-  underlyings: readonly ('NIFTY' | 'BANKNIFTY')[];
+  underlyings: readonly ('NIFTY' | 'BANKNIFTY' | 'USDINR')[];
   /** Every goal must be met. */
   goals: readonly FnoGoal[];
   goalText: string;
@@ -123,6 +123,44 @@ export const FNO_SCENARIOS: readonly FnoScenario[] = [
     debrief: {
       met: 'You held nothing into any expiry day. Closing early costs a little time value, but it removes the largest swings and the exercise charge.',
       notMet: 'A position was open on its expiry day or the loss went past your limit. Look at the date and ask why you did not close it a day earlier.',
+    },
+  },
+  {
+    id: 'fno-rupee-2022',
+    title: 'The rupee under pressure',
+    start: '2022-06-01',
+    end: '2022-10-31',
+    underlyings: ['USDINR'],
+    goals: [{ kind: 'limit_loss', pct: 3 }, { kind: 'margin_cap', pct: 50 }],
+    goalText: 'Trade USD/INR futures if you wish, but finish with no more than 3% less than your starting ₹10,00,000 and never use over half of it as margin.',
+    brief:
+      'In 2022 the dollar rose against most currencies and the rupee weakened. A currency lot is 1,000 dollars, and a one-rupee move in the rate changes your account by ₹1,000 a lot, which looks small. The margin is small too, so it is easy to hold far too many lots. You have ₹10,00,000 and five months. Decide how many lots a two-rupee move against you could survive.',
+    checkpoints: [
+      { date: '2022-08-01', text: 'Look at the margin used and at what a one-rupee move costs on your lots. Is the position still the size you planned?' },
+    ],
+    lessons: ['currency-and-commodities', 'futures-margin-mtm'],
+    debrief: {
+      met: 'You stayed inside both limits. A currency moves slowly by the day, which makes a big position feel safe. Notice how many lots your margin cap allowed compared with how many you could have held.',
+      notMet: 'A limit was crossed. A currency future moves little each day, so a large position feels calm until a run of one-way days. Look at the date the margin share was highest and at the lots you held.',
+    },
+  },
+  {
+    id: 'fno-rupee-2023',
+    title: 'A quiet rupee',
+    start: '2023-02-01',
+    end: '2023-07-31',
+    underlyings: ['USDINR'],
+    goals: [{ kind: 'limit_loss', pct: 2 }, { kind: 'no_expiry_holding' }],
+    goalText: 'Finish with no more than 2% less than your starting ₹10,00,000, and close every position before its expiry day.',
+    brief:
+      'In the first half of 2023 the rupee stayed in a narrow range. Calm markets invite bigger positions and longer holds. Currency futures expire on a fixed day each month, two working days before the last working day, and the checker looks at what you held on each expiry. Trade as you like, but close or roll before the last day.',
+    checkpoints: [
+      { date: '2023-04-03', text: 'Which expiry comes next? Write down the date and what you will do before it.' },
+    ],
+    lessons: ['currency-and-commodities', 'expiry-and-settlement'],
+    debrief: {
+      met: 'You held nothing into an expiry day and kept the loss inside the limit. Rolling costs charges twice, so ask whether the extra position was worth it.',
+      notMet: 'A position was open on an expiry day or the loss went past your limit. Look at the date and ask what you would have gained by closing a day earlier.',
     },
   },
 ];
