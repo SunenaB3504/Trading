@@ -26,7 +26,7 @@ export const HoroscopeDossierModal: React.FC<HoroscopeDossierModalProps> = ({
   activeDate,
 }) => {
   const transitPositions = useMemo(
-    () => calculateTransitPositions(activeDate || '2026-10-05'),
+    () => calculateTransitPositions(activeDate && activeDate.length >= 10 ? activeDate : '2005-01-01'),
     [activeDate]
   );
 
@@ -249,3 +249,4 @@ function YogasSummarySection({ yogas }: { yogas: any }) {
     </div>
   );
 }
+

@@ -21,9 +21,10 @@ export const DailyActionFeed: React.FC<DailyActionFeedProps> = ({
   registry,
   fundamentalsMap = {},
 }) => {
+  const effectiveDate = activeDate && activeDate.length >= 10 ? activeDate : '2005-01-01';
   const summary = useMemo(
-    () => scanUniverse(registry, activeDate, fundamentalsMap),
-    [registry, activeDate, fundamentalsMap]
+    () => scanUniverse(registry, effectiveDate, fundamentalsMap),
+    [registry, effectiveDate, fundamentalsMap]
   );
 
   const prioritized = useMemo(
@@ -109,3 +110,4 @@ function getActionBadgeStyle(item: UniverseStockScanItem): React.CSSProperties {
   }
   return { backgroundColor: '#1E293B', color: '#94A3B8', border: '1px solid #334155' };
 }
+

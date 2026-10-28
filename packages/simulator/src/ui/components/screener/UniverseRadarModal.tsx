@@ -34,9 +34,10 @@ export const UniverseRadarModal: React.FC<UniverseRadarModalProps> = ({
   const [selectedYoga, setSelectedYoga] = useState<'ALL' | 'VRY' | 'NBRY' | 'DHANA' | 'MAHAPURUSHA'>('ALL');
   const [actionFilter, setActionFilter] = useState<'ALL' | 'BUY' | 'SELL' | 'HOLD' | 'BLOCKED'>('ALL');
 
+  const effectiveDate = activeDate && activeDate.length >= 10 ? activeDate : '2005-01-01';
   const summary = useMemo(
-    () => scanUniverse(registry, activeDate, fundamentalsMap),
-    [registry, activeDate, fundamentalsMap]
+    () => scanUniverse(registry, effectiveDate, fundamentalsMap),
+    [registry, effectiveDate, fundamentalsMap]
   );
 
   const filteredItems = useMemo(() => {
@@ -285,3 +286,4 @@ function StockTableRow({ item, onSelect }: { item: UniverseStockScanItem; onSele
     </tr>
   );
 }
+

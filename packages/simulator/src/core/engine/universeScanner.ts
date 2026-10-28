@@ -162,8 +162,9 @@ export function scanUniverse(
   activeDate: string,
   fundamentalsMap: Record<string, QuarterlyFundamental[]> = {}
 ): UniverseScanSummary {
-  const transitSigns = calculateTransitSigns(activeDate);
-  const transitPositions = calculateTransitPositions(activeDate);
+  const safeDate = activeDate && activeDate.length >= 10 ? activeDate : '2005-01-01';
+  const transitSigns = calculateTransitSigns(safeDate);
+  const transitPositions = calculateTransitPositions(safeDate);
 
   const items: UniverseStockScanItem[] = [];
   const triadDist: Record<string, number> = {};
@@ -174,7 +175,7 @@ export function scanUniverse(
 
   for (const record of Object.values(registry)) {
     const funds = fundamentalsMap[record.symbol] ?? [];
-    const item = scanSingleStock(record, activeDate, transitSigns, transitPositions, funds);
+    const item = scanSingleStock(record, safeDate, transitSigns, transitPositions, funds);
     items.push(item);
 
     triadDist[item.triadCode] = (triadDist[item.triadCode] ?? 0) + 1;

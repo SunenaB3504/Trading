@@ -56,7 +56,8 @@ export type TransitPlanetaryPositions = Record<PlanetKey, DetailedPlanetPosition
  * Calculates high-precision sidereal positions and signs for all 9 Grahas at any date.
  */
 export function calculateTransitPositions(dateStr: string): TransitPlanetaryPositions {
-  const dateObj = new Date(`${dateStr.slice(0, 10)}T09:15:00Z`);
+  const safeDate = dateStr && dateStr.length >= 10 ? dateStr.slice(0, 10) : '2005-01-01';
+  const dateObj = new Date(`${safeDate}T09:15:00Z`);
   const time = new Astronomy.AstroTime(dateObj);
   const jd = time.ut;
   const ayanamsa = calculateLahiriAyanamsa(jd);
@@ -113,7 +114,8 @@ export function calculateTransitSigns(dateStr: string): Record<PlanetKey, number
  * Calculates dynamic sidereal Nakshatra positions (0 to 26) for all 9 Grahas at any date.
  */
 export function calculateTransitNakshatras(dateStr: string): TransitPlanetaryNakshatras {
-  const dateObj = new Date(`${dateStr.slice(0, 10)}T09:15:00Z`);
+  const safeDate = dateStr && dateStr.length >= 10 ? dateStr.slice(0, 10) : '2005-01-01';
+  const dateObj = new Date(`${safeDate}T09:15:00Z`);
   const time = new Astronomy.AstroTime(dateObj);
   const jd = time.ut;
   const ayanamsa = calculateLahiriAyanamsa(jd);
