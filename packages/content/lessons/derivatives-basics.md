@@ -6,6 +6,8 @@ order: 1
 source: Investor Guide 3, sections 1 and 2
 facts_as_of: 2026-10-24
 reviewed: false
+try_tab: fno
+try_text: Open F&O, look at a Nifty lot and work out the contract value.
 ---
 A derivative is a contract whose value comes from something else, called the underlying, such as a share or an index. You do not buy the underlying. You buy or sell a contract about its future price. The two main kinds on Indian exchanges are futures and options. Both are standardised, and the clearing corporation guarantees that each side pays.
 

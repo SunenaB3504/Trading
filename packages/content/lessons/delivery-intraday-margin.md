@@ -6,6 +6,8 @@ order: 2
 source: Investor Guide 2, section 2
 facts_as_of: 2026-10-24
 reviewed: false
+try_tab: trade
+try_text: Place a delivery order and a same-day order and compare the charges.
 ---
 The same share can be traded three ways, and each has different costs, taxes and risks. Delivery is the only one that makes you an owner.
 

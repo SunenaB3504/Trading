@@ -6,6 +6,8 @@ order: 6
 source: Investor Guide 4, section 6
 facts_as_of: 2026-10-24
 reviewed: false
+try_tab: machine
+try_text: Replay a fall in the Time Machine and write down what you would do before you move on.
 ---
 The hardest part of investing is managing your own behaviour. These habits are well documented and affect experts as well as beginners.
 

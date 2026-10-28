@@ -6,6 +6,8 @@ order: 7
 source: Investor Guide 4, section 9
 facts_as_of: 2026-10-24
 reviewed: false
+try_tab: report
+try_text: Open Report and look at the range of your results, not one number.
 ---
 Good outcomes mostly come from a few boring habits followed for years. None needs special knowledge.
 

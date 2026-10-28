@@ -6,6 +6,8 @@ order: 5
 source: Investor Guide 4, section 4
 facts_as_of: 2026-10-24
 reviewed: false
+try_tab: builder
+try_text: Build a mix and read the worst fall, not only the return.
 ---
 Risk means the chance of losing money or not reaching your goal. It comes in several kinds, and the biggest one for a stock buyer is the one beginners think least about: the company itself failing.
 

@@ -6,6 +6,8 @@ order: 5
 source: Investor Guide 3, section 10
 facts_as_of: 2026-10-24
 reviewed: false
+try_tab: fno
+try_text: Find the expiry dates in F&O and plan to close before the first one.
 ---
 What happens at expiry depends on the contract type, and getting it wrong can create costs or obligations you did not expect. Check your position before the last trading day.
 

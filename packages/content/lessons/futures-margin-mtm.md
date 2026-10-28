@@ -6,6 +6,8 @@ order: 2
 source: Investor Guide 3, section 3
 facts_as_of: 2026-10-24
 reviewed: false
+try_tab: fno
+try_text: Buy one future and step forward a day to see the margin and the daily settlement.
 ---
 A futures contract is an agreement to buy or sell the underlying at a fixed price on a fixed date. You put down a margin, and your profit or loss is settled in cash every day.
 

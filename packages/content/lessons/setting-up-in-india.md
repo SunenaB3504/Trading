@@ -6,6 +6,8 @@ order: 3
 source: Investor Guide 1, section 3
 facts_as_of: 2026-10-24
 reviewed: false
+try_tab: ledger
+try_text: Open the Ledger and see how each charge is recorded on a trade.
 ---
 To buy shares you need three linked accounts and a verified identity. All are opened online in a day or two.
 

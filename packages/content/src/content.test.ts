@@ -8,7 +8,7 @@ import { parseGlossary, parseLesson, parseQuiz } from './parse';
 import type { Lesson, Quiz } from './parse';
 import { EMPTY_PROGRESS, levelStatus, markLesson, nextStep, recordQuiz } from './progress';
 import type { Level } from './index';
-import { GLOSSARY, LEVELS, LESSONS, PATH, QUIZZES, glossaryFor, lessonById, searchGlossary } from './index';
+import { GUIDE_MD, GLOSSARY, LEVELS, LESSONS, PATH, QUIZZES, glossaryFor, lessonById, searchGlossary } from './index';
 
 const L1 = LEVELS[0] as Level;
 const L2 = LEVELS[1] as Level;
@@ -82,7 +82,7 @@ describe('Markdown subset', () => {
 });
 
 describe('parsers refuse broken files', () => {
-  const head = (extra = ''): string => `---\nid: x\ntitle: T\nlevel: 1\norder: 1\nsource: s\nfacts_as_of: 2026-01-01\nreviewed: false\n${extra}---\nbody\n`;
+  const head = (extra = ''): string => `---\nid: x\ntitle: T\nlevel: 1\norder: 1\nsource: s\nfacts_as_of: 2026-01-01\nreviewed: false\ntry_tab: trade\ntry_text: Do it.\n${extra}---\nbody\n`;
   it('lessons', () => {
     expect(parseLesson(head(), 'x.md').id).toBe('x');
     expect(() => parseLesson('no header', 'x.md')).toThrow(/front matter/);
@@ -90,6 +90,17 @@ describe('parsers refuse broken files', () => {
     expect(() => parseLesson(head().replace('reviewed: false', 'reviewed: maybe'), 'x.md')).toThrow(/reviewed/);
     expect(() => parseLesson(head().replace('id: x', 'id: Bad Id'), 'x.md')).toThrow(/bad id/);
     expect(() => parseLesson(head().replace('body', ''), 'x.md')).toThrow(/empty/);
+  });
+  it('every lesson has a Try it exercise that opens a Practise screen', () => {
+    const tabs = ['trade', 'funds', 'machine', 'builder', 'charts', 'lab', 'robo', 'fno', 'optlab', 'tax', 'bonds', 'ledger', 'universe', 'compare', 'report'];
+    for (const l of LESSONS) {
+      expect(tabs, l.id).toContain(l.tryIt.tab);
+      expect(l.tryIt.text.length, l.id).toBeGreaterThan(10);
+    }
+  });
+  it('USER_GUIDE.md is the same text as the in-app guide', () => {
+    const file = readFileSync(join(import.meta.dirname, '..', '..', '..', 'USER_GUIDE.md'), 'utf8').replace(/\r\n/g, '\n');
+    expect(file).toBe(GUIDE_MD);
   });
   it('glossary and quizzes', () => {
     expect(() => parseGlossary('| A | only two |')).toThrow(/bad row/);

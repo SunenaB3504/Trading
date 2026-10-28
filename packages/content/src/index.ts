@@ -6,6 +6,7 @@ export type { Block, Span } from './markdown';
 export { plainText } from './markdown';
 export type { GlossaryEntry, Lesson, Quiz, QuizQuestion } from './parse';
 export { parseBlocks } from './markdown';
+export { GUIDE_MD } from './guide';
 export { EMPTY_PROGRESS, levelStatus, markLesson, nextStep, recordQuiz } from './progress';
 export type { LevelStatus, NextStep, Progress, QuizResult } from './progress';
 export { HINTS, hintFor } from './hints';

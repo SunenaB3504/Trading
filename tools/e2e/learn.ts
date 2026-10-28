@@ -23,6 +23,12 @@ async function readLevelOne(page: Page): Promise<void> {
     if (i === 0) {
       const text = await page.getByTestId('lesson-view').innerText();
       check('a lesson shows its source, the date its facts were checked and its words', /Facts checked 2026-10-24/.test(text) && /Compounding/.test(text), text.slice(0, 300));
+      await page.getByTestId('lesson-try').click();
+      await page.getByText('Time Machine', { exact: true }).waitFor({ timeout: 10_000 });
+      check('the Try it button opens the Practise screens', true);
+      await openTab(page, 'Learn');
+      await page.getByTestId('learn-next').click();
+      await page.getByTestId('lesson-view').waitFor({ timeout: 10_000 });
     }
     await page.getByTestId('lesson-done').click();
     await page.getByTestId('lesson-back').click();
@@ -99,6 +105,10 @@ async function main(): Promise<void> {
     await glossary(page);
     await mistakes(page);
     await journal(page);
+    await openTab(page, 'Settings');
+    await openTab(page, 'Guide');
+    await page.getByTestId('guide-screen').waitFor({ timeout: 10_000 });
+    check('the in-app guide opens from Settings', /user guide/i.test(await page.getByTestId('guide-screen').innerText()));
     await page.reload();
     await appReady(page);
     await openTab(page, 'Learn');

@@ -15,6 +15,7 @@ import { LedgerScreen } from './screens/LedgerScreen';
 import { PinScreen } from './screens/PinScreen';
 import { ProfilesScreen } from './screens/ProfilesScreen';
 import { ReportScreen } from './screens/ReportScreen';
+import { GuideScreen } from './screens/GuideScreen';
 import { SettingsScreen } from './screens/SettingsScreen';
 import { AskScreenBar } from './tutor/AskScreenBar';
 import { ChartScreen } from './screens/ChartScreen';
@@ -49,7 +50,7 @@ import { TabStrip } from './ui/TabStrip';
 
 type SectionId = 'home' | 'learn' | 'practise' | 'measure' | 'tutor' | 'settings';
 type PractiseId = 'trade' | 'funds' | 'machine' | 'builder' | 'charts' | 'lab' | 'robo' | 'fno' | 'optlab' | 'tax' | 'bonds' | 'ledger' | 'universe' | 'compare' | 'report';
-type SettingsId = 'general' | 'profiles' | 'backup' | 'data';
+type SettingsId = 'general' | 'profiles' | 'backup' | 'data' | 'guide';
 
 const SECTIONS = [
   ['home', 'Home'],
@@ -81,6 +82,7 @@ const SETTINGS = [
   ['profiles', 'Profiles'],
   ['backup', 'Backup'],
   ['data', 'Data'],
+  ['guide', 'Guide'],
 ] as const;
 
 /** `fetch` must be called as a plain function; calling it as a method of another object throws "Illegal invocation". */
@@ -134,8 +136,8 @@ function useDevice() {
   return { device, profile, settings, setSettings, locked, setLocked, reload, open };
 }
 
-function Practise(props: { env: TutorEnv; kv: KeyValueStore; now: () => number; markets: Markets; funds: FundsMarket | null }) {
-  const [tab, setTab] = useState<PractiseId>('trade');
+function Practise(props: { env: TutorEnv; kv: KeyValueStore; now: () => number; markets: Markets; funds: FundsMarket | null; first: PractiseId }) {
+  const [tab, setTab] = useState<PractiseId>(props.first);
   const { kv, now, markets, funds, env } = props;
   const market = markets.market;
   const fnoData = useMemo(() => fnoDataOf(markets.real), [markets.real]);
@@ -195,6 +197,7 @@ function Settings(props: {
         <BackupScreen device={d.device.kv} profiles={d.device.profiles} profile={profile} now={now} onImported={props.onImported} />
       ) : null}
       {tab === 'data' ? <DataScreen client={props.client} kv={d.device.kv} now={now} prices={props.prices} /> : null}
+      {tab === 'guide' ? <GuideScreen /> : null}
     </>
   );
 }
@@ -229,6 +232,11 @@ function Main(props: {
   const funds = useFunds(d.device.kv, props.client, now);
   const prices = [markets.realNote, fundsNote(funds)];
   const env = useMemo((): TutorEnv => ({ device: d.device.kv, profile: profileKv, secure: d.device.secure, settings, names: [profile.name], now }), [d.device, profileKv, settings, profile.name, now]);
+  const [first, setFirst] = useState<PractiseId>('trade');
+  const tryIt = (tab: string) => {
+    setFirst(PRACTISE.find((t) => t[0] === tab)?.[0] ?? 'trade');
+    props.setSection('practise');
+  };
   const accept = () => {
     const next = { ...settings, disclaimerAcceptedAt: Date.now() };
     void saveDeviceSettings(d.device.kv, next).then(() => d.setSettings(next));
@@ -241,8 +249,8 @@ function Main(props: {
       {section === 'home' ? (
         <HomeScreen profile={profile} kv={profileKv} now={now} market={markets.market} env={env} onGo={props.setSection} />
       ) : null}
-      {section === 'learn' ? <LearnScreen kv={profileKv} now={now} env={env} /> : null}
-      {section === 'practise' ? <Practise env={env} kv={profileKv} now={now} markets={markets} funds={funds} /> : null}
+      {section === 'learn' ? <LearnScreen kv={profileKv} now={now} env={env} onTry={tryIt} /> : null}
+      {section === 'practise' ? <Practise env={env} kv={profileKv} now={now} markets={markets} funds={funds} first={first} /> : null}
       {section === 'measure' ? <MeasureScreen kv={profileKv} now={now} market={markets.market} env={env} /> : null}
       {section === 'tutor' ? <TutorScreen env={env} owner={profile.owner} deviceKv={d.device.kv} profileKv={profileKv} onDevice={d.setSettings} /> : null}
       {section === 'settings' ? (

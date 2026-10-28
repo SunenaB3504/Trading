@@ -272,6 +272,7 @@ Changes beyond the task table: the app's snapshot client moved to `packages/work
 
 ### Stage 10: Final Verification
 * Every SSD §13 item on a real phone and on the laptop; facts file as-of dates checked; in-app user guide and `USER_GUIDE.md`; verification report.
+* **Stage 10 progress (2026-10-28):** `VERIFICATION_REPORT.md` written (SSD §13 item by item, with evidence and gaps). Built the in-app Guide (Settings) and `USER_GUIDE.md` (a test keeps them identical), and the missing "Try it" button on every lesson. Typecheck, cycles, 1,452 tests and 17 e2e suites pass; lint fails only on `packages/simulator`, so `pnpm verify` does not exit clean. *Open (owner):* phone check G1 to G7, lesson review (0 of 32), the runbook release gate scope, Release 1 on hold.
 
 ### Release 3
 * Complete release. A hosted version for sharing is a separate later project.

@@ -6,6 +6,8 @@ order: 2
 source: Investor Guide 4, section 7
 facts_as_of: 2026-10-28
 reviewed: false
+try_tab: report
+try_text: Open Report and compare your real results with any promise you have seen.
 ---
 Fraud in investing usually looks like an opportunity. The common thread is a promise that is too good, from a person you do not know, with pressure to act quickly.
 

@@ -6,6 +6,8 @@ order: 3
 source: Investor Guide 4, sections 2 and 6
 facts_as_of: 2026-10-24
 reviewed: false
+try_tab: lab
+try_text: Test a simple rule, then change one setting and see how the result moves.
 ---
 A rule that looks good on past prices may be nothing more than luck, or a rule bent to fit the past. Testing fairly is a skill of its own.
 

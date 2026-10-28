@@ -6,6 +6,8 @@ order: 2
 source: Investor Guide 1, section 6
 facts_as_of: 2026-10-28
 reviewed: false
+try_tab: bonds
+try_text: Raise the yield one point and read the new price and the duration.
 ---
 A bond pays a fixed coupon. Its price changes every day, so the return you earn depends on what you pay. The yield to maturity is the single yearly rate that makes the bond's cash flows worth the price you pay today.
 

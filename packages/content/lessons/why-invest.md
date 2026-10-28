@@ -6,6 +6,8 @@ order: 1
 source: Investor Guide 1, section 1
 facts_as_of: 2026-10-24
 reviewed: false
+try_tab: funds
+try_text: Open Funds and compare how a fund and a bank deposit grew over the years.
 ---
 Money left idle loses buying power every year, and investing is the attempt to grow it faster than prices rise. This guide is for learning. It is not advice on what to buy.
 

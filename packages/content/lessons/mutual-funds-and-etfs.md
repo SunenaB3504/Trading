@@ -6,6 +6,8 @@ order: 5
 source: Investor Guide 1, section 5
 facts_as_of: 2026-10-24
 reviewed: false
+try_tab: funds
+try_text: Open Funds and read the NAV and the cut-off time of one fund.
 ---
 A fund pools money from many investors and a professional manager or an index rule buys a basket of assets for all of them. You own units, not the underlying shares.
 

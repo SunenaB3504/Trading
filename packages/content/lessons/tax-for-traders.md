@@ -6,6 +6,8 @@ order: 1
 source: Investor Guide 2, section 6
 facts_as_of: 2026-10-24
 reviewed: false
+try_tab: tax
+try_text: Close a trade and see how the Tax tab classes it.
 ---
 Tax is a cost on your gains, and the rate depends on how long you held and what you traded. The rates here are as reported for 2026 and change often. Confirm them with the Income-tax Department or a tax adviser. This is for learning, not tax advice.
 

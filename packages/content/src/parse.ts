@@ -12,6 +12,8 @@ export interface Lesson {
   factsAsOf: string;
   /** Whether the owner has read and approved the lesson. */
   reviewed: boolean;
+  /** The Practise screen to open and what to do there (the "Try it" exercise). */
+  tryIt: { tab: string; text: string };
   blocks: Block[];
 }
 
@@ -58,6 +60,7 @@ export function parseLesson(text: string, file: string): Lesson {
     source: need(meta, 'source', file),
     factsAsOf: asOf,
     reviewed: reviewed === 'true',
+    tryIt: { tab: need(meta, 'try_tab', file), text: need(meta, 'try_text', file) },
     blocks: parseBlocks(body),
   };
 }

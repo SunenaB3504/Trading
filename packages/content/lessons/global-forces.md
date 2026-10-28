@@ -6,6 +6,8 @@ order: 3
 source: Investor Guide 1, sections 6 and 8
 facts_as_of: 2026-10-28
 reviewed: false
+try_tab: fno
+try_text: Start a rupee scenario in F&O and watch the rate through a weak spell.
 ---
 Indian prices do not move alone. Three outside forces show up again and again.
 

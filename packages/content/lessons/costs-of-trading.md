@@ -6,6 +6,8 @@ order: 4
 source: Investor Guide 2, section 5
 facts_as_of: 2026-10-24
 reviewed: false
+try_tab: ledger
+try_text: Open the Ledger and add up what charges took from your last trades.
 ---
 Every trade has costs, and they are charged whether you gain or lose. Small percentages add up quickly when you trade often.
 

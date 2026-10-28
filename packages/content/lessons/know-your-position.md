@@ -6,6 +6,8 @@ order: 2
 source: Investor Guide 1, section 2
 facts_as_of: 2026-10-24
 reviewed: false
+try_tab: ledger
+try_text: Open the Ledger and find the cost and quantity of one holding.
 ---
 The right investment depends more on your situation than on the market. Settle these five points before you buy anything.
 

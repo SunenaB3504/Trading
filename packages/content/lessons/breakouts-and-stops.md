@@ -6,6 +6,8 @@ order: 2
 source: Investor Guide 2, section 4; Investor Guide 4, section 2
 facts_as_of: 2026-10-24
 reviewed: false
+try_tab: trade
+try_text: Place a buy with a stop-loss and decide the exit before the entry.
 ---
 A rule you can write down is a rule you can test. The app's Strategy Lab uses one simple rule set so you can see each part at work.
 

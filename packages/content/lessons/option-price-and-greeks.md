@@ -6,6 +6,8 @@ order: 4
 source: Investor Guide 3, sections 6, 7 and 8
 facts_as_of: 2026-10-24
 reviewed: false
+try_tab: optlab
+try_text: Slide the days and the volatility and watch an option price change.
 ---
 Before expiry an option's price has two parts. **Premium = intrinsic value + time value.** Intrinsic value is what the option would be worth if used now: for a call, spot minus strike (if positive); for a put, strike minus spot. Time value is the extra paid for the chance that it becomes more valuable before expiry.
 

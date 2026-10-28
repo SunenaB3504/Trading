@@ -30,7 +30,7 @@ const TABS = [
   ['glossary', 'Glossary'],
 ] as const;
 
-function LessonView(props: { lesson: Lesson; done: boolean; onToggle: () => void; onBack: () => void }) {
+function LessonView(props: { lesson: Lesson; done: boolean; onToggle: () => void; onBack: () => void; onTry: (tab: string) => void }) {
   const { lesson } = props;
   const terms = glossaryFor(lesson.id);
   return (
@@ -40,6 +40,10 @@ function LessonView(props: { lesson: Lesson; done: boolean; onToggle: () => void
       <Note>{`${lesson.source}. Facts checked ${lesson.factsAsOf}.${lesson.reviewed ? '' : ' Draft: not yet reviewed by the owner.'}`}</Note>
       <View style={styles.gap} />
       <MarkdownView blocks={lesson.blocks} />
+      <Section title="Try it">
+        <Note>{lesson.tryIt.text}</Note>
+        <Button label="Open it in Practise" onPress={() => props.onTry(lesson.tryIt.tab)} testID="lesson-try" />
+      </Section>
       {terms.length > 0 ? (
         <Section title="Words in this lesson">
           {terms.map((t) => (
@@ -141,13 +145,13 @@ function GlossaryView() {
   );
 }
 
-function PathTab(props: { env: TutorEnv; progress: Progress; view: View_; setView: (v: View_) => void; save: (p: Progress) => void; now: () => number }) {
+function PathTab(props: { env: TutorEnv; progress: Progress; view: View_; setView: (v: View_) => void; save: (p: Progress) => void; now: () => number; onTry: (tab: string) => void }) {
   const { progress, view, now } = props;
   const lesson = view.v === 'lesson' ? lessonById(view.id) : null;
   const quiz = view.v === 'quiz' ? (LEVELS.find((l) => l.quiz?.id === view.id)?.quiz ?? null) : null;
   const back = () => props.setView({ v: 'path' });
   if (lesson !== null)
-    return <LessonView lesson={lesson} done={progress.lessons[lesson.id] !== undefined} onBack={back} onToggle={() => props.save(markLesson(progress, lesson.id, progress.lessons[lesson.id] === undefined, now()))} />;
+    return <LessonView lesson={lesson} done={progress.lessons[lesson.id] !== undefined} onBack={back} onTry={props.onTry} onToggle={() => props.save(markLesson(progress, lesson.id, progress.lessons[lesson.id] === undefined, now()))} />;
   if (quiz !== null)
     return (
       <QuizView
@@ -163,7 +167,7 @@ function PathTab(props: { env: TutorEnv; progress: Progress; view: View_; setVie
   return <Path progress={progress} onOpen={props.setView} />;
 }
 
-export function LearnScreen({ kv, now, env }: { kv: KeyValueStore; now: () => number; env: TutorEnv }) {
+export function LearnScreen({ kv, now, env, onTry }: { kv: KeyValueStore; now: () => number; env: TutorEnv; onTry: (tab: string) => void }) {
   const [tab, setTab] = useState<(typeof TABS)[number][0]>('path');
   const [view, setView] = useState<View_>({ v: 'path' });
   const [progress, setProgress] = useState<Progress | null>(null);
@@ -191,7 +195,7 @@ export function LearnScreen({ kv, now, env }: { kv: KeyValueStore; now: () => nu
     <ScrollView contentContainerStyle={styles.page} testID="learn-screen">
       <TabStrip tabs={TABS} active={tab} onSelect={(t) => { setTab(t); setView({ v: 'path' }); }} small />
       <CoachHint screen="learn" />
-      {tab === 'glossary' ? <GlossaryView /> : <PathTab env={env} progress={progress} view={view} setView={setView} save={save} now={now} />}
+      {tab === 'glossary' ? <GlossaryView /> : <PathTab env={env} progress={progress} view={view} setView={setView} save={save} now={now} onTry={onTry} />}
     </ScrollView>
   );
 }

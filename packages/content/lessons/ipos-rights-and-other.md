@@ -6,6 +6,8 @@ order: 8
 source: Investor Guide 1, section 8
 facts_as_of: 2026-10-24
 reviewed: false
+try_tab: trade
+try_text: Search Trade for a share and look at how its price began.
 ---
 Beyond ordinary shares, several other instruments trade or are offered through the market. Each has its own rules.
 

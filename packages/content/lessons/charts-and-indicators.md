@@ -6,6 +6,8 @@ order: 1
 source: Investor Guide 4, section 2
 facts_as_of: 2026-10-24
 reviewed: false
+try_tab: charts
+try_text: Open a chart, add a moving average and RSI, and see what they show about the past.
 ---
 Technical analysis studies price and volume. It gives clear entry and exit rules, but its patterns are easy to see in hindsight and often fail later. Learn the tools so you can read a chart, and keep their limits in mind.
 

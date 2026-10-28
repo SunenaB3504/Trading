@@ -6,6 +6,8 @@ order: 4
 source: Investor Guide 2, section 4
 facts_as_of: 2026-10-24
 reviewed: false
+try_tab: trade
+try_text: Try a short sale in Trade and note the extra risk.
 ---
 Short selling bets on a price falling, and it carries a risk that buying does not: the loss has no upper limit. The way you enter the market also changes your result more than most people expect.
 

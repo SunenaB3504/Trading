@@ -6,6 +6,8 @@ order: 1
 source: Investor Guide 2, section 1
 facts_as_of: 2026-10-24
 reviewed: false
+try_tab: trade
+try_text: Place a limit order and a stop order and see when each fills.
 ---
 An order tells your broker what to buy or sell, how many, and at what price or condition. Choosing the wrong type is a common and costly beginner mistake.
 

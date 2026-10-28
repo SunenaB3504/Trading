@@ -6,6 +6,8 @@ order: 4
 source: Investor Guide 4, section 11
 facts_as_of: 2026-10-28
 reviewed: false
+try_tab: ledger
+try_text: Open the Ledger and check that every record matches your own notes.
 ---
 India has a regulator, exchange systems and complaint channels for investors. Know where they are before you need them.
 

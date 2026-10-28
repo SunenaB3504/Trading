@@ -6,6 +6,8 @@ order: 3
 source: Investor Guide 2, section 3
 facts_as_of: 2026-10-24
 reviewed: false
+try_tab: trade
+try_text: Look at the order book for a thinly traded share and a busy one.
 ---
 The price you see is only the last deal. The order book shows who is waiting to buy and sell, and it tells you how easily you can trade.
 

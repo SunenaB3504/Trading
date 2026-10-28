@@ -6,6 +6,8 @@ order: 1
 source: Investor Guide 1, section 8; Investor Guide 3, section 10
 facts_as_of: 2026-10-28
 reviewed: false
+try_tab: fno
+try_text: Open F&O, choose USD/INR and work out what a two-rupee move costs on your lots.
 ---
 A currency future is a contract on an exchange rate. The one in this app is USD/INR: how many rupees one US dollar costs. If you buy it, you gain when the dollar becomes dearer in rupees, which means the rupee gets weaker.
 

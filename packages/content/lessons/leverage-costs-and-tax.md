@@ -6,6 +6,8 @@ order: 6
 source: Investor Guide 3, sections 11 and 13
 facts_as_of: 2026-10-24
 reviewed: false
+try_tab: fno
+try_text: Work out in rupees what a 5% move against your position would cost.
 ---
 A derivative position can lose more than the money you put in, and the market's own history shows how fast that can happen.
 

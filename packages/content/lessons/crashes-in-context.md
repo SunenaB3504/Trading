@@ -6,6 +6,8 @@ order: 3
 source: Investor Guide 4, section 8
 facts_as_of: 2026-10-24
 reviewed: false
+try_tab: machine
+try_text: Move the Time Machine to early 2020 and decide what you would hold.
 ---
 Markets fall hard from time to time. The Nifty record in this project's NSE data begins in September 2007 and shows two large falls.
 

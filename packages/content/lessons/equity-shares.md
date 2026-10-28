@@ -6,6 +6,8 @@ order: 4
 source: Investor Guide 1, section 4
 facts_as_of: 2026-10-24
 reviewed: false
+try_tab: trade
+try_text: Open Trade, pick a share and read its price, lot and cost before you buy one.
 ---
 A share is a part-ownership of a business, and your return comes from two sources: the price rising and dividends paid. Both depend on the company earning money, which no one can promise.
 

@@ -6,6 +6,8 @@ order: 7
 source: Investor Guide 1, section 7
 facts_as_of: 2026-10-24
 reviewed: false
+try_tab: trade
+try_text: Find the gold ETF in Trade and look at how it is priced.
 ---
 These three let you own something other than company shares or bonds, each with its own way of earning and its own risks.
 

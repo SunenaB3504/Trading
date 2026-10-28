@@ -6,6 +6,8 @@ order: 3
 source: Investor Guide 3, sections 4, 5 and 9
 facts_as_of: 2026-10-24
 reviewed: false
+try_tab: optlab
+try_text: Pick a strategy and read the maximum loss and the break-evens.
 ---
 An option gives its buyer a right, not an obligation. The seller takes the obligation in return for a fee called the premium. A call gives the right to buy the underlying at the strike price; a put gives the right to sell it.
 

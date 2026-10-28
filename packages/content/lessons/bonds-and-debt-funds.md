@@ -6,6 +6,8 @@ order: 6
 source: Investor Guide 1, section 6
 facts_as_of: 2026-10-24
 reviewed: false
+try_tab: bonds
+try_text: Price a bond at two yields and see how the price moves.
 ---
 A bond is a loan you give to a government or company, which pays you interest and returns your money on a fixed date. The risk is mostly that the borrower fails to pay or that rising interest rates cut the bond's market price.
 
