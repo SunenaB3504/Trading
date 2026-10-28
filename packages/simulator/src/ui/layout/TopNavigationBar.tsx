@@ -133,7 +133,17 @@ function PlaybackControls({
   );
 }
 
-export const TopNavigationBar: React.FC = () => {
+export interface TopNavigationBarProps {
+  onOpenRadar?: () => void;
+  onOpenHoroscope?: () => void;
+  onOpenStrategy?: () => void;
+}
+
+export const TopNavigationBar: React.FC<TopNavigationBarProps> = ({
+  onOpenRadar,
+  onOpenHoroscope,
+  onOpenStrategy,
+}) => {
   const { isPlaying, speed, activeDate, currentIndex, totalSessions } = useSimulationStore();
   const { activeSymbol, setActiveSymbol } = useStockStore();
 
@@ -150,6 +160,61 @@ export const TopNavigationBar: React.FC = () => {
     >
       <BrandAndTicker symbol={activeSymbol} onSelect={setActiveSymbol} />
       <PlaybackControls isPlaying={isPlaying} speed={speed} />
+
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        {onOpenRadar && (
+          <button
+            onClick={onOpenRadar}
+            style={{
+              padding: '5px 10px',
+              borderRadius: '5px',
+              backgroundColor: '#1E2638',
+              color: '#00F2FE',
+              border: '1px solid #0E7490',
+              cursor: 'pointer',
+              fontSize: '11px',
+              fontWeight: 700,
+            }}
+          >
+            ☵ Universe Radar
+          </button>
+        )}
+        {onOpenHoroscope && (
+          <button
+            onClick={onOpenHoroscope}
+            style={{
+              padding: '5px 10px',
+              borderRadius: '5px',
+              backgroundColor: '#1E2638',
+              color: '#D4AF37',
+              border: '1px solid #854D0E',
+              cursor: 'pointer',
+              fontSize: '11px',
+              fontWeight: 700,
+            }}
+          >
+            ☸ Horoscope Dossier
+          </button>
+        )}
+        {onOpenStrategy && (
+          <button
+            onClick={onOpenStrategy}
+            style={{
+              padding: '5px 8px',
+              borderRadius: '5px',
+              backgroundColor: '#1E2638',
+              color: '#94A3B8',
+              border: '1px solid #334155',
+              cursor: 'pointer',
+              fontSize: '11px',
+              fontWeight: 700,
+            }}
+          >
+            ⚙ Strategy
+          </button>
+        )}
+      </div>
+
       <div style={{ fontSize: '11px', color: '#9CA3AF', fontFamily: 'monospace' }}>
         Session: <strong style={{ color: '#F3F4F6' }}>{currentIndex + 1}</strong> / {totalSessions || '—'} | Date:{' '}
         <strong style={{ color: '#F3F4F6' }}>{activeDate || '—'}</strong>

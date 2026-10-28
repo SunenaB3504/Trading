@@ -42,6 +42,73 @@ function getBodySiderealLongitude(
 
 export type TransitPlanetaryNakshatras = Record<PlanetKey, PlanetTransitInfo>;
 
+export interface DetailedPlanetPosition {
+  longitude: number;
+  signIndex: number;
+  degreeInSign: number;
+  nakshatraIndex: number;
+  navamshaSignIndex: number;
+}
+
+export type TransitPlanetaryPositions = Record<PlanetKey, DetailedPlanetPosition>;
+
+/**
+ * Calculates high-precision sidereal positions and signs for all 9 Grahas at any date.
+ */
+export function calculateTransitPositions(dateStr: string): TransitPlanetaryPositions {
+  const dateObj = new Date(`${dateStr.slice(0, 10)}T09:15:00Z`);
+  const time = new Astronomy.AstroTime(dateObj);
+  const jd = time.ut;
+  const ayanamsa = calculateLahiriAyanamsa(jd);
+
+  const getDetailed = (body: Astronomy.Body): DetailedPlanetPosition => {
+    const sidereal = getBodySiderealLongitude(body, time, ayanamsa);
+    return {
+      longitude: sidereal,
+      signIndex: Math.floor(sidereal / 30.0) % 12,
+      degreeInSign: sidereal % 30.0,
+      nakshatraIndex: Math.floor(sidereal / NAKSHATRA_SPAN) % 27,
+      navamshaSignIndex: Math.floor(sidereal / (360.0 / 108.0)) % 12,
+    };
+  };
+
+  const rahuTropical = calculateMeanRahu(jd);
+  const rahuSidereal = norm360(rahuTropical - ayanamsa);
+  const ketuSidereal = norm360(rahuSidereal + 180.0);
+
+  const getRahuKetu = (deg: number): DetailedPlanetPosition => ({
+    longitude: deg,
+    signIndex: Math.floor(deg / 30.0) % 12,
+    degreeInSign: deg % 30.0,
+    nakshatraIndex: Math.floor(deg / NAKSHATRA_SPAN) % 27,
+    navamshaSignIndex: Math.floor(deg / (360.0 / 108.0)) % 12,
+  });
+
+  return {
+    sun: getDetailed(Astronomy.Body.Sun),
+    moon: getDetailed(Astronomy.Body.Moon),
+    mars: getDetailed(Astronomy.Body.Mars),
+    mercury: getDetailed(Astronomy.Body.Mercury),
+    jupiter: getDetailed(Astronomy.Body.Jupiter),
+    venus: getDetailed(Astronomy.Body.Venus),
+    saturn: getDetailed(Astronomy.Body.Saturn),
+    rahu: getRahuKetu(rahuSidereal),
+    ketu: getRahuKetu(ketuSidereal),
+  };
+}
+
+/**
+ * Convenience helper returning a map of planet -> signIndex (0..11) for transit date.
+ */
+export function calculateTransitSigns(dateStr: string): Record<PlanetKey, number> {
+  const detailed = calculateTransitPositions(dateStr);
+  const res: Partial<Record<PlanetKey, number>> = {};
+  for (const [p, val] of Object.entries(detailed) as [PlanetKey, DetailedPlanetPosition][]) {
+    res[p] = val.signIndex;
+  }
+  return res as Record<PlanetKey, number>;
+}
+
 /**
  * Calculates dynamic sidereal Nakshatra positions (0 to 26) for all 9 Grahas at any date.
  */

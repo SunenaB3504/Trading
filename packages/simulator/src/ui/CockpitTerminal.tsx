@@ -18,6 +18,10 @@ import { TrikonaNathansBadge } from './components/astro/TrikonaNathansBadge';
 import { FinancialAuditCard } from './components/financial/FinancialAuditCard';
 import { MasterTradeTicketCard } from './components/advisory/MasterTradeTicketCard';
 import { CopilotChatCard } from './components/copilot/CopilotChatCard';
+import { DailyActionFeed } from './components/screener/DailyActionFeed';
+import { UniverseRadarModal } from './components/screener/UniverseRadarModal';
+import { HoroscopeDossierModal } from './components/astro/HoroscopeDossierModal';
+import { StrategyParameterDrawer, DEFAULT_STRATEGY_PARAMETERS, type StrategyParameters } from './components/settings/StrategyParameterDrawer';
 import { evaluateKotaChakra } from '../core/astro/kotaChakra';
 import { calculateTransitNakshatras } from '../core/astro/ephemeris';
 import { NAKSHATRAS } from '../core/astro/constants';
@@ -31,8 +35,10 @@ import { serializeCockpitState } from '../core/ai/ragContextBuilder';
 import type { ActiveDashaState, KotaChakraState } from '../core/astro/types';
 import type { DailyBar, CorporateRegistryRecord, QuarterlyFundamental } from '../core/data/types';
 import pitFundamentalsData from '../core/data/fixtures/pitFundamentals.json';
+import corporateRegistryData from '../core/data/corporateRegistry.json';
 
 const pitFundamentals = pitFundamentalsData as Record<string, QuarterlyFundamental[]>;
+const corporateRegistry = corporateRegistryData as Record<string, CorporateRegistryRecord>;
 
 function LeftChartPanel({
   bars,
@@ -65,15 +71,25 @@ function RightTelemetryPanel({
   auditResult,
   kotaState,
   telemetry,
+  activeDate,
+  onSelectStock,
 }: {
   ticket: MasterTradeTicket | null;
   onOrder: (t: MasterTradeTicket) => void;
   auditResult: FinancialAuditResult;
   kotaState: KotaChakraState;
   telemetry: string;
+  activeDate: string;
+  onSelectStock: (sym: string) => void;
 }): React.ReactElement {
   return (
     <section style={{ display: 'flex', flexDirection: 'column', gap: '12px', padding: '14px', overflowY: 'auto' }}>
+      <DailyActionFeed
+        activeDate={activeDate}
+        onSelectStock={onSelectStock}
+        registry={corporateRegistry}
+        fundamentalsMap={pitFundamentals}
+      />
       <MasterTradeTicketCard ticket={ticket} onExecuteOrder={onOrder} />
       <FinancialAuditCard auditResult={auditResult} />
       <KotaRadarCard kotaState={kotaState} />
@@ -178,6 +194,12 @@ function useCockpitTelemetryState() {
 export const CockpitTerminal: React.FC = () => {
   const { currentIndex, activeDate, bars, dashaState, kotaState, auditResult, tradeTicket, telemetry, executeOrder, metadata } =
     useCockpitTelemetryState();
+  const { setActiveSymbol } = useStockStore();
+
+  const [isRadarOpen, setIsRadarOpen] = React.useState(false);
+  const [isHoroscopeOpen, setIsHoroscopeOpen] = React.useState(false);
+  const [isStrategyOpen, setIsStrategyOpen] = React.useState(false);
+  const [strategyParams, setStrategyParams] = React.useState<StrategyParameters>(DEFAULT_STRATEGY_PARAMETERS);
 
   const handleOrder = (ticket: MasterTradeTicket) => {
     if (ticket.action !== 'BUY' || ticket.shares <= 0) return;
@@ -186,12 +208,47 @@ export const CockpitTerminal: React.FC = () => {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', backgroundColor: '#07090E', color: '#F1F5F9' }}>
-      <TopNavigationBar />
+      <TopNavigationBar
+        onOpenRadar={() => setIsRadarOpen(true)}
+        onOpenHoroscope={() => setIsHoroscopeOpen(true)}
+        onOpenStrategy={() => setIsStrategyOpen(true)}
+      />
       <main style={{ flex: 1, display: 'grid', gridTemplateColumns: '1.6fr 1.2fr', overflow: 'hidden' }}>
         <LeftChartPanel bars={bars} currentIndex={currentIndex} dashaState={dashaState} activeDate={activeDate} metadata={metadata} />
-        <RightTelemetryPanel ticket={tradeTicket} onOrder={handleOrder} auditResult={auditResult} kotaState={kotaState} telemetry={telemetry} />
+        <RightTelemetryPanel
+          ticket={tradeTicket}
+          onOrder={handleOrder}
+          auditResult={auditResult}
+          kotaState={kotaState}
+          telemetry={telemetry}
+          activeDate={activeDate}
+          onSelectStock={setActiveSymbol}
+        />
       </main>
       <BottomStatusBar />
+
+      <UniverseRadarModal
+        isOpen={isRadarOpen}
+        onClose={() => setIsRadarOpen(false)}
+        activeDate={activeDate}
+        onSelectStock={setActiveSymbol}
+        registry={corporateRegistry}
+        fundamentalsMap={pitFundamentals}
+      />
+
+      <HoroscopeDossierModal
+        isOpen={isHoroscopeOpen}
+        onClose={() => setIsHoroscopeOpen(false)}
+        metadata={metadata}
+        activeDate={activeDate}
+      />
+
+      <StrategyParameterDrawer
+        isOpen={isStrategyOpen}
+        onClose={() => setIsStrategyOpen(false)}
+        parameters={strategyParams}
+        onSaveParameters={setStrategyParams}
+      />
     </div>
   );
 };
