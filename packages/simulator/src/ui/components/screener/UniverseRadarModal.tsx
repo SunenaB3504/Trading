@@ -91,6 +91,11 @@ export const UniverseRadarModal: React.FC<UniverseRadarModalProps> = ({
           actionFilter={actionFilter}
           onSelectAction={setActionFilter}
           summary={summary}
+          onResetFilters={() => {
+            setSelectedTriad('ALL');
+            setSelectedYoga('ALL');
+            setActionFilter('ALL');
+          }}
         />
         <div style={{ flex: 1, overflowY: 'auto', padding: '12px' }}>
           <StockTable
@@ -98,6 +103,11 @@ export const UniverseRadarModal: React.FC<UniverseRadarModalProps> = ({
             onSelect={(sym) => {
               onSelectStock(sym);
               onClose();
+            }}
+            onResetFilters={() => {
+              setSelectedTriad('ALL');
+              setSelectedYoga('ALL');
+              setActionFilter('ALL');
             }}
           />
         </div>
@@ -151,6 +161,7 @@ function FiltersBar({
   actionFilter,
   onSelectAction,
   summary,
+  onResetFilters,
 }: {
   selectedTriad: string;
   onSelectTriad: (t: string) => void;
@@ -159,8 +170,11 @@ function FiltersBar({
   actionFilter: 'ALL' | 'BUY' | 'SELL' | 'HOLD' | 'BLOCKED';
   onSelectAction: (a: 'ALL' | 'BUY' | 'SELL' | 'HOLD' | 'BLOCKED') => void;
   summary: { strongBuyCount: number; turnaroundBuyCount: number; blockedCount: number };
+  onResetFilters: () => void;
 }) {
   const triads = ['ALL', '[T-T-T]', '[D-T-T]', '[D-D-D]', '[T-D-T]', '[K-T-T]'];
+  const hasActiveFilter = selectedTriad !== 'ALL' || selectedYoga !== 'ALL' || actionFilter !== 'ALL';
+
   return (
     <div style={{ padding: '10px 18px', borderBottom: '1px solid #1E2638', display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
@@ -214,13 +228,65 @@ function FiltersBar({
           <option value="BLOCKED">Risk Vetoed ({summary.blockedCount})</option>
         </select>
       </div>
+
+      {hasActiveFilter && (
+        <button
+          onClick={onResetFilters}
+          style={{
+            marginLeft: 'auto',
+            padding: '3px 10px',
+            borderRadius: '4px',
+            fontSize: '11px',
+            fontWeight: 700,
+            backgroundColor: '#1E2638',
+            color: '#38BDF8',
+            border: '1px solid #0284C7',
+            cursor: 'pointer',
+          }}
+        >
+          ↺ Reset Filters
+        </button>
+      )}
     </div>
   );
 }
 
-function StockTable({ items, onSelect }: { items: UniverseStockScanItem[]; onSelect: (sym: string) => void }) {
+function StockTable({
+  items,
+  onSelect,
+  onResetFilters,
+}: {
+  items: UniverseStockScanItem[];
+  onSelect: (sym: string) => void;
+  onResetFilters: () => void;
+}) {
   if (items.length === 0) {
-    return <div style={{ padding: '40px', textAlign: 'center', color: '#64748B', fontSize: '13px' }}>No universe constituents match the active filter criteria.</div>;
+    return (
+      <div style={{ padding: '40px 20px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+        <div style={{ color: '#F1F5F9', fontSize: '13px', fontWeight: 700 }}>
+          No universe constituents match this exact combination of filters.
+        </div>
+        <div style={{ color: '#94A3B8', fontSize: '12px', maxWidth: '520px', lineHeight: 1.5 }}>
+          Astrological note: <strong>[T-T-T]</strong> represents a pure Trikona benefic bull run, while <strong>Viparita Raja Yoga (VRY)</strong> requires Dusthana lords (active in <strong>[D-T-T]</strong> or <strong>[D-D-D]</strong>). Selecting both simultaneously is mutually exclusive in most charts.
+        </div>
+        <button
+          onClick={onResetFilters}
+          style={{
+            marginTop: '8px',
+            padding: '6px 16px',
+            borderRadius: '5px',
+            backgroundColor: '#D4AF37',
+            color: '#07090E',
+            fontWeight: 800,
+            fontSize: '12px',
+            border: 'none',
+            cursor: 'pointer',
+          }}
+        >
+          Reset Filters to View All Matching Stocks
+        </button>
+      </div>
+    );
   }
 
   return (
