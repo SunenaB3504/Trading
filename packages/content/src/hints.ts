@@ -18,6 +18,9 @@ export const HINTS: Record<string, Hint> = {
   compare: { text: 'This shows what holding longer or selling earlier would have done. It is hindsight, so learn from it, do not chase it.', lesson: 'behavioural-traps' },
   timemachine: { text: 'You only see prices up to the date you are at. Decide, move the date on, and then look at what happened. Do not move back to change an order.', lesson: 'behavioural-traps' },
   builder: { text: 'A mix that fell less in the past is not promised to fall less next time. Look at the worst fall, not only the return.', lesson: 'types-of-risk' },
+  charts: { text: 'A chart is a record of what already happened. Averages and RSI smooth or measure that record. They do not predict.', lesson: 'charts-and-indicators' },
+  lab: { text: 'Test the rules on past prices, but do not keep changing the settings until the past looks good. That is overfitting.', lesson: 'rules-and-overfitting' },
+  robo: { text: 'These accounts follow fixed rules and are brought up to date session by session. Compare them with the Index Benchmark, not with each other only.', lesson: 'rules-and-overfitting' },
   measure: { text: 'Write down why you trade before you trade. Flags below are habits to look at, not verdicts.', lesson: 'behavioural-traps' },
 };
 

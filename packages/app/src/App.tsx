@@ -17,6 +17,9 @@ import { ProfilesScreen } from './screens/ProfilesScreen';
 import { ReportScreen } from './screens/ReportScreen';
 import { SettingsScreen } from './screens/SettingsScreen';
 import { AskScreenBar } from './tutor/AskScreenBar';
+import { ChartScreen } from './screens/ChartScreen';
+import { RoboScreen } from './screens/RoboScreen';
+import { StrategyLabScreen } from './screens/StrategyLabScreen';
 import { BuilderScreen } from './screens/BuilderScreen';
 import { TimeMachineScreen } from './screens/TimeMachineScreen';
 import { TutorScreen } from './screens/TutorScreen';
@@ -40,7 +43,7 @@ import { RootErrorBoundary } from './ui/RootErrorBoundary';
 import { TabStrip } from './ui/TabStrip';
 
 type SectionId = 'home' | 'learn' | 'practise' | 'measure' | 'tutor' | 'settings';
-type PractiseId = 'trade' | 'funds' | 'machine' | 'builder' | 'ledger' | 'universe' | 'compare' | 'report';
+type PractiseId = 'trade' | 'funds' | 'machine' | 'builder' | 'charts' | 'lab' | 'robo' | 'ledger' | 'universe' | 'compare' | 'report';
 type SettingsId = 'general' | 'profiles' | 'backup' | 'data';
 
 const SECTIONS = [
@@ -56,6 +59,9 @@ const PRACTISE = [
   ['funds', 'Funds'],
   ['machine', 'Time Machine'],
   ['builder', 'Builder'],
+  ['charts', 'Charts'],
+  ['lab', 'Strategy Lab'],
+  ['robo', 'Robo'],
   ['ledger', 'Ledger'],
   ['universe', 'Universe'],
   ['compare', 'Compare'],
@@ -123,20 +129,24 @@ function Practise(props: { env: TutorEnv; kv: KeyValueStore; now: () => number; 
   const [tab, setTab] = useState<PractiseId>('trade');
   const { kv, now, markets, funds, env } = props;
   const market = markets.market;
+  const screens: Record<PractiseId, () => React.ReactElement> = {
+    trade: () => <TradeScreen kv={kv} now={now} market={market} env={env} />,
+    funds: () => <FundsScreen kv={kv} now={now} funds={funds} />,
+    machine: () => <TimeMachineScreen kv={kv} now={now} real={markets.real} funds={funds} env={env} />,
+    builder: () => <BuilderScreen real={markets.real} funds={funds} />,
+    charts: () => <ChartScreen market={market} />,
+    lab: () => <StrategyLabScreen kv={kv} now={now} real={markets.real} />,
+    robo: () => <RoboScreen kv={kv} now={now} real={markets.real} />,
+    ledger: () => <LedgerScreen kv={kv} now={now} />,
+    universe: () => <UniverseScreen />,
+    compare: () => <CompareScreen kv={kv} now={now} market={market} />,
+    report: () => <ReportScreen kv={kv} now={now} market={market} />,
+  };
   return (
     <>
       <MarketSwitch markets={markets} />
       <TabStrip tabs={PRACTISE} active={tab} onSelect={setTab} small />
-      <View style={styles.body} key={market.id}>
-        {tab === 'trade' ? <TradeScreen kv={kv} now={now} market={market} env={env} /> : null}
-        {tab === 'funds' ? <FundsScreen kv={kv} now={now} funds={funds} /> : null}
-        {tab === 'machine' ? <TimeMachineScreen kv={kv} now={now} real={markets.real} funds={funds} env={env} /> : null}
-        {tab === 'builder' ? <BuilderScreen real={markets.real} funds={funds} /> : null}
-        {tab === 'ledger' ? <LedgerScreen kv={kv} now={now} /> : null}
-        {tab === 'universe' ? <UniverseScreen /> : null}
-        {tab === 'compare' ? <CompareScreen kv={kv} now={now} market={market} /> : null}
-        {tab === 'report' ? <ReportScreen kv={kv} now={now} market={market} /> : null}
-      </View>
+      <View style={styles.body} key={market.id}>{screens[tab]()}</View>
     </>
   );
 }

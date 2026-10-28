@@ -113,8 +113,8 @@ async function liveAnswer(page: Page): Promise<void> {
   const before = calls;
   await freshHome(page);
   const text = await ask(page, 'home-guide');
-  check('a good key gives a live answer with its figures filled by code', /AI answer/.test(text) && /0 of 15/.test(text), text);
-  check('the facts used and the model are shown under it', /Facts used: lessons done 0 of 15/.test(text) && /claude-haiku-5-5/.test(text), text);
+  check('a good key gives a live answer with its figures filled by code', /AI answer/.test(text) && /0 of \d+/.test(text), text);
+  check('the facts used and the model are shown under it', /Facts used: lessons done 0 of \d+/.test(text) && /claude-haiku-5-5/.test(text), text);
   check('exactly one call was made', calls === before + 1, String(calls - before));
   await section(page, 'Tutor');
   await page.getByText(/, 1 calls/).waitFor({ timeout: 10_000 }).catch(() => undefined);

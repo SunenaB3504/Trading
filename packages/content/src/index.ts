@@ -26,6 +26,7 @@ export const GLOSSARY: readonly GlossaryEntry[] = parseGlossary(GLOSSARY_FILE).s
 export const LEVEL_TITLES: Readonly<Record<number, string>> = {
   1: 'Level 1: Foundations',
   2: 'Level 2: Trading, costs and habits',
+  3: 'Level 3: Charts and rules',
 };
 
 export interface Level {

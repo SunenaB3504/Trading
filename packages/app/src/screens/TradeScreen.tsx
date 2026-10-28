@@ -203,7 +203,7 @@ function JournalFields(props: { value: BeforeFields; onChange: (v: BeforeFields)
 }
 
 /** A few instruments are buttons; a longer list gets a search box and shows the matches as buttons. */
-function StockPicker(props: { market: Market; value: string; onChange: (id: string) => void }) {
+export function StockPicker(props: { market: Market; value: string; onChange: (id: string) => void }) {
   const { market } = props;
   const [query, setQuery] = useState('');
   if (market.instruments.length <= 6)

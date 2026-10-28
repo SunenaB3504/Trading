@@ -130,12 +130,23 @@ function buildFill(
   };
 }
 
+const providers = new WeakMap<ReplaySnapshot, ReturnType<typeof contextProvider>>();
+
+/** One date index per snapshot: a long run places many orders against the same frozen data. */
+function providerOf(snapshot: ReplaySnapshot): ReturnType<typeof contextProvider> {
+  const known = providers.get(snapshot);
+  if (known !== undefined) return known;
+  const made = contextProvider(snapshot);
+  providers.set(snapshot, made);
+  return made;
+}
+
 /** Simulates one order and posts it; false when the order is a GTT that the data has not yet settled. */
 export function processOrder(run: Run, ro: ReplayOrder): boolean {
   const sim = fillOrder(
     ro.order,
     ro.intent,
-    contextProvider(run.snapshot),
+    providerOf(run.snapshot),
     run.cfg.fillOptions ?? DEFAULT_FILL_OPTIONS,
   );
   if (sim.status === 'open') return false;

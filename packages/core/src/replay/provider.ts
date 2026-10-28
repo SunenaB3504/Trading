@@ -28,10 +28,16 @@ export function contextProvider(s: ReplaySnapshot): ContextProvider {
   };
 }
 
-function lastCloseOnOrBefore(bars: readonly BarAdj[], date: string): number | null {
-  let close: number | null = null;
-  for (const b of bars) if (b.date <= date) close = b.close;
-  return close;
+/** The last two bars dated on or before `date`: the adjusted close of the latest one needs nothing earlier. */
+function tailUpTo(bars: readonly BarUnadj[], date: string): BarUnadj[] {
+  let lo = 0;
+  let hi = bars.length;
+  while (lo < hi) {
+    const mid = (lo + hi) >> 1;
+    if ((bars[mid] as BarUnadj).date <= date) lo = mid + 1;
+    else hi = mid;
+  }
+  return bars.slice(Math.max(0, lo - 2), lo);
 }
 
 /** Marks for every held instrument: adjusted close on or before `date`, rounded to whole paise. */
@@ -44,9 +50,11 @@ export function marksAsOf(
   const marks: Record<string, number> = {};
   for (const [id, bars] of Object.entries(s.bars)) {
     if (quantityHeld(state, id) <= 0) continue;
-    const adj = adjustSeries(bars, actions, { includeDividends: false, asOf: date });
-    const close = lastCloseOnOrBefore(adj, date);
-    if (close !== null) marks[id] = Math.round(close);
+    // Only the latest bar's close is needed, and its factor depends on actions after it, not on bars before it.
+    const tail = tailUpTo(bars, date);
+    if (tail.length === 0) continue;
+    const adj = adjustSeries(tail, actions, { includeDividends: false, asOf: date });
+    marks[id] = Math.round((adj[adj.length - 1] as BarAdj).close);
   }
   return marks;
 }

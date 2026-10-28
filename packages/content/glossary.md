@@ -49,3 +49,16 @@
 | Loss aversion | Feeling losses more than equal gains | behavioural-traps |
 | Rebalancing | Restoring your target split | habits-that-help |
 | Survivorship bias | Seeing only those who survived | types-of-risk |
+| Averaging down | Buying more of a share as its price falls | short-selling-and-entry-methods |
+| Backtest | Running a rule over old prices to see what it would have done | rules-and-overfitting |
+| Breakout | A close above the recent highs, usually on heavy volume | breakouts-and-stops |
+| Candlestick | A bar showing a day's open, high, low and close | charts-and-indicators |
+| Drawdown | A fall from a peak in the value of your money | breakouts-and-stops |
+| Look-ahead | A test using information that was not known at the time | rules-and-overfitting |
+| Moving average | The average of the last N closing prices | charts-and-indicators |
+| Overfitting | Tuning a rule until the past looks good | rules-and-overfitting |
+| RSI | A 0 to 100 gauge of recent gains against recent losses | charts-and-indicators |
+| Short selling | Selling first in the hope of buying back lower | short-selling-and-entry-methods |
+| Support and resistance | Price levels where buyers or sellers appeared before | charts-and-indicators |
+| Trailing stop | A stop that moves up with the highest price reached | breakouts-and-stops |
+| Volume | The number of shares traded | charts-and-indicators |
