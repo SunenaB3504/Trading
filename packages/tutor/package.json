@@ -1,0 +1,14 @@
+{
+  "name": "@trading/tutor",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@trading/content": "workspace:*",
+    "@trading/core": "workspace:*"
+  }
+}
