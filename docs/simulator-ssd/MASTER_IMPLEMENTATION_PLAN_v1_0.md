@@ -457,6 +457,22 @@ packages/simulator/src/
   * `ui/components/settings/StrategyParameterDrawer.tsx` (`< 350 LOC`).
 * **Acceptance Criteria:** Changing a slider immediately updates position sizing and active edge signals across all cockpit widgets.
 
+#### WP-5.6: 4-Fold Classical Confluence Filters (Indu Lagna, Kota Chakra, SBC, Tara Bala)
+* **Objective:** Expand the Market Universe Radar with 4 classical Vedic confluence filters and deconstruct radar UI into modular subcomponents (<250 LOC).
+* **Key Tasks:**
+  1. Implement `induLagna.ts` computing Uttara Kalamrita 9th lord Kalas rays and transit benefic (Jupiter, Venus) Kendra/Trikona activations.
+  2. Implement `taraBala.ts` evaluating 9-star Tara Bala cycle (Sampat, Kshema, Sadhana vs. Vipat, Naidhana) and lunar Tithis.
+  3. Integrate `kotaChakra.ts` and `sbcChakra.ts` into `universeScanner.ts` to compute 4-fold confluence score (★ 0..4/4).
+  4. Decompose `UniverseRadarModal.tsx` into modular subcomponents: `RadarFiltersBar.tsx` (< 250 LOC) and `RadarStockTable.tsx` (< 250 LOC).
+* **Deliverables:**
+  * `core/astro/induLagna.ts` & `induLagna.test.ts` (`< 200 LOC`).
+  * `core/astro/taraBala.ts` & `taraBala.test.ts` (`< 200 LOC`).
+  * `core/engine/universeScanner.ts` (< 350 LOC).
+  * `ui/components/screener/RadarFiltersBar.tsx` (< 250 LOC).
+  * `ui/components/screener/RadarStockTable.tsx` (< 250 LOC).
+  * `ui/components/screener/UniverseRadarModal.tsx` (< 200 LOC).
+* **Acceptance Criteria:** All 4 confluence filters toggle dynamically without lag; composite confluence score (★ 0..4/4) displays with color-coded chips; 16 test files pass (70/70 tests).
+
 ---
 
 ## 5. Technical Risk Management & Mitigations

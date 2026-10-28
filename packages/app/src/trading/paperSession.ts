@@ -1,5 +1,7 @@
 import {
   FixedClock,
+  equityAt,
+  marksAsOf,
   checkMistakes,
   PaperExecutionAdapter,
   computeLedgerB,
@@ -141,6 +143,12 @@ export class PaperSession {
     return toComparisonView(
       computeLedgerB(result, snapshot, cfg.actions, cfg.endDate, cfg.capitalPaise),
     );
+  }
+
+  /** Cash plus the holdings at the adjusted close on the last date of the market, in whole paise. */
+  equityPaise(): number {
+    const { state } = this.adapter.result();
+    return equityAt(state, marksAsOf(this.market.snapshot, this.market.config.actions, state, this.market.lastDate));
   }
 
   /** Win/loss report with bootstrap intervals; the seed is fixed so the same book gives the same numbers. */

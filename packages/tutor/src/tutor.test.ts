@@ -2,7 +2,7 @@ import { GLOSSARY, SAMPLES } from '@trading/content';
 import { describe, expect, it } from 'vitest';
 import { askTutor } from './engine';
 import type { AskDeps } from './engine';
-import { askScreen, learningGuide, lessonMaterial, preTrade, quizFeedback, scrub, tradeReview, weeklyReview } from './contexts';
+import { askScreen, learningGuide, lessonMaterial, preTrade, quizFeedback, scenarioDebrief, scrub, tradeReview, weeklyReview } from './contexts';
 import { buildPrompt, fillPlaceholders, SYSTEM_PROMPT } from './prompt';
 import { FEATURES, ProviderError } from './types';
 import type { Fact, ModelProvider, ProviderReply, ProviderRequest, TutorContext } from './types';
@@ -241,6 +241,13 @@ describe('what each feature sends (SSD v4.1 §7.4)', () => {
     const c = weeklyReview({ facts: [], flags: ['Overtrading'], entries: Array.from({ length: 12 }, () => journal), symbols: [], names: [] });
     expect(c.material.filter((m) => m.title.startsWith('Journal entry'))).toHaveLength(8);
     expect(c.material.some((m) => m.text.includes('- Overtrading'))).toBe(true);
+  });
+  it('scenario debrief: the goal and whether it was met, what was done, what followed and the lesson', () => {
+    const c = scenarioDebrief({ title: 'The 2020 recovery', goalText: 'Beat the index', goalMet: false, facts: [], actions: ['buy 1000 NIFTYBEES'], followed: 'The benchmark rose after.', symbols: ['NIFTYBEES'], lessonIds: ['behavioural-traps'] });
+    expect(c.feature).toBe('scenario_debrief');
+    expect(c.material[0]?.text).toContain('Goal met: no');
+    expect(c.material[1]?.text).toBe('- buy 1000 NIFTYBEES');
+    expect(scenarioDebrief({ title: 't', goalText: 'g', goalMet: true, facts: [], actions: [], followed: 'f', symbols: [], lessonIds: [] }).material[1]?.text).toBe('No orders were placed.');
   });
   it('quiz feedback: the question, the model answer and the lesson', () => {
     const c = quizFeedback({ question: 'Where does a stop fill?', modelAnswer: 'Near the open.', lessonIds: ['order-types'] });

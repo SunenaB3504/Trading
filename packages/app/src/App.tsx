@@ -17,6 +17,8 @@ import { ProfilesScreen } from './screens/ProfilesScreen';
 import { ReportScreen } from './screens/ReportScreen';
 import { SettingsScreen } from './screens/SettingsScreen';
 import { AskScreenBar } from './tutor/AskScreenBar';
+import { BuilderScreen } from './screens/BuilderScreen';
+import { TimeMachineScreen } from './screens/TimeMachineScreen';
 import { TutorScreen } from './screens/TutorScreen';
 import type { TutorEnv } from './tutor/run';
 import { FundsScreen } from './screens/FundsScreen';
@@ -38,7 +40,7 @@ import { RootErrorBoundary } from './ui/RootErrorBoundary';
 import { TabStrip } from './ui/TabStrip';
 
 type SectionId = 'home' | 'learn' | 'practise' | 'measure' | 'tutor' | 'settings';
-type PractiseId = 'trade' | 'funds' | 'ledger' | 'universe' | 'compare' | 'report';
+type PractiseId = 'trade' | 'funds' | 'machine' | 'builder' | 'ledger' | 'universe' | 'compare' | 'report';
 type SettingsId = 'general' | 'profiles' | 'backup' | 'data';
 
 const SECTIONS = [
@@ -52,6 +54,8 @@ const SECTIONS = [
 const PRACTISE = [
   ['trade', 'Trade'],
   ['funds', 'Funds'],
+  ['machine', 'Time Machine'],
+  ['builder', 'Builder'],
   ['ledger', 'Ledger'],
   ['universe', 'Universe'],
   ['compare', 'Compare'],
@@ -126,6 +130,8 @@ function Practise(props: { env: TutorEnv; kv: KeyValueStore; now: () => number; 
       <View style={styles.body} key={market.id}>
         {tab === 'trade' ? <TradeScreen kv={kv} now={now} market={market} env={env} /> : null}
         {tab === 'funds' ? <FundsScreen kv={kv} now={now} funds={funds} /> : null}
+        {tab === 'machine' ? <TimeMachineScreen kv={kv} now={now} real={markets.real} funds={funds} env={env} /> : null}
+        {tab === 'builder' ? <BuilderScreen real={markets.real} funds={funds} /> : null}
         {tab === 'ledger' ? <LedgerScreen kv={kv} now={now} /> : null}
         {tab === 'universe' ? <UniverseScreen /> : null}
         {tab === 'compare' ? <CompareScreen kv={kv} now={now} market={market} /> : null}

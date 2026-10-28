@@ -370,13 +370,23 @@ $$\mathbf{Trade Ticket} = \Big\{ \text{When to Invest}, \quad \text{Quantity / R
 ### Subsystem 9: Market Universe Radar, 27-Triad Combinatorial Screener & Daily Action Digest
 * **Responsibility:** Batch-evaluates the entire target equity universe for any selected historical or current simulation date $t_{\text{sim}}$, categorizing instruments across all 27 Dasha Triad permutations and generating a prioritized daily execution feed.
 * **Architecture & Modular Components:**
-  * `core/engine/universeScanner.ts` (< 350 LOC): Evaluates corporate metadata, transit ephemerides, active Dasha triads, and PIT balance-sheet health for all universe constituents.
-  * `ui/components/screener/UniverseRadarModal.tsx` (< 400 LOC): Multi-filter screener drawer/modal.
+  * `core/engine/universeScanner.ts` (< 350 LOC): Evaluates corporate metadata, transit ephemerides, active Dasha triads, 4-fold confluence metrics, and PIT balance-sheet health for all universe constituents.
+  * `core/astro/induLagna.ts` (< 200 LOC): Computes Uttara Kalamrita 9th lord Kalas rays and Gochara transit Kendra/Trikona benefic activations.
+  * `core/astro/taraBala.ts` (< 250 LOC): Computes 9-star Tara Bala cycle (Sampat, Kshema, Sadhana vs. Vipat, Naidhana) and lunar Tithi phase.
+  * `ui/components/screener/UniverseRadarModal.tsx` (< 200 LOC): Multi-filter screener modal container.
+  * `ui/components/screener/RadarFiltersBar.tsx` (< 250 LOC): Interactive toolbar for Triads, Yogas, Actions, and 4-fold Confluence filters.
+  * `ui/components/screener/RadarStockTable.tsx` (< 250 LOC): Constituent data table with Confluence badges (★ 0..4/4) and Cockpit deep-dive routing.
   * `ui/components/screener/DailyActionFeed.tsx` (< 300 LOC): Prioritized market-wide execution table.
 * **Core Capabilities:**
   * **27-Triad Permutation Engine:**
     - Evaluates the complete Cartesian product $\{T, K, D\}_{\text{MD}} \times \{T, K, D\}_{\text{AD}} \times \{T, K, D\}_{\text{PD}}$ ($3^3 = 27$ distinct triads).
     - Quick-filter pills to view all stocks in $[T\text{-}T\text{-}T]$ (Bull Runs), $[D\text{-}T\text{-}T]$ (Turnarounds), $[D\text{-}D\text{-}D]$ (Peak Astrological Stress), $[T\text{-}D\text{-}T]$ (Impending Exits), or custom sets (e.g. $[K\text{-}T\text{-}T]$).
+  * **4-Fold Vedic Confluence Filters & Badges:**
+    1. **Kota Chakra Citadel Defense:** Filters for Fortified Citadel ($\text{Score} \ge 0.60$ with clean Stambha) vs. Fortress Breached ($\text{Score} < 0.40$ or malefics in Stambha).
+    2. **Sarvatobhadra Chakra (SBC):** 81-square grid Subha Vedha benefic rays vs. clean vs. Papa Vedha affliction hits on ticker consonants.
+    3. **Indu Lagna Wealth Vector:** Identifies active Gochara transit of benefics (Jupiter, Venus) in Kendra or Trikona from the stock's Indu Lagna.
+    4. **Panchanga & Tara Bala:** Filters for Auspicious stars (Sampat [Wealth], Kshema [Safety], Sadhana [Success], Mitra [Support]) vs. Inauspicious stars (Vipat [Peril], Naidhana [Destruction]).
+    5. **Composite Confluence Score (★ 0..4/4):** Ranks equities by simultaneous alignment across Kota, SBC, Indu Lagna, and Tara Bala.
   * **One-Click Cockpit Deep Dive:**
     - Selecting any row in the screener table immediately loads the ticker into the primary Cockpit Terminal, mounts its 25-year timeline buffer, and snaps the chart to the ongoing Dasha epoch.
   * **Auto-Snapping to Cusp Boundaries:**

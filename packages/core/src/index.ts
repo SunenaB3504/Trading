@@ -21,3 +21,4 @@ export * from './execution';
 export * from './bundle';
 export * from './overlay';
 export * from './mistakes';
+export * from './portfolio';

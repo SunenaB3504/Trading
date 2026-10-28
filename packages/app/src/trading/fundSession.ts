@@ -167,6 +167,16 @@ export class FundSession {
     return { ok: true, orderId: built.order.id };
   }
 
+  /** Cash plus the value of the holdings at the latest NAVs, in whole paise. */
+  equityPaise(): number {
+    return this.result.equityPaise;
+  }
+
+  /** Separate months in which a purchase went through (a SIP instalment counts once, in its month). */
+  buyMonths(): number {
+    return new Set(this.result.txns.filter((t) => t.action === 'purchase' && t.status === 'done').map((t) => (t.navDate ?? '').slice(0, 7))).size;
+  }
+
   view(): FundView {
     const names = new Map(this.market.funds.map((f) => [f.id, f.name]));
     const nameOf = (id: string): string => names.get(id) ?? id;

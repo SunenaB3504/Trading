@@ -1,7 +1,7 @@
 export { askTutor, MAX_OUTPUT_TOKENS } from './engine';
 export type { AnswerSource, AskDeps, TutorAnswer } from './engine';
 export { coachAnswer, REASON_TEXT } from './coach';
-export { askScreen, learningGuide, lessonMaterial, preTrade, quizFeedback, scrub, tradeReview, weeklyReview } from './contexts';
+export { askScreen, learningGuide, lessonMaterial, preTrade, quizFeedback, scenarioDebrief, scrub, tradeReview, weeklyReview } from './contexts';
 export type { JournalText } from './contexts';
 export { SYSTEM_PROMPT, TASKS, TEMPLATE_VERSION, buildPrompt, fillPlaceholders } from './prompt';
 export type { Prompt } from './prompt';

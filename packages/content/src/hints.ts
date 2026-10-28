@@ -16,6 +16,8 @@ export const HINTS: Record<string, Hint> = {
   report: { text: 'A few trades say little. Look at the range, not the single number.', lesson: 'habits-that-help' },
   universe: { text: 'A stock can fail a rule for good reason. Read why before you override it.', lesson: 'types-of-risk' },
   compare: { text: 'This shows what holding longer or selling earlier would have done. It is hindsight, so learn from it, do not chase it.', lesson: 'behavioural-traps' },
+  timemachine: { text: 'You only see prices up to the date you are at. Decide, move the date on, and then look at what happened. Do not move back to change an order.', lesson: 'behavioural-traps' },
+  builder: { text: 'A mix that fell less in the past is not promised to fall less next time. Look at the worst fall, not only the return.', lesson: 'types-of-risk' },
   measure: { text: 'Write down why you trade before you trade. Flags below are habits to look at, not verdicts.', lesson: 'behavioural-traps' },
 };
 

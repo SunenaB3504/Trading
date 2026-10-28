@@ -56,3 +56,5 @@ export function searchGlossary(query: string): GlossaryEntry[] {
 /** The levels in the shape `nextStep` takes. */
 export const PATH = LEVELS.map((l) => ({ lessons: l.lessons.map((x) => x.id), quiz: l.quiz?.id ?? null }));
 export { SAMPLES } from './samples';
+export { SCENARIOS, scenarioById } from './scenarios';
+export type { Checkpoint, Scenario, ScenarioGoal } from './scenarios';

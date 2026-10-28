@@ -3,6 +3,10 @@ import {
   scanUniverse,
   filterUniverseByTriad,
   filterUniverseByYoga,
+  filterUniverseByKota,
+  filterUniverseBySBC,
+  filterUniverseByInduLagna,
+  filterUniverseByTara,
   getPrioritizedDailyActionFeed,
 } from './universeScanner';
 import type { CorporateRegistryRecord, QuarterlyFundamental } from '../data/types';
@@ -114,6 +118,41 @@ describe('Market Universe Scanner Engine (universeScanner)', () => {
     expect(summary.scanDate).toBe('2026-10-05');
     expect(summary.items.length).toBe(3);
     expect(Object.keys(summary.triadDistribution).length).toBeGreaterThan(0);
+  });
+
+  it('evaluates 4-fold Vedic Confluence fields (Kota, SBC, Indu Lagna, Tara Bala)', () => {
+    const summary = scanUniverse(sampleRegistry, '2026-10-05', sampleFundamentals);
+    const item = summary.items[0];
+    expect(item).toBeDefined();
+    if (!item) return;
+
+    expect(item.kotaDefenseScore).toBeGreaterThanOrEqual(0);
+    expect(item.kotaDefenseScore).toBeLessThanOrEqual(1.0);
+    expect(['FORTIFIED', 'BREACHED', 'NEUTRAL']).toContain(item.kotaStatus);
+    expect(['SUBHA', 'CLEAN', 'AFFLICTED']).toContain(item.sbcStatus);
+    expect(typeof item.isInduLagnaActive).toBe('boolean');
+    expect(item.taraNumber).toBeGreaterThanOrEqual(1);
+    expect(item.taraNumber).toBeLessThanOrEqual(9);
+    expect(['AUSPICIOUS', 'NEUTRAL', 'INAUSPICIOUS']).toContain(item.taraCategory);
+    expect(item.confluenceScore).toBeGreaterThanOrEqual(0);
+    expect(item.confluenceScore).toBeLessThanOrEqual(4);
+  });
+
+  it('correctly filters universe items by Confluence criteria (Kota, SBC, Indu, Tara)', () => {
+    const summary = scanUniverse(sampleRegistry, '2026-10-05', sampleFundamentals);
+    const items = summary.items;
+
+    const fortified = filterUniverseByKota(items, 'FORTIFIED');
+    expect(fortified.every((i) => i.isKotaFortified)).toBe(true);
+
+    const sbcSubha = filterUniverseBySBC(items, 'SUBHA');
+    expect(sbcSubha.every((i) => i.sbcStatus === 'SUBHA')).toBe(true);
+
+    const induActive = filterUniverseByInduLagna(items, 'ACTIVE');
+    expect(induActive.every((i) => i.isInduLagnaActive)).toBe(true);
+
+    const taraAuspicious = filterUniverseByTara(items, 'AUSPICIOUS');
+    expect(taraAuspicious.every((i) => i.taraCategory === 'AUSPICIOUS')).toBe(true);
   });
 
   it('correctly flags balance-sheet risk veto on distressed company', () => {

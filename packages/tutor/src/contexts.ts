@@ -113,3 +113,19 @@ export function quizFeedback(i: { question: string; modelAnswer: string; lessonI
     lessonIds: i.lessonIds,
   };
 }
+
+export function scenarioDebrief(i: { title: string; goalText: string; goalMet: boolean; facts: Fact[]; actions: string[]; followed: string; symbols: string[]; lessonIds: string[] }): TutorContext {
+  const did = i.actions.length === 0 ? 'No orders were placed.' : i.actions.slice(0, 40).map((a) => `- ${a}`).join('\n');
+  return {
+    feature: 'scenario_debrief',
+    facts: i.facts,
+    material: [
+      { title: 'Scenario', text: `${i.title}\nGoal: ${i.goalText}\nGoal met: ${i.goalMet ? 'yes' : 'no'}` },
+      { title: 'What the person did', text: did },
+      { title: 'What followed after the scenario ended', text: i.followed },
+      ...lessons(i.lessonIds),
+    ],
+    symbols: i.symbols,
+    lessonIds: i.lessonIds,
+  };
+}

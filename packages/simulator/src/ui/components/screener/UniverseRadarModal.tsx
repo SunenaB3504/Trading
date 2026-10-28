@@ -1,7 +1,8 @@
 /**
  * packages/simulator/src/ui/components/screener/UniverseRadarModal.tsx
- * Market Universe Radar & 27-Triad Screener Drawer/Modal.
- * Enforces strict modularity (< 400 LOC, functions < 60 LOC, complexity <= 10).
+ * Market Universe Radar & Screener Modal with 4-fold Vedic Confluence.
+ * Integrates Triads, Yogas, Kota Chakra, SBC, Indu Lagna, and Tara Bala.
+ * Enforces strict modularity (< 200 LOC, functions < 60 LOC, complexity <= 10).
  */
 
 import React, { useMemo, useState } from 'react';
@@ -10,8 +11,13 @@ import {
   scanUniverse,
   filterUniverseByTriad,
   filterUniverseByYoga,
-  type UniverseStockScanItem,
+  filterUniverseByKota,
+  filterUniverseBySBC,
+  filterUniverseByInduLagna,
+  filterUniverseByTara,
 } from '../../../core/engine/universeScanner';
+import { RadarFiltersBar, type RadarFiltersState } from './RadarFiltersBar';
+import { RadarStockTable } from './RadarStockTable';
 
 export interface UniverseRadarModalProps {
   isOpen: boolean;
@@ -22,6 +28,17 @@ export interface UniverseRadarModalProps {
   fundamentalsMap?: Record<string, QuarterlyFundamental[]>;
 }
 
+const INITIAL_FILTERS: RadarFiltersState = {
+  selectedTriad: 'ALL',
+  selectedYoga: 'ALL',
+  actionFilter: 'ALL',
+  kotaFilter: 'ALL',
+  sbcFilter: 'ALL',
+  induFilter: 'ALL',
+  taraFilter: 'ALL',
+  minConfluence: 0,
+};
+
 export const UniverseRadarModal: React.FC<UniverseRadarModalProps> = ({
   isOpen,
   onClose,
@@ -30,9 +47,7 @@ export const UniverseRadarModal: React.FC<UniverseRadarModalProps> = ({
   registry,
   fundamentalsMap = {},
 }) => {
-  const [selectedTriad, setSelectedTriad] = useState<string>('ALL');
-  const [selectedYoga, setSelectedYoga] = useState<'ALL' | 'VRY' | 'NBRY' | 'DHANA' | 'MAHAPURUSHA'>('ALL');
-  const [actionFilter, setActionFilter] = useState<'ALL' | 'BUY' | 'SELL' | 'HOLD' | 'BLOCKED'>('ALL');
+  const [filters, setFilters] = useState<RadarFiltersState>(INITIAL_FILTERS);
 
   const effectiveDate = activeDate && activeDate.length >= 10 ? activeDate : '2005-01-01';
   const summary = useMemo(
@@ -42,15 +57,32 @@ export const UniverseRadarModal: React.FC<UniverseRadarModalProps> = ({
 
   const filteredItems = useMemo(() => {
     let res = summary.items;
-    res = filterUniverseByTriad(res, selectedTriad);
-    res = filterUniverseByYoga(res, selectedYoga);
-    if (actionFilter === 'BLOCKED') {
+    res = filterUniverseByTriad(res, filters.selectedTriad);
+    res = filterUniverseByYoga(res, filters.selectedYoga);
+    res = filterUniverseByKota(res, filters.kotaFilter);
+    res = filterUniverseBySBC(res, filters.sbcFilter);
+    res = filterUniverseByInduLagna(res, filters.induFilter);
+    res = filterUniverseByTara(res, filters.taraFilter);
+
+    if (filters.minConfluence > 0) {
+      res = res.filter((i) => i.confluenceScore >= filters.minConfluence);
+    }
+
+    if (filters.actionFilter === 'BLOCKED') {
       res = res.filter((i) => i.isBlocked);
-    } else if (actionFilter !== 'ALL') {
-      res = res.filter((i) => i.action === actionFilter && !i.isBlocked);
+    } else if (filters.actionFilter !== 'ALL') {
+      res = res.filter((i) => i.action === filters.actionFilter && !i.isBlocked);
     }
     return res;
-  }, [summary.items, selectedTriad, selectedYoga, actionFilter]);
+  }, [summary.items, filters]);
+
+  const handleFilterChange = <K extends keyof RadarFiltersState>(key: K, value: RadarFiltersState[K]) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const handleResetFilters = () => {
+    setFilters(INITIAL_FILTERS);
+  };
 
   if (!isOpen) return null;
 
@@ -70,9 +102,9 @@ export const UniverseRadarModal: React.FC<UniverseRadarModalProps> = ({
     >
       <div
         style={{
-          width: '95%',
-          maxWidth: '1200px',
-          maxHeight: '85vh',
+          width: '96%',
+          maxWidth: '1280px',
+          maxHeight: '88vh',
           backgroundColor: '#0B0E14',
           border: '1px solid #1E2638',
           borderRadius: '10px',
@@ -82,33 +114,21 @@ export const UniverseRadarModal: React.FC<UniverseRadarModalProps> = ({
           overflow: 'hidden',
         }}
       >
-        <Header activeDate={activeDate} total={summary.totalScanned} onClose={onClose} />
-        <FiltersBar
-          selectedTriad={selectedTriad}
-          onSelectTriad={setSelectedTriad}
-          selectedYoga={selectedYoga}
-          onSelectYoga={setSelectedYoga}
-          actionFilter={actionFilter}
-          onSelectAction={setActionFilter}
+        <RadarHeader activeDate={activeDate} total={summary.totalScanned} matchedCount={filteredItems.length} onClose={onClose} />
+        <RadarFiltersBar
+          filters={filters}
+          onChange={handleFilterChange}
+          onReset={handleResetFilters}
           summary={summary}
-          onResetFilters={() => {
-            setSelectedTriad('ALL');
-            setSelectedYoga('ALL');
-            setActionFilter('ALL');
-          }}
         />
         <div style={{ flex: 1, overflowY: 'auto', padding: '12px' }}>
-          <StockTable
+          <RadarStockTable
             items={filteredItems}
             onSelect={(sym) => {
               onSelectStock(sym);
               onClose();
             }}
-            onResetFilters={() => {
-              setSelectedTriad('ALL');
-              setSelectedYoga('ALL');
-              setActionFilter('ALL');
-            }}
+            onResetFilters={handleResetFilters}
           />
         </div>
       </div>
@@ -116,7 +136,17 @@ export const UniverseRadarModal: React.FC<UniverseRadarModalProps> = ({
   );
 };
 
-function Header({ activeDate, total, onClose }: { activeDate: string; total: number; onClose: () => void }) {
+function RadarHeader({
+  activeDate,
+  total,
+  matchedCount,
+  onClose,
+}: {
+  activeDate: string;
+  total: number;
+  matchedCount: number;
+  onClose: () => void;
+}) {
   return (
     <div
       style={{
@@ -132,7 +162,7 @@ function Header({ activeDate, total, onClose }: { activeDate: string; total: num
         <span style={{ color: '#D4AF37', fontSize: '14px', fontWeight: 900 }}>☵ MARKET UNIVERSE RADAR</span>
         <span style={{ color: '#64748B', fontSize: '12px' }}>|</span>
         <span style={{ color: '#94A3B8', fontSize: '12px', fontFamily: 'monospace' }}>
-          Date: <strong style={{ color: '#F8FAFC' }}>{activeDate}</strong> ({total} stocks scanned)
+          Date: <strong style={{ color: '#F8FAFC' }}>{activeDate}</strong> ({total} stocks scanned | <strong style={{ color: '#38BDF8' }}>{matchedCount}</strong> matched)
         </span>
       </div>
       <button
@@ -152,204 +182,3 @@ function Header({ activeDate, total, onClose }: { activeDate: string; total: num
     </div>
   );
 }
-
-function FiltersBar({
-  selectedTriad,
-  onSelectTriad,
-  selectedYoga,
-  onSelectYoga,
-  actionFilter,
-  onSelectAction,
-  summary,
-  onResetFilters,
-}: {
-  selectedTriad: string;
-  onSelectTriad: (t: string) => void;
-  selectedYoga: 'ALL' | 'VRY' | 'NBRY' | 'DHANA' | 'MAHAPURUSHA';
-  onSelectYoga: (y: 'ALL' | 'VRY' | 'NBRY' | 'DHANA' | 'MAHAPURUSHA') => void;
-  actionFilter: 'ALL' | 'BUY' | 'SELL' | 'HOLD' | 'BLOCKED';
-  onSelectAction: (a: 'ALL' | 'BUY' | 'SELL' | 'HOLD' | 'BLOCKED') => void;
-  summary: { strongBuyCount: number; turnaroundBuyCount: number; blockedCount: number };
-  onResetFilters: () => void;
-}) {
-  const triads = ['ALL', '[T-T-T]', '[D-T-T]', '[D-D-D]', '[T-D-T]', '[K-T-T]'];
-  const hasActiveFilter = selectedTriad !== 'ALL' || selectedYoga !== 'ALL' || actionFilter !== 'ALL';
-
-  return (
-    <div style={{ padding: '10px 18px', borderBottom: '1px solid #1E2638', display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-        <span style={{ color: '#94A3B8', fontSize: '11px', fontWeight: 700 }}>Triad:</span>
-        {triads.map((t) => (
-          <button
-            key={t}
-            onClick={() => onSelectTriad(t)}
-            style={{
-              padding: '3px 8px',
-              borderRadius: '4px',
-              fontSize: '11px',
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              backgroundColor: selectedTriad === t ? '#D4AF37' : '#111827',
-              color: selectedTriad === t ? '#07090E' : '#CBD5E1',
-              border: '1px solid #1E2638',
-              cursor: 'pointer',
-            }}
-          >
-            {t}
-          </button>
-        ))}
-      </div>
-
-      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-        <span style={{ color: '#94A3B8', fontSize: '11px', fontWeight: 700 }}>Yoga:</span>
-        <select
-          value={selectedYoga}
-          onChange={(e) => onSelectYoga(e.target.value as any)}
-          style={{ padding: '3px 8px', backgroundColor: '#111827', border: '1px solid #1E2638', color: '#F8FAFC', borderRadius: '4px', fontSize: '11px' }}
-        >
-          <option value="ALL">All Yogas</option>
-          <option value="VRY">Viparita Raja Yoga (VRY)</option>
-          <option value="NBRY">Neecha Bhanga (NBRY)</option>
-          <option value="DHANA">Dhana Yogas</option>
-          <option value="MAHAPURUSHA">Pancha Mahapurusha</option>
-        </select>
-      </div>
-
-      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-        <span style={{ color: '#94A3B8', fontSize: '11px', fontWeight: 700 }}>Action:</span>
-        <select
-          value={actionFilter}
-          onChange={(e) => onSelectAction(e.target.value as any)}
-          style={{ padding: '3px 8px', backgroundColor: '#111827', border: '1px solid #1E2638', color: '#F8FAFC', borderRadius: '4px', fontSize: '11px' }}
-        >
-          <option value="ALL">All Actions</option>
-          <option value="BUY">BUY Only ({summary.strongBuyCount + summary.turnaroundBuyCount})</option>
-          <option value="SELL">SELL Only</option>
-          <option value="BLOCKED">Risk Vetoed ({summary.blockedCount})</option>
-        </select>
-      </div>
-
-      {hasActiveFilter && (
-        <button
-          onClick={onResetFilters}
-          style={{
-            marginLeft: 'auto',
-            padding: '3px 10px',
-            borderRadius: '4px',
-            fontSize: '11px',
-            fontWeight: 700,
-            backgroundColor: '#1E2638',
-            color: '#38BDF8',
-            border: '1px solid #0284C7',
-            cursor: 'pointer',
-          }}
-        >
-          ↺ Reset Filters
-        </button>
-      )}
-    </div>
-  );
-}
-
-function StockTable({
-  items,
-  onSelect,
-  onResetFilters,
-}: {
-  items: UniverseStockScanItem[];
-  onSelect: (sym: string) => void;
-  onResetFilters: () => void;
-}) {
-  if (items.length === 0) {
-    return (
-      <div style={{ padding: '40px 20px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
-        <div style={{ color: '#F1F5F9', fontSize: '13px', fontWeight: 700 }}>
-          No universe constituents match this exact combination of filters.
-        </div>
-        <div style={{ color: '#94A3B8', fontSize: '12px', maxWidth: '520px', lineHeight: 1.5 }}>
-          Astrological note: <strong>[T-T-T]</strong> represents a pure Trikona benefic bull run, while <strong>Viparita Raja Yoga (VRY)</strong> requires Dusthana lords (active in <strong>[D-T-T]</strong> or <strong>[D-D-D]</strong>). Selecting both simultaneously is mutually exclusive in most charts.
-        </div>
-        <button
-          onClick={onResetFilters}
-          style={{
-            marginTop: '8px',
-            padding: '6px 16px',
-            borderRadius: '5px',
-            backgroundColor: '#D4AF37',
-            color: '#07090E',
-            fontWeight: 800,
-            fontSize: '12px',
-            border: 'none',
-            cursor: 'pointer',
-          }}
-        >
-          Reset Filters to View All Matching Stocks
-        </button>
-      </div>
-    );
-  }
-
-  return (
-    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '11px' }}>
-      <thead>
-        <tr style={{ color: '#94A3B8', borderBottom: '1px solid #1E2638', textAlign: 'left' }}>
-          <th style={{ padding: '8px' }}>Symbol</th>
-          <th style={{ padding: '8px' }}>Lagna</th>
-          <th style={{ padding: '8px' }}>Triad</th>
-          <th style={{ padding: '8px' }}>Lords (MD-AD-PD)</th>
-          <th style={{ padding: '8px' }}>Special Yogas</th>
-          <th style={{ padding: '8px' }}>Cusp</th>
-          <th style={{ padding: '8px' }}>Signal / Action</th>
-          <th style={{ padding: '8px' }}>Sizing</th>
-          <th style={{ padding: '8px', textAlign: 'right' }}>Cockpit</th>
-        </tr>
-      </thead>
-      <tbody>
-        {items.map((item) => (
-          <StockTableRow key={item.symbol} item={item} onSelect={onSelect} />
-        ))}
-      </tbody>
-    </table>
-  );
-}
-
-function StockTableRow({ item, onSelect }: { item: UniverseStockScanItem; onSelect: (sym: string) => void }) {
-  const actionColor = item.isBlocked ? '#EF4444' : item.action === 'BUY' ? '#10B981' : item.action === 'SELL' ? '#F59E0B' : '#64748B';
-  return (
-    <tr
-      onClick={() => onSelect(item.symbol)}
-      style={{ borderBottom: '1px solid #111827', cursor: 'pointer', transition: 'background-color 0.1s' }}
-      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#111827')}
-      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
-    >
-      <td style={{ padding: '8px', fontWeight: 800, color: '#D4AF37' }}>{item.symbol}</td>
-      <td style={{ padding: '8px', color: '#CBD5E1' }}>{item.lagnaSignName} (1L {item.lagnaLord})</td>
-      <td style={{ padding: '8px', fontFamily: 'monospace', fontWeight: 700, color: '#00F2FE' }}>{item.triadCode}</td>
-      <td style={{ padding: '8px', color: '#94A3B8', fontFamily: 'monospace' }}>{item.mdLord}-{item.adLord}-{item.pdLord}</td>
-      <td style={{ padding: '8px' }}>
-        {item.activeYogas.length > 0 ? (
-          <span style={{ color: '#38BDF8', fontWeight: 600 }}>{item.activeYogas.slice(0, 2).join(', ')}</span>
-        ) : (
-          <span style={{ color: '#475569' }}>—</span>
-        )}
-      </td>
-      <td style={{ padding: '8px', color: '#F1F5F9' }}>{item.daysToCusp}d remaining</td>
-      <td style={{ padding: '8px', fontWeight: 700, color: actionColor }}>
-        {item.isBlocked ? 'BLOCKED (VETO)' : item.signal !== 'NONE' ? item.signal : item.action}
-      </td>
-      <td style={{ padding: '8px', color: '#CBD5E1', fontFamily: 'monospace' }}>{(item.sizingFraction * 100).toFixed(1)}%</td>
-      <td style={{ padding: '8px', textAlign: 'right' }}>
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onSelect(item.symbol);
-          }}
-          style={{ padding: '3px 8px', borderRadius: '4px', backgroundColor: '#1E2638', color: '#00F2FE', border: 'none', cursor: 'pointer', fontSize: '10px', fontWeight: 700 }}
-        >
-          Deep Dive ↗
-        </button>
-      </td>
-    </tr>
-  );
-}
-

@@ -39,6 +39,7 @@ export type BackupItem =
   | { t: 'fund'; order: FundOrder }
   | { t: 'learn'; progress: Progress }
   | { t: 'journal'; entry: JournalEntry }
+  | { t: 'tm'; key: string; value: string }
   | ({ t: 'order'; m?: string } & StoredOrder);
 
 const byPlacement = (a: StoredOrder, b: StoredOrder): number =>
@@ -83,6 +84,18 @@ async function booksOf(kv: KeyValueStore): Promise<Map<string, StoredOrder[]>> {
   return books;
 }
 
+/** Time Machine sessions and everything inside them live under this key prefix of the profile's store. */
+export const TM_PREFIX = 'tm/';
+
+async function tmItems(kv: KeyValueStore): Promise<BackupItem[]> {
+  const out: BackupItem[] = [];
+  for (const key of (await kv.keys()).filter((k) => k.startsWith(TM_PREFIX)).sort()) {
+    const value = await kv.get(key);
+    if (value !== null) out.push({ t: 'tm', key, value });
+  }
+  return out;
+}
+
 const fundOrdersOf = async (kv: KeyValueStore): Promise<FundOrder[]> =>
   (await getStamped<FundOrder[]>(kv, FUND_ORDERS_KEY))?.value ?? [];
 
@@ -99,6 +112,7 @@ export async function exportProfile(d: ExportDeps): Promise<Exported> {
     ...(await fundOrdersOf(d.profileKv)).map((order): BackupItem => ({ t: 'fund', order })),
     { t: 'learn', progress: await loadProgress(d.profileKv) },
     ...(await loadJournal(d.profileKv)).map((entry): BackupItem => ({ t: 'journal', entry })),
+    ...(await tmItems(d.profileKv)),
     ...orders.sort(byPlacement),
   ];
   const bundle = buildBundle({
@@ -145,6 +159,8 @@ export interface ReadBackup {
   progress: Progress | null;
   /** Trade journal entries. */
   journal: JournalEntry[];
+  /** Time Machine records, as stored. */
+  tm: Array<{ key: string; value: string }>;
 }
 
 const SHAPE = 'The orders in the bundle are not in the expected form.';
@@ -180,21 +196,43 @@ function header(tagged: Array<Record<string, unknown>>): Pick<ReadBackup, 'profi
   return { profile: p.data, settings: s?.data ?? null };
 }
 
+/** The Time Machine records of a tagged backup, or null when one is not a key under the Time Machine prefix with a text value. */
+function tmRecords(tagged: Array<Record<string, unknown>>): ReadBackup['tm'] | null {
+  const out: ReadBackup['tm'] = [];
+  for (const i of tagged.filter((x) => x.t === 'tm')) {
+    if (typeof i.key !== 'string' || !i.key.startsWith(TM_PREFIX) || typeof i.value !== 'string') return null;
+    out.push({ key: i.key, value: i.value });
+  }
+  return out;
+}
+
+const KNOWN_TAGS = ['profile', 'settings', 'order', 'fund', 'learn', 'journal', 'tm'];
+
+type Extras = Pick<ReadBackup, 'funds' | 'progress' | 'journal' | 'tm'>;
+
+/** The fund orders, Learn progress, journal and Time Machine records of a tagged backup, or null when any is malformed. */
+function extras(tagged: Array<Record<string, unknown>>): Extras | null {
+  const funds = tagged.filter((i) => i.t === 'fund').map((i) => i.order);
+  const learn = tagged.filter((i) => i.t === 'learn').map((i) => i.progress);
+  const journal = tagged.filter((i) => i.t === 'journal').map((i) => i.entry);
+  const tm = tmRecords(tagged);
+  if (tm === null || !funds.every(isFundOrder)) return null;
+  if (learn.length > 1 || !learn.every(isProgress) || !journal.every(isEntry)) return null;
+  return { funds, progress: learn[0] ?? null, journal, tm };
+}
+
 function contents(items: unknown[]): Omit<ReadBackup, 'level' | 'unsigned'> | string {
   if (items.every(isOrder))
-    return { profile: null, settings: null, orders: items, books: byMarket(items, []), funds: [], progress: null, journal: [] };
+    return { profile: null, settings: null, orders: items, books: byMarket(items, []), funds: [], progress: null, journal: [], tm: [] };
   const tagged = items as Array<Record<string, unknown>>;
-  if (!tagged.every((i) => i.t === 'profile' || i.t === 'settings' || i.t === 'order' || i.t === 'fund' || i.t === 'learn' || i.t === 'journal')) return SHAPE;
+  if (!tagged.every((i) => KNOWN_TAGS.includes(String(i.t)))) return SHAPE;
   const head = header(tagged);
   const orderItems = tagged.filter((i) => i.t === 'order');
   const markets = orderItems.map((i) => (typeof i.m === 'string' ? i.m : demoMarket().id));
   const orders: unknown[] = orderItems.map(withoutTag);
-  const funds = tagged.filter((i) => i.t === 'fund').map((i) => i.order);
-  const learn = tagged.filter((i) => i.t === 'learn').map((i) => i.progress);
-  const journal = tagged.filter((i) => i.t === 'journal').map((i) => i.entry);
-  if (head === null || !orders.every(isOrder) || !funds.every(isFundOrder)) return SHAPE;
-  if (learn.length > 1 || !learn.every(isProgress) || !journal.every(isEntry)) return SHAPE;
-  return { ...head, orders, books: byMarket(orders, markets), funds, progress: learn[0] ?? null, journal };
+  const more = extras(tagged);
+  if (head === null || more === null || !orders.every(isOrder)) return SHAPE;
+  return { ...head, orders, books: byMarket(orders, markets), ...more };
 }
 
 /** The key to check a bundle against: the one typed in, else this device's key if it is the one that signed. */
@@ -285,10 +323,12 @@ export async function previewImport(b: ReadBackup, profiles: ProfileStore): Prom
 }
 
 /** Replaces the profile's books with the file's: books the file does not hold are emptied, as a full restore. */
-async function putBooks(kv: KeyValueStore, books: Record<string, StoredOrder[]>, now: number, extra?: Pick<ReadBackup, 'funds' | 'progress' | 'journal'>): Promise<void> {
+async function putBooks(kv: KeyValueStore, books: Record<string, StoredOrder[]>, now: number, extra?: Pick<ReadBackup, 'funds' | 'progress' | 'journal' | 'tm'>): Promise<void> {
   if (extra !== undefined) {
     await putStamped(kv, FUND_ORDERS_KEY, extra.funds, now);
     await saveJournal(kv, extra.journal, now);
+    for (const k of (await kv.keys()).filter((x) => x.startsWith(TM_PREFIX))) await kv.delete(k);
+    for (const r of extra.tm) await kv.set(r.key, r.value);
     if (extra.progress !== null) await saveProgress(kv, extra.progress, now);
   }
   const markets = new Set([...(await booksOf(kv)).keys(), ...Object.keys(books)]);
