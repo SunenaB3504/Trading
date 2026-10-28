@@ -1,7 +1,7 @@
-# SOFTWARE SPECIFICATION DOCUMENT (SSD v1.1)
+# SOFTWARE SPECIFICATION DOCUMENT (SSD v1.2)
 ## STANDALONE ASTRO-FINANCIAL TRADE SIMULATOR & ADVISORY TERMINAL
 **An Offline-First, React-Powered Desktop Application for Quantitative Vedic Market Chronometry**  
-*Document Version: 1.1.0 | Date: 2026-10-26 | Status: Architecture & System Design (Refined with Quantitative Review)*  
+*Document Version: 1.2.0 | Date: 2026-10-28 | Status: Architecture & System Design (Refined with Combinatorial Screener, Yoga Engine & Horoscopic Dossier)*  
 *Target Environment: Standalone Desktop (Electron / Tauri + React 19 + TypeScript)*  
 *Design Constraint: Strict Modularity (< 500 Lines per File Enforcement)*
 
@@ -19,6 +19,10 @@ The application allows users to:
 4. **Conduct 12-Bhava Financial Audits:** Cross-check astrological buy signals against company balance-sheet fundamentals (Debt-to-Equity, Free Cash Flow, ROCE, and Forensic Pledging).
 5. **Receive Actionable Advisory Directives:** Synthesize astro and financial data into unambiguous execution tickets (*When to Invest, Exact Rupee/Share Quantity to Allocate, and When to Exit*).
 6. **Interact with a Local AI Copilot:** Query off-screen planetary combinations, financial ratios, and risk postures via a context-aware natural language chatbot.
+7. **Screen Universe via 27-Triad Combinations:** Batch-evaluate all universe equities for any simulation date $t_{\text{sim}}$, filtering across all 27 Dasha Triad permutations ($[T\text{-}T\text{-}T]$, $[D\text{-}T\text{-}T]$, $[D\text{-}D\text{-}D]$, $[K\text{-}T\text{-}T]$, etc.).
+8. **Detect Special Astrological Yogas (VRY & NBRY):** Identify parabolic turnaround setups where stressed planets trigger sudden wealth generation (*Viparita Raja Yoga*, *Neecha Bhanga Raja Yoga*, *Dhana Yogas*, *Pancha Mahapurusha*).
+9. **Dispatch Daily Universe Action Feeds:** Aggregate all universe signals on date $t_{\text{sim}}$ into a prioritized action feed (`Strong BUY`, `Turnaround BUY`, `Defensive SELL`, `Fortress Breach SELL`, `Risk VETO`).
+10. **Audit In-Depth Horoscopic Dossiers:** Conduct full deep-dive astrological inspections featuring D1 Rashi and D9 Navamsha wheels, planetary dignities (exaltation, debilitation, combustion, retrogression), Shadbala, and 12-Bhava lordship provenance.
 
 ### 1.2 Non-Goals
 * **Offline-First Core (With Cloud-Assisted Copilot):** All planetary calculations, ephemerides, historical OHLCV data, DuckDB queries, and trade advisory signals run 100% offline without internet. The natural-language AI Copilot operates via a lightweight, zero-hardware free cloud LLM API (Google Gemini Flash / Groq) to protect lower-spec host machines from GPU/RAM exhaustion, with optional offline Ollama fallback.
@@ -88,13 +92,15 @@ To guarantee maintainability, testability, and clean separation of concerns, **n
 If any module approaches 400 lines, it must be decomposed into focused sub-components, helper utilities, or custom hooks.
 
 ```
-packages/app/src/
+packages/simulator/src/
 ├── core/
 │   ├── astro/
 │   │   ├── types.ts                      (< 150 lines: PlanetKey, NatalBirthInput, CanonicalVedicChart)
 │   │   ├── constants.ts                  (< 200 lines: Signs, Lords, Nakshatras, BAV tables, YearLength)
 │   │   ├── astronomy.ts                  (< 350 lines: astronomy-engine wrapper, Meeus nodes, Lagna, MC)
 │   │   ├── vedicMath.ts                  (< 450 lines: Lahiri Ayanamsa, Nirayana, SAV/BAV, Vimshottari, D9)
+│   │   ├── trikonaNathans.ts             (< 200 lines: Dual Lordship, Moolatrikona, T & D sets)
+│   │   ├── yogaDetector.ts               (< 300 lines: VRY, NBRY, Dhana Yogas, Pancha Mahapurusha)
 │   │   ├── transit.ts                    (< 350 lines: Real-time Graha transits, Kakshya, ephemeris step)
 │   │   ├── bhava.ts                      (< 250 lines: Shripati & Porphyry bhava cusps and sandhis)
 │   │   ├── kotaChakra.ts                 (< 400 lines: Fortress zones, Pravesha/Nirgama, Stambha breach)
@@ -113,7 +119,8 @@ packages/app/src/
 │   │   └── sqliteClient.ts               (< 300 lines: OLTP user ledger, portfolio, trade tickets)
 │   ├── engine/
 │   │   ├── timelineCache.ts              (< 300 lines: Pre-computed S(t) Float64Array memory buffers)
-│   │   ├── edgeDetector.ts               (< 350 lines: 5 edge cusp scenarios)
+│   │   ├── universeScanner.ts            (< 350 lines: 27-Triad screening, yoga filters & batch signals)
+│   │   ├── edgeDetector.ts               (< 350 lines: 5 edge cusp scenarios & triad classification)
 │   │   ├── sizingCalculator.ts           (< 300 lines: Buyer Kundli math)
 │   │   ├── advisorySynthesizer.ts        (< 400 lines: Trade ticket generator)
 │   │   └── timeMachine.ts                (< 350 lines: Playback stepper logic)
@@ -135,8 +142,13 @@ packages/app/src/
 │   │   │   └── ChartControls.tsx         (< 200 lines: Zoom, pan, timeframe)
 │   │   ├── astro/
 │   │   │   ├── KundliWheel.tsx           (< 350 lines: Parashari square/wheel)
+│   │   │   ├── HoroscopeDossierModal.tsx (< 400 lines: Comprehensive D1/D9 & dignity audit)
+│   │   │   ├── TrikonaNathansBadge.tsx   (< 150 lines: 1H/5H/9H lords & T/D set display)
 │   │   │   ├── KotaFortressRadar.tsx     (< 400 lines: Concentric fortress UI)
 │   │   │   └── SbcVedhaGrid.tsx          (< 450 lines: 9x9 Sarvatobhadra view)
+│   │   ├── screener/
+│   │   │   ├── UniverseRadarModal.tsx    (< 400 lines: 27-Triad & Yoga multi-filter table)
+│   │   │   └── DailyActionFeed.tsx       (< 300 lines: Prioritized BUY/SELL/VETO digest)
 │   │   ├── financial/
 │   │   │   ├── FinancialAuditCard.tsx    (< 350 lines: 12-Bhava score table)
 │   │   │   └── SolvencyGauges.tsx        (< 300 lines: Debt, FCF, ROCE visuals)
@@ -146,6 +158,8 @@ packages/app/src/
 │   │   ├── advisory/
 │   │   │   ├── MasterTradeTicket.tsx     (< 400 lines: When, How Much, When to Sell)
 │   │   │   └── ExecutionModal.tsx        (< 300 lines: Virtual buy/sell confirmation)
+│   │   ├── settings/
+│   │   │   └── StrategyParameterDrawer.tsx (< 350 lines: Cusp, sizing & triad parameter knobs)
 │   │   └── copilot/
 │   │       ├── ChatWidget.tsx            (< 350 lines: Chat message stream & input)
 │   │       └── QuerySuggestions.tsx      (< 200 lines: Suggested prompt chips)
@@ -157,10 +171,10 @@ packages/app/src/
 
 ---
 
-## 4. Detailed Specification of the 8 Core Subsystems
+## 4. Detailed Specification of the 10 Core Subsystems
 
 ```
-                                  THE 8 CORE SUBSYSTEMS MATRIX
+                                  THE 10 CORE SUBSYSTEMS MATRIX
                                   
        [ 1. Astro Chronometry ]       [ 2. Financial Reality-Check ]     [ 3. Chakra Radar ]
        MD to Prana (5 Tiers)          12-Bhava Balance Sheet Audit       Kota Fortress & SBC
@@ -176,10 +190,18 @@ packages/app/src/
                   /                               |                              \
        [ 5. Future Gantt Horizon ]     [ 6. Automated Edge Radar ]       [ 7. Advisory Engine ]
        Cusp Countdown Timers          Pre-emptive Cusp Signals           When, How Much, When to Sell
+                  \                               |                              /
+                   \                              |                             /
+                    +-----------------------------+----------------------------+
                                                   |
-                                                  v
-                                    [ 8. IN-APP AI COPILOT ]
-                                    Natural Language Ad-Hoc Assistant
+                                   [ 8. IN-APP AI COPILOT ]
+                                   Natural Language Ad-Hoc Assistant
+                                                  |
+                    +-----------------------------+----------------------------+
+                   /                                                           \
+                  /                                                             \
+   [ 9. Universe Radar & 27-Triad Screener ]                     [ 10. Special Yogas & Horoscopic Dossier ]
+   Daily Action Feed & Parameter Matrix                          VRY / NBRY Engine & Full D1/D9 Audit
 ```
 
 ---
@@ -223,7 +245,7 @@ packages/app/src/
     \text{Score} \le -0.30 \implies \mathbf{[D]} \text{ (Dusthana Malefic Set)} \\
     \text{Otherwise} \implies \mathbf{[K]} \text{ (Kendra / Neutral Action Set)}
     \end{cases}$$
-  * Formally identifies both the **Lagna Trikona Nathans $[T]$ Set** and **Dusthana Nathans $[D]$ Set** (e.g., *Libra Lagna $\rightarrow [T]\text{ Set}: \{\text{Venus, Saturn, Mercury}\}$, $[D]\text{ Set}: \{\text{Jupiter, Mars, Rahu, Ketu}\}$*).
+  * Formally identifies both the **Lagna Trikona Nathans $[T]$ Set** and **Dusthana Nathans $[D]$ Set** (e.g., *Libra Lagna $\rightarrow [T]\text{ Set}: \{\text{Venus, Saturn, Mercury}\}$, $[D]\text{ Set}: \{\text{Jupiter, Sun, Rahu, Ketu}\}$*). Mars holds score $+0.35$ and resides in the neutral/action $[K]$ Kendra set.
   * Exposes explicit badges in the UI so traders can transparently audit why each level of an ongoing Dasha is classified as **`[T]`** (Trikona Auspicious), **`[K]`** (Kendra Action), or **`[D]`** (Dusthana Stress).
   * Emits full `CanonicalVedicChart` and assigns confluence weights based on lord dignity.
 
@@ -345,14 +367,67 @@ $$\mathbf{Trade Ticket} = \Big\{ \text{When to Invest}, \quad \text{Quantity / R
 
 ---
 
-## 5. User Interface (UI) Cockpit Wireframe
+### Subsystem 9: Market Universe Radar, 27-Triad Combinatorial Screener & Daily Action Digest
+* **Responsibility:** Batch-evaluates the entire target equity universe for any selected historical or current simulation date $t_{\text{sim}}$, categorizing instruments across all 27 Dasha Triad permutations and generating a prioritized daily execution feed.
+* **Architecture & Modular Components:**
+  * `core/engine/universeScanner.ts` (< 350 LOC): Evaluates corporate metadata, transit ephemerides, active Dasha triads, and PIT balance-sheet health for all universe constituents.
+  * `ui/components/screener/UniverseRadarModal.tsx` (< 400 LOC): Multi-filter screener drawer/modal.
+  * `ui/components/screener/DailyActionFeed.tsx` (< 300 LOC): Prioritized market-wide execution table.
+* **Core Capabilities:**
+  * **27-Triad Permutation Engine:**
+    - Evaluates the complete Cartesian product $\{T, K, D\}_{\text{MD}} \times \{T, K, D\}_{\text{AD}} \times \{T, K, D\}_{\text{PD}}$ ($3^3 = 27$ distinct triads).
+    - Quick-filter pills to view all stocks in $[T\text{-}T\text{-}T]$ (Bull Runs), $[D\text{-}T\text{-}T]$ (Turnarounds), $[D\text{-}D\text{-}D]$ (Peak Astrological Stress), $[T\text{-}D\text{-}T]$ (Impending Exits), or custom sets (e.g. $[K\text{-}T\text{-}T]$).
+  * **One-Click Cockpit Deep Dive:**
+    - Selecting any row in the screener table immediately loads the ticker into the primary Cockpit Terminal, mounts its 25-year timeline buffer, and snaps the chart to the ongoing Dasha epoch.
+  * **Auto-Snapping to Cusp Boundaries:**
+    - Interactive "Jump to Inception Cusp" ($T \pm 3$ sessions) or "Jump to Defensive Exit" ($T - 10$ sessions) navigation buttons, bypassing manual date navigation.
+  * **Daily Master Action Digest:**
+    - Aggregates all universe signals on date $t_{\text{sim}}$ into a prioritized action table:
+      1. **Strong BUY:** $[T\text{-}T\text{-}T] + \Phi_{\text{Financial}} > 0.70 + \text{Kota Safe} + \Omega_{\text{Trader}} = 1.0$.
+      2. **Turnaround BUY:** $[D\text{-}T\text{-}T] \text{ with VRY/NBRY} + \tau_{\text{Cusp}} \le 3 \text{ days} + \Phi_{\text{Financial}} > 0.50$.
+      3. **Pre-Emptive Defensive Exit (SELL):** $[T\text{-}D\text{-}T] + \tau_{\text{Cusp}} \le 10 \text{ days}$.
+      4. **Fortress Breach Liquidation (SELL):** Malefics entered central Stambha ($< 0.35$ score).
+      5. **Risk Vetoed Watchlist:** Astrologically green, but blocked by balance-sheet debt ($D/E > 2.0$) or promoter pledging ($> 25\%$) with ₹0 allocation.
+  * **Configurable Strategy Parameter Matrix (`StrategyParameterDrawer.tsx`):**
+    - Sliders for Cusp Window Tolerance ($\pm 1$ to $\pm 10$ sessions).
+    - Sliders for Kota defense threshold ($0.20$ to $0.50$).
+    - Sliders for Risk budget fraction ($5\%$ to $25\%$).
+    - Interactive $3 \times 3 \times 3$ grid assigning custom $\Theta_{\text{Astro}}$ weights and actions across any of the 27 Triad codes.
 
-The desktop application presents an integrated, single-window trading cockpit designed for multi-monitor workstations:
+---
+
+### Subsystem 10: Special Yogas Engine (VRY/NBRY) & Comprehensive Horoscopic Dossier
+* **Responsibility:** Detects classical astrological turning-point yogas (wealth explosions out of distress) and exposes an in-depth horoscopic audit modal for any selected stock.
+* **Astrological Special Yogas Detection (`core/astro/yogaDetector.ts` < 300 LOC):**
+  * **Viparita Raja Yoga (VRY - Harsha, Sarala, Vimala):**
+    - Formed when lords of the 6th, 8th, or 12th houses occupy exclusively the 6th, 8th, or 12th houses without association with natural benefics.
+    - In $[D\text{-}D\text{-}D]$ or $[D\text{-}T\text{-}T]$ periods, flags high-conviction turnaround anomalies where market participants expect failure, but the astrological architecture triggers a parabolic reversal.
+  * **Neecha Bhanga Raja Yoga (NBRY):**
+    - Evaluates 4 classical conditions for debilitation cancellation:
+      1. The lord of the debilitation sign or exaltation sign is in a Kendra from Lagna or Moon.
+      2. The planet which is exalted in that sign is in a Kendra from Lagna or Moon.
+      3. The debilitated planet is exalted in the Navamsha (D9) chart.
+      4. The planet is aspected by its dispositor.
+    - Converts apparent fundamental or chart collapse into an exponential rebound inception.
+  * **Dhana & Pancha Mahapurusha Yogas:**
+    - Identifies classical wealth combinations of 1st, 2nd, 5th, 9th, and 11th lords, plus Ruchaka (Mars), Bhadra (Mercury), Hamsa (Jupiter), Malavya (Venus), and Sasa (Saturn) yogas in Kendras.
+* **Comprehensive Horoscopic Dossier Modal (`ui/components/astro/HoroscopeDossierModal.tsx` < 400 LOC):**
+  * **Dual Chart Wheels:** Parashari D1 Rashi Chart and D9 Navamsha Chart with precise degree annotations and ceremonial listing time.
+  * **9-Graha Dignity Audit Table:** Displays state for each planet (Exalted/Uccha, Moolatrikona, Swakshetra, Debilitated/Neecha, Combust with Sun, Retrograde/Vakra).
+  * **12-Bhava Mathematical Lordship Breakdown:** Explains the Moolatrikona precedence and Lagnesha immunity calculations behind every $[T]$, $[K]$, and $[D]$ classification.
+  * **Special Sensitive Points:** Indu Lagna wealth point, Bhrigu Bindu midpoints, and Yogi/Avayogi degrees.
+  * **Spatial Radar Overlays:** Active Kota Chakra zone placement (Stambha, Madhya, Prakaara, Bahya) and Sarvatobhadra 81-Square grid Vedha rays.
+
+---
+
+## 5. User Interface (UI) Cockpit & Screener Wireframes
+
+The desktop application presents an integrated, single-window trading cockpit designed for multi-monitor workstations, supplemented by quick-access drawers for universe scanning and horoscopic deep dives:
 
 ```
 +-------------------------------------------------------------------------------------------------------------------------+
 | [TOP BAR] Ticker: [ TCS v ] | As of: [ 2026-10-05 ] [Jump] | Speed: [ 5x v ] [<<] [ Play ] [>>] | Zoom: [ 1W | 1M | 1Y | PD | AD | MD ] |
-| Horizon: 1H (Lagna): Venus | 5H: Saturn | 9H: Mercury  ---> TRIKONA NATHANS: { Venus, Saturn, Mercury }               |
+| Actions: [ Radar / Screener ☵ ] [ Full Horoscope ☸ ] [ Strategy Config ⚙ ] | TRIKONA NATHANS: { Venus, Saturn, Mercury } |
 +-----------------------------------------------------------+-------------------------------------------------------------+
 | LEFT PANEL (Astrological Engine)                          | CENTER PANEL (Interactive Canvas Price Chart)               |
 |                                                           |                                                             |
@@ -363,7 +438,7 @@ The desktop application presents an integrated, single-window trading cockpit de
 |    SD: Mercury (1L - Sookshma Expansion)                  |   ₹1,900 |  |  Saturn 6H Red Trap (Price Dropped -39%)     |
 |                                                           |          +------------------------------------------------- |
 | 2. Kota Chakra Radar:                                     |             Aug 2023        Jan 2025       Oct 2026         |
-|    * Stambha: Unbreached (Fortress Intact)                |                                                             |
+|    * Stambha: Unbreached (Fortress Intact)                |  [ Cusp Jump: [<< Inception Cusp] [Defensive Exit >>] ]     |
 |    * Pravesha: Jupiter Entering Ramparts                  +-------------------------------------------------------------+
 |                                                           | FUTURE HORIZON GANTT TIMELINE:                              |
 | 3. Sarvatobhadra Chakra:                                  | [ MD: Venus ..............................................] |
@@ -388,15 +463,41 @@ The desktop application presents an integrated, single-window trading cockpit de
 +-----------------------------------------------------------+-------------------------------------------------------------+
 | [BOTTOM BAR] Virtual Equity: ₹10,00,000 | Active P&L: +₹35,240 | Trader: Sunil (Safe: 100% Sizing) | System: Standalone 60 FPS|
 +-------------------------------------------------------------------------------------------------------------------------+
+
+[ MODAL / DRAWER 1: UNIVERSE RADAR & COMBINATORIAL 27-TRIAD SCREENER ]
++-------------------------------------------------------------------------------------------------------------------------+
+| [Filters: Triad [ [T-T-T] | [D-T-T] | [D-D-D] | [All 27 v] ] Yoga [ All | VRY | NBRY | Dhana ] Action [ BUY | SELL ] ]    |
+| Symbol  | Lagna  | Triad   | Running Lords (MD-AD-PD)   | Active Yogas   | Cusp Ingress | Action Signal | Sizing (₹ / %)     |
+|---------+--------+---------+----------------------------+----------------+--------------+---------------+--------------------|
+| TCS     | Libra  | [T-T-T] | Venus-Saturn-Mercury       | Bhadra, Dhana  | In 2 days    | STRONG BUY    | ₹1,50,000 (15.0%)  |
+| INFY    | Taurus | [D-T-T] | Rahu-Mercury-Venus         | VRY (Harsha)   | Today (±0)   | TURNAROUND BUY| ₹1,12,500 (11.2%)  |
+| SUZLON  | Aries  | [D-D-D] | Ketu-Venus-Mars            | None           | Past (-45d)  | BLOCKED (VETO)| ₹0.00 (Debt Veto)  |
+| RELIANCE| Leo    | [T-D-T] | Sun-Saturn-Mars            | None           | In 8 days    | DEFENSIVE EXIT| SELL (Close Long)  |
+| [ Actions: Click any row to load into Cockpit & snap chart cursor directly to inflection cusp ]                         |
++-------------------------------------------------------------------------------------------------------------------------+
+
+[ MODAL 2: FULL HOROSCOPIC & PLANETARY DIGNITY DOSSIER ]
++-------------------------------------------------------------------------------------------------------------------------+
+| INSTRUMENT HOROSCOPE: TATA CONSULTANCY SERVICES (TCS) | Listing: 2004-08-25 10:00:00 IST | Venue: NSE Mumbai            |
+|-------------------------------------------------------------------------------------------------------------------------|
+| [D1 RASHI CHART WHEEL]                     | [D9 NAVAMSHA CHART WHEEL]                | [GRAHA DIGNITY AUDIT TABLE]     |
+| Lagna: Libra (14°22')                      | Navamsha Lagna: Gemini                   | Sun: Leo (11H) Moolatrikona [D] |
+| Moon:  Anuradha (Scorpio 2H)               | Moon: Taurus (Exalted)                   | Moon: Scorpio (2H) Neecha       |
+| 1L: Venus in Gemini (9H Bhagya)            | Jupiter: Cancer (Exalted)                | Mars: Virgo (12H) Neutral [K]   |
+| 5L: Saturn in Cancer (10H Karma)           | Saturn: Libra (Exalted)                  | Merc: Virgo (Exalted/Bhadra) [T]|
+| 9L: Mercury in Virgo (12H Exalted)         | Rahu/Ketu: Pisces/Virgo                  | Jup:  Virgo (12H) Neutral [D]   |
+| Indu Lagna: Sagittarius (3H - 44 Kalas)    | Special Yogas: NBRY on Moon via Venus    | Ven:  Gemini (9H) Lagnesha [T]  |
+| Kota Swami: Mercury | Kota Pala: Saturn    |                                          | Sat:  Cancer (10H) Yogakaraka[T]|
++-------------------------------------------------------------------------------------------------------------------------+
 ```
 
 ---
 
-## 6. Implementation & Development Roadmap (Decoupled 4-Phase Plan)
+## 6. Implementation & Development Roadmap (Decoupled 5-Phase Plan)
 
 ```
 +----------------------------------------------------------------------------------------------------+
-|                                    4-PHASE IMPLEMENTATION ROADMAP                                  |
+|                                    5-PHASE IMPLEMENTATION ROADMAP                                  |
 +----------------------------------------------------------------------------------------------------+
 |  Phase 0: Data Foundation & Corporate Natal Registry (Weeks 0–1)                                   |
 |  - Ingestion of 25-year daily/minute NSE OHLCV bars into DuckDB Parquet partitions.                 |
@@ -419,6 +520,20 @@ The desktop application presents an integrated, single-window trading cockpit de
 |  - Forward cusp Gantt countdown calendars and pre-emptive cusp alarms ($T-10$ exit, $T\pm3$ VRY). |
 |  - Master Trade Advisory Ticket generator (When, How Much, When to Sell).                          |
 |  - Gemini Flash Free API bilingual Copilot with specialized Malayalam/Sanskrit glossary mapping.   |
+|                                                                                                    |
+|  Phase 4: Advanced Ergonomics, Forward Projections & Advisory Hardening (Weeks 10–11)              |
+|  - Direct date ingress & future horizon projection engine (2027–2035+).                            |
+|  - Adaptive chart zoom & Astro-period snapping (`1W`, `1M`, `1Y`, `PD`, `AD`, `MD`).               |
+|  - Master Trade Ticket Risk Veto state machine (Zero-allocation guard on Debt/ICR/Chandrashtama).  |
+|  - Lagna Trikona Nathans, Parashari Dual Lordship resolution & dynamic Triad Telemetry (`[D-T-D]`).|
+|  - AI Copilot API settings modal, key encryption & connection health monitor.                      |
+|                                                                                                    |
+|  Phase 5: Combinatorial Universe Radar, Special Yogas & Horoscopic Dossier (Weeks 12–13)           |
+|  - WP-5.1: Market Universe Radar & 27-Triad Screener Engine (`universeScanner.ts`).                |
+|  - WP-5.2: Classical Raja Yoga & Neecha Bhanga Engine (`yogaDetector.ts` - VRY, NBRY, Dhana).      |
+|  - WP-5.3: Daily Master Action Feed & One-Click Deep-Dive Cusp Snapping.                           |
+|  - WP-5.4: Comprehensive Horoscopic Dossier Modal (`HoroscopeDossierModal.tsx`).                   |
+|  - WP-5.5: Configurable Strategy Parameter Matrix Drawer (`StrategyParameterDrawer.tsx`).         |
 +----------------------------------------------------------------------------------------------------+
 ```
 

@@ -1,16 +1,16 @@
 
-# MASTER IMPLEMENTATION PLAN (MIP v1.0)
+# MASTER IMPLEMENTATION PLAN (MIP v1.2)
 ## STANDALONE ASTRO-FINANCIAL TRADE SIMULATOR & ADVISORY TERMINAL
 **Engineering Roadmap, Work Packages, Quality Gates, and Execution Protocols**  
-*Document Version: 1.1.0 | Date: 2026-10-26 | Status: Complete (Phases 0, 1, 2, 3 Implemented & Verified)*  
-*Companion Document: [`docs/simulator-ssd/SIMULATOR_SSD_v1_0.md`](file:///c:/Users/Admin/Sunil/Trading/docs/simulator-ssd/SIMULATOR_SSD_v1_0.md) (SSD v1.1.0)*  
+*Document Version: 1.2.0 | Date: 2026-10-28 | Status: Active (Phases 0-4 Complete; Phase 5 Combinatorial Roadmap Added)*  
+*Companion Document: [`docs/simulator-ssd/SIMULATOR_SSD_v1_0.md`](file:///c:/Users/Admin/Sunil\Trading\docs\simulator-ssd\SIMULATOR_SSD_v1_0.md) (SSD v1.2.0)*  
 *Design Constraint: Strict Modularity (< 500 Lines per File Enforcement via ESLint)*
 
 ---
 
 ## 1. Executive Summary & Governance Rules
 
-This Master Implementation Plan (MIP v1.0) operationalizes the architectural blueprint defined in **SSD v1.1.0** into discrete, testable, and parallelizable work packages. Where this plan and the SSD disagree on architectural intent, the SSD governs.
+This Master Implementation Plan (MIP v1.2) operationalizes the architectural blueprint defined in **SSD v1.2.0** into discrete, testable, and parallelizable work packages. Where this plan and the SSD disagree on architectural intent, the SSD governs.
 
 ### 1.1 Global Definition of Done (DoD)
 Every work package (WP) in this plan must satisfy the following invariant criteria before being marked complete:
@@ -23,7 +23,7 @@ Every work package (WP) in this plan must satisfy the following invariant criter
 
 ---
 
-## 2. 4-Phase Critical Path & Dependency Topology
+## 2. 5-Phase Critical Path & Dependency Topology
 
 ```
 [ PHASE 0: DATA FOUNDATION & REGISTRY ] (Weeks 0–1)
@@ -61,8 +61,16 @@ Every work package (WP) in this plan must satisfy the following invariant criter
 ├── WP-4.1: Direct Date Ingress & Future Horizon Projection Engine
 ├── WP-4.2: Adaptive Chart Zoom & Astro-Period Snapping (1W/1M/1Y/PD/AD/MD)
 ├── WP-4.3: Master Trade Ticket Risk Veto State Machine (Zero-Allocation Guard)
-├── WP-4.4: Lagna Trikona Nathans (1H, 5H, 9H Lords) Persona Widget
+├── WP-4.4: Lagna Trikona Nathans, Dual Lordship Resolution & Dynamic Triad Telemetry ([D-T-D])
 └── WP-4.5: AI Copilot API Settings, Encryption & Diagnostic Health Monitor
+         │
+         ▼
+[ PHASE 5: COMBINATORIAL UNIVERSE RADAR, SPECIAL YOGAS & HOROSCOPIC DOSSIER ] (Weeks 12–13)
+├── WP-5.1: Market Universe Radar & 27-Triad Screener Engine (universeScanner.ts)
+├── WP-5.2: Classical Raja Yoga & Neecha Bhanga Engine (yogaDetector.ts - VRY, NBRY, Dhana)
+├── WP-5.3: Daily Master Action Feed & One-Click Deep-Dive Cusp Snapping
+├── WP-5.4: Comprehensive Horoscopic Dossier Modal (HoroscopeDossierModal.tsx)
+└── WP-5.5: Configurable Strategy Parameter Matrix Drawer (StrategyParameterDrawer.tsx)
 ```
 
 ---
@@ -83,13 +91,15 @@ Every work package (WP) in this plan must satisfy the following invariant criter
 
 ### 3.2 Monorepo File & Directory Map (< 500 LOC Ceiling)
 ```
-packages/app/src/
+packages/simulator/src/
 ├── core/
 │   ├── astro/
 │   │   ├── types.ts                      (< 150 LOC: Astrological domain models)
 │   │   ├── constants.ts                  (< 200 LOC: Signs, Lords, Nakshatras, YearLength)
 │   │   ├── astronomy.ts                  (< 350 LOC: astronomy-engine wrapper, Meeus nodes)
 │   │   ├── vedicMath.ts                  (< 450 LOC: Lahiri Ayanamsa, Nirayana, SAV/BAV, D9)
+│   │   ├── trikonaNathans.ts             (< 200 LOC: Dual lordship, Moolatrikona, T & D sets)
+│   │   ├── yogaDetector.ts               (< 300 LOC: VRY, NBRY, Dhana Yogas, Pancha Mahapurusha)
 │   │   ├── vimshottari.ts                (< 350 LOC: 5-tier Dasha math down to Prana)
 │   │   ├── transit.ts                    (< 350 LOC: Real-time Graha transits, Kakshya)
 │   │   ├── bhava.ts                      (< 250 LOC: Shripati & Porphyry bhava cusps)
@@ -109,7 +119,8 @@ packages/app/src/
 │   │   └── sqliteClient.ts               (< 300 LOC: OLTP user ledger, portfolio, trade tickets)
 │   ├── engine/
 │   │   ├── timelineCache.ts              (< 300 LOC: Pre-computed S(t) Float64Array memory buffers)
-│   │   ├── edgeDetector.ts               (< 350 LOC: 5 edge cusp scenarios)
+│   │   ├── universeScanner.ts            (< 350 LOC: 27-Triad screening, yoga filters & batch signals)
+│   │   ├── edgeDetector.ts               (< 350 LOC: 5 edge cusp scenarios & triad classification)
 │   │   ├── sizingCalculator.ts           (< 300 LOC: Buyer Kundli scalar math)
 │   │   ├── advisorySynthesizer.ts        (< 400 LOC: Trade ticket generator)
 │   │   └── timeMachine.ts                (< 350 LOC: Event-driven playback stepper)
@@ -131,8 +142,13 @@ packages/app/src/
 │   │   │   └── ChartControls.tsx         (< 200 LOC: Zoom, pan, timeframe controls)
 │   │   ├── astro/
 │   │   │   ├── KundliWheel.tsx           (< 350 LOC: Parashari square/wheel UI)
+│   │   │   ├── HoroscopeDossierModal.tsx (< 400 LOC: Comprehensive D1/D9 & dignity audit)
+│   │   │   ├── TrikonaNathansBadge.tsx   (< 150 LOC: 1H/5H/9H lords & T/D set display)
 │   │   │   ├── KotaFortressRadar.tsx     (< 400 LOC: Concentric fortress canvas radar)
 │   │   │   └── SbcVedhaGrid.tsx          (< 450 LOC: 9x9 Sarvatobhadra interactive grid)
+│   │   ├── screener/
+│   │   │   ├── UniverseRadarModal.tsx    (< 400 LOC: 27-Triad & Yoga multi-filter table)
+│   │   │   └── DailyActionFeed.tsx       (< 300 LOC: Prioritized BUY/SELL/VETO digest)
 │   │   ├── financial/
 │   │   │   ├── FinancialAuditCard.tsx    (< 350 LOC: 12-Bhava audit score UI)
 │   │   │   └── SolvencyGauges.tsx        (< 300 LOC: Debt, FCF, ROCE gauges)
@@ -142,6 +158,8 @@ packages/app/src/
 │   │   ├── advisory/
 │   │   │   ├── MasterTradeTicket.tsx     (< 400 LOC: Action ticket view)
 │   │   │   └── ExecutionModal.tsx        (< 300 LOC: Virtual execution confirmation)
+│   │   ├── settings/
+│   │   │   └── StrategyParameterDrawer.tsx (< 350 LOC: Cusp, sizing & triad parameter knobs)
 │   │   └── copilot/
 │   │       ├── ChatWidget.tsx            (< 350 LOC: Streamed chat view & prompt input)
 │   │       └── QuerySuggestions.tsx      (< 200 LOC: Pre-built prompt chips)
@@ -386,6 +404,61 @@ packages/app/src/
 
 ---
 
+### Phase 5: Combinatorial Universe Radar, Special Yogas & Horoscopic Dossier (Weeks 12–13)
+
+#### WP-5.1: Market Universe Radar & 27-Triad Screener Engine
+* **Objective:** Batch-evaluate corporate metadata, transit ephemerides, active Dasha triads, and PIT balance-sheet health for all universe constituents on any simulation date $t_{\text{sim}}$, enabling combinatorial 27-triad filtering.
+* **Key Tasks:**
+  1. Implement `universeScanner.ts` to iterate through all active stocks in `corporateRegistry.json` for date $t_{\text{sim}}$ using pre-computed ephemerides and Dasha hierarchies.
+  2. Group universe constituents into the 27 Dasha Triad buckets ($\{T, K, D\}^3$) and annotate days-to-cusp.
+  3. Build `UniverseRadarModal.tsx` providing quick-filter chips for $[T\text{-}T\text{-}T]$, $[D\text{-}T\text{-}T]$, $[D\text{-}D\text{-}D]$, and any custom triad combination.
+* **Deliverables:**
+  * `core/engine/universeScanner.ts` (`< 350 LOC`).
+  * `ui/components/screener/UniverseRadarModal.tsx` (`< 400 LOC`).
+* **Acceptance Criteria:** Scanning 50+ universe stocks across all 27 triads executes in $<50\text{ ms}$ without UI lag.
+
+#### WP-5.2: Classical Raja Yoga & Neecha Bhanga Engine
+* **Objective:** Detect classical turning-point yogas (wealth explosions out of distress) to empower turnaround anomaly detection in $[D\text{-}D\text{-}D]$ and $[D\text{-}T\text{-}T]$ periods.
+* **Key Tasks:**
+  1. Implement `yogaDetector.ts` evaluating Viparita Raja Yoga (Harsha, Sarala, Vimala) when lords of 6H, 8H, 12H occupy only Dusthana houses without benefic association.
+  2. Implement Neecha Bhanga Raja Yoga (NBRY) evaluating the 4 classical debility cancellation rules (dispositor in Kendra, exaltation lord in Kendra, exalted in D9 Navamsha, or aspected by dispositor).
+  3. Detect Dhana Yogas (confluences of 1L, 2L, 5L, 9L, 11L) and Pancha Mahapurusha Yogas (Ruchaka, Bhadra, Hamsa, Malavya, Sasa).
+* **Deliverables:**
+  * `core/astro/yogaDetector.ts` (`< 300 LOC`).
+  * `core/astro/yogaDetector.test.ts` (`< 200 LOC`).
+* **Acceptance Criteria:** TCS chart verifies Bhadra Yoga and Moon NBRY; distressed test fixtures accurately detect Harsha/Sarala/Vimala VRY.
+
+#### WP-5.3: Daily Master Action Feed & One-Click Deep-Dive Cusp Snapping
+* **Objective:** Synthesize universe-wide signals on date $t_{\text{sim}}$ into a prioritized action feed and enable 1-click loading into the Cockpit Terminal with automatic cursor snap to cusp boundaries.
+* **Key Tasks:**
+  1. Build `DailyActionFeed.tsx` rendering prioritized signals: Strong BUY ($[T\text{-}T\text{-}T]$), Turnaround BUY ($[D\text{-}T\text{-}T]$ with VRY/NBRY), Defensive Exit ($[T\text{-}D\text{-}T]$), and Fortress Breach Liquidations.
+  2. Implement click-through handler that loads selected ticker into `useStockStore`, mounts its $S(t)$ timeline buffer, and automatically snaps the simulation cursor to the inflection cusp ($T \pm 3$ sessions).
+* **Deliverables:**
+  * `ui/components/screener/DailyActionFeed.tsx` (`< 300 LOC`).
+  * Deep-dive navigation hooks in `CockpitTerminal.tsx`.
+* **Acceptance Criteria:** Clicking any row in the action digest immediately updates the chart canvas and highlights the active cusp boundary.
+
+#### WP-5.4: Comprehensive Horoscopic Dossier Modal
+* **Objective:** Provide a full-screen horoscopic audit modal displaying D1 Rashi and D9 Navamsha wheels, planetary dignities, Shadbala, and 12-Bhava lordship provenance.
+* **Key Tasks:**
+  1. Render SVG Parashari D1 Rashi and D9 Navamsha wheels with ceremonial listing coordinates and planet degrees.
+  2. Display 9-Graha dignity audit table: Exalted (*Uccha*), Moolatrikona, Own Sign (*Swakshetra*), Debilitated (*Neecha*), Combust (*Asta*), Retrograde (*Vakra*).
+  3. Render mathematical 12-Bhava lordship calculation breakdown showing Moolatrikona weights and Lagnesha immunity justification for each planet.
+* **Deliverables:**
+  * `ui/components/astro/HoroscopeDossierModal.tsx` (`< 400 LOC`).
+* **Acceptance Criteria:** Modal renders cleanly within 50ms of user click and presents verified astronomical positions and dignities.
+
+#### WP-5.5: Configurable Strategy Parameter Matrix Drawer
+* **Objective:** Provide interactive UI controls to customize backtesting heuristics and evaluate combinatorial parameter permutations.
+* **Key Tasks:**
+  1. Create `StrategyParameterDrawer.tsx` with interactive sliders for Cusp Window Tolerance ($\pm 1$ to $\pm 10$ sessions), Kota Defense Threshold ($0.20$ to $0.50$), and Risk Budget Fraction ($5\%$ to $25\%$).
+  2. Expose an interactive $3 \times 3 \times 3$ grid allowing traders to assign custom actions and $\Theta_{\text{Astro}}$ weights to any of the 27 Triad codes.
+* **Deliverables:**
+  * `ui/components/settings/StrategyParameterDrawer.tsx` (`< 350 LOC`).
+* **Acceptance Criteria:** Changing a slider immediately updates position sizing and active edge signals across all cockpit widgets.
+
+---
+
 ## 5. Technical Risk Management & Mitigations
 
 | Identified Risk | Severity | Root Cause | Built-In Architectural Mitigation |
@@ -409,6 +482,8 @@ packages/app/src/
 | **TC-05** | Circuit Breaker Sizing | Trigger trade ticket during Trader Chandrashtama ($\Omega_{\text{Trader}} = 0$). | Calculated Rupee Allocation equals exactly ₹0.00. |
 | **TC-06** | Gemini Bilingual Copilot | Submit Malayalam prompt: *"ഈ ഓഹരിയുടെ അടുത്ത ദശാ പരിവർത്തനം എപ്പോഴാണ്?"* | Returns accurate calendar date and explanation in fluent Malayalam in $<1.5$ seconds. |
 | **TC-07** | Modularity Compliance | Run `pnpm run lint` across all packages in monorepo. | Zero files exceed 500 lines of code; zero lint warnings. |
+| **TC-08** | 27-Triad Universe Screener Benchmark | Run `universeScanner` on 50 universe stocks for date $t_{\text{sim}}$. | Categorization completes in $\le 50\text{ ms}$; all active triads classified. |
+| **TC-09** | VRY & NBRY Detection Accuracy | Evaluate test fixtures with known Harsha/Sarala/Vimala VRY and Moon NBRY. | Correctly identifies and tags cancellation conditions with zero false negatives. |
 
 ---
 

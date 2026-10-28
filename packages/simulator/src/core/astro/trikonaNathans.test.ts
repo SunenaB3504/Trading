@@ -9,7 +9,7 @@ describe('Parashari Dual Lordship & Trikona/Dusthana derivation', () => {
     expect(res.h9Lord).toBe('mercury');
 
     expect(res.trikonaLords).toEqual(expect.arrayContaining(['venus', 'saturn', 'mercury']));
-    expect(res.dusthanaLords).toEqual(expect.arrayContaining(['jupiter', 'mars', 'rahu', 'ketu']));
+    expect(res.dusthanaLords).toEqual(expect.arrayContaining(['jupiter', 'sun', 'rahu', 'ketu']));
     expect(res.dusthanaLords).not.toContain('venus');
     expect(res.dusthanaLords).not.toContain('saturn');
   });
