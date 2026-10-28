@@ -21,7 +21,6 @@ import { CopilotChatCard } from './components/copilot/CopilotChatCard';
 import { DailyActionFeed } from './components/screener/DailyActionFeed';
 import { UniverseRadarModal } from './components/screener/UniverseRadarModal';
 import { HoroscopeDossierModal } from './components/astro/HoroscopeDossierModal';
-import { DashaTimelineModal } from './components/screener/DashaTimelineModal';
 import { StrategyParameterDrawer, DEFAULT_STRATEGY_PARAMETERS, type StrategyParameters } from './components/settings/StrategyParameterDrawer';
 import { evaluateKotaChakra } from '../core/astro/kotaChakra';
 import { calculateTransitNakshatras } from '../core/astro/ephemeris';
@@ -199,7 +198,6 @@ export const CockpitTerminal: React.FC = () => {
 
   const [isRadarOpen, setIsRadarOpen] = React.useState(false);
   const [isHoroscopeOpen, setIsHoroscopeOpen] = React.useState(false);
-  const [isTimelineOpen, setIsTimelineOpen] = React.useState(false);
   const [isStrategyOpen, setIsStrategyOpen] = React.useState(false);
   const [strategyParams, setStrategyParams] = React.useState<StrategyParameters>(DEFAULT_STRATEGY_PARAMETERS);
 
@@ -215,7 +213,6 @@ export const CockpitTerminal: React.FC = () => {
       <TopNavigationBar
         onOpenRadar={() => setIsRadarOpen(true)}
         onOpenHoroscope={() => setIsHoroscopeOpen(true)}
-        onOpenTimeline={() => setIsTimelineOpen(true)}
         onOpenStrategy={() => setIsStrategyOpen(true)}
         availableTickers={availableTickers}
       />
@@ -245,13 +242,6 @@ export const CockpitTerminal: React.FC = () => {
       <HoroscopeDossierModal
         isOpen={isHoroscopeOpen}
         onClose={() => setIsHoroscopeOpen(false)}
-        metadata={metadata}
-        activeDate={activeDate}
-      />
-
-      <DashaTimelineModal
-        isOpen={isTimelineOpen}
-        onClose={() => setIsTimelineOpen(false)}
         metadata={metadata}
         activeDate={activeDate}
       />

@@ -1,8 +1,7 @@
 /**
- * packages/simulator/src/ui/components/screener/DashaTimelineModal.tsx
- * Chronological Dasha Schedule & "Comes-to-Effect" Reverse Query Modal.
- * Renders MD -> AD roadmaps and upcoming Triad boundary countdowns.
- * Enforces strict modularity (< 250 LOC, functions < 60 LOC, complexity <= 10).
+ * packages/simulator/src/ui/components/astro/DossierDashaTimelineTab.tsx
+ * Tab 2 of Horoscope Dossier: Chronological Dasha Roadmap & "Comes-to-Effect" Reverse Query.
+ * Enforces strict modularity (< 200 LOC, functions < 60 LOC, complexity <= 10).
  */
 
 import React, { useMemo, useState } from 'react';
@@ -13,33 +12,26 @@ import {
   type DashaEpochScheduleEntry,
 } from '../../../core/astro/dashaTimelineScanner';
 
-export interface DashaTimelineModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  metadata: CorporateRegistryRecord | null;
+export interface DossierDashaTimelineTabProps {
+  metadata: CorporateRegistryRecord;
   activeDate: string;
 }
 
-export const DashaTimelineModal: React.FC<DashaTimelineModalProps> = ({
-  isOpen,
-  onClose,
+export const DossierDashaTimelineTab: React.FC<DossierDashaTimelineTabProps> = ({
   metadata,
   activeDate,
 }) => {
   const [levelFilter, setLevelFilter] = useState<'ALL' | 'MD_ONLY' | 'UPCOMING_ONLY'>('ALL');
 
   const schedule = useMemo(() => {
-    if (!metadata) return [];
     return generateDashaSchedule(metadata, activeDate, 2);
   }, [metadata, activeDate]);
 
   const nextBullRun = useMemo(() => {
-    if (!metadata) return null;
     return findNextTriadOccurrence(metadata, '[T-T-T]', activeDate);
   }, [metadata, activeDate]);
 
   const nextTurnaround = useMemo(() => {
-    if (!metadata) return null;
     return findNextTriadOccurrence(metadata, '[D-T-T]', activeDate);
   }, [metadata, activeDate]);
 
@@ -49,80 +41,52 @@ export const DashaTimelineModal: React.FC<DashaTimelineModalProps> = ({
     return schedule;
   }, [schedule, levelFilter]);
 
-  if (!isOpen || !metadata) return null;
-
   return (
-    <div
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 110,
-        backgroundColor: 'rgba(7, 9, 14, 0.88)',
-        backdropFilter: 'blur(8px)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '20px',
-      }}
-    >
-      <div
-        style={{
-          width: '95%',
-          maxWidth: '1100px',
-          maxHeight: '88vh',
-          backgroundColor: '#0B0E14',
-          border: '1px solid #1E2638',
-          borderRadius: '10px',
-          display: 'flex',
-          flexDirection: 'column',
-          boxShadow: '0 25px 60px rgba(0,0,0,0.9)',
-          overflow: 'hidden',
-        }}
-      >
-        <Header metadata={metadata} activeDate={activeDate} onClose={onClose} />
-
-        <div style={{ padding: '14px 18px', borderBottom: '1px solid #1E2638', display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-          <InsightCard
-            title="NEXT [T-T-T] BULL RUN"
-            entry={nextBullRun}
-            accent="#10B981"
-            fallback="No upcoming [T-T-T] found in 120-year cycle"
-          />
-          <InsightCard
-            title="NEXT [D-T-T] TURNAROUND"
-            entry={nextTurnaround}
-            accent="#00F2FE"
-            fallback="No upcoming [D-T-T] found in 120-year cycle"
-          />
-        </div>
-
-        <FilterBar filter={levelFilter} onSelect={setLevelFilter} count={filteredSchedule.length} />
-
-        <div style={{ flex: 1, overflowY: 'auto', padding: '12px' }}>
-          <ScheduleTable entries={filteredSchedule} />
-        </div>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+      <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap' }}>
+        <InsightCard
+          title="NEXT [T-T-T] BULL RUN"
+          entry={nextBullRun}
+          accent="#10B981"
+          fallback="No upcoming [T-T-T] found in 120-year cycle"
+        />
+        <InsightCard
+          title="NEXT [D-T-T] TURNAROUND"
+          entry={nextTurnaround}
+          accent="#00F2FE"
+          fallback="No upcoming [D-T-T] found in 120-year cycle"
+        />
       </div>
+
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 0', borderBottom: '1px solid #1E2638' }}>
+        <span style={{ color: '#94A3B8', fontSize: '11px', fontWeight: 700 }}>Filter:</span>
+        {(['ALL', 'UPCOMING_ONLY', 'MD_ONLY'] as const).map((mode) => (
+          <button
+            key={mode}
+            onClick={() => setLevelFilter(mode)}
+            style={{
+              padding: '2px 8px',
+              borderRadius: '4px',
+              fontSize: '11px',
+              fontWeight: 700,
+              backgroundColor: levelFilter === mode ? '#D4AF37' : '#111827',
+              color: levelFilter === mode ? '#07090E' : '#94A3B8',
+              border: '1px solid #1E2638',
+              cursor: 'pointer',
+            }}
+          >
+            {mode === 'ALL' ? 'All Epochs' : mode === 'UPCOMING_ONLY' ? 'Active & Upcoming' : 'Mahadashas Only'}
+          </button>
+        ))}
+        <span style={{ marginLeft: 'auto', color: '#64748B', fontSize: '11px', fontFamily: 'monospace' }}>
+          {filteredSchedule.length} periods listed
+        </span>
+      </div>
+
+      <ScheduleTable entries={filteredSchedule} />
     </div>
   );
 };
-
-function Header({ metadata, activeDate, onClose }: { metadata: CorporateRegistryRecord; activeDate: string; onClose: () => void }) {
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 18px', borderBottom: '1px solid #1E2638', backgroundColor: '#07090E' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-        <span style={{ color: '#D4AF37', fontSize: '14px', fontWeight: 900 }}>⌛ DASHA TIMELINE SCHEDULE & "COMES-TO-EFFECT"</span>
-        <span style={{ color: '#64748B' }}>|</span>
-        <span style={{ color: '#00F2FE', fontWeight: 800 }}>{metadata.symbol}</span>
-        <span style={{ color: '#94A3B8', fontSize: '12px' }}>({metadata.company_name})</span>
-        <span style={{ color: '#64748B' }}>|</span>
-        <span style={{ color: '#CBD5E1', fontSize: '11px', fontFamily: 'monospace' }}>As of: {activeDate}</span>
-      </div>
-      <button onClick={onClose} style={{ padding: '4px 10px', borderRadius: '4px', backgroundColor: '#1E2638', color: '#94A3B8', border: 'none', cursor: 'pointer', fontWeight: 700 }}>
-        ✕ Close
-      </button>
-    </div>
-  );
-}
 
 function InsightCard({ title, entry, accent, fallback }: { title: string; entry: DashaEpochScheduleEntry | null; accent: string; fallback: string }) {
   return (
@@ -147,35 +111,6 @@ function InsightCard({ title, entry, accent, fallback }: { title: string; entry:
   );
 }
 
-function FilterBar({ filter, onSelect, count }: { filter: string; onSelect: (f: any) => void; count: number }) {
-  return (
-    <div style={{ padding: '8px 18px', borderBottom: '1px solid #1E2638', display: 'flex', alignItems: 'center', gap: '10px' }}>
-      <span style={{ color: '#94A3B8', fontSize: '11px', fontWeight: 700 }}>View:</span>
-      {(['ALL', 'UPCOMING_ONLY', 'MD_ONLY'] as const).map((mode) => (
-        <button
-          key={mode}
-          onClick={() => onSelect(mode)}
-          style={{
-            padding: '2px 8px',
-            borderRadius: '4px',
-            fontSize: '11px',
-            fontWeight: 700,
-            backgroundColor: filter === mode ? '#D4AF37' : '#111827',
-            color: filter === mode ? '#07090E' : '#94A3B8',
-            border: '1px solid #1E2638',
-            cursor: 'pointer',
-          }}
-        >
-          {mode === 'ALL' ? 'All Epochs' : mode === 'UPCOMING_ONLY' ? 'Active & Upcoming' : 'Mahadashas Only'}
-        </button>
-      ))}
-      <span style={{ marginLeft: 'auto', color: '#64748B', fontSize: '11px', fontFamily: 'monospace' }}>
-        {count} periods listed
-      </span>
-    </div>
-  );
-}
-
 function ScheduleTable({ entries }: { entries: DashaEpochScheduleEntry[] }) {
   return (
     <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '11px' }}>
@@ -188,7 +123,7 @@ function ScheduleTable({ entries }: { entries: DashaEpochScheduleEntry[] }) {
           <th style={{ padding: '6px' }}>End Date</th>
           <th style={{ padding: '6px' }}>Duration</th>
           <th style={{ padding: '6px' }}>Status</th>
-          <th style={{ padding: '6px', textAlign: 'right' }}>Days Until Start</th>
+          <th style={{ padding: '6px', textAlign: 'right' }}>Countdown</th>
         </tr>
       </thead>
       <tbody>
@@ -216,7 +151,7 @@ function ScheduleTable({ entries }: { entries: DashaEpochScheduleEntry[] }) {
               <td style={{ padding: '6px', color: '#94A3B8' }}>{e.durationDays}d</td>
               <td style={{ padding: '6px', fontWeight: 800, color: statusColor }}>{e.status}</td>
               <td style={{ padding: '6px', textAlign: 'right', fontFamily: 'monospace', color: e.daysUntilStart > 0 ? '#FBBF24' : '#64748B' }}>
-                {e.status === 'ACTIVE' ? 'Running' : e.daysUntilStart > 0 ? `${e.daysUntilStart}d` : '—'}
+                {e.status === 'ACTIVE' ? 'Running' : e.daysUntilStart > 0 ? `In ${e.daysUntilStart}d` : '—'}
               </td>
             </tr>
           );

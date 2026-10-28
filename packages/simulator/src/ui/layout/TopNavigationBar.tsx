@@ -143,15 +143,13 @@ function PlaybackControls({
 export interface TopNavigationBarProps {
   onOpenRadar?: () => void;
   onOpenHoroscope?: () => void;
-  onOpenTimeline?: () => void;
   onOpenStrategy?: () => void;
-  availableTickers?: string[];
+  availableTickers?: string[] | undefined;
 }
 
 export const TopNavigationBar: React.FC<TopNavigationBarProps> = ({
   onOpenRadar,
   onOpenHoroscope,
-  onOpenTimeline,
   onOpenStrategy,
   availableTickers,
 }) => {
@@ -188,23 +186,6 @@ export const TopNavigationBar: React.FC<TopNavigationBarProps> = ({
             }}
           >
             ☵ Universe Radar
-          </button>
-        )}
-        {onOpenTimeline && (
-          <button
-            onClick={onOpenTimeline}
-            style={{
-              padding: '5px 10px',
-              borderRadius: '5px',
-              backgroundColor: '#1E2638',
-              color: '#38BDF8',
-              border: '1px solid #0284C7',
-              cursor: 'pointer',
-              fontSize: '11px',
-              fontWeight: 700,
-            }}
-          >
-            ⌛ Dasha Timeline
           </button>
         )}
         {onOpenHoroscope && (
