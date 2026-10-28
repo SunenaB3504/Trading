@@ -32,6 +32,7 @@
     "e2e:tutor": "tsx tools/e2e/tutor.ts",
     "e2e:machine": "tsx tools/e2e/timeMachine.ts",
     "e2e:strategy": "tsx tools/e2e/strategy.ts",
+    "e2e:fno": "tsx tools/e2e/fno.ts",
     "record:status": "tsx packages/workers/src/recordStatus.ts",
     "pull:bars": "tsx packages/workers/src/pullBars.ts",
     "pull:yahoo": "tsx packages/workers/src/pullYahoo.ts",

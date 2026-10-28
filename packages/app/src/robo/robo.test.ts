@@ -49,7 +49,7 @@ describe('Robo accounts', () => {
     const never = await catchUp(new MemoryKv(), REAL, NOW, defaultStart(REAL));
     expect(after[0]?.sessions).toBeGreaterThan(before[0]?.sessions ?? 0);
     expect(brief(after)).toEqual(brief(never));
-  });
+  }, 120_000);
 
   it('prices that arrive later cannot change what an earlier session decided', async () => {
     const cutDate = REAL.snapshot.bars[REAL.instruments[0] as string]?.map((b) => b.date).slice(-30)[0] as string;

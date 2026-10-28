@@ -33,7 +33,7 @@
 | Leverage | Controlling a position larger than the money you put in | delivery-intraday-margin |
 | Limit order | An order at your price or better | order-types |
 | Liquidity | How easily you trade without moving the price | order-book-liquidity-circuits |
-| Margin | Money you must deposit to hold a leveraged position | delivery-intraday-margin |
+| Margin | Money you must deposit to hold a leveraged position, including futures and short options | delivery-intraday-margin, futures-margin-mtm, leverage-costs-and-tax |
 | Market order | An order filled at the best available price now | order-types |
 | MTF | A broker loan to buy more shares than you can pay for | delivery-intraday-margin |
 | Slippage | The gap between expected and actual price | costs-of-trading |
@@ -62,3 +62,25 @@
 | Support and resistance | Price levels where buyers or sellers appeared before | charts-and-indicators |
 | Trailing stop | A stop that moves up with the highest price reached | breakouts-and-stops |
 | Volume | The number of shares traded | charts-and-indicators |
+| Call option | The right to buy at the strike price | options-and-payoffs |
+| Put option | The right to sell at the strike price | options-and-payoffs |
+| Premium | The price of an option, paid by the buyer to the seller | options-and-payoffs, option-price-and-greeks |
+| Strike | The fixed price at which an option can be used | derivatives-basics, options-and-payoffs |
+| Lot | The fixed number of units in one contract | derivatives-basics |
+| Futures | A contract to buy or sell at a fixed price on a fixed date | futures-margin-mtm |
+| Mark-to-market | Daily cash settlement of a futures gain or loss | futures-margin-mtm |
+| Margin call | A demand to add money, or the forced closing of a position | futures-margin-mtm, leverage-costs-and-tax |
+| Open interest | The number of contracts still open | futures-margin-mtm |
+| Intrinsic value | What an option would be worth if used now | option-price-and-greeks |
+| Time value | The part of an option's price above its intrinsic value | option-price-and-greeks |
+| Implied volatility | The expected movement hidden in an option's price | option-price-and-greeks |
+| Delta | How much an option's price moves for a 1-point move in the index | option-price-and-greeks |
+| Gamma | How fast delta changes | option-price-and-greeks |
+| Theta | How much an option loses each day as time passes | option-price-and-greeks |
+| Vega | How much an option changes for a 1-point change in implied volatility | option-price-and-greeks |
+| Moneyness | Whether an option is in, at or out of the money | derivatives-basics |
+| Straddle | A call and a put at the same strike | options-and-payoffs |
+| Option spread | Two options of the same kind, one bought and one sold, to shape the result | options-and-payoffs |
+| Iron condor | A short strangle with bought options further out to cap the loss | options-and-payoffs |
+| Expiry | The last day a contract exists | expiry-and-settlement |
+| Cash settlement | Paying the difference in money, with no shares moving | expiry-and-settlement |

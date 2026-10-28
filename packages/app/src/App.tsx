@@ -21,6 +21,8 @@ import { ChartScreen } from './screens/ChartScreen';
 import { RoboScreen } from './screens/RoboScreen';
 import { StrategyLabScreen } from './screens/StrategyLabScreen';
 import { BuilderScreen } from './screens/BuilderScreen';
+import { FnoScreen } from './screens/FnoScreen';
+import { OptionsLabScreen } from './screens/OptionsLabScreen';
 import { TimeMachineScreen } from './screens/TimeMachineScreen';
 import { TutorScreen } from './screens/TutorScreen';
 import type { TutorEnv } from './tutor/run';
@@ -36,14 +38,15 @@ import { fundsNote, useFunds } from './trading/useFunds';
 import { useMarkets } from './trading/useMarkets';
 import type { Markets } from './trading/useMarkets';
 import { MarketSwitch } from './ui/MarketSwitch';
-import type { FundsMarket } from '@trading/core';
+import type { FundsMarket, UnderlyingId } from '@trading/core';
+import { fnoDataOf } from './fno/fnoSessions';
 import type { KeyValueStore } from './store/kv';
 import { colors } from './ui/Section';
 import { RootErrorBoundary } from './ui/RootErrorBoundary';
 import { TabStrip } from './ui/TabStrip';
 
 type SectionId = 'home' | 'learn' | 'practise' | 'measure' | 'tutor' | 'settings';
-type PractiseId = 'trade' | 'funds' | 'machine' | 'builder' | 'charts' | 'lab' | 'robo' | 'ledger' | 'universe' | 'compare' | 'report';
+type PractiseId = 'trade' | 'funds' | 'machine' | 'builder' | 'charts' | 'lab' | 'robo' | 'fno' | 'optlab' | 'ledger' | 'universe' | 'compare' | 'report';
 type SettingsId = 'general' | 'profiles' | 'backup' | 'data';
 
 const SECTIONS = [
@@ -62,6 +65,8 @@ const PRACTISE = [
   ['charts', 'Charts'],
   ['lab', 'Strategy Lab'],
   ['robo', 'Robo'],
+  ['fno', 'F&O'],
+  ['optlab', 'Options Lab'],
   ['ledger', 'Ledger'],
   ['universe', 'Universe'],
   ['compare', 'Compare'],
@@ -129,6 +134,12 @@ function Practise(props: { env: TutorEnv; kv: KeyValueStore; now: () => number; 
   const [tab, setTab] = useState<PractiseId>('trade');
   const { kv, now, markets, funds, env } = props;
   const market = markets.market;
+  const fnoData = useMemo(() => fnoDataOf(markets.real), [markets.real]);
+  const spotOf = (u: UnderlyingId): number | null => {
+    const last = fnoData?.dates[fnoData.dates.length - 1];
+    const level = last === undefined ? null : (fnoData?.spot(u, last, 'close') ?? null);
+    return level === null ? null : level / 100;
+  };
   const screens: Record<PractiseId, () => React.ReactElement> = {
     trade: () => <TradeScreen kv={kv} now={now} market={market} env={env} />,
     funds: () => <FundsScreen kv={kv} now={now} funds={funds} />,
@@ -137,6 +148,8 @@ function Practise(props: { env: TutorEnv; kv: KeyValueStore; now: () => number; 
     charts: () => <ChartScreen market={market} />,
     lab: () => <StrategyLabScreen kv={kv} now={now} real={markets.real} />,
     robo: () => <RoboScreen kv={kv} now={now} real={markets.real} />,
+    fno: () => <FnoScreen kv={kv} now={now} real={markets.real} />,
+    optlab: () => <OptionsLabScreen spotOf={spotOf} />,
     ledger: () => <LedgerScreen kv={kv} now={now} />,
     universe: () => <UniverseScreen />,
     compare: () => <CompareScreen kv={kv} now={now} market={market} />,

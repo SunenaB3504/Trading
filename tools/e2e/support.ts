@@ -55,6 +55,8 @@ const PARENT: Record<string, string> = {
   Charts: 'Practise',
   'Strategy Lab': 'Practise',
   Robo: 'Practise',
+  'F&O': 'Practise',
+  'Options Lab': 'Practise',
   Path: 'Learn',
   Glossary: 'Learn',
   Mistakes: 'Measure',

@@ -21,6 +21,8 @@ export const HINTS: Record<string, Hint> = {
   charts: { text: 'A chart is a record of what already happened. Averages and RSI smooth or measure that record. They do not predict.', lesson: 'charts-and-indicators' },
   lab: { text: 'Test the rules on past prices, but do not keep changing the settings until the past looks good. That is overfitting.', lesson: 'rules-and-overfitting' },
   robo: { text: 'These accounts follow fixed rules and are brought up to date session by session. Compare them with the Index Benchmark, not with each other only.', lesson: 'rules-and-overfitting' },
+  fno: { text: 'A lot controls far more than you put up. Before you open a position, work out what a 5% move against you costs in rupees.', lesson: 'leverage-costs-and-tax' },
+  optionslab: { text: 'The picture shows one moment. Slide the days and the volatility and watch how time and volatility change an option you did not touch.', lesson: 'option-price-and-greeks' },
   measure: { text: 'Write down why you trade before you trade. Flags below are habits to look at, not verdicts.', lesson: 'behavioural-traps' },
 };
 

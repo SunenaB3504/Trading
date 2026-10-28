@@ -27,6 +27,7 @@ export const LEVEL_TITLES: Readonly<Record<number, string>> = {
   1: 'Level 1: Foundations',
   2: 'Level 2: Trading, costs and habits',
   3: 'Level 3: Charts and rules',
+  4: 'Level 4: Futures and options',
 };
 
 export interface Level {
@@ -59,3 +60,5 @@ export const PATH = LEVELS.map((l) => ({ lessons: l.lessons.map((x) => x.id), qu
 export { SAMPLES } from './samples';
 export { SCENARIOS, scenarioById } from './scenarios';
 export type { Checkpoint, Scenario, ScenarioGoal } from './scenarios';
+export { FNO_SCENARIOS, fnoScenarioById } from './fnoScenarios';
+export type { FnoGoal, FnoScenario } from './fnoScenarios';
