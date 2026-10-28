@@ -11,6 +11,7 @@ import { SIGN_NAMES, SIGN_LORDS } from '../../../core/astro/constants';
 import { calculateTransitPositions, type DetailedPlanetPosition } from '../../../core/astro/ephemeris';
 import { evaluateSpecialYogas, EXALTATION_SIGNS, DEBILITATION_SIGNS, OWN_SIGNS } from '../../../core/astro/yogaDetector';
 import { deriveLagnaLordships } from '../../../core/astro/trikonaNathans';
+import { getOrComputeJathakam } from '../../../core/astro/jathakaCache';
 
 export interface HoroscopeDossierModalProps {
   isOpen: boolean;
@@ -25,6 +26,11 @@ export const HoroscopeDossierModal: React.FC<HoroscopeDossierModalProps> = ({
   metadata,
   activeDate,
 }) => {
+  const jathakam = useMemo(() => {
+    if (!metadata) return null;
+    return getOrComputeJathakam(metadata, activeDate);
+  }, [metadata, activeDate]);
+
   const transitPositions = useMemo(
     () => calculateTransitPositions(activeDate && activeDate.length >= 10 ? activeDate : '2005-01-01'),
     [activeDate]
@@ -58,7 +64,7 @@ export const HoroscopeDossierModal: React.FC<HoroscopeDossierModalProps> = ({
     });
   }, [lagnaId, moonId, transitSigns, navSigns]);
 
-  const lordships = useMemo(() => deriveLagnaLordships(lagnaId), [lagnaId]);
+  const lordships = useMemo(() => jathakam?.lordships ?? deriveLagnaLordships(lagnaId), [jathakam, lagnaId]);
 
   if (!isOpen || !metadata) return null;
 

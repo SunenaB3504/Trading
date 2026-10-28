@@ -1,7 +1,7 @@
 /**
  * packages/simulator/src/ui/components/screener/UniverseRadarModal.tsx
- * Market Universe Radar & Screener Modal with 4-fold Vedic Confluence.
- * Integrates Triads, Yogas, Kota Chakra, SBC, Indu Lagna, and Tara Bala.
+ * Market Universe Radar & Screener Modal with 4-fold Vedic Confluence and Dasha Filters.
+ * Integrates Triads, Yogas, Dasha Lords, Kota Chakra, SBC, Indu Lagna, and Tara Bala.
  * Enforces strict modularity (< 200 LOC, functions < 60 LOC, complexity <= 10).
  */
 
@@ -15,6 +15,7 @@ import {
   filterUniverseBySBC,
   filterUniverseByInduLagna,
   filterUniverseByTara,
+  filterUniverseByDashaLord,
 } from '../../../core/engine/universeScanner';
 import { RadarFiltersBar, type RadarFiltersState } from './RadarFiltersBar';
 import { RadarStockTable } from './RadarStockTable';
@@ -37,6 +38,8 @@ const INITIAL_FILTERS: RadarFiltersState = {
   induFilter: 'ALL',
   taraFilter: 'ALL',
   minConfluence: 0,
+  mdLordFilter: 'ALL',
+  adLordFilter: 'ALL',
 };
 
 export const UniverseRadarModal: React.FC<UniverseRadarModalProps> = ({
@@ -59,6 +62,8 @@ export const UniverseRadarModal: React.FC<UniverseRadarModalProps> = ({
     let res = summary.items;
     res = filterUniverseByTriad(res, filters.selectedTriad);
     res = filterUniverseByYoga(res, filters.selectedYoga);
+    res = filterUniverseByDashaLord(res, 'MD', filters.mdLordFilter);
+    res = filterUniverseByDashaLord(res, 'AD', filters.adLordFilter);
     res = filterUniverseByKota(res, filters.kotaFilter);
     res = filterUniverseBySBC(res, filters.sbcFilter);
     res = filterUniverseByInduLagna(res, filters.induFilter);
@@ -114,7 +119,12 @@ export const UniverseRadarModal: React.FC<UniverseRadarModalProps> = ({
           overflow: 'hidden',
         }}
       >
-        <RadarHeader activeDate={activeDate} total={summary.totalScanned} matchedCount={filteredItems.length} onClose={onClose} />
+        <RadarHeader
+          activeDate={activeDate}
+          total={summary.totalScanned}
+          matchedCount={filteredItems.length}
+          onClose={onClose}
+        />
         <RadarFiltersBar
           filters={filters}
           onChange={handleFilterChange}

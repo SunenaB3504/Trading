@@ -334,6 +334,27 @@ export function filterUniverseByTara(
   return items.filter((i) => i.taraCategory === taraFilter);
 }
 
+export function filterUniverseByDashaLord(
+  items: UniverseStockScanItem[],
+  level: 'MD' | 'AD' | 'PD',
+  lord: PlanetKey | 'ALL'
+): UniverseStockScanItem[] {
+  if (!lord || lord === 'ALL') return items;
+  if (level === 'MD') return items.filter((i) => i.mdLord === lord);
+  if (level === 'AD') return items.filter((i) => i.adLord === lord);
+  return items.filter((i) => i.pdLord === lord);
+}
+
+export function filterUniverseByDashaRole(
+  items: UniverseStockScanItem[],
+  level: 'MD' | 'AD' | 'PD',
+  role: 'T' | 'K' | 'D' | 'ALL'
+): UniverseStockScanItem[] {
+  if (!role || role === 'ALL') return items;
+  const idx = level === 'MD' ? 1 : level === 'AD' ? 3 : 5;
+  return items.filter((i) => i.triadCode[idx] === role);
+}
+
 export function getPrioritizedDailyActionFeed(items: UniverseStockScanItem[]): UniverseStockScanItem[] {
   const priorityOrder: Record<string, number> = { BUY: 1, SELL: 2, HOLD: 3 };
   return [...items].sort((a, b) => {

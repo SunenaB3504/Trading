@@ -66,3 +66,4 @@ describe('Indu Lagna Wealth Engine', () => {
     expect(evalResult.beneficPlanetsInKendraTrikona).toContain('jupiter');
   });
 });
+

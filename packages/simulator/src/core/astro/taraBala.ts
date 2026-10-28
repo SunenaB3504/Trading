@@ -134,3 +134,4 @@ export function mapConsonantToNakshatra(consonant: string): number {
 
   return CONSONANT_NAKSHATRA_MAP[c] ?? 0;
 }
+

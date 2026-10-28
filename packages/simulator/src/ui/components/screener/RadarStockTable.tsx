@@ -158,3 +158,4 @@ function StockTableRow({ item, onSelect }: { item: UniverseStockScanItem; onSele
     </tr>
   );
 }
+

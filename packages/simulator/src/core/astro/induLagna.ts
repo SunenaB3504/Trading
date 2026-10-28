@@ -129,3 +129,4 @@ export function evaluateInduLagna(
     status: act.status,
   };
 }
+

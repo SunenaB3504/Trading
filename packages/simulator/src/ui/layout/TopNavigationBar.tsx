@@ -9,15 +9,21 @@ import { useSimulationStore, type PlaybackSpeed } from '../../state/simulationSt
 import { useStockStore } from '../../state/stockStore';
 import { TimeMachine } from '../../core/engine/timeMachine';
 
-const TICKERS = ['TCS', 'DIVISLAB', 'BIOCON', 'PETRONET', 'IGL', 'YESBANK', 'SUZLON', 'BALAJITELE'];
+const DEFAULT_TICKERS = ['TCS', 'DIVISLAB', 'BIOCON', 'PETRONET', 'IGL', 'YESBANK', 'SUZLON', 'BALAJITELE'];
 
 function BrandAndTicker({
   symbol,
   onSelect,
+  availableTickers = DEFAULT_TICKERS,
 }: {
   symbol: string;
   onSelect: (sym: string) => void;
+  availableTickers?: string[] | undefined;
 }): React.ReactElement {
+  const tickerList = availableTickers.includes(symbol)
+    ? availableTickers
+    : [symbol, ...availableTickers];
+
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
       <span style={{ color: '#D4AF37', fontWeight: 900, fontSize: '15px', letterSpacing: '0.08em' }}>
@@ -34,9 +40,10 @@ function BrandAndTicker({
           borderRadius: '6px',
           fontWeight: 700,
           fontSize: '12px',
+          maxWidth: '180px',
         }}
       >
-        {TICKERS.map((t) => (
+        {tickerList.map((t) => (
           <option key={t} value={t}>
             {t} (NSE)
           </option>
@@ -136,13 +143,17 @@ function PlaybackControls({
 export interface TopNavigationBarProps {
   onOpenRadar?: () => void;
   onOpenHoroscope?: () => void;
+  onOpenTimeline?: () => void;
   onOpenStrategy?: () => void;
+  availableTickers?: string[];
 }
 
 export const TopNavigationBar: React.FC<TopNavigationBarProps> = ({
   onOpenRadar,
   onOpenHoroscope,
+  onOpenTimeline,
   onOpenStrategy,
+  availableTickers,
 }) => {
   const { isPlaying, speed, activeDate, currentIndex, totalSessions } = useSimulationStore();
   const { activeSymbol, setActiveSymbol } = useStockStore();
@@ -158,7 +169,7 @@ export const TopNavigationBar: React.FC<TopNavigationBarProps> = ({
         borderBottom: '1px solid #1E2638',
       }}
     >
-      <BrandAndTicker symbol={activeSymbol} onSelect={setActiveSymbol} />
+      <BrandAndTicker symbol={activeSymbol} onSelect={setActiveSymbol} availableTickers={availableTickers} />
       <PlaybackControls isPlaying={isPlaying} speed={speed} />
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -177,6 +188,23 @@ export const TopNavigationBar: React.FC<TopNavigationBarProps> = ({
             }}
           >
             ☵ Universe Radar
+          </button>
+        )}
+        {onOpenTimeline && (
+          <button
+            onClick={onOpenTimeline}
+            style={{
+              padding: '5px 10px',
+              borderRadius: '5px',
+              backgroundColor: '#1E2638',
+              color: '#38BDF8',
+              border: '1px solid #0284C7',
+              cursor: 'pointer',
+              fontSize: '11px',
+              fontWeight: 700,
+            }}
+          >
+            ⌛ Dasha Timeline
           </button>
         )}
         {onOpenHoroscope && (

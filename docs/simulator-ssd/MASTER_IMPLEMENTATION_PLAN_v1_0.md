@@ -473,6 +473,29 @@ packages/simulator/src/
   * `ui/components/screener/UniverseRadarModal.tsx` (< 200 LOC).
 * **Acceptance Criteria:** All 4 confluence filters toggle dynamically without lag; composite confluence score (★ 0..4/4) displays with color-coded chips; 16 test files pass (70/70 tests).
 
+#### WP-5.7: On-Demand Jathakam Persistence & Database Cache Engine
+* **Objective:** Enable instantaneous ($0\text{ ms}$) retrieval of any stock's computed horoscope by persisting on-demand calculations in local database/storage upon first access.
+* **Key Tasks:**
+  1. Implement `jathakaCache.ts` with local IndexedDB/localStorage storage layer (with memory fallback).
+  2. Compute and serialize D1 Rashi, D9 Navamsha, 12 Bhavas, 9 Graha dignities, 120-year hierarchical Dasha tree, Indu Lagna, and Yogas on first open.
+  3. Wire cache into `HoroscopeDossierModal.tsx` and searchable universe picker.
+* **Deliverables:**
+  * `core/astro/jathakaCache.ts` & `jathakaCache.test.ts` (`< 200 LOC`).
+* **Acceptance Criteria:** First-time load computes in $<15\text{ ms}$ and persists; subsequent loads resolve in $0\text{ ms}$ from cache.
+
+#### WP-5.8: Chronological Dasha Schedule & "Comes-to-Effect" Timeline Scanner
+* **Objective:** Provide deep temporal query engine to identify exact calendar start/end dates for all Dasha epochs and reverse-lookup when specific Triads take effect.
+* **Key Tasks:**
+  1. Implement `dashaTimelineScanner.ts` generating flattened chronological schedule of all MD, AD, and PD epochs with $[T, K, D]$ classifications and active/completed/upcoming statuses.
+  2. Implement `findNextTriadOccurrence()` computing exact calendar dates when $[T\text{-}T\text{-}T]$, $[D\text{-}T\text{-}T]$, or $[T\text{-}D\text{-}T]$ next come into effect.
+  3. Build `DashaTimelineModal.tsx` rendering interactive schedule table and reverse-lookup countdown cards.
+  4. Expand `RadarFiltersBar.tsx` with specific MD/AD lord filters and forward evaluation date selector.
+* **Deliverables:**
+  * `core/astro/dashaTimelineScanner.ts` & `dashaTimelineScanner.test.ts` (`< 250 LOC`).
+  * `ui/components/screener/DashaTimelineModal.tsx` (`< 250 LOC`).
+  * `ui/components/screener/RadarFiltersBar.tsx` (< 250 LOC).
+* **Acceptance Criteria:** Returns precise transition calendar dates; highlights active and impending triads; verified by unit tests.
+
 ---
 
 ## 5. Technical Risk Management & Mitigations

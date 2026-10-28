@@ -387,6 +387,10 @@ $$\mathbf{Trade Ticket} = \Big\{ \text{When to Invest}, \quad \text{Quantity / R
     3. **Indu Lagna Wealth Vector:** Identifies active Gochara transit of benefics (Jupiter, Venus) in Kendra or Trikona from the stock's Indu Lagna.
     4. **Panchanga & Tara Bala:** Filters for Auspicious stars (Sampat [Wealth], Kshema [Safety], Sadhana [Success], Mitra [Support]) vs. Inauspicious stars (Vipat [Peril], Naidhana [Destruction]).
     5. **Composite Confluence Score (★ 0..4/4):** Ranks equities by simultaneous alignment across Kota, SBC, Indu Lagna, and Tara Bala.
+  * **Granular Dasha Lord, Role & Forward Time Filtering:**
+    - **Graha Lord Selectors:** Filter universe by specific Mahadasha (MD), Antardasha (AD), or Pratyantardasha (PD) lords (e.g. Venus MD, Saturn AD).
+    - **Functional Role Selectors:** Filter by functional Parashari dignity (e.g. MD Lord is Trikona, AD Lord is Dusthana).
+    - **Target Evaluation Date (Forward Time Inspector):** Allows backtesters to inspect and scan what the universe's Dasha triad and confluence will be on any arbitrary historical or future date $t_{\text{target}}$.
   * **One-Click Cockpit Deep Dive:**
     - Selecting any row in the screener table immediately loads the ticker into the primary Cockpit Terminal, mounts its 25-year timeline buffer, and snaps the chart to the ongoing Dasha epoch.
   * **Auto-Snapping to Cusp Boundaries:**
@@ -427,6 +431,12 @@ $$\mathbf{Trade Ticket} = \Big\{ \text{When to Invest}, \quad \text{Quantity / R
   * **12-Bhava Mathematical Lordship Breakdown:** Explains the Moolatrikona precedence and Lagnesha immunity calculations behind every $[T]$, $[K]$, and $[D]$ classification.
   * **Special Sensitive Points:** Indu Lagna wealth point, Bhrigu Bindu midpoints, and Yogi/Avayogi degrees.
   * **Spatial Radar Overlays:** Active Kota Chakra zone placement (Stambha, Madhya, Prakaara, Bahya) and Sarvatobhadra 81-Square grid Vedha rays.
+  * **On-Demand Jathakam Persistence Engine (`core/astro/jathakaCache.ts` < 200 LOC):**
+    - First-time stock inspection dynamically generates the full horoscopic payload (D1, D9, 12 Bhavas, 120-year hierarchical Dasha tree, Indu Lagna, Yogas).
+    - Serializes and stores the payload in client persistent storage (IndexedDB / SQLite cache) to eliminate duplicate compute ($0\text{ ms}$ on subsequent loads).
+  * **Chronological Dasha Timeline & "Comes-to-Effect" Schedule (`core/astro/dashaTimelineScanner.ts`, `DashaTimelineModal.tsx` < 250 LOC):**
+    - Hierarchical schedule view mapping exact calendar transition dates, durations, and $[T, K, D]$ roles across all historical, active, and upcoming MD, AD, and PD epochs.
+    - Reverse search engine: Computes the exact future calendar window when a stock will enter $[T\text{-}T\text{-}T]$ bull harvest, $[D\text{-}T\text{-}T]$ turnaround, or $[T\text{-}D\text{-}T]$ defensive exit.
 
 ---
 

@@ -62,3 +62,4 @@ describe('Tara Bala & Panchanga Engine', () => {
     expect(mapConsonantToNakshatra('Unknown')).toBe(0);
   });
 });
+
