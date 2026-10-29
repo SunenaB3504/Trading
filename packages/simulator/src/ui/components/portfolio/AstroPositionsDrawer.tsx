@@ -152,9 +152,11 @@ export const AstroPositionsDrawer: React.FC<AstroPositionsDrawerProps> = ({
 }) => {
   const { ledger, orders, executeOrder } = usePortfolioStore();
 
-  if (!isOpen) return null;
+  const positionsList: PortfolioPosition[] = useMemo(
+    () => Object.values(ledger.positions),
+    [ledger.positions]
+  );
 
-  const positionsList: PortfolioPosition[] = Object.values(ledger.positions);
   const latestBuyOrders = useMemo(() => {
     const map: Record<string, PaperTradeOrder> = {};
     for (const o of orders) {
@@ -162,6 +164,8 @@ export const AstroPositionsDrawer: React.FC<AstroPositionsDrawerProps> = ({
     }
     return map;
   }, [orders]);
+
+  if (!isOpen) return null;
 
   const handleCloseTrade = (pos: PortfolioPosition) => {
     void executeOrder(

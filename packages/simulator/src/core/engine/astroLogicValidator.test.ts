@@ -85,3 +85,4 @@ describe('astroLogicValidator', () => {
     expect(vryGroup?.totalRealizedPnl).toBe(-1000);
   });
 });
+
