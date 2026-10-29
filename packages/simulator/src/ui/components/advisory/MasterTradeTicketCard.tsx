@@ -97,11 +97,17 @@ function TicketMetricsGrid({
   actualInvested,
   targetPrice,
   stopPrice,
+  onSharesChange,
+  isCustomized,
+  onResetShares,
 }: {
   shares: number;
   actualInvested: number;
   targetPrice: number;
   stopPrice: number;
+  onSharesChange?: ((val: number) => void) | undefined;
+  isCustomized?: boolean | undefined;
+  onResetShares?: (() => void) | undefined;
 }): React.ReactElement {
   return (
     <div
@@ -116,12 +122,96 @@ function TicketMetricsGrid({
       }}
     >
       <div>
-        <span style={{ color: '#9CA3AF', display: 'block', fontSize: '10px' }}>Quantity</span>
-        <strong style={{ color: '#F3F4F6' }}>{shares} shares</strong>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2px' }}>
+          <span style={{ color: '#9CA3AF', fontSize: '10px' }}>Quantity</span>
+          {isCustomized && onResetShares && (
+            <button
+              type="button"
+              onClick={onResetShares}
+              title="Reset to recommended sizing"
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#38BDF8',
+                fontSize: '9px',
+                cursor: 'pointer',
+                padding: 0,
+                textDecoration: 'underline',
+              }}
+            >
+              Reset
+            </button>
+          )}
+        </div>
+        {onSharesChange ? (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
+            <button
+              type="button"
+              onClick={() => onSharesChange(Math.max(1, shares <= 10 ? shares - 1 : shares - 10))}
+              title="Decrease quantity"
+              style={{
+                backgroundColor: '#1F2937',
+                border: '1px solid #374151',
+                borderRadius: '3px',
+                color: '#9CA3AF',
+                width: '18px',
+                height: '22px',
+                fontSize: '12px',
+                fontWeight: 700,
+                cursor: 'pointer',
+                padding: 0,
+              }}
+            >
+              −
+            </button>
+            <input
+              type="number"
+              min={1}
+              value={shares}
+              onChange={(e) => {
+                const parsed = parseInt(e.target.value, 10);
+                onSharesChange(isNaN(parsed) ? 1 : Math.max(1, parsed));
+              }}
+              style={{
+                width: '56px',
+                backgroundColor: '#030712',
+                border: isCustomized ? '1px solid #D4AF37' : '1px solid #374151',
+                borderRadius: '4px',
+                color: '#F9FAFB',
+                fontSize: '12px',
+                fontWeight: 700,
+                padding: '2px 4px',
+                textAlign: 'center',
+              }}
+            />
+            <button
+              type="button"
+              onClick={() => onSharesChange(shares < 10 ? shares + 1 : shares + 10)}
+              title="Increase quantity"
+              style={{
+                backgroundColor: '#1F2937',
+                border: '1px solid #374151',
+                borderRadius: '3px',
+                color: '#9CA3AF',
+                width: '18px',
+                height: '22px',
+                fontSize: '12px',
+                fontWeight: 700,
+                cursor: 'pointer',
+                padding: 0,
+              }}
+            >
+              +
+            </button>
+            <span style={{ color: '#9CA3AF', fontSize: '11px', marginLeft: '2px' }}>shs</span>
+          </div>
+        ) : (
+          <strong style={{ color: '#F3F4F6' }}>{shares} shares</strong>
+        )}
       </div>
       <div>
         <span style={{ color: '#9CA3AF', display: 'block', fontSize: '10px' }}>Allocation</span>
-        <strong style={{ color: '#F3F4F6' }}>₹{actualInvested.toLocaleString('en-IN')}</strong>
+        <strong style={{ color: '#F3F4F6' }}>₹{actualInvested.toLocaleString('en-IN', { maximumFractionDigits: 1 })}</strong>
       </div>
       <div>
         <span style={{ color: '#9CA3AF', display: 'block', fontSize: '10px' }}>Target / Stop</span>
@@ -206,6 +296,14 @@ function MultipliersRow({
 }
 
 export const MasterTradeTicketCard: React.FC<MasterTradeTicketCardProps> = ({ ticket, onExecuteOrder }) => {
+  const [customShares, setCustomShares] = React.useState<number>(ticket?.shares ?? 1);
+
+  React.useEffect(() => {
+    if (ticket) {
+      setCustomShares(ticket.shares);
+    }
+  }, [ticket?.ticketId, ticket?.shares]);
+
   if (!ticket) {
     return (
       <div style={{ padding: '16px', background: '#0B0E14', borderRadius: '8px', border: '1px solid #1E2638', color: '#64748B' }}>
@@ -217,6 +315,18 @@ export const MasterTradeTicketCard: React.FC<MasterTradeTicketCardProps> = ({ ti
   const p = ticket.provenance;
   const isBuy = ticket.action === 'BUY';
   const isVetoed = p.isVetoed;
+  const isCustomized = customShares !== ticket.shares;
+  const currentInvested = Math.round(customShares * ticket.price * 10) / 10;
+
+  const handleExecute = () => {
+    if (!onExecuteOrder) return;
+    const orderTicket: MasterTradeTicket = {
+      ...ticket,
+      shares: customShares,
+      actualInvestedRupees: currentInvested,
+    };
+    onExecuteOrder(orderTicket);
+  };
 
   return (
     <div
@@ -233,7 +343,15 @@ export const MasterTradeTicketCard: React.FC<MasterTradeTicketCardProps> = ({ ti
       <TicketHeader action={ticket.action} symbol={ticket.symbol} price={ticket.price} ticketId={ticket.ticketId} isVetoed={isVetoed} triadCode={p.triadCode} />
       <div style={{ fontSize: '11px', color: '#CBD5E1' }}><strong>Signal:</strong> {p.signal} — {p.reason}</div>
       <MultipliersRow omegaTrader={p.omegaTrader} phiFinancial={p.phiFinancial} thetaAstro={p.thetaAstro} triadCode={p.triadCode} />
-      <TicketMetricsGrid shares={ticket.shares} actualInvested={ticket.actualInvestedRupees} targetPrice={ticket.exitRules.profitTargetPrice} stopPrice={ticket.exitRules.stopLossPrice} />
+      <TicketMetricsGrid
+        shares={customShares}
+        actualInvested={currentInvested}
+        targetPrice={ticket.exitRules.profitTargetPrice}
+        stopPrice={ticket.exitRules.stopLossPrice}
+        onSharesChange={isBuy && !isVetoed ? setCustomShares : undefined}
+        isCustomized={isCustomized}
+        onResetShares={() => setCustomShares(ticket.shares)}
+      />
       {isVetoed && p.vetoReason && (
         <div style={{ padding: '8px 10px', borderRadius: '6px', backgroundColor: '#450A0A', border: '1px solid #7F1D1D', color: '#FECACA', fontSize: '11px', fontWeight: 600 }}>
           ⛔ {p.vetoReason}
@@ -243,7 +361,7 @@ export const MasterTradeTicketCard: React.FC<MasterTradeTicketCardProps> = ({ ti
         cuspExitDate={ticket.exitRules.calendarCuspExitDate}
         isBuy={isBuy}
         isVetoed={isVetoed}
-        onExecute={onExecuteOrder ? () => onExecuteOrder(ticket) : undefined}
+        onExecute={onExecuteOrder ? handleExecute : undefined}
       />
     </div>
   );
