@@ -67,7 +67,12 @@ function LeftChartPanel({
       <DashaRibbon dashaState={dashaState} activeDate={activeDate} />
       <TrikonaNathansBadge metadata={metadata} />
       <div style={{ flex: 1, position: 'relative', background: '#0B0E14', padding: '10px', minHeight: 0 }}>
-        <PriceCandleCanvas bars={bars} currentIndex={currentIndex} activeDate={activeDate} />
+        <PriceCandleCanvas
+          bars={bars}
+          currentIndex={currentIndex}
+          activeDate={activeDate}
+          onSelectDate={onSelectDate}
+        />
       </div>
       <ForwardRoadmapStrip
         metadata={metadata}

@@ -61,6 +61,14 @@ const PlaybackButtons: React.FC<{
 }> = ({ isPlaying, currentIndex, totalSessions, timeMachine }) => (
   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
     <button
+      onClick={() => timeMachine.step(-5)}
+      disabled={currentIndex <= 4}
+      style={btnStyle}
+      title="Step back 1 week"
+    >
+      ⏪ -1W
+    </button>
+    <button
       onClick={() => timeMachine.step(-1)}
       disabled={currentIndex <= 0}
       style={btnStyle}

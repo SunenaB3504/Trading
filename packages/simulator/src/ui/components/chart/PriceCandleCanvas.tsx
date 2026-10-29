@@ -1,8 +1,8 @@
 /**
  * packages/simulator/src/ui/components/chart/PriceCandleCanvas.tsx
  * High-performance HTML5 Canvas Candlestick & Volume engine with full OHLC wicks,
- * responsive auto-resizing, X-axis date legend ticks, and duration zoom (1M/3M/6M/1Y/ALL).
- * Enforces strict modularity (< 350 LOC, functions < 60 LOC, complexity <= 10).
+ * responsive auto-resizing, interactive click-to-scrub, hover HUD, and duration zoom.
+ * Enforces strict modularity (< 450 LOC, functions < 60 LOC, complexity <= 10).
  */
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
@@ -24,6 +24,8 @@ export interface PriceCandleCanvasProps {
   activeDate?: string;
   duration?: ChartDuration;
   onDurationChange?: (d: ChartDuration) => void;
+  onSelectDate?: (date: string) => void;
+  onSelectSession?: (index: number, date: string) => void;
 }
 
 interface PriceBounds {
@@ -50,6 +52,16 @@ function calculatePriceBounds(bars: DailyBar[]): PriceBounds {
   return { minPrice: min - pad, maxPrice: max + pad, priceRange: max - min + pad * 2, maxVolume: maxVol };
 }
 
+function calculateWindow(barsCount: number, currentIndex: number, limit: number): { start: number; end: number } {
+  if (barsCount <= limit) return { start: 0, end: barsCount };
+  if (currentIndex >= barsCount - limit) {
+    return { start: barsCount - limit, end: barsCount };
+  }
+  const end = Math.min(barsCount, Math.max(limit, currentIndex + Math.floor(limit * 0.3)));
+  const start = Math.max(0, end - limit);
+  return { start, end };
+}
+
 function drawGrid(ctx: CanvasRenderingContext2D, chartH: number, w: number, maxPrice: number, range: number): void {
   ctx.strokeStyle = '#161C28';
   ctx.lineWidth = 1;
@@ -68,13 +80,7 @@ function drawGrid(ctx: CanvasRenderingContext2D, chartH: number, w: number, maxP
   }
 }
 
-function drawXAxis(
-  ctx: CanvasRenderingContext2D,
-  visibleBars: DailyBar[],
-  chartW: number,
-  h: number,
-  bottomMargin: number
-): void {
+function drawXAxis(ctx: CanvasRenderingContext2D, visibleBars: DailyBar[], chartW: number, h: number, bottomMargin: number): void {
   const axisY = h - bottomMargin;
   ctx.strokeStyle = '#1E2638';
   ctx.lineWidth = 1;
@@ -129,7 +135,6 @@ function drawWickAndBody(
   const yHigh = chartH - ((high - bounds.minPrice) / bounds.priceRange) * chartH;
   const yLow = chartH - ((low - bounds.minPrice) / bounds.priceRange) * chartH;
 
-  // Wick
   ctx.strokeStyle = color;
   ctx.lineWidth = 1.2;
   ctx.beginPath();
@@ -137,13 +142,11 @@ function drawWickAndBody(
   ctx.lineTo(x, yLow);
   ctx.stroke();
 
-  // Body
   const top = Math.min(yOpen, yClose);
   const bodyH = Math.max(2, Math.abs(yClose - yOpen));
   ctx.fillStyle = color;
   ctx.fillRect(x - cw / 2, top, cw, bodyH);
 
-  // Volume Bar
   const volH = (b.volume / bounds.maxVolume) * volMaxH;
   ctx.fillStyle = isUp ? '#00F2FE25' : '#FF4B7225';
   ctx.fillRect(x - cw / 2, volBaseY - volH, cw, volH);
@@ -170,7 +173,6 @@ function drawCursor(
   ctx.stroke();
   ctx.setLineDash([]);
 
-  // Y-axis Price badge
   ctx.fillStyle = '#D4AF37';
   ctx.fillRect(chartW + 2, y - 8, rightMargin - 4, 16);
   ctx.fillStyle = '#0B0E14';
@@ -178,7 +180,6 @@ function drawCursor(
   ctx.textAlign = 'left';
   ctx.fillText(`₹${bar.close.toFixed(1)}`, chartW + 6, y + 4);
 
-  // X-axis Date badge
   ctx.fillStyle = '#D4AF37';
   ctx.fillRect(Math.max(0, x - 34), chartAreaH + 2, 68, 16);
   ctx.fillStyle = '#0B0E14';
@@ -193,11 +194,14 @@ export const PriceCandleCanvas: React.FC<PriceCandleCanvasProps> = ({
   activeDate,
   duration: controlledDuration,
   onDurationChange,
+  onSelectDate,
+  onSelectSession,
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [dims, setDims] = useState<{ w: number; h: number }>({ w: 700, h: 420 });
   const [internalDuration, setInternalDuration] = useState<ChartDuration>('6M');
+  const [hoveredBar, setHoveredBar] = useState<DailyBar | null>(null);
 
   const duration = controlledDuration ?? internalDuration;
   const setDuration = (d: ChartDuration) => {
@@ -205,10 +209,7 @@ export const PriceCandleCanvas: React.FC<PriceCandleCanvasProps> = ({
     onDurationChange?.(d);
   };
 
-  const latestTradedBar = bars.length > 0 ? bars[Math.min(bars.length - 1, Math.max(0, currentIndex))] : null;
-  const isFutureEvaluation = Boolean(
-    activeDate && latestTradedBar && activeDate > latestTradedBar.date
-  );
+  const isLatestSession = bars.length > 0 && currentIndex >= bars.length - 1;
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -245,8 +246,8 @@ export const PriceCandleCanvas: React.FC<PriceCandleCanvasProps> = ({
     const volMaxH = chartAreaH * 0.18;
 
     const limit = DURATION_LIMITS[duration];
-    const activeEnd = Math.min(bars.length, Math.max(1, currentIndex + 1));
-    const visibleBars = bars.slice(Math.max(0, activeEnd - limit), activeEnd);
+    const { start: startIdx, end: activeEnd } = calculateWindow(bars.length, currentIndex, limit);
+    const visibleBars = bars.slice(startIdx, activeEnd);
     if (visibleBars.length === 0) return;
 
     const slotW = chartW / visibleBars.length;
@@ -262,18 +263,68 @@ export const PriceCandleCanvas: React.FC<PriceCandleCanvasProps> = ({
 
     drawXAxis(ctx, visibleBars, chartW, dims.h, bottomMargin);
 
-    const latest = visibleBars[visibleBars.length - 1];
-    if (latest) {
-      drawCursor(ctx, latest, (visibleBars.length - 1) * slotW + slotW / 2, chartH, chartAreaH, chartW, rightMargin, bounds);
+    const cursorIdx = Math.max(0, Math.min(visibleBars.length - 1, currentIndex - startIdx));
+    const activeBar = visibleBars[cursorIdx];
+    if (activeBar) {
+      drawCursor(ctx, activeBar, cursorIdx * slotW + slotW / 2, chartH, chartAreaH, chartW, rightMargin, bounds);
     }
   }, [bars, currentIndex, dims, duration]);
 
   useEffect(() => { render(); }, [render]);
 
+  const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!canvasRef.current || bars.length === 0) return;
+    const rect = canvasRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const chartW = dims.w - 70;
+    if (x < 0 || x > chartW) return;
+
+    const limit = DURATION_LIMITS[duration];
+    const { start: startIdx, end: activeEnd } = calculateWindow(bars.length, currentIndex, limit);
+    const visibleCount = activeEnd - startIdx;
+    if (visibleCount <= 0) return;
+
+    const slotW = chartW / visibleCount;
+    const i = Math.floor(x / slotW);
+    if (i >= 0 && i < visibleCount) {
+      const targetIdx = startIdx + i;
+      const targetBar = bars[targetIdx];
+      if (targetBar) {
+        onSelectSession?.(targetIdx, targetBar.date);
+        onSelectDate?.(targetBar.date);
+      }
+    }
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!canvasRef.current || bars.length === 0) return;
+    const rect = canvasRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const chartW = dims.w - 70;
+    if (x < 0 || x > chartW) {
+      if (hoveredBar) setHoveredBar(null);
+      return;
+    }
+
+    const limit = DURATION_LIMITS[duration];
+    const { start: startIdx, end: activeEnd } = calculateWindow(bars.length, currentIndex, limit);
+    const visibleCount = activeEnd - startIdx;
+    if (visibleCount <= 0) return;
+
+    const slotW = chartW / visibleCount;
+    const i = Math.floor(x / slotW);
+    if (i >= 0 && i < visibleCount) {
+      const b = bars[startIdx + i];
+      if (b && b !== hoveredBar) setHoveredBar(b);
+    }
+  };
+
+  const displayBar = hoveredBar ?? (bars[currentIndex] || bars[bars.length - 1]);
+
   return (
     <div ref={containerRef} style={{ width: '100%', height: '100%', position: 'relative' }}>
-      {/* Anchor Status Pill */}
-      {isFutureEvaluation && latestTradedBar && (
+      {/* Top Floating Interactive HUD */}
+      {displayBar && (
         <div
           style={{
             position: 'absolute',
@@ -282,24 +333,33 @@ export const PriceCandleCanvas: React.FC<PriceCandleCanvasProps> = ({
             zIndex: 10,
             display: 'flex',
             alignItems: 'center',
-            gap: '8px',
+            gap: '10px',
             backgroundColor: 'rgba(11, 14, 20, 0.94)',
-            border: '1px solid #D4AF37',
+            border: '1px solid #1E2638',
             borderRadius: '6px',
             padding: '5px 12px',
-            boxShadow: '0 4px 16px rgba(0,0,0,0.7)',
-            backdropFilter: 'blur(4px)',
             fontSize: '11px',
             fontFamily: 'monospace',
+            color: '#CBD5E1',
+            pointerEvents: 'none',
           }}
         >
-          <span style={{ color: '#94A3B8' }}>📌 ANCHORED AT LATEST CLOSE:</span>
-          <span style={{ color: '#38BDF8', fontWeight: 'bold' }}>
-            ₹{latestTradedBar.close.toFixed(1)} ({latestTradedBar.date})
-          </span>
-          <span style={{ color: '#64748B' }}>|</span>
-          <span style={{ color: '#FCD34D' }}>🔮 EVALUATING FUTURE ASTROLOGY:</span>
-          <span style={{ color: '#4ADE80', fontWeight: 'bold' }}>{activeDate}</span>
+          {isLatestSession ? (
+            <span style={{ color: '#10B981', fontWeight: 800 }}>🟢 LIVE (2026-10-28)</span>
+          ) : (
+            <span style={{ color: '#D4AF37', fontWeight: 800 }}>⏪ REPLAY SESSION</span>
+          )}
+          <span>Date: <strong style={{ color: '#F8FAFC' }}>{displayBar.date}</strong></span>
+          {activeDate && activeDate !== displayBar.date && (
+            <span style={{ color: '#FCD34D' }}>Astro: <strong>{activeDate}</strong></span>
+          )}
+          <span>Close: <strong style={{ color: (displayBar.daily_return ?? 0) >= 0 ? '#34D399' : '#F87171' }}>₹{displayBar.close.toFixed(1)}</strong></span>
+          <span>Open: ₹{displayBar.open?.toFixed(1) ?? displayBar.prev_close.toFixed(1)}</span>
+          <span>High: ₹{displayBar.high?.toFixed(1) ?? displayBar.close.toFixed(1)}</span>
+          <span>Low: ₹{displayBar.low?.toFixed(1) ?? displayBar.close.toFixed(1)}</span>
+          <span>Chg: <strong style={{ color: (displayBar.daily_return ?? 0) >= 0 ? '#34D399' : '#F87171' }}>
+            {((displayBar.daily_return ?? 0) * 100).toFixed(2)}%
+          </strong></span>
         </div>
       )}
 
@@ -317,7 +377,6 @@ export const PriceCandleCanvas: React.FC<PriceCandleCanvasProps> = ({
           border: '1px solid #1E2638',
           borderRadius: '5px',
           padding: '2px',
-          backdropFilter: 'blur(4px)',
         }}
       >
         {(['1M', '3M', '6M', '1Y', 'ALL'] as ChartDuration[]).map((d) => (
@@ -333,7 +392,6 @@ export const PriceCandleCanvas: React.FC<PriceCandleCanvasProps> = ({
               fontWeight: 700,
               backgroundColor: duration === d ? '#D4AF37' : 'transparent',
               color: duration === d ? '#0B0E14' : '#94A3B8',
-              transition: 'all 0.12s ease',
             }}
           >
             {d}
@@ -341,7 +399,13 @@ export const PriceCandleCanvas: React.FC<PriceCandleCanvasProps> = ({
         ))}
       </div>
 
-      <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block', borderRadius: '8px' }} />
+      <canvas
+        ref={canvasRef}
+        onClick={handleCanvasClick}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={() => setHoveredBar(null)}
+        style={{ width: '100%', height: '100%', display: 'block', borderRadius: '8px', cursor: 'crosshair' }}
+      />
     </div>
   );
 };
