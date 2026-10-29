@@ -64,5 +64,22 @@ describe('useStockStore & Forward Date Anchoring', () => {
     expect(stock.metadata?.symbol).toBe('TCS');
     expect(stock.activeBar).not.toBeNull();
   });
+
+  it('scales universe stock prices to their authentic CMPs instead of defaulting to 1795', () => {
+    useStockStore.getState().loadStock('RAILTEL', '2026-10-28');
+    const railtel = useStockStore.getState();
+    expect(railtel.activeSymbol).toBe('RAILTEL');
+    expect(railtel.activeBar?.close).toBe(388.5);
+
+    useStockStore.getState().loadStock('FINEORG', '2026-10-28');
+    const fineorg = useStockStore.getState();
+    expect(fineorg.activeSymbol).toBe('FINEORG');
+    expect(fineorg.activeBar?.close).toBe(4725.0);
+
+    useStockStore.getState().loadStock('ARIES', '2026-10-28');
+    const aries = useStockStore.getState();
+    expect(aries.activeSymbol).toBe('ARIES');
+    expect(aries.activeBar?.close).toBe(272.4);
+  });
 });
 

@@ -49,3 +49,4 @@ describe('Statutory Transaction Charges & Tax Engine', () => {
     expect(res.netPnl).toBe(-res.totalCharges); // Net loss equals transaction friction
   });
 });
+

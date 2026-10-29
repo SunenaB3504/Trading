@@ -22,6 +22,16 @@ function KpiBox({ label, value, color }: { label: string; value: string; color?:
   );
 }
 
+function formatCurrency(amount: number, fractionDigits = 0): string {
+  if (amount === 0) return '₹0';
+  const isNeg = amount < 0;
+  const abs = Math.abs(amount).toLocaleString('en-IN', {
+    minimumFractionDigits: fractionDigits,
+    maximumFractionDigits: fractionDigits,
+  });
+  return isNeg ? `-₹${abs}` : `+₹${abs}`;
+}
+
 function CategoryRow({ stat }: { stat: SetupCategoryStats }): React.ReactElement {
   const isNetProfit = stat.totalNetPnl >= 0;
   const verdict = stat.winRatePct >= 75 ? '🟢 ROBUST EDGE (★)' : stat.winRatePct >= 50 ? '🟡 MODERATE' : '🔴 UNDER REVIEW';
@@ -40,7 +50,7 @@ function CategoryRow({ stat }: { stat: SetupCategoryStats }): React.ReactElement
         -₹{(stat.totalCharges + stat.totalTax).toLocaleString('en-IN')}
       </td>
       <td style={{ padding: '10px', textAlign: 'right', fontWeight: 800, color: isNetProfit ? '#34D399' : '#F87171' }}>
-        {isNetProfit ? '+' : ''}₹{stat.totalNetPnl.toLocaleString('en-IN')}
+        {formatCurrency(stat.totalNetPnl)}
       </td>
       <td style={{ padding: '10px', textAlign: 'center', fontWeight: 700, color: stat.netAvgReturnPct >= 0 ? '#34D399' : '#F87171' }}>
         {stat.netAvgReturnPct.toFixed(2)}%
@@ -110,9 +120,9 @@ export const AstroScorecardModal: React.FC<AstroScorecardModalProps> = ({ isOpen
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '10px' }}>
             <KpiBox label="Closed Trades" value={scorecard.totalTrades.toString()} />
             <KpiBox label="Win Rate" value={`${scorecard.overallWinRatePct.toFixed(1)}%`} color={scorecard.overallWinRatePct >= 50 ? '#34D399' : '#F87171'} />
-            <KpiBox label="Gross P&L" value={`${scorecard.totalRealizedPnl >= 0 ? '+' : ''}₹${scorecard.totalRealizedPnl.toLocaleString('en-IN')}`} color="#94A3B8" />
+            <KpiBox label="Gross P&L" value={formatCurrency(scorecard.totalRealizedPnl)} color="#94A3B8" />
             <KpiBox label="Taxes & Charges" value={`-₹${totalDeductions.toLocaleString('en-IN')}`} color="#F59E0B" />
-            <KpiBox label="Net Take-Home P&L" value={`${scorecard.totalNetPnl >= 0 ? '+' : ''}₹${scorecard.totalNetPnl.toLocaleString('en-IN')}`} color={scorecard.totalNetPnl >= 0 ? '#34D399' : '#F87171'} />
+            <KpiBox label="Net Take-Home P&L" value={formatCurrency(scorecard.totalNetPnl, 2)} color={scorecard.totalNetPnl >= 0 ? '#34D399' : '#F87171'} />
             <KpiBox label="Net Avg Return" value={`${scorecard.netAvgReturnPct.toFixed(2)}%`} color={scorecard.netAvgReturnPct >= 0 ? '#34D399' : '#F87171'} />
           </div>
 
@@ -179,7 +189,7 @@ export const AstroScorecardModal: React.FC<AstroScorecardModalProps> = ({ isOpen
                           -₹{(t.charges + t.tax).toFixed(0)}
                         </td>
                         <td style={{ padding: '8px', textAlign: 'right', fontWeight: 800, color: t.netPnl >= 0 ? '#34D399' : '#F87171' }}>
-                          {t.netPnl >= 0 ? '+' : ''}₹{t.netPnl.toFixed(0)} ({t.netReturnPct.toFixed(2)}%)
+                          {formatCurrency(t.netPnl)} ({t.netReturnPct.toFixed(2)}%)
                         </td>
                       </tr>
                     ))}

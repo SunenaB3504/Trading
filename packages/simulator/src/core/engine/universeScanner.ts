@@ -21,6 +21,9 @@ import { detectEdgeSignals, formatTriadCode, type EdgeSignalType } from './edgeD
 import { calculatePositionSize } from './sizingCalculator';
 import type { StrategyParameters } from '../../state/strategyStore';
 import precomputedAstroData from '../data/fixtures/precomputedNifty500Astro.json';
+import nifty500PricesData from '../data/fixtures/nifty500Prices.json';
+
+const nifty500Prices = nifty500PricesData as Record<string, number>;
 
 interface PrecomputedStockRecord {
   symbol: string;
@@ -111,15 +114,16 @@ function resolveDashaHierarchy(record: CorporateRegistryRecord, activeDate: stri
 }
 
 function createSyntheticBar(symbol: string, date: string): DailyBar {
+  const targetCmp = nifty500Prices[symbol] ?? 500.0;
   return {
     symbol,
     date,
-    close: 500.0,
-    prev_close: 495.0,
+    close: targetCmp,
+    prev_close: Math.round(targetCmp * 0.99 * 100) / 100,
     volume: 100000,
     daily_return: 0.01,
     adj_close_index: 1.0,
-    rolling_peak: 500.0,
+    rolling_peak: targetCmp,
     drawdown: 0.0,
     is_macro_crisis: false,
   };

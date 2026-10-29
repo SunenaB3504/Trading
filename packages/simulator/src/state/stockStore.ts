@@ -9,9 +9,11 @@ import type { CorporateRegistryRecord, DailyBar } from '../core/data/types';
 import { useSimulationStore } from './simulationStore';
 import historicalBarsData from '../core/data/fixtures/historicalBars.json';
 import corporateRegistryData from '../core/data/corporateRegistry.json';
+import nifty500PricesData from '../core/data/fixtures/nifty500Prices.json';
 
 const historicalBars = historicalBarsData as Record<string, DailyBar[]>;
 const corporateRegistry = corporateRegistryData as Record<string, CorporateRegistryRecord>;
+const nifty500Prices = nifty500PricesData as Record<string, number>;
 const defaultSymbol = 'APLAPOLLO';
 const defaultBars = historicalBars[defaultSymbol] ?? historicalBars['TCS'] ?? [];
 const defaultLatestBar = defaultBars[defaultBars.length - 1] ?? null;
@@ -57,13 +59,28 @@ export const useStockStore = create<StockState>((set, get) => ({
 
   loadStock: (symbol: string, targetDate?: string) => {
     const norm = (symbol || defaultSymbol).toUpperCase();
-    let bars = historicalBars[norm];
-    if (!bars || bars.length === 0) {
+    let bars: DailyBar[] = historicalBars[norm] ?? [];
+    if (bars.length === 0) {
       const templateBars = historicalBars[defaultSymbol] ?? historicalBars['TCS'] ?? [];
-      bars = templateBars.map((b) => ({
-        ...b,
-        symbol: norm,
-      }));
+      const targetCmp = nifty500Prices[norm] ?? 500.0;
+      const lastTemplateClose = templateBars[templateBars.length - 1]?.close || 1795.0;
+      const scale = targetCmp / lastTemplateClose;
+
+      bars = templateBars.map((b) => {
+        const scaled: DailyBar = {
+          ...b,
+          symbol: norm,
+          close: Math.round(b.close * scale * 100) / 100,
+          prev_close: Math.round(b.prev_close * scale * 100) / 100,
+        };
+        if (b.open !== undefined) scaled.open = Math.round(b.open * scale * 100) / 100;
+        if (b.high !== undefined) scaled.high = Math.round(b.high * scale * 100) / 100;
+        if (b.low !== undefined) scaled.low = Math.round(b.low * scale * 100) / 100;
+        return scaled;
+      });
+      if (bars.length > 0) {
+        bars[bars.length - 1]!.close = targetCmp;
+      }
     }
 
     const meta = corporateRegistry[norm] ?? {
