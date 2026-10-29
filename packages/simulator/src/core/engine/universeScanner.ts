@@ -272,7 +272,7 @@ export function scanSingleStock(
   const isVetoed = audit.phiFinancial === 0.0;
   const bar = createSyntheticBar(record.symbol, activeDate);
 
-  const sessionsToCusp = strategyParams?.cuspWindowSessions ?? Math.min(daysToCusp, 10);
+  const sessionsToCusp = Math.round(daysToCusp);
   const allowVry = strategyParams ? strategyParams.enableVryTurnaround && hasVry : hasVry;
   const allowNbry = strategyParams ? strategyParams.enableNbryTurnaround && hasNbry : hasNbry;
   const riskBudget = strategyParams?.riskBudgetFraction ?? 0.1;

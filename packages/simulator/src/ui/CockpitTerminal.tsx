@@ -28,7 +28,8 @@ import { AstroPositionsDrawer } from './components/portfolio/AstroPositionsDrawe
 import { AstroScorecardModal } from './components/portfolio/AstroScorecardModal';
 import { serializeAstroProvenance } from '../core/engine/astroProvenanceSerializer';
 import { evaluateKotaChakra } from '../core/astro/kotaChakra';
-import { calculateTransitNakshatras } from '../core/astro/ephemeris';
+import { calculateTransitNakshatras, calculateTransitSigns } from '../core/astro/ephemeris';
+import { evaluateSpecialYogas } from '../core/astro/yogaDetector';
 import { NAKSHATRAS } from '../core/astro/constants';
 import { generateMahadashas, resolveActive5FoldDasha } from '../core/astro/vimshottari';
 import { classifyLordRole } from '../core/astro/trikonaNathans';
@@ -135,12 +136,25 @@ function deriveTradeTicket(
   const adCategory = dashaState ? classifyLordRole(dashaState.antardasha, lagnaId) : 'neutral';
   const pdCategory = dashaState ? classifyLordRole(dashaState.pratyantardasha, lagnaId) : 'neutral';
 
+  const transitSigns = activeDate ? calculateTransitSigns(activeDate) : {
+    sun: 0, moon: 0, mars: 0, mercury: 0, jupiter: 0, venus: 0, saturn: 0, rahu: 0, ketu: 0,
+  };
+  const activeYogas = evaluateSpecialYogas({
+    lagnaSignId: lagnaId,
+    moonSignId: metadata?.moon_sign_id ?? 0,
+    planetSigns: transitSigns,
+  }).activeYogaNames;
+  const hasVry = activeYogas.some((y) => y.startsWith('VRY'));
+  const allowVry = strategyParams ? strategyParams.enableVryTurnaround && hasVry : hasVry;
+
+  const sessionsToCusp = dashaState ? Math.round(dashaState.pdRemainingDays) : 30;
+
   const edge = detectEdgeSignals(bar, {
     mdCategory,
     adCategory,
     pdCategory,
-    sessionsToCusp: strategyParams?.cuspWindowSessions ?? 2,
-    isVry: false,
+    sessionsToCusp,
+    isVry: allowVry,
     isFortressBreached: isBreached,
     lords: dashaState
       ? {
@@ -160,7 +174,13 @@ function deriveTradeTicket(
     currentPrice: bar.close,
   });
 
-  const cuspExitDate = activeDate && activeDate > bar.date ? activeDate : '2026-12-31';
+  let cuspExitDate = '2026-12-31';
+  if (dashaState && dashaState.pdRemainingDays > 0) {
+    const baseMs = new Date(activeDate || bar.date).getTime();
+    const endMs = baseMs + (dashaState.pdRemainingDays * 86400000);
+    cuspExitDate = new Date(endMs).toISOString().slice(0, 10);
+  }
+
   const ticket = synthesizeTradeTicket(bar, edge, sizing, cuspExitDate);
 
   if (strategyParams) {
@@ -200,7 +220,7 @@ function useCockpitTelemetryState() {
   const { ledger, executeOrder } = usePortfolioStore();
   const strategyParams = useStrategyStore((s) => s.parameters);
 
-  const resolvedMeta = metadata ?? corporateRegistry[activeSymbol] ?? corporateRegistry['TCS'] ?? null;
+  const resolvedMeta = metadata ?? corporateRegistry[activeSymbol] ?? corporateRegistry['APLAPOLLO'] ?? null;
 
   const dashaState = useMemo(() => deriveActiveDasha(resolvedMeta, activeDate), [resolvedMeta, activeDate]);
 
@@ -214,7 +234,7 @@ function useCockpitTelemetryState() {
   }, [resolvedMeta, activeDate]);
 
   const auditResult = useMemo(() => {
-    const symFund = pitFundamentals[activeBar?.symbol ?? activeSymbol ?? 'TCS'] ?? [];
+    const symFund = pitFundamentals[activeBar?.symbol ?? activeSymbol ?? 'APLAPOLLO'] ?? [];
     return auditBalanceSheetPIT(symFund, activeDate);
   }, [activeBar?.symbol, activeSymbol, activeDate]);
 
@@ -235,7 +255,7 @@ function useCockpitTelemetryState() {
   );
 
   const telemetry = useMemo(() => serializeCockpitState({
-    activeSymbol: activeBar?.symbol ?? activeSymbol ?? 'TCS',
+    activeSymbol: activeBar?.symbol ?? activeSymbol ?? 'APLAPOLLO',
     activeDate,
     currentBar: activeBar,
     dashaState,
@@ -263,7 +283,7 @@ export const CockpitTerminal: React.FC = () => {
   const availableTickers = useMemo(() => Object.keys(corporateRegistry), []);
 
   React.useEffect(() => {
-    loadStock('TCS', '2026-10-28');
+    loadStock('APLAPOLLO', '2026-10-28');
   }, [loadStock]);
 
   const handleSelectStock = (sym: string, targetDate?: string) => {
@@ -284,7 +304,7 @@ export const CockpitTerminal: React.FC = () => {
         onOpenStrategy={() => setIsStrategyOpen(true)}
         onOpenPositions={() => setIsPositionsOpen(true)}
         onOpenScorecard={() => setIsScorecardOpen(true)}
-        onSyncToday={() => loadStock(metadata?.symbol ?? 'TCS', '2026-10-28')}
+        onSyncToday={() => loadStock(metadata?.symbol ?? 'APLAPOLLO', '2026-10-28')}
         availableTickers={availableTickers}
       />
       <main style={{ flex: 1, display: 'grid', gridTemplateColumns: '1.6fr 1.2fr', overflow: 'hidden' }}>
@@ -294,10 +314,10 @@ export const CockpitTerminal: React.FC = () => {
           dashaState={dashaState}
           activeDate={activeDate}
           metadata={metadata}
-          onSelectDate={(d) => loadStock(metadata?.symbol ?? 'TCS', d)}
+          onSelectDate={(d) => loadStock(metadata?.symbol ?? 'APLAPOLLO', d)}
           onSyncLatestSession={() => {
             const latest = bars[bars.length - 1];
-            if (latest) loadStock(metadata?.symbol ?? 'TCS', latest.date);
+            if (latest) loadStock(metadata?.symbol ?? 'APLAPOLLO', latest.date);
           }}
         />
         <RightTelemetryPanel

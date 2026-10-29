@@ -10,7 +10,7 @@ import { useStockStore } from '../../state/stockStore';
 import { usePortfolioStore } from '../../state/portfolioStore';
 import { TimeMachine } from '../../core/engine/timeMachine';
 
-const DEFAULT_TICKERS = ['TCS', 'DIVISLAB', 'BIOCON', 'PETRONET', 'IGL', 'YESBANK', 'SUZLON', 'BALAJITELE'];
+const DEFAULT_TICKERS = ['APLAPOLLO', 'TCS', 'DIVISLAB', 'BIOCON', 'PETRONET', 'IGL', 'YESBANK', 'SUZLON', 'BALAJITELE'];
 
 function BrandAndTicker({
   symbol,

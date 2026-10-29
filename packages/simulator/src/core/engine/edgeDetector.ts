@@ -22,6 +22,7 @@ export type EdgeSignalType =
   | 'DEFENSIVE_EXIT'
   | 'BULL_HARVEST'
   | 'FORTRESS_BREACH_EXIT'
+  | 'TRIKONA_EXPANSION'
   | 'NONE';
 
 export interface EdgeDetectionResult {
@@ -108,6 +109,21 @@ function checkHarvestEdge(ctx: CuspContext, triadCode: string, label: string): E
   return null;
 }
 
+function checkTrikonaExpansionEdge(ctx: CuspContext, triadCode: string, label: string): EdgeDetectionResult | null {
+  const isTtt = ctx.mdCategory === 'trikona' && ctx.adCategory === 'trikona' && ctx.pdCategory === 'trikona';
+  if (isTtt && ctx.sessionsToCusp > 3) {
+    return {
+      signal: 'TRIKONA_EXPANSION',
+      action: 'BUY',
+      thetaAstro: 1.0,
+      triadCode,
+      reason: `Triple Trikona ${label} prime bull expansion trend (${Math.round(ctx.sessionsToCusp)}d to cusp)`,
+      isSilencedByQualityGate: false,
+    };
+  }
+  return null;
+}
+
 export function detectEdgeSignals(bar: DailyBar, ctx: CuspContext): EdgeDetectionResult {
   const triadCode = formatTriadCode(ctx.mdCategory, ctx.adCategory, ctx.pdCategory);
   const lordsStr = ctx.lords
@@ -146,6 +162,21 @@ export function detectEdgeSignals(bar: DailyBar, ctx: CuspContext): EdgeDetectio
 
   const harvest = checkHarvestEdge(ctx, triadCode, label);
   if (harvest) return harvest;
+
+  const expansion = checkTrikonaExpansionEdge(ctx, triadCode, label);
+  if (expansion) {
+    const qg = evaluateExAnteQualityGate(bar);
+    if (qg.isSilenced) {
+      return {
+        ...expansion,
+        action: 'HOLD',
+        thetaAstro: 0.0,
+        isSilencedByQualityGate: true,
+        qualityGateReason: qg.reason,
+      };
+    }
+    return expansion;
+  }
 
   // Default state: Triple Trikona running bull trend or neutral
   const isTtt = ctx.mdCategory === 'trikona' && ctx.adCategory === 'trikona';

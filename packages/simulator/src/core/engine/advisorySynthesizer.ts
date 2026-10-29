@@ -68,7 +68,11 @@ export function synthesizeTradeTicket(
   const exitRules = buildExitRules(bar.close, cuspExitDate);
   const ticketId = `TKT-${bar.symbol}-${bar.date.replace(/-/g, '')}-${Date.now().toString().slice(-4)}`;
 
-  const isVetoed = sizing.isVetoed || sizing.shares === 0 || sizing.multipliers.phiFinancial <= 0 || sizing.multipliers.omegaTrader <= 0;
+  const isVetoed =
+    sizing.isVetoed ||
+    (edge.action === 'BUY' && sizing.shares === 0) ||
+    sizing.multipliers.phiFinancial <= 0 ||
+    sizing.multipliers.omegaTrader <= 0;
   const action: TicketAction = isVetoed ? 'BLOCKED' : edge.action;
 
   let vetoReason = sizing.vetoReason;

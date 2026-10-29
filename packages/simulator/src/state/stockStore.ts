@@ -1,5 +1,5 @@
 /**
- * packages/app/src/state/stockStore.ts
+ * packages/simulator/src/state/stockStore.ts
  * Reactive store for active stock, corporate metadata, and chronological daily bars.
  * Enforces strict modularity (< 300 LOC, functions < 60 LOC, complexity <= 10).
  */
@@ -12,7 +12,8 @@ import corporateRegistryData from '../core/data/corporateRegistry.json';
 
 const historicalBars = historicalBarsData as Record<string, DailyBar[]>;
 const corporateRegistry = corporateRegistryData as Record<string, CorporateRegistryRecord>;
-const defaultBars = historicalBars['TCS'] ?? [];
+const defaultSymbol = 'APLAPOLLO';
+const defaultBars = historicalBars[defaultSymbol] ?? historicalBars['TCS'] ?? [];
 const defaultLatestBar = defaultBars[defaultBars.length - 1] ?? null;
 
 export interface StockState {
@@ -31,8 +32,8 @@ export interface StockState {
 }
 
 export const useStockStore = create<StockState>((set, get) => ({
-  activeSymbol: 'TCS',
-  metadata: corporateRegistry['TCS'] ?? null,
+  activeSymbol: defaultSymbol,
+  metadata: corporateRegistry[defaultSymbol] ?? corporateRegistry['TCS'] ?? null,
   bars: defaultBars,
   activeBar: defaultLatestBar,
 
@@ -55,9 +56,38 @@ export const useStockStore = create<StockState>((set, get) => ({
   },
 
   loadStock: (symbol: string, targetDate?: string) => {
-    const norm = (symbol || 'TCS').toUpperCase();
-    const bars = historicalBars[norm] ?? historicalBars['TCS'] ?? [];
-    const meta = corporateRegistry[norm] ?? corporateRegistry['TCS'] ?? null;
+    const norm = (symbol || defaultSymbol).toUpperCase();
+    let bars = historicalBars[norm];
+    if (!bars || bars.length === 0) {
+      const templateBars = historicalBars[defaultSymbol] ?? historicalBars['TCS'] ?? [];
+      bars = templateBars.map((b) => ({
+        ...b,
+        symbol: norm,
+      }));
+    }
+
+    const meta = corporateRegistry[norm] ?? {
+      symbol: norm,
+      company_name: norm,
+      listing_date: '2015-01-01',
+      listing_time: '09:15:00',
+      timezone_offset_minutes: 330,
+      latitude: 19.0760,
+      longitude: 72.8777,
+      year_length_days: 365.2425,
+      primary_consonant: norm[0] || 'A',
+      ayanamsa: 24.0,
+      lagna_sign_id: 1,
+      lagna_sign: 'Aries',
+      lagna_deg: 15.0,
+      moon_sign_id: 1,
+      moon_sign: 'Aries',
+      moon_deg: 15.0,
+      moon_nakshatra: 'Ashwini',
+      pada: 1,
+      birth_md_lord: 'ketu',
+      starting_balance_years: 5.0,
+    };
 
     const simState = useSimulationStore.getState();
     const evalDate = targetDate ?? simState.activeDate ?? '2026-10-28';
@@ -72,7 +102,7 @@ export const useStockStore = create<StockState>((set, get) => ({
       if (evalDate >= latestBar.date) {
         // Forward evaluation: pin candle chart cursor to latest historical traded session
         targetIdx = bars.length - 1;
-        resolvedDate = evalDate; // Retain forward evaluation date for astronomical telemetry!
+        resolvedDate = evalDate;
       } else if (evalDate <= firstBar.date) {
         targetIdx = 0;
         resolvedDate = firstBar.date;
@@ -103,8 +133,8 @@ export const useStockStore = create<StockState>((set, get) => ({
 
   reset: () =>
     set({
-      activeSymbol: 'TCS',
-      metadata: corporateRegistry['TCS'] ?? null,
+      activeSymbol: defaultSymbol,
+      metadata: corporateRegistry[defaultSymbol] ?? null,
       bars: defaultBars,
       activeBar: defaultLatestBar,
     }),
