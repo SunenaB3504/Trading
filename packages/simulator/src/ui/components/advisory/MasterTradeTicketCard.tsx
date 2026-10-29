@@ -162,7 +162,7 @@ function TicketFooter({
             cursor: 'pointer',
           }}
         >
-          Execute Paper Trade
+          Test Logic: Paper Buy
         </button>
       )}
     </div>

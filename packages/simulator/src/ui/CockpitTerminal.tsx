@@ -24,6 +24,9 @@ import { DailyActionFeed } from './components/screener/DailyActionFeed';
 import { UniverseRadarModal } from './components/screener/UniverseRadarModal';
 import { HoroscopeDossierModal } from './components/astro/HoroscopeDossierModal';
 import { StrategyParameterDrawer, type StrategyParameters } from './components/settings/StrategyParameterDrawer';
+import { AstroPositionsDrawer } from './components/portfolio/AstroPositionsDrawer';
+import { AstroScorecardModal } from './components/portfolio/AstroScorecardModal';
+import { serializeAstroProvenance } from '../core/engine/astroProvenanceSerializer';
 import { evaluateKotaChakra } from '../core/astro/kotaChakra';
 import { calculateTransitNakshatras } from '../core/astro/ephemeris';
 import { NAKSHATRAS } from '../core/astro/constants';
@@ -249,6 +252,8 @@ export const CockpitTerminal: React.FC = () => {
   const [isRadarOpen, setIsRadarOpen] = React.useState(false);
   const [isHoroscopeOpen, setIsHoroscopeOpen] = React.useState(false);
   const [isStrategyOpen, setIsStrategyOpen] = React.useState(false);
+  const [isPositionsOpen, setIsPositionsOpen] = React.useState(false);
+  const [isScorecardOpen, setIsScorecardOpen] = React.useState(false);
 
   const availableTickers = useMemo(() => Object.keys(corporateRegistry), []);
 
@@ -258,7 +263,8 @@ export const CockpitTerminal: React.FC = () => {
 
   const handleOrder = (ticket: MasterTradeTicket) => {
     if (ticket.action !== 'BUY' || ticket.shares <= 0) return;
-    void executeOrder(ticket.symbol, 'BUY', ticket.shares, ticket.price, ticket.provenance.reason, activeDate);
+    const provenanceStr = serializeAstroProvenance(ticket, dashaState);
+    void executeOrder(ticket.symbol, 'BUY', ticket.shares, ticket.price, provenanceStr, activeDate);
   };
 
   return (
@@ -267,6 +273,8 @@ export const CockpitTerminal: React.FC = () => {
         onOpenRadar={() => setIsRadarOpen(true)}
         onOpenHoroscope={() => setIsHoroscopeOpen(true)}
         onOpenStrategy={() => setIsStrategyOpen(true)}
+        onOpenPositions={() => setIsPositionsOpen(true)}
+        onOpenScorecard={() => setIsScorecardOpen(true)}
         availableTickers={availableTickers}
       />
       <main style={{ flex: 1, display: 'grid', gridTemplateColumns: '1.6fr 1.2fr', overflow: 'hidden' }}>
@@ -313,6 +321,18 @@ export const CockpitTerminal: React.FC = () => {
       <StrategyParameterDrawer
         isOpen={isStrategyOpen}
         onClose={() => setIsStrategyOpen(false)}
+      />
+
+      <AstroPositionsDrawer
+        isOpen={isPositionsOpen}
+        onClose={() => setIsPositionsOpen(false)}
+        activeDate={activeDate}
+        onSelectStock={handleSelectStock}
+      />
+
+      <AstroScorecardModal
+        isOpen={isScorecardOpen}
+        onClose={() => setIsScorecardOpen(false)}
       />
     </div>
   );

@@ -7,6 +7,7 @@
 import React from 'react';
 import { useSimulationStore, type PlaybackSpeed } from '../../state/simulationStore';
 import { useStockStore } from '../../state/stockStore';
+import { usePortfolioStore } from '../../state/portfolioStore';
 import { TimeMachine } from '../../core/engine/timeMachine';
 
 const DEFAULT_TICKERS = ['TCS', 'DIVISLAB', 'BIOCON', 'PETRONET', 'IGL', 'YESBANK', 'SUZLON', 'BALAJITELE'];
@@ -144,6 +145,8 @@ export interface TopNavigationBarProps {
   onOpenRadar?: () => void;
   onOpenHoroscope?: () => void;
   onOpenStrategy?: () => void;
+  onOpenPositions?: () => void;
+  onOpenScorecard?: () => void;
   availableTickers?: string[] | undefined;
 }
 
@@ -151,10 +154,14 @@ export const TopNavigationBar: React.FC<TopNavigationBarProps> = ({
   onOpenRadar,
   onOpenHoroscope,
   onOpenStrategy,
+  onOpenPositions,
+  onOpenScorecard,
   availableTickers,
 }) => {
   const { isPlaying, speed, activeDate, currentIndex, totalSessions } = useSimulationStore();
   const { activeSymbol, setActiveSymbol } = useStockStore();
+  const { ledger } = usePortfolioStore();
+  const positionsCount = Object.keys(ledger.positions).length;
 
   return (
     <header
@@ -220,6 +227,40 @@ export const TopNavigationBar: React.FC<TopNavigationBarProps> = ({
             }}
           >
             ⚙ Strategy
+          </button>
+        )}
+        {onOpenPositions && (
+          <button
+            onClick={onOpenPositions}
+            style={{
+              padding: '5px 10px',
+              borderRadius: '5px',
+              backgroundColor: positionsCount > 0 ? '#064E3B' : '#1E2638',
+              color: positionsCount > 0 ? '#6EE7B7' : '#94A3B8',
+              border: `1px solid ${positionsCount > 0 ? '#059669' : '#334155'}`,
+              cursor: 'pointer',
+              fontSize: '11px',
+              fontWeight: 700,
+            }}
+          >
+            💼 Positions ({positionsCount})
+          </button>
+        )}
+        {onOpenScorecard && (
+          <button
+            onClick={onOpenScorecard}
+            style={{
+              padding: '5px 10px',
+              borderRadius: '5px',
+              backgroundColor: '#1E2638',
+              color: '#FDE047',
+              border: '1px solid #CA8A04',
+              cursor: 'pointer',
+              fontSize: '11px',
+              fontWeight: 700,
+            }}
+          >
+            📊 Scorecard
           </button>
         )}
       </div>
