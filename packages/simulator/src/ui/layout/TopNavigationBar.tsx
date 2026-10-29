@@ -163,7 +163,7 @@ export const TopNavigationBar: React.FC<TopNavigationBarProps> = ({
   const { isPlaying, speed, activeDate, currentIndex, totalSessions } = useSimulationStore();
   const { activeSymbol, setActiveSymbol } = useStockStore();
   const { ledger } = usePortfolioStore();
-  const positionsCount = Object.keys(ledger.positions).length;
+  const positionsCount = Object.values(ledger.positions).filter((p) => p.shares > 0).length;
 
   return (
     <header

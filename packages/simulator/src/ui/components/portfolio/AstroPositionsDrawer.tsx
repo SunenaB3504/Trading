@@ -153,7 +153,7 @@ export const AstroPositionsDrawer: React.FC<AstroPositionsDrawerProps> = ({
   const { ledger, orders, executeOrder } = usePortfolioStore();
 
   const positionsList: PortfolioPosition[] = useMemo(
-    () => Object.values(ledger.positions),
+    () => Object.values(ledger.positions).filter((p) => p.shares > 0),
     [ledger.positions]
   );
 

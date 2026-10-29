@@ -33,7 +33,10 @@ export class SQLiteClient {
    * Retrieves current portfolio ledger snapshot.
    */
   public async getPortfolioLedger(): Promise<PortfolioLedgerState> {
-    return { ...this.ledgerState };
+    return {
+      ...this.ledgerState,
+      positions: { ...this.ledgerState.positions },
+    };
   }
 
   /**
@@ -95,11 +98,12 @@ export class SQLiteClient {
 
     pos.current_price = order.price;
     pos.market_value = pos.shares * pos.current_price;
-    pos.unrealized_pnl = pos.market_value - pos.shares * pos.average_cost;
+    const costBasis = pos.shares * pos.average_cost;
+    pos.unrealized_pnl = pos.market_value - costBasis;
     pos.unrealized_return_pct =
-      pos.average_cost > 0 ? (pos.unrealized_pnl / (pos.shares * pos.average_cost)) * 100 : 0;
+      costBasis > 0 ? (pos.unrealized_pnl / costBasis) * 100 : 0;
 
-    if (pos.shares === 0) {
+    if (pos.shares <= 0) {
       delete this.ledgerState.positions[sym];
     } else {
       this.ledgerState.positions[sym] = pos;
@@ -116,12 +120,17 @@ export class SQLiteClient {
     let unrealized = 0;
 
     for (const [sym, pos] of Object.entries(this.ledgerState.positions)) {
+      if (pos.shares <= 0) {
+        delete this.ledgerState.positions[sym];
+        continue;
+      }
       const currentPrice = priceMap[sym] ?? pos.current_price;
       pos.current_price = currentPrice;
       pos.market_value = pos.shares * currentPrice;
-      pos.unrealized_pnl = pos.market_value - pos.shares * pos.average_cost;
+      const costBasis = pos.shares * pos.average_cost;
+      pos.unrealized_pnl = pos.market_value - costBasis;
       pos.unrealized_return_pct =
-        pos.average_cost > 0 ? (pos.unrealized_pnl / (pos.shares * pos.average_cost)) * 100 : 0;
+        costBasis > 0 ? (pos.unrealized_pnl / costBasis) * 100 : 0;
 
       invested += pos.market_value;
       unrealized += pos.unrealized_pnl;
