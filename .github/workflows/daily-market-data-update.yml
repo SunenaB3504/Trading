@@ -1,0 +1,51 @@
+name: Daily Market Data Update
+
+# Automatically fetches the latest NSE daily market bars every weekday evening
+# after market close, and commits the updated data fixtures back to the repo.
+
+on:
+  schedule:
+    # Runs at 12:00 UTC (17:30 IST), Monday through Friday
+    - cron: '0 12 * * 1-5'
+  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  update-market-data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Fetch latest market bars
+        run: pnpm update:bars
+
+      - name: Commit and push updated market data
+        run: |
+          if ! git diff --quiet packages/simulator/src/core/data/fixtures/historicalBars.json; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add packages/simulator/src/core/data/fixtures/historicalBars.json
+            git commit -m "chore(data): update daily market bars up to $(date +'%Y-%m-%d') [skip ci]"
+            git push
+            echo "Successfully committed and pushed updated market data."
+          else
+            echo "No new market data found. Repository is already up to date."
+          fi
+
