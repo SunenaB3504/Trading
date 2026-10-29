@@ -92,6 +92,14 @@ export interface UniverseStockScanItem {
   taraName: string;
   taraCategory: TaraCategory;
   confluenceScore: number; // 0..4
+
+  // Pricing & Timeline Metrics
+  cmp: number;
+  targetPrice: number;
+  stopPrice: number;
+  targetReturnPct: number;
+  stopLossPct: number;
+  cuspExitDate: string;
 }
 
 export interface UniverseScanSummary {
@@ -313,6 +321,16 @@ export function scanSingleStock(
     ? `BLOCKED: Ex-ante severe drawdown limit (-${Math.round(severeDrawdown * 100)}%)`
     : undefined;
 
+  const cmp = bar.close;
+  const targetPrice = Math.round(cmp * 1.166 * 100) / 100;
+  const stopPrice = Math.round(cmp * 0.95 * 100) / 100;
+  const targetReturnPct = 16.6;
+  const stopLossPct = -5.0;
+  const activeMs = new Date(`${activeDate}T12:00:00+05:30`).getTime();
+  const cuspExitDate = new Date(activeMs + Math.max(1, Math.round(daysToCusp)) * 86400000)
+    .toISOString()
+    .split('T')[0] ?? activeDate;
+
   return {
     symbol: record.symbol,
     companyName: record.company_name,
@@ -335,6 +353,12 @@ export function scanSingleStock(
     sizingFraction: sizing.multipliers.compositeFraction,
     isBlocked,
     blockReason,
+    cmp,
+    targetPrice,
+    stopPrice,
+    targetReturnPct,
+    stopLossPct,
+    cuspExitDate,
     ...confluence,
   };
 }
