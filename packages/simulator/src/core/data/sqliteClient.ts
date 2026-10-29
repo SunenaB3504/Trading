@@ -5,6 +5,10 @@
  */
 
 import type { PaperTradeOrder, PortfolioLedgerState } from './types';
+import { calculateOrderCharges } from '../financial/taxEngine';
+
+const STORAGE_KEY_ORDERS = 'astro_simulator_orders_v1';
+const STORAGE_KEY_LEDGER = 'astro_simulator_ledger_v1';
 
 export class SQLiteClient {
   private static instance: SQLiteClient | null = null;
@@ -19,7 +23,29 @@ export class SQLiteClient {
   };
 
   private constructor() {
-    // Singleton
+    this.loadFromStorage();
+  }
+
+  private loadFromStorage(): void {
+    if (typeof window === 'undefined' || !window.localStorage) return;
+    try {
+      const savedOrders = window.localStorage.getItem(STORAGE_KEY_ORDERS);
+      if (savedOrders) this.orders = JSON.parse(savedOrders);
+      const savedLedger = window.localStorage.getItem(STORAGE_KEY_LEDGER);
+      if (savedLedger) this.ledgerState = JSON.parse(savedLedger);
+    } catch {
+      // Fallback to fresh memory
+    }
+  }
+
+  private saveToStorage(): void {
+    if (typeof window === 'undefined' || !window.localStorage) return;
+    try {
+      window.localStorage.setItem(STORAGE_KEY_ORDERS, JSON.stringify(this.orders));
+      window.localStorage.setItem(STORAGE_KEY_LEDGER, JSON.stringify(this.ledgerState));
+    } catch {
+      // Ignore quota errors
+    }
   }
 
   public static getInstance(): SQLiteClient {
@@ -65,6 +91,7 @@ export class SQLiteClient {
 
     this.orders.push(order);
     this.updateLedger(order);
+    this.saveToStorage();
     return order;
   }
 
@@ -81,19 +108,21 @@ export class SQLiteClient {
     };
 
     if (order.side === 'BUY') {
+      const buyCharges = calculateOrderCharges('BUY', order.price, order.quantity);
       const totalCost = pos.shares * pos.average_cost + order.rupee_value;
       pos.shares += order.quantity;
       pos.average_cost = pos.shares > 0 ? totalCost / pos.shares : 0;
-      this.ledgerState.cash_balance -= order.rupee_value;
+      this.ledgerState.cash_balance -= (order.rupee_value + buyCharges.totalCharges);
     } else {
+      const sellCharges = calculateOrderCharges('SELL', order.price, order.quantity);
       const sellShares = Math.min(pos.shares, order.quantity);
       const proceeds = sellShares * order.price;
       const costBasis = sellShares * pos.average_cost;
       const pnl = proceeds - costBasis;
 
       pos.shares -= sellShares;
-      this.ledgerState.cash_balance += proceeds;
-      this.ledgerState.realized_pnl += pnl;
+      this.ledgerState.cash_balance += (proceeds - sellCharges.totalCharges);
+      this.ledgerState.realized_pnl += (pnl - sellCharges.totalCharges);
     }
 
     pos.current_price = order.price;
@@ -170,5 +199,9 @@ export class SQLiteClient {
       unrealized_pnl: 0.0,
       positions: {},
     };
+    if (typeof window !== 'undefined' && window.localStorage) {
+      window.localStorage.removeItem(STORAGE_KEY_ORDERS);
+      window.localStorage.removeItem(STORAGE_KEY_LEDGER);
+    }
   }
 }

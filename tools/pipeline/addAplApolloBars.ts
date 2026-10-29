@@ -89,3 +89,4 @@ data['APLAPOLLO'] = aplBars;
 console.log(`Writing updated historicalBars.json with APLAPOLLO (latest close: ${aplBars[aplBars.length - 1]?.close})...`);
 fs.writeFileSync(fixturePath, JSON.stringify(data));
 console.log('Successfully written APLAPOLLO historical bars.');
+

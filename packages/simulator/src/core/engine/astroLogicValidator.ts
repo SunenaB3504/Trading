@@ -7,6 +7,7 @@
 
 import type { PaperTradeOrder } from '../data/types';
 import { parseAstroProvenance, type ParsedAstroProvenance } from './astroProvenanceSerializer';
+import { calculateTradeTaxAndNetPnl } from '../financial/taxEngine';
 
 export interface ClosedAstroTrade {
   symbol: string;
@@ -17,12 +18,16 @@ export interface ClosedAstroTrade {
   shares: number;
   buyPrice: number;
   sellPrice: number;
-  realizedPnl: number;
-  returnPct: number;
+  realizedPnl: number; // Gross P&L
+  returnPct: number;   // Gross Return %
   provenance: ParsedAstroProvenance;
   setupCategory: string;
   hitTarget: boolean;
   hitStop: boolean;
+  charges: number;     // Statutory friction: STT, Stamp Duty, DP, Exchange, SEBI, GST
+  tax: number;         // STCG or LTCG
+  netPnl: number;      // Net Post-Tax P&L
+  netReturnPct: number;// Net Post-Tax Return %
 }
 
 export interface SetupCategoryStats {
@@ -31,16 +36,24 @@ export interface SetupCategoryStats {
   winningTrades: number;
   losingTrades: number;
   winRatePct: number;
-  totalRealizedPnl: number;
+  totalRealizedPnl: number; // Gross P&L
+  totalNetPnl: number;      // Net Post-Tax P&L
+  totalCharges: number;
+  totalTax: number;
   avgReturnPct: number;
+  netAvgReturnPct: number;
   profitFactor: number;
 }
 
 export interface AstroValidationScorecard {
   totalTrades: number;
   overallWinRatePct: number;
-  totalRealizedPnl: number;
+  totalRealizedPnl: number; // Gross P&L
+  totalNetPnl: number;      // Net Post-Tax P&L
+  totalCharges: number;
+  totalTax: number;
   avgReturnPct: number;
+  netAvgReturnPct: number;
   profitFactor: number;
   categoryBreakdown: SetupCategoryStats[];
   closedTrades: ClosedAstroTrade[];
@@ -67,11 +80,14 @@ export function reconstructClosedTrades(orders: PaperTradeOrder[]): ClosedAstroT
     } else if (ord.side === 'SELL' && buyQueue[sym]?.length) {
       const buyOrd = buyQueue[sym].shift()!;
       const shares = Math.min(buyOrd.quantity, ord.quantity);
-      const buyCost = shares * buyOrd.price;
-      const sellProceeds = shares * ord.price;
-      const pnl = sellProceeds - buyCost;
-      const returnPct = buyCost > 0 ? (pnl / buyCost) * 100 : 0;
       const prov = parseAstroProvenance(buyOrd.advisory_provenance);
+      const taxResult = calculateTradeTaxAndNetPnl(
+        buyOrd.price,
+        ord.price,
+        shares,
+        buyOrd.timestamp,
+        ord.timestamp
+      );
 
       closed.push({
         symbol: sym,
@@ -82,12 +98,16 @@ export function reconstructClosedTrades(orders: PaperTradeOrder[]): ClosedAstroT
         shares,
         buyPrice: buyOrd.price,
         sellPrice: ord.price,
-        realizedPnl: Math.round(pnl * 100) / 100,
-        returnPct: Math.round(returnPct * 100) / 100,
+        realizedPnl: taxResult.grossPnl,
+        returnPct: taxResult.grossReturnPct,
         provenance: prov,
         setupCategory: resolveSetupCategory(prov),
         hitTarget: prov.targetPrice > 0 && ord.price >= prov.targetPrice,
         hitStop: prov.stopPrice > 0 && ord.price <= prov.stopPrice,
+        charges: taxResult.totalCharges,
+        tax: taxResult.capitalGainsTax,
+        netPnl: taxResult.netPnl,
+        netReturnPct: taxResult.netReturnPct,
       });
     }
   }
@@ -105,7 +125,11 @@ function computeCategoryStats(category: string, trades: ClosedAstroTrade[]): Set
       losingTrades: 0,
       winRatePct: 0,
       totalRealizedPnl: 0,
+      totalNetPnl: 0,
+      totalCharges: 0,
+      totalTax: 0,
       avgReturnPct: 0,
+      netAvgReturnPct: 0,
       profitFactor: 0,
     };
   }
@@ -113,22 +137,32 @@ function computeCategoryStats(category: string, trades: ClosedAstroTrade[]): Set
   let wins = 0;
   let grossProfit = 0;
   let grossLoss = 0;
-  let sumReturn = 0;
-  let totalPnl = 0;
+  let sumGrossReturn = 0;
+  let sumNetReturn = 0;
+  let totalGrossPnl = 0;
+  let totalNetPnl = 0;
+  let totalCharges = 0;
+  let totalTax = 0;
 
   for (const t of trades) {
-    totalPnl += t.realizedPnl;
-    sumReturn += t.returnPct;
-    if (t.realizedPnl > 0) {
+    totalGrossPnl += t.realizedPnl;
+    totalNetPnl += t.netPnl;
+    totalCharges += t.charges;
+    totalTax += t.tax;
+    sumGrossReturn += t.returnPct;
+    sumNetReturn += t.netReturnPct;
+
+    if (t.netPnl > 0) {
       wins += 1;
-      grossProfit += t.realizedPnl;
-    } else if (t.realizedPnl < 0) {
-      grossLoss += Math.abs(t.realizedPnl);
+      grossProfit += t.netPnl;
+    } else if (t.netPnl < 0) {
+      grossLoss += Math.abs(t.netPnl);
     }
   }
 
   const winRatePct = Math.round((wins / total) * 1000) / 10;
-  const avgReturnPct = Math.round((sumReturn / total) * 100) / 100;
+  const avgReturnPct = Math.round((sumGrossReturn / total) * 100) / 100;
+  const netAvgReturnPct = Math.round((sumNetReturn / total) * 100) / 100;
   const profitFactor = grossLoss === 0
     ? grossProfit > 0 ? 99.9 : 1.0
     : Math.round((grossProfit / grossLoss) * 100) / 100;
@@ -139,8 +173,12 @@ function computeCategoryStats(category: string, trades: ClosedAstroTrade[]): Set
     winningTrades: wins,
     losingTrades: total - wins,
     winRatePct,
-    totalRealizedPnl: Math.round(totalPnl * 100) / 100,
+    totalRealizedPnl: Math.round(totalGrossPnl * 100) / 100,
+    totalNetPnl: Math.round(totalNetPnl * 100) / 100,
+    totalCharges: Math.round(totalCharges * 100) / 100,
+    totalTax: Math.round(totalTax * 100) / 100,
     avgReturnPct,
+    netAvgReturnPct,
     profitFactor,
   };
 }
@@ -165,7 +203,11 @@ export function generateAstroScorecard(orders: PaperTradeOrder[]): AstroValidati
     totalTrades: overall.totalTrades,
     overallWinRatePct: overall.winRatePct,
     totalRealizedPnl: overall.totalRealizedPnl,
+    totalNetPnl: overall.totalNetPnl,
+    totalCharges: overall.totalCharges,
+    totalTax: overall.totalTax,
     avgReturnPct: overall.avgReturnPct,
+    netAvgReturnPct: overall.netAvgReturnPct,
     profitFactor: overall.profitFactor,
     categoryBreakdown,
     closedTrades,

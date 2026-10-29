@@ -1,6 +1,6 @@
 /**
  * packages/simulator/src/ui/components/portfolio/AstroScorecardModal.tsx
- * Modal displaying empirical validation metrics, win rates, and alpha by astrological setup.
+ * Modal displaying empirical validation metrics, win rates, taxes, and net take-home alpha.
  * Decomposed into small sub-components (< 60 LOC each, file < 300 LOC).
  */
 
@@ -17,13 +17,13 @@ function KpiBox({ label, value, color }: { label: string; value: string; color?:
   return (
     <div style={{ backgroundColor: '#0B0F19', padding: '12px', borderRadius: '6px', border: '1px solid #1E293B', textAlign: 'center' }}>
       <div style={{ fontSize: '11px', color: '#94A3B8', marginBottom: '4px' }}>{label}</div>
-      <div style={{ fontSize: '18px', fontWeight: 800, color: color || '#F8FAFC' }}>{value}</div>
+      <div style={{ fontSize: '17px', fontWeight: 800, color: color || '#F8FAFC' }}>{value}</div>
     </div>
   );
 }
 
 function CategoryRow({ stat }: { stat: SetupCategoryStats }): React.ReactElement {
-  const isProfitable = stat.totalRealizedPnl >= 0;
+  const isNetProfit = stat.totalNetPnl >= 0;
   const verdict = stat.winRatePct >= 75 ? '🟢 ROBUST EDGE (★)' : stat.winRatePct >= 50 ? '🟡 MODERATE' : '🔴 UNDER REVIEW';
 
   return (
@@ -33,11 +33,18 @@ function CategoryRow({ stat }: { stat: SetupCategoryStats }): React.ReactElement
       <td style={{ padding: '10px', textAlign: 'center', fontWeight: 700, color: stat.winRatePct >= 60 ? '#34D399' : '#F87171' }}>
         {stat.winRatePct.toFixed(1)}%
       </td>
-      <td style={{ padding: '10px', textAlign: 'right', fontWeight: 700, color: isProfitable ? '#34D399' : '#F87171' }}>
-        {isProfitable ? '+' : ''}₹{stat.totalRealizedPnl.toLocaleString('en-IN')}
+      <td style={{ padding: '10px', textAlign: 'right', color: '#94A3B8' }}>
+        ₹{stat.totalRealizedPnl.toLocaleString('en-IN')}
       </td>
-      <td style={{ padding: '10px', textAlign: 'center' }}>{stat.avgReturnPct.toFixed(2)}%</td>
-      <td style={{ padding: '10px', textAlign: 'center' }}>{stat.profitFactor.toFixed(2)}</td>
+      <td style={{ padding: '10px', textAlign: 'right', color: '#F59E0B' }}>
+        -₹{(stat.totalCharges + stat.totalTax).toLocaleString('en-IN')}
+      </td>
+      <td style={{ padding: '10px', textAlign: 'right', fontWeight: 800, color: isNetProfit ? '#34D399' : '#F87171' }}>
+        {isNetProfit ? '+' : ''}₹{stat.totalNetPnl.toLocaleString('en-IN')}
+      </td>
+      <td style={{ padding: '10px', textAlign: 'center', fontWeight: 700, color: stat.netAvgReturnPct >= 0 ? '#34D399' : '#F87171' }}>
+        {stat.netAvgReturnPct.toFixed(2)}%
+      </td>
       <td style={{ padding: '10px', textAlign: 'center', fontSize: '11px', fontWeight: 700 }}>{verdict}</td>
     </tr>
   );
@@ -54,7 +61,7 @@ export const AstroScorecardModal: React.FC<AstroScorecardModalProps> = ({ isOpen
 
   if (!isOpen) return null;
 
-  const isProfit = scorecard.totalRealizedPnl >= 0;
+  const totalDeductions = scorecard.totalCharges + scorecard.totalTax;
 
   return (
     <div
@@ -74,7 +81,7 @@ export const AstroScorecardModal: React.FC<AstroScorecardModalProps> = ({ isOpen
     >
       <div
         style={{
-          width: '840px',
+          width: '940px',
           maxHeight: '90vh',
           backgroundColor: '#07090E',
           borderRadius: '12px',
@@ -88,10 +95,10 @@ export const AstroScorecardModal: React.FC<AstroScorecardModalProps> = ({ isOpen
         <div style={{ padding: '16px 20px', borderBottom: '1px solid #1E293B', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
             <h2 style={{ margin: 0, fontSize: '16px', color: '#D4AF37', fontWeight: 800 }}>
-              Empirical Astro-Logic Validation Scorecard
+              Empirical Astro-Logic Validation Scorecard (Post-Tax Audit)
             </h2>
             <div style={{ fontSize: '11px', color: '#64748B' }}>
-              Statistical validation of Planetary Timing, Vimshottari Triads & Risk Exit Rules
+              Statistical validation including Indian Equity Statutory Charges (STT, Stamp Duty, GST) & Capital Gains Tax
             </div>
           </div>
           <button onClick={onClose} style={{ background: 'none', border: 'none', color: '#94A3B8', fontSize: '20px', cursor: 'pointer' }}>
@@ -100,12 +107,13 @@ export const AstroScorecardModal: React.FC<AstroScorecardModalProps> = ({ isOpen
         </div>
 
         <div style={{ flex: 1, overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '10px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '10px' }}>
             <KpiBox label="Closed Trades" value={scorecard.totalTrades.toString()} />
             <KpiBox label="Win Rate" value={`${scorecard.overallWinRatePct.toFixed(1)}%`} color={scorecard.overallWinRatePct >= 50 ? '#34D399' : '#F87171'} />
-            <KpiBox label="Realized P&L" value={`${isProfit ? '+' : ''}₹${scorecard.totalRealizedPnl.toLocaleString('en-IN')}`} color={isProfit ? '#34D399' : '#F87171'} />
-            <KpiBox label="Avg Return" value={`${scorecard.avgReturnPct.toFixed(2)}%`} color={scorecard.avgReturnPct >= 0 ? '#34D399' : '#F87171'} />
-            <KpiBox label="Profit Factor" value={scorecard.profitFactor.toFixed(2)} color="#D4AF37" />
+            <KpiBox label="Gross P&L" value={`${scorecard.totalRealizedPnl >= 0 ? '+' : ''}₹${scorecard.totalRealizedPnl.toLocaleString('en-IN')}`} color="#94A3B8" />
+            <KpiBox label="Taxes & Charges" value={`-₹${totalDeductions.toLocaleString('en-IN')}`} color="#F59E0B" />
+            <KpiBox label="Net Take-Home P&L" value={`${scorecard.totalNetPnl >= 0 ? '+' : ''}₹${scorecard.totalNetPnl.toLocaleString('en-IN')}`} color={scorecard.totalNetPnl >= 0 ? '#34D399' : '#F87171'} />
+            <KpiBox label="Net Avg Return" value={`${scorecard.netAvgReturnPct.toFixed(2)}%`} color={scorecard.netAvgReturnPct >= 0 ? '#34D399' : '#F87171'} />
           </div>
 
           <div>
@@ -118,16 +126,17 @@ export const AstroScorecardModal: React.FC<AstroScorecardModalProps> = ({ isOpen
                   <th style={{ padding: '10px' }}>Setup Category</th>
                   <th style={{ padding: '10px', textAlign: 'center' }}>Trades</th>
                   <th style={{ padding: '10px', textAlign: 'center' }}>Win Rate</th>
-                  <th style={{ padding: '10px', textAlign: 'right' }}>Realized P&L</th>
-                  <th style={{ padding: '10px', textAlign: 'center' }}>Avg Return</th>
-                  <th style={{ padding: '10px', textAlign: 'center' }}>Profit Factor</th>
+                  <th style={{ padding: '10px', textAlign: 'right' }}>Gross P&L</th>
+                  <th style={{ padding: '10px', textAlign: 'right' }}>Taxes/Fees</th>
+                  <th style={{ padding: '10px', textAlign: 'right' }}>Net P&L</th>
+                  <th style={{ padding: '10px', textAlign: 'center' }}>Net Return</th>
                   <th style={{ padding: '10px', textAlign: 'center' }}>Verdict</th>
                 </tr>
               </thead>
               <tbody>
                 {scorecard.categoryBreakdown.length === 0 ? (
                   <tr>
-                    <td colSpan={7} style={{ padding: '24px', textAlign: 'center', color: '#64748B', fontSize: '12px' }}>
+                    <td colSpan={8} style={{ padding: '24px', textAlign: 'center', color: '#64748B', fontSize: '12px' }}>
                       No closed round-trip trades recorded yet. Close active positions to generate scorecard metrics.
                     </td>
                   </tr>
@@ -141,7 +150,7 @@ export const AstroScorecardModal: React.FC<AstroScorecardModalProps> = ({ isOpen
           {scorecard.closedTrades.length > 0 && (
             <div>
               <h3 style={{ fontSize: '13px', color: '#F1F5F9', marginBottom: '10px', fontWeight: 700 }}>
-                Recent Closed Trades Audit Log
+                Recent Closed Trades Audit Log (Net of STT & Taxes)
               </h3>
               <div style={{ maxHeight: '200px', overflowY: 'auto', border: '1px solid #1E293B', borderRadius: '6px' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse', backgroundColor: '#0B0F19', fontSize: '11px' }}>
@@ -151,7 +160,9 @@ export const AstroScorecardModal: React.FC<AstroScorecardModalProps> = ({ isOpen
                       <th style={{ padding: '8px' }}>Period</th>
                       <th style={{ padding: '8px' }}>Setup</th>
                       <th style={{ padding: '8px' }}>Price Range</th>
-                      <th style={{ padding: '8px', textAlign: 'right' }}>Return / P&L</th>
+                      <th style={{ padding: '8px', textAlign: 'right' }}>Gross P&L</th>
+                      <th style={{ padding: '8px', textAlign: 'right' }}>Taxes & Fees</th>
+                      <th style={{ padding: '8px', textAlign: 'right' }}>Net Post-Tax P&L</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -161,8 +172,14 @@ export const AstroScorecardModal: React.FC<AstroScorecardModalProps> = ({ isOpen
                         <td style={{ padding: '8px', color: '#94A3B8' }}>{t.buyDate} → {t.sellDate}</td>
                         <td style={{ padding: '8px' }}>{t.setupCategory}</td>
                         <td style={{ padding: '8px' }}>₹{t.buyPrice} → ₹{t.sellPrice}</td>
-                        <td style={{ padding: '8px', textAlign: 'right', fontWeight: 700, color: t.realizedPnl >= 0 ? '#34D399' : '#F87171' }}>
-                          {t.returnPct.toFixed(2)}% (₹{t.realizedPnl})
+                        <td style={{ padding: '8px', textAlign: 'right', color: '#94A3B8' }}>
+                          ₹{t.realizedPnl.toFixed(0)} ({t.returnPct.toFixed(2)}%)
+                        </td>
+                        <td style={{ padding: '8px', textAlign: 'right', color: '#F59E0B' }}>
+                          -₹{(t.charges + t.tax).toFixed(0)}
+                        </td>
+                        <td style={{ padding: '8px', textAlign: 'right', fontWeight: 800, color: t.netPnl >= 0 ? '#34D399' : '#F87171' }}>
+                          {t.netPnl >= 0 ? '+' : ''}₹{t.netPnl.toFixed(0)} ({t.netReturnPct.toFixed(2)}%)
                         </td>
                       </tr>
                     ))}
