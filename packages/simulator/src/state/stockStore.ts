@@ -12,6 +12,8 @@ import corporateRegistryData from '../core/data/corporateRegistry.json';
 
 const historicalBars = historicalBarsData as Record<string, DailyBar[]>;
 const corporateRegistry = corporateRegistryData as Record<string, CorporateRegistryRecord>;
+const defaultBars = historicalBars['TCS'] ?? [];
+const defaultLatestBar = defaultBars[defaultBars.length - 1] ?? null;
 
 export interface StockState {
   activeSymbol: string;
@@ -31,8 +33,8 @@ export interface StockState {
 export const useStockStore = create<StockState>((set, get) => ({
   activeSymbol: 'TCS',
   metadata: corporateRegistry['TCS'] ?? null,
-  bars: historicalBars['TCS'] ?? [],
-  activeBar: (historicalBars['TCS'] ?? [])[250] ?? null,
+  bars: defaultBars,
+  activeBar: defaultLatestBar,
 
   setActiveSymbol: (activeSymbol: string) => {
     get().loadStock(activeSymbol);
@@ -58,7 +60,7 @@ export const useStockStore = create<StockState>((set, get) => ({
     const meta = corporateRegistry[norm] ?? corporateRegistry['TCS'] ?? null;
 
     const simState = useSimulationStore.getState();
-    const evalDate = targetDate ?? simState.activeDate ?? '2005-08-25';
+    const evalDate = targetDate ?? simState.activeDate ?? '2026-10-28';
 
     let targetIdx = -1;
     let resolvedDate = evalDate;
@@ -103,7 +105,7 @@ export const useStockStore = create<StockState>((set, get) => ({
     set({
       activeSymbol: 'TCS',
       metadata: corporateRegistry['TCS'] ?? null,
-      bars: historicalBars['TCS'] ?? [],
-      activeBar: (historicalBars['TCS'] ?? [])[250] ?? null,
+      bars: defaultBars,
+      activeBar: defaultLatestBar,
     }),
 }));

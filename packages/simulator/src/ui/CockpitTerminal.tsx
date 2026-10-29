@@ -257,6 +257,10 @@ export const CockpitTerminal: React.FC = () => {
 
   const availableTickers = useMemo(() => Object.keys(corporateRegistry), []);
 
+  React.useEffect(() => {
+    loadStock('TCS', '2026-10-28');
+  }, [loadStock]);
+
   const handleSelectStock = (sym: string, targetDate?: string) => {
     loadStock(sym, targetDate ?? activeDate);
   };
@@ -275,6 +279,7 @@ export const CockpitTerminal: React.FC = () => {
         onOpenStrategy={() => setIsStrategyOpen(true)}
         onOpenPositions={() => setIsPositionsOpen(true)}
         onOpenScorecard={() => setIsScorecardOpen(true)}
+        onSyncToday={() => loadStock(metadata?.symbol ?? 'TCS', '2026-10-28')}
         availableTickers={availableTickers}
       />
       <main style={{ flex: 1, display: 'grid', gridTemplateColumns: '1.6fr 1.2fr', overflow: 'hidden' }}>

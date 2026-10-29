@@ -147,6 +147,7 @@ export interface TopNavigationBarProps {
   onOpenStrategy?: () => void;
   onOpenPositions?: () => void;
   onOpenScorecard?: () => void;
+  onSyncToday?: () => void;
   availableTickers?: string[] | undefined;
 }
 
@@ -156,6 +157,7 @@ export const TopNavigationBar: React.FC<TopNavigationBarProps> = ({
   onOpenStrategy,
   onOpenPositions,
   onOpenScorecard,
+  onSyncToday,
   availableTickers,
 }) => {
   const { isPlaying, speed, activeDate, currentIndex, totalSessions } = useSimulationStore();
@@ -265,9 +267,29 @@ export const TopNavigationBar: React.FC<TopNavigationBarProps> = ({
         )}
       </div>
 
-      <div style={{ fontSize: '11px', color: '#9CA3AF', fontFamily: 'monospace' }}>
-        Session: <strong style={{ color: '#F3F4F6' }}>{currentIndex + 1}</strong> / {totalSessions || '—'} | Date:{' '}
-        <strong style={{ color: '#F3F4F6' }}>{activeDate || '—'}</strong>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div style={{ fontSize: '11px', color: '#9CA3AF', fontFamily: 'monospace' }}>
+          Session: <strong style={{ color: '#F3F4F6' }}>{currentIndex + 1}</strong> / {totalSessions || '—'} | Date:{' '}
+          <strong style={{ color: '#F3F4F6' }}>{activeDate || '—'}</strong>
+        </div>
+        {onSyncToday && (
+          <button
+            onClick={onSyncToday}
+            title="Jump directly to current market session"
+            style={{
+              padding: '4px 8px',
+              borderRadius: '4px',
+              backgroundColor: '#0F172A',
+              color: '#38BDF8',
+              border: '1px solid #0284C7',
+              cursor: 'pointer',
+              fontSize: '10px',
+              fontWeight: 700,
+            }}
+          >
+            ⚡ Sync Today
+          </button>
+        )}
       </div>
     </header>
   );
