@@ -18,6 +18,83 @@ const defaultSymbol = 'APLAPOLLO';
 const defaultBars = historicalBars[defaultSymbol] ?? historicalBars['TCS'] ?? [];
 const defaultLatestBar = defaultBars[defaultBars.length - 1] ?? null;
 
+function hashSymbol(sym: string): number {
+  let h = 0;
+  for (let i = 0; i < sym.length; i++) {
+    h = (Math.imul(31, h) + sym.charCodeAt(i)) | 0;
+  }
+  return Math.abs(h);
+}
+
+export function generateSyntheticStockBars(
+  norm: string,
+  templateBars: DailyBar[],
+  targetCmp: number
+): DailyBar[] {
+  const lastTemplateClose = templateBars[templateBars.length - 1]?.close || 1795.0;
+  const scale = targetCmp / lastTemplateClose;
+  const h = hashSymbol(norm);
+  const N = templateBars.length;
+
+  const p1 = 65 + (h % 35); // 65-100 day intermediate cycle
+  const p2 = 20 + ((h >> 2) % 15); // 20-35 day short-term swing
+  const phi1 = ((h % 360) * Math.PI) / 180;
+  const phi2 = (((h >> 4) % 360) * Math.PI) / 180;
+
+  const rawWave = (idx: number) =>
+    Math.sin((2 * Math.PI * idx) / p1 + phi1) * 0.18 +
+    Math.cos((2 * Math.PI * idx) / p2 + phi2) * 0.08;
+
+  const endWave = rawWave(N - 1);
+
+  let prevClose = Math.round(templateBars[0]!.close * scale * 100) / 100;
+
+  return templateBars.map((b, i) => {
+    if (i === N - 1) {
+      const open = Math.round(targetCmp * (1 - (b.daily_return ?? 0.002) * 0.6) * 100) / 100;
+      const high = Math.round(Math.max(open, targetCmp) * 1.008 * 100) / 100;
+      const low = Math.round(Math.min(open, targetCmp) * 0.992 * 100) / 100;
+      return {
+        ...b,
+        symbol: norm,
+        close: targetCmp,
+        prev_close: prevClose,
+        open,
+        high,
+        low,
+        volume: Math.round(b.volume * (0.7 + (((h + i) % 10) / 10) * 0.6)),
+      };
+    }
+
+    const wave = rawWave(i) - endWave * (i / (N - 1));
+    const baseClose = b.close * scale;
+    const close = Math.round(baseClose * (1 + wave) * 100) / 100;
+
+    const pseudoRand = Math.sin((i + 1) * 91.345 + (h % 500)) * 10000;
+    const frac = pseudoRand - Math.floor(pseudoRand);
+    const wickHigh = 0.003 + frac * 0.012;
+    const wickLow = 0.003 + (1 - frac) * 0.012;
+
+    const open = Math.round(close * (1 - (frac - 0.5) * 0.018) * 100) / 100;
+    const high = Math.round(Math.max(open, close) * (1 + wickHigh) * 100) / 100;
+    const low = Math.round(Math.min(open, close) * (1 - wickLow) * 100) / 100;
+
+    const bar: DailyBar = {
+      ...b,
+      symbol: norm,
+      close,
+      prev_close: prevClose,
+      open,
+      high,
+      low,
+      volume: Math.round(b.volume * (0.6 + frac * 0.8)),
+    };
+
+    prevClose = close;
+    return bar;
+  });
+}
+
 export interface StockState {
   activeSymbol: string;
   metadata: CorporateRegistryRecord | null;
@@ -63,24 +140,7 @@ export const useStockStore = create<StockState>((set, get) => ({
     if (bars.length === 0) {
       const templateBars = historicalBars[defaultSymbol] ?? historicalBars['TCS'] ?? [];
       const targetCmp = nifty500Prices[norm] ?? 500.0;
-      const lastTemplateClose = templateBars[templateBars.length - 1]?.close || 1795.0;
-      const scale = targetCmp / lastTemplateClose;
-
-      bars = templateBars.map((b) => {
-        const scaled: DailyBar = {
-          ...b,
-          symbol: norm,
-          close: Math.round(b.close * scale * 100) / 100,
-          prev_close: Math.round(b.prev_close * scale * 100) / 100,
-        };
-        if (b.open !== undefined) scaled.open = Math.round(b.open * scale * 100) / 100;
-        if (b.high !== undefined) scaled.high = Math.round(b.high * scale * 100) / 100;
-        if (b.low !== undefined) scaled.low = Math.round(b.low * scale * 100) / 100;
-        return scaled;
-      });
-      if (bars.length > 0) {
-        bars[bars.length - 1]!.close = targetCmp;
-      }
+      bars = generateSyntheticStockBars(norm, templateBars, targetCmp);
     }
 
     const meta = corporateRegistry[norm] ?? {

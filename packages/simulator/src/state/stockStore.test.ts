@@ -81,5 +81,26 @@ describe('useStockStore & Forward Date Anchoring', () => {
     expect(aries.activeSymbol).toBe('ARIES');
     expect(aries.activeBar?.close).toBe(272.4);
   });
+
+  it('generates distinct, non-identical price trajectories for different universe stocks', () => {
+    useStockStore.getState().loadStock('FINEORG', '2026-10-28');
+    const fineorgBars = useStockStore.getState().bars;
+
+    useStockStore.getState().loadStock('ARIES', '2026-10-28');
+    const ariesBars = useStockStore.getState().bars;
+
+    useStockStore.getState().loadStock('RAILTEL', '2026-10-28');
+    const railtelBars = useStockStore.getState().bars;
+
+    const idx60 = fineorgBars.length - 60;
+
+    const fineorgRatio60 = fineorgBars[idx60]!.close / fineorgBars[fineorgBars.length - 1]!.close;
+    const ariesRatio60 = ariesBars[idx60]!.close / ariesBars[ariesBars.length - 1]!.close;
+    const railtelRatio60 = railtelBars[idx60]!.close / railtelBars[railtelBars.length - 1]!.close;
+
+    expect(fineorgRatio60).not.toBeCloseTo(ariesRatio60, 2);
+    expect(fineorgRatio60).not.toBeCloseTo(railtelRatio60, 2);
+    expect(ariesRatio60).not.toBeCloseTo(railtelRatio60, 2);
+  });
 });
 
