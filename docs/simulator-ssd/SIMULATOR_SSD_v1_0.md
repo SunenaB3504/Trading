@@ -1,7 +1,7 @@
-# SOFTWARE SPECIFICATION DOCUMENT (SSD v1.2)
+# SOFTWARE SPECIFICATION DOCUMENT (SSD v1.3)
 ## STANDALONE ASTRO-FINANCIAL TRADE SIMULATOR & ADVISORY TERMINAL
 **An Offline-First, React-Powered Desktop Application for Quantitative Vedic Market Chronometry**  
-*Document Version: 1.2.0 | Date: 2026-10-28 | Status: Architecture & System Design (Refined with Combinatorial Screener, Yoga Engine & Horoscopic Dossier)*  
+*Document Version: 1.3.0 | Date: 2026-10-29 | Status: Architecture & System Design (Enhanced with Native Astro-Logic Validation Mock Trading & Ledger Subsystem)*  
 *Target Environment: Standalone Desktop (Electron / Tauri + React 19 + TypeScript)*  
 *Design Constraint: Strict Modularity (< 500 Lines per File Enforcement)*
 
@@ -23,6 +23,7 @@ The application allows users to:
 8. **Detect Special Astrological Yogas (VRY & NBRY):** Identify parabolic turnaround setups where stressed planets trigger sudden wealth generation (*Viparita Raja Yoga*, *Neecha Bhanga Raja Yoga*, *Dhana Yogas*, *Pancha Mahapurusha*).
 9. **Dispatch Daily Universe Action Feeds:** Aggregate all universe signals on date $t_{\text{sim}}$ into a prioritized action feed (`Strong BUY`, `Turnaround BUY`, `Defensive SELL`, `Fortress Breach SELL`, `Risk VETO`).
 10. **Audit In-Depth Horoscopic Dossiers:** Conduct full deep-dive astrological inspections featuring D1 Rashi and D9 Navamsha wheels, planetary dignities (exaltation, debilitation, combustion, retrogression), Shadbala, and 12-Bhava lordship provenance.
+11. **Empirically Validate Astrological Logics via Native Mock Trading:** Directly test and record paper executions generated from Master Trade Tickets (`[Test Logic: Paper Buy]`) into an isolated, self-contained terminal ledger, tracking active positions against live planetary transits (e.g., Chandrashtama countdowns, Kota fortress alerts) and measuring the statistical win rate and alpha of each astrological rule without relying on external non-astrological apps.
 
 ### 1.2 Non-Goals
 * **Offline-First Core (With Cloud-Assisted Copilot):** All planetary calculations, ephemerides, historical OHLCV data, DuckDB queries, and trade advisory signals run 100% offline without internet. The natural-language AI Copilot operates via a lightweight, zero-hardware free cloud LLM API (Google Gemini Flash / Groq) to protect lower-spec host machines from GPU/RAM exhaustion, with optional offline Ollama fallback.
@@ -77,7 +78,7 @@ The application is engineered as a zero-latency standalone desktop executable ut
   * **Pre-Computed Timeline Caching:** On ticker initialization, pre-generates the entire 25-year $\mathbf{S}(t)$ timeline into contiguous memory arrays, allowing $100\times$ simulation playback with pure $O(1)$ indexed memory reads.
 * **Dual-Storage Engine Architecture (Clear Separation of Concerns):**
   * **DuckDB (OLAP Columnar):** Embedded columnar engine optimized for read-heavy time-series analytics (1.2M+ daily/minute OHLCV bars stored as Parquet) and Point-in-Time (PIT) quarterly financial ratios.
-  * **SQLite (OLTP Transactional):** Embedded relational database for ACID user state (virtual paper-trade executions, multi-account portfolio ledgers, trader horoscopic profiles, and trade journal notes).
+  * **SQLite (OLTP Transactional):** Embedded relational database for ACID user state: virtual paper-trade executions with `advisory_provenance` (capturing Triad, Dasha, Transit, and Kota states at time of entry), real-time portfolio ledgers (`cash_balance`, `invested_equity`, `realized_pnl`, `unrealized_pnl`), active position tracking with real-time Astro Risk indicators (Moon transit, Chandrashtama countdown, Durgaswami breach), trader horoscopic profiles, and empirical logic-validation scorecards.
 * **AI Copilot Engine (Zero-Hardware Free Cloud API):**
   * **Primary Cloud Provider:** **Google Gemini 1.5/2.0 Flash** via Google AI Studio Free Tier (Zero RAM/VRAM local footprint, 1,000,000 token context window, <1s response time, and best-in-class native Malayalam & Indic script retention).
   * **Pluggable Free Endpoints:** Extensible client supporting any OpenAI-compatible free API provider (Groq Cloud for Llama-3.3-70B, OpenRouter free models, or local Ollama if hardware permits).
@@ -509,15 +510,35 @@ The desktop application presents an integrated, single-window trading cockpit de
 | Indu Lagna: Sagittarius (3H - 44 Kalas)    | Special Yogas: NBRY on Moon via Venus    | Ven:  Gemini (9H) Lagnesha [T]  |
 | Kota Swami: Mercury | Kota Pala: Saturn    |                                          | Sat:  Cancer (10H) Yogakaraka[T]|
 +-------------------------------------------------------------------------------------------------------------------------+
+
+[ DRAWER 2: ACTIVE ASTRO-LOGIC POSITIONS & REAL-TIME RISK MONITOR ]
++-------------------------------------------------------------------------------------------------------------------------+
+| [PORTFOLIO SUMMARY: Cash: ₹8,00,000 | Invested: ₹2,00,000 | Unrealized P&L: +₹3,385 (+1.69%) | Total Equity: ₹10,03,385]|
+| Symbol   | Qty | Entry Price | Current Price | P&L (₹ / %)     | Entry Astro Logic Provenance   | Astro Risk / Exit Alert     | Actions       |
+|----------+-----+-------------+---------------+-----------------+--------------------------------+-----------------------------+---------------|
+| APLAPOLLO|  55 | ₹1,795.00   | ₹1,822.00     | +₹1,485 (+1.5%) | [T-T-T] Venus YK, Indu Lagna   | 🟢 Safe (Moon in 11H)       | [Close Trade] |
+| TCS      |  30 | ₹3,950.00   | ₹3,980.00     | +₹900 (+0.8%)   | [T-T-T] Exalted Mercury AD     | 🟡 Transit Moon 7H Ingress  | [Close Trade] |
+| DIVISLAB |  15 | ₹5,980.00   | ₹6,047.00     | +₹1,005 (+1.1%) | [T-T-T] Sun Bhagyesh Activation| 🔴 2d to Chandrashtama!     | [Close Trade] |
++-------------------------------------------------------------------------------------------------------------------------+
+
+[ MODAL 3: ASTRO-LOGIC VALIDATION SCORECARD ]
++-------------------------------------------------------------------------------------------------------------------------+
+| EMPIRICAL ASTRO-LOGIC VALIDATION SCORECARD (Closed Trades Sample: N = 48)                                               |
+| Setup Category                 | Trades | Win Rate | Profit Factor | Avg Return (%) | Alpha vs Nifty 50 | Rule Verdict      |
+|--------------------------------+--------+----------+---------------+----------------+-------------------+-------------------|
+| [T-T-T] Pure Triad Buy         |   24   |  83.3%   |     3.42      |    +4.18%      |      +3.10%       |  ROBUST EDGE (★)  |
+| [D-T-T] Harsha/Sarala VRY      |   12   |  75.0%   |     2.85      |    +6.20%      |      +4.90%       |  HIGH ALPHA (★)   |
+| Chandrashtama Exit Mitigation  |   18   |  88.9%   |      N/A      |   -1.1% saved  |   Drawdown averted|  CAPITAL PROTECTOR|
++-------------------------------------------------------------------------------------------------------------------------+
 ```
 
 ---
 
-## 6. Implementation & Development Roadmap (Decoupled 5-Phase Plan)
+## 6. Implementation & Development Roadmap (Decoupled 6-Phase Plan)
 
 ```
 +----------------------------------------------------------------------------------------------------+
-|                                    5-PHASE IMPLEMENTATION ROADMAP                                  |
+|                                    6-PHASE IMPLEMENTATION ROADMAP                                  |
 +----------------------------------------------------------------------------------------------------+
 |  Phase 0: Data Foundation & Corporate Natal Registry (Weeks 0–1)                                   |
 |  - Ingestion of 25-year daily/minute NSE OHLCV bars into DuckDB Parquet partitions.                 |
@@ -554,6 +575,11 @@ The desktop application presents an integrated, single-window trading cockpit de
 |  - WP-5.3: Daily Master Action Feed & One-Click Deep-Dive Cusp Snapping.                           |
 |  - WP-5.4: Comprehensive Horoscopic Dossier Modal (`HoroscopeDossierModal.tsx`).                   |
 |  - WP-5.5: Configurable Strategy Parameter Matrix Drawer (`StrategyParameterDrawer.tsx`).         |
+|                                                                                                    |
+|  Phase 6: Native Astro-Logic Validation Mock Trading & Verification Subsystem (Weeks 14–15)        |
+|  - WP-6.1: Master Trade Ticket One-Click Paper Execution & Astro Provenance Serializer.            |
+|  - WP-6.2: Collapsible Active Positions & Real-Time Planetary Risk Drawer (`AstroPositionsDrawer`).|
+|  - WP-6.3: Empirical Astro-Logic Validation Scorecard & Alpha Analytics (`AstroScorecardModal`).   |
 +----------------------------------------------------------------------------------------------------+
 ```
 

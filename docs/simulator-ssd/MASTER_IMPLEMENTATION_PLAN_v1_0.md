@@ -1,16 +1,16 @@
 
-# MASTER IMPLEMENTATION PLAN (MIP v1.2)
+# MASTER IMPLEMENTATION PLAN (MIP v1.3)
 ## STANDALONE ASTRO-FINANCIAL TRADE SIMULATOR & ADVISORY TERMINAL
 **Engineering Roadmap, Work Packages, Quality Gates, and Execution Protocols**  
-*Document Version: 1.2.0 | Date: 2026-10-28 | Status: Active (Phases 0-4 Complete; Phase 5 Combinatorial Roadmap Added)*  
-*Companion Document: [`docs/simulator-ssd/SIMULATOR_SSD_v1_0.md`](file:///c:/Users/Admin/Sunil\Trading\docs\simulator-ssd\SIMULATOR_SSD_v1_0.md) (SSD v1.2.0)*  
+*Document Version: 1.3.0 | Date: 2026-10-29 | Status: Active (Phases 0-5 Complete; Phase 6 Native Astro-Logic Validation Mock Trading Roadmap Added)*  
+*Companion Document: [`docs/simulator-ssd/SIMULATOR_SSD_v1_0.md`](file:///c:/Users/Admin/Sunil\Trading\docs\simulator-ssd\SIMULATOR_SSD_v1_0.md) (SSD v1.3.0)*  
 *Design Constraint: Strict Modularity (< 500 Lines per File Enforcement via ESLint)*
 
 ---
 
 ## 1. Executive Summary & Governance Rules
 
-This Master Implementation Plan (MIP v1.2) operationalizes the architectural blueprint defined in **SSD v1.2.0** into discrete, testable, and parallelizable work packages. Where this plan and the SSD disagree on architectural intent, the SSD governs.
+This Master Implementation Plan (MIP v1.3) operationalizes the architectural blueprint defined in **SSD v1.3.0** into discrete, testable, and parallelizable work packages. Where this plan and the SSD disagree on architectural intent, the SSD governs.
 
 ### 1.1 Global Definition of Done (DoD)
 Every work package (WP) in this plan must satisfy the following invariant criteria before being marked complete:
@@ -71,6 +71,12 @@ Every work package (WP) in this plan must satisfy the following invariant criter
 ├── WP-5.3: Daily Master Action Feed & One-Click Deep-Dive Cusp Snapping
 ├── WP-5.4: Comprehensive Horoscopic Dossier Modal (HoroscopeDossierModal.tsx)
 └── WP-5.5: Configurable Strategy Parameter Matrix Drawer (StrategyParameterDrawer.tsx)
+         │
+         ▼
+[ PHASE 6: NATIVE ASTRO-LOGIC VALIDATION MOCK TRADING & VERIFICATION SUBSYSTEM ] (Weeks 14–15)
+├── WP-6.1: Master Trade Ticket One-Click Paper Execution & Astro Provenance Serializer
+├── WP-6.2: Collapsible Active Positions & Real-Time Planetary Risk Drawer (AstroPositionsDrawer.tsx)
+└── WP-6.3: Empirical Astro-Logic Validation Scorecard & Alpha Analytics (AstroScorecardModal.tsx)
 ```
 
 ---
@@ -498,6 +504,42 @@ packages/simulator/src/
 
 ---
 
+### Phase 6: Native Astro-Logic Validation Mock Trading & Verification Subsystem
+
+#### WP-6.1: Master Trade Ticket One-Click Execution & Astro Provenance Serializer
+* **Objective:** Allow direct execution of paper trade orders from `MasterTradeTicketCard.tsx` (`[Test Logic: Paper Buy]`) into the simulator's isolated SQLite ledger, recording detailed astrological reason strings.
+* **Key Tasks:**
+  1. Wire `onExecuteOrder` in `MasterTradeTicketCard.tsx` to `portfolioStore.executeOrder()`.
+  2. Implement `astroProvenanceSerializer.ts` capturing active Triad (`[T-T-T]`), Dasha lords (MD-AD-PD), transit nakshatras, Indu Lagna activation, and planned exit windows (e.g. "Exit before Chandrashtama on YYYY-MM-DD").
+  3. Enforce zero look-ahead fills at current simulated session tick prices with cash allocation checks.
+* **Deliverables:**
+  * `core/engine/astroProvenanceSerializer.ts` & `astroProvenanceSerializer.test.ts` (`< 150 LOC`).
+  * Integration into `ui/components/advisory/MasterTradeTicketCard.tsx` (`< 250 LOC`).
+* **Acceptance Criteria:** Clicking "Test Logic: Paper Buy" atomically executes order in SQLite, decreases cash, records full provenance string, and updates portfolio store in $<5\text{ ms}$.
+
+#### WP-6.2: Collapsible Active Positions & Real-Time Planetary Risk Drawer
+* **Objective:** Render a docked, collapsible positions tray inside Cockpit Terminal that tracks active holdings against live planetary transits.
+* **Key Tasks:**
+  1. Build `AstroPositionsDrawer.tsx` listing open positions with average cost, current price, unrealized P&L (₹ / %), and entry astrological provenance.
+  2. Compute real-time Planetary Risk indicators per open position: current Moon transit Bhava/Nakshatra, countdown sessions until Chandrashtama, and Kota Durgaswami fortress status.
+  3. Provide one-click `[Close Trade / Exit]` button calculating realized P&L and archiving trade result.
+* **Deliverables:**
+  * `ui/components/portfolio/AstroPositionsDrawer.tsx` (`< 300 LOC`).
+* **Acceptance Criteria:** Drawer opens/closes seamlessly; updates unrealized P&L on session scrub; flags warning badge when stock enters Chandrashtama.
+
+#### WP-6.3: Empirical Astro-Logic Validation Scorecard & Alpha Analytics
+* **Objective:** Aggregate closed trade records into an empirical performance scorecard measuring the statistical efficacy and alpha of each astrological rule.
+* **Key Tasks:**
+  1. Implement `astroLogicValidator.ts` analyzing closed trades grouped by setup category (`[T-T-T]` Triad, VRY, NBRY, Dhana Yoga) and calculating Win Rate, Profit Factor, Average Return, and Alpha over Nifty 50.
+  2. Implement Chandrashtama exit efficacy audit: evaluate whether price dropped following Chandrashtama exit recommendations, quantifying averted drawdowns.
+  3. Build `AstroScorecardModal.tsx` displaying the validation scorecard with clean data tables and visual badges.
+* **Deliverables:**
+  * `core/engine/astroLogicValidator.ts` & `astroLogicValidator.test.ts` (`< 200 LOC`).
+  * `ui/components/portfolio/AstroScorecardModal.tsx` (`< 250 LOC`).
+* **Acceptance Criteria:** Accurately groups trades by entry provenance; computes win rates and risk-adjusted metrics without floating-point errors; passes unit tests.
+
+---
+
 ## 5. Technical Risk Management & Mitigations
 
 | Identified Risk | Severity | Root Cause | Built-In Architectural Mitigation |
@@ -523,6 +565,7 @@ packages/simulator/src/
 | **TC-07** | Modularity Compliance | Run `pnpm run lint` across all packages in monorepo. | Zero files exceed 500 lines of code; zero lint warnings. |
 | **TC-08** | 27-Triad Universe Screener Benchmark | Run `universeScanner` on 50 universe stocks for date $t_{\text{sim}}$. | Categorization completes in $\le 50\text{ ms}$; all active triads classified. |
 | **TC-09** | VRY & NBRY Detection Accuracy | Evaluate test fixtures with known Harsha/Sarala/Vimala VRY and Moon NBRY. | Correctly identifies and tags cancellation conditions with zero false negatives. |
+| **TC-10** | Native Astro-Logic Mock Order Execution | Click "Test Logic: Paper Buy" on Master Trade Ticket for `[T-T-T]` setup. | Order recorded in SQLite with full `advisory_provenance`; cash deducted; position displays active transit risk badge; ledger balances match exactly. |
 
 ---
 
