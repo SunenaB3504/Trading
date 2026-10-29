@@ -44,7 +44,7 @@ function CategoryRow({ stat }: { stat: SetupCategoryStats }): React.ReactElement
         {stat.winRatePct.toFixed(1)}%
       </td>
       <td style={{ padding: '10px', textAlign: 'right', color: '#94A3B8' }}>
-        ₹{stat.totalRealizedPnl.toLocaleString('en-IN')}
+        {formatCurrency(stat.totalRealizedPnl)}
       </td>
       <td style={{ padding: '10px', textAlign: 'right', color: '#F59E0B' }}>
         -₹{(stat.totalCharges + stat.totalTax).toLocaleString('en-IN')}
@@ -183,13 +183,13 @@ export const AstroScorecardModal: React.FC<AstroScorecardModalProps> = ({ isOpen
                         <td style={{ padding: '8px' }}>{t.setupCategory}</td>
                         <td style={{ padding: '8px' }}>₹{t.buyPrice} → ₹{t.sellPrice}</td>
                         <td style={{ padding: '8px', textAlign: 'right', color: '#94A3B8' }}>
-                          ₹{t.realizedPnl.toFixed(0)} ({t.returnPct.toFixed(2)}%)
+                          {formatCurrency(t.realizedPnl)} ({t.returnPct >= 0 ? `+${t.returnPct.toFixed(2)}` : t.returnPct.toFixed(2)}%)
                         </td>
                         <td style={{ padding: '8px', textAlign: 'right', color: '#F59E0B' }}>
                           -₹{(t.charges + t.tax).toFixed(0)}
                         </td>
                         <td style={{ padding: '8px', textAlign: 'right', fontWeight: 800, color: t.netPnl >= 0 ? '#34D399' : '#F87171' }}>
-                          {formatCurrency(t.netPnl)} ({t.netReturnPct.toFixed(2)}%)
+                          {formatCurrency(t.netPnl)} ({t.netReturnPct >= 0 ? `+${t.netReturnPct.toFixed(2)}` : t.netReturnPct.toFixed(2)}%)
                         </td>
                       </tr>
                     ))}
