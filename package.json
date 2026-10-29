@@ -15,6 +15,7 @@
     "cycles": "depcruise --config .dependency-cruiser.cjs packages",
     "test": "vitest run",
     "coverage": "vitest run --coverage",
+    "sync-prices": "tsx packages/simulator/scripts/syncNseBhavcopy.ts",
     "simulator": "pnpm --filter @trading/simulator dev",
     "e2e:airplane": "tsx tools/e2e/airplaneMode.ts",
     "e2e:orders": "tsx tools/e2e/orderEntry.ts",

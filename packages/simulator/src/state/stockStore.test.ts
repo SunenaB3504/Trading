@@ -69,17 +69,22 @@ describe('useStockStore & Forward Date Anchoring', () => {
     useStockStore.getState().loadStock('RAILTEL', '2026-10-28');
     const railtel = useStockStore.getState();
     expect(railtel.activeSymbol).toBe('RAILTEL');
-    expect(railtel.activeBar?.close).toBe(388.5);
+    expect(railtel.activeBar?.close).toBe(229.3);
 
     useStockStore.getState().loadStock('FINEORG', '2026-10-28');
     const fineorg = useStockStore.getState();
     expect(fineorg.activeSymbol).toBe('FINEORG');
-    expect(fineorg.activeBar?.close).toBe(4725.0);
+    expect(fineorg.activeBar?.close).toBe(5102);
 
-    useStockStore.getState().loadStock('ARIES', '2026-10-28');
-    const aries = useStockStore.getState();
-    expect(aries.activeSymbol).toBe('ARIES');
-    expect(aries.activeBar?.close).toBe(272.4);
+    useStockStore.getState().loadStock('TREEHOUSE', '2026-10-28');
+    const treehouse = useStockStore.getState();
+    expect(treehouse.activeSymbol).toBe('TREEHOUSE');
+    expect(treehouse.activeBar?.close).toBe(6.01);
+
+    useStockStore.getState().loadStock('MANIKA', '2026-10-28');
+    const manika = useStockStore.getState();
+    expect(manika.activeSymbol).toBe('MANIKA');
+    expect(manika.activeBar?.close).toBe(46.13);
   });
 
   it('generates distinct, non-identical price trajectories for different universe stocks', () => {
