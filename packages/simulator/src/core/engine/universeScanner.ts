@@ -20,6 +20,38 @@ import { auditBalanceSheetPIT } from '../financial/balanceSheetAudit';
 import { detectEdgeSignals, formatTriadCode, type EdgeSignalType } from './edgeDetector';
 import { calculatePositionSize } from './sizingCalculator';
 import type { StrategyParameters } from '../../state/strategyStore';
+import precomputedAstroData from '../data/fixtures/precomputedNifty500Astro.json';
+
+interface PrecomputedStockRecord {
+  symbol: string;
+  lagnaSignId: number;
+  lagnaNameEn: string;
+  lagnaNameMl: string;
+  lagnaLord: PlanetKey;
+  moonSignId: number;
+  janmaNakshatraId: number;
+  induLagnaSignId: number;
+  natalYogas: string[];
+  activeDasha: {
+    md: PlanetKey;
+    ad: PlanetKey;
+    pd: PlanetKey;
+    triad: string;
+    endDate: string;
+    daysRemaining: number;
+    isTrikonaPrime: boolean;
+  };
+  forwardSchedule5Y?: Array<{
+    startDate: string;
+    endDate: string;
+    md: PlanetKey;
+    ad: PlanetKey;
+    pd: PlanetKey;
+    triad: string;
+  }>;
+}
+
+const precomputedAstro = precomputedAstroData as Record<string, PrecomputedStockRecord>;
 
 export interface UniverseStockScanItem {
   symbol: string;
@@ -98,10 +130,12 @@ function evaluateConfluenceVectors(
   lagnaId: number,
   transitSigns: Record<PlanetKey, number>,
   transitPositions: TransitPlanetaryPositions,
-  defenseCutoff: number = 0.40
+  defenseCutoff: number = 0.40,
+  preJanmaNak?: number,
+  preMoonSignId?: number
 ) {
-  const janmaNak = calculateNakshatraAndBalance(record.moon_deg).nakshatraIndex;
-  const moonSignId = record.moon_sign_id ?? 0;
+  const janmaNak = preJanmaNak ?? calculateNakshatraAndBalance(record.moon_deg).nakshatraIndex;
+  const moonSignId = preMoonSignId ?? (record.moon_sign_id ?? 0);
 
   // 1. Kota Chakra
   const kota = evaluateKotaChakra(janmaNak, moonSignId, transitPositions);
@@ -164,41 +198,83 @@ export function scanSingleStock(
   fundamentals: QuarterlyFundamental[] = [],
   strategyParams?: StrategyParameters
 ): UniverseStockScanItem {
-  const lagnaId = record.lagna_sign_id ?? 0;
-  const lagnaLord = SIGN_LORDS[lagnaId] ?? 'mars';
-  const lagnaName = SIGN_NAMES[lagnaId] ?? 'Aries';
+  const pre = precomputedAstro[record.symbol];
+  const lagnaId = pre ? pre.lagnaSignId : (record.lagna_sign_id ?? 0);
+  const lagnaLord = pre ? pre.lagnaLord : (SIGN_LORDS[lagnaId] ?? 'mars');
+  const lagnaName = pre ? pre.lagnaNameEn : (SIGN_NAMES[lagnaId] ?? 'Aries');
 
-  const dasha = resolveDashaHierarchy(record, activeDate);
-  const mdLord = dasha?.mahadasha ?? 'ketu';
-  const adLord = dasha?.antardasha ?? 'venus';
-  const pdLord = dasha?.pratyantardasha ?? 'sun';
+  let mdLord: PlanetKey = 'ketu';
+  let adLord: PlanetKey = 'venus';
+  let pdLord: PlanetKey = 'sun';
+  let triadCode = '[D-D-D]';
+  let daysToCusp = 10;
+  let mdRole: 'trikona' | 'kendra' | 'dusthana' = 'dusthana';
+  let adRole: 'trikona' | 'kendra' | 'dusthana' = 'dusthana';
+  let pdRole: 'trikona' | 'kendra' | 'dusthana' = 'dusthana';
 
-  const mdRole = classifyLordRole(mdLord, lagnaId);
-  const adRole = classifyLordRole(adLord, lagnaId);
-  const pdRole = classifyLordRole(pdLord, lagnaId);
-  const triadCode = formatTriadCode(mdRole, adRole, pdRole);
-
-  const navSigns: Partial<Record<PlanetKey, number>> = {};
-  for (const [p, pos] of Object.entries(transitPositions) as [PlanetKey, { navamshaSignIndex: number }][]) {
-    navSigns[p] = pos.navamshaSignIndex;
+  if (pre && activeDate >= '2026-10-01' && pre.forwardSchedule5Y) {
+    const match = pre.forwardSchedule5Y.find((f) => f.startDate <= activeDate && f.endDate >= activeDate);
+    if (match) {
+      mdLord = match.md;
+      adLord = match.ad;
+      pdLord = match.pd;
+      triadCode = match.triad;
+      mdRole = classifyLordRole(mdLord, lagnaId);
+      adRole = classifyLordRole(adLord, lagnaId);
+      pdRole = classifyLordRole(pdLord, lagnaId);
+      const msLeft = new Date(`${match.endDate}T12:00:00+05:30`).getTime() - new Date(`${activeDate}T12:00:00+05:30`).getTime();
+      daysToCusp = Math.max(1, Math.round(msLeft / 86400000));
+    } else {
+      const dasha = resolveDashaHierarchy(record, activeDate);
+      mdLord = dasha?.mahadasha ?? 'ketu';
+      adLord = dasha?.antardasha ?? 'venus';
+      pdLord = dasha?.pratyantardasha ?? 'sun';
+      mdRole = classifyLordRole(mdLord, lagnaId);
+      adRole = classifyLordRole(adLord, lagnaId);
+      pdRole = classifyLordRole(pdLord, lagnaId);
+      triadCode = formatTriadCode(mdRole, adRole, pdRole);
+      daysToCusp = dasha?.pdRemainingDays ?? 0;
+    }
+  } else {
+    const dasha = resolveDashaHierarchy(record, activeDate);
+    mdLord = dasha?.mahadasha ?? 'ketu';
+    adLord = dasha?.antardasha ?? 'venus';
+    pdLord = dasha?.pratyantardasha ?? 'sun';
+    mdRole = classifyLordRole(mdLord, lagnaId);
+    adRole = classifyLordRole(adLord, lagnaId);
+    pdRole = classifyLordRole(pdLord, lagnaId);
+    triadCode = formatTriadCode(mdRole, adRole, pdRole);
+    daysToCusp = dasha?.pdRemainingDays ?? 0;
   }
 
-  const yogas = evaluateSpecialYogas({
-    lagnaSignId: lagnaId,
-    moonSignId: record.moon_sign_id ?? 0,
-    planetSigns: transitSigns,
-    navamshaSigns: navSigns,
-  });
+  const activeYogas = pre
+    ? pre.natalYogas
+    : evaluateSpecialYogas({
+        lagnaSignId: lagnaId,
+        moonSignId: record.moon_sign_id ?? 0,
+        planetSigns: transitSigns,
+      }).activeYogaNames;
+
+  const hasVry = activeYogas.some((y) => y.startsWith('VRY'));
+  const hasNbry = activeYogas.some((y) => y.startsWith('NBRY'));
 
   const defenseThreshold = strategyParams?.kotaDefenseThreshold ?? 0.40;
-  const confluence = evaluateConfluenceVectors(record, lagnaId, transitSigns, transitPositions, defenseThreshold);
+  const confluence = evaluateConfluenceVectors(
+    record,
+    lagnaId,
+    transitSigns,
+    transitPositions,
+    defenseThreshold,
+    pre?.janmaNakshatraId,
+    pre?.moonSignId
+  );
   const audit = auditBalanceSheetPIT(fundamentals, activeDate);
   const isVetoed = audit.phiFinancial === 0.0;
   const bar = createSyntheticBar(record.symbol, activeDate);
 
-  const sessionsToCusp = strategyParams?.cuspWindowSessions ?? Math.min(dasha?.pdRemainingDays ?? 5, 10);
-  const allowVry = strategyParams ? strategyParams.enableVryTurnaround && yogas.vry.hasVry : yogas.vry.hasVry;
-  const allowNbry = strategyParams ? strategyParams.enableNbryTurnaround && yogas.nbry.hasNbry : yogas.nbry.hasNbry;
+  const sessionsToCusp = strategyParams?.cuspWindowSessions ?? Math.min(daysToCusp, 10);
+  const allowVry = strategyParams ? strategyParams.enableVryTurnaround && hasVry : hasVry;
+  const allowNbry = strategyParams ? strategyParams.enableNbryTurnaround && hasNbry : hasNbry;
   const riskBudget = strategyParams?.riskBudgetFraction ?? 0.1;
   const minPrice = strategyParams?.minNominalPrice ?? 0;
   const severeDrawdown = strategyParams?.severeDrawdownPct ?? 1.0;
@@ -244,8 +320,8 @@ export function scanSingleStock(
     mdLord,
     adLord,
     pdLord,
-    daysToCusp: dasha?.pdRemainingDays ?? 0,
-    activeYogas: yogas.activeYogaNames,
+    daysToCusp,
+    activeYogas,
     hasVry: allowVry,
     hasNbry: allowNbry,
     phiFinancial: audit.phiFinancial,

@@ -20,6 +20,9 @@ import {
 import { RadarFiltersBar, type RadarFiltersState } from './RadarFiltersBar';
 import { RadarStockTable } from './RadarStockTable';
 import { useStrategyStore } from '../../../state/strategyStore';
+import precomputedNifty500AstroData from '../../../core/data/fixtures/precomputedNifty500Astro.json';
+
+const precomputedNifty500Astro = precomputedNifty500AstroData as Record<string, unknown>;
 
 export interface UniverseRadarModalProps {
   isOpen: boolean;
@@ -57,6 +60,7 @@ export const UniverseRadarModal: React.FC<UniverseRadarModalProps> = ({
   const [scanDate, setScanDate] = useState<string>(initialDate);
   const [filters, setFilters] = useState<RadarFiltersState>(INITIAL_FILTERS);
   const [language, setLanguage] = useState<'ML' | 'EN'>('ML');
+  const [scope, setScope] = useState<'NIFTY500' | 'ALL'>('NIFTY500');
 
   useEffect(() => {
     if (activeDate && activeDate.length >= 10) {
@@ -72,9 +76,18 @@ export const UniverseRadarModal: React.FC<UniverseRadarModalProps> = ({
 
   const strategyParams = useStrategyStore((s) => s.parameters);
 
+  const activeRegistry = useMemo(() => {
+    if (scope === 'ALL') return registry;
+    const filtered: Record<string, CorporateRegistryRecord> = {};
+    for (const sym of Object.keys(precomputedNifty500Astro)) {
+      if (registry[sym]) filtered[sym] = registry[sym];
+    }
+    return filtered;
+  }, [registry, scope]);
+
   const summary = useMemo(
-    () => scanUniverse(registry, scanDate, fundamentalsMap, strategyParams),
-    [registry, scanDate, fundamentalsMap, strategyParams]
+    () => scanUniverse(activeRegistry, scanDate, fundamentalsMap, strategyParams),
+    [activeRegistry, scanDate, fundamentalsMap, strategyParams]
   );
 
   const filteredItems = useMemo(() => {
@@ -145,6 +158,8 @@ export const UniverseRadarModal: React.FC<UniverseRadarModalProps> = ({
           onClose={onClose}
           language={language}
           onLanguageChange={setLanguage}
+          scope={scope}
+          onScopeChange={setScope}
         />
         <RadarFiltersBar
           filters={filters}
@@ -179,6 +194,8 @@ function RadarHeader({
   onClose,
   language,
   onLanguageChange,
+  scope,
+  onScopeChange,
 }: {
   scanDate: string;
   activeDate: string;
@@ -190,6 +207,8 @@ function RadarHeader({
   onClose: () => void;
   language: 'ML' | 'EN';
   onLanguageChange: (lang: 'ML' | 'EN') => void;
+  scope: 'NIFTY500' | 'ALL';
+  onScopeChange: (scope: 'NIFTY500' | 'ALL') => void;
 }) {
   const isFuture = scanDate > activeDate;
 
@@ -250,6 +269,42 @@ function RadarHeader({
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        {/* Scope Switcher */}
+        <div style={{ display: 'flex', alignItems: 'center', backgroundColor: '#111827', borderRadius: '4px', border: '1px solid #1E2638', padding: '2px' }}>
+          <button
+            onClick={() => onScopeChange('NIFTY500')}
+            style={{
+              padding: '2px 8px',
+              borderRadius: '3px',
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: '10px',
+              fontWeight: 700,
+              backgroundColor: scope === 'NIFTY500' ? '#D4AF37' : 'transparent',
+              color: scope === 'NIFTY500' ? '#07090E' : '#94A3B8',
+              transition: 'all 0.15s ease',
+            }}
+          >
+            Nifty 500
+          </button>
+          <button
+            onClick={() => onScopeChange('ALL')}
+            style={{
+              padding: '2px 8px',
+              borderRadius: '3px',
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: '10px',
+              fontWeight: 700,
+              backgroundColor: scope === 'ALL' ? '#D4AF37' : 'transparent',
+              color: scope === 'ALL' ? '#07090E' : '#94A3B8',
+              transition: 'all 0.15s ease',
+            }}
+          >
+            All NSE
+          </button>
+        </div>
+
         {/* Language Switcher (Option C) */}
         <div style={{ display: 'flex', alignItems: 'center', backgroundColor: '#111827', borderRadius: '4px', border: '1px solid #1E2638', padding: '2px' }}>
           <button
