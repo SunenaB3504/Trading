@@ -17,8 +17,8 @@ const corporateRegistry = corporateRegistryData as Record<string, CorporateRegis
 const nifty500Prices = nifty500PricesData as Record<string, number>;
 export const authenticUniverseSymbols: string[] = barsManifestData.symbols;
 
-const defaultSymbol = 'APLAPOLLO';
-const defaultBars = historicalBars[defaultSymbol] ?? historicalBars['TCS'] ?? [];
+const defaultSymbol = 'TCS';
+const defaultBars = historicalBars[defaultSymbol] ?? [];
 const defaultLatestBar = defaultBars[defaultBars.length - 1] ?? null;
 
 const barLoaders = import.meta.glob<DailyBar[] | { default: DailyBar[] }>(
@@ -195,7 +195,7 @@ export interface StockState {
 
 export const useStockStore = create<StockState>((set, get) => ({
   activeSymbol: defaultSymbol,
-  metadata: corporateRegistry[defaultSymbol] ?? corporateRegistry['TCS'] ?? null,
+  metadata: corporateRegistry[defaultSymbol] ?? null,
   bars: defaultBars,
   activeBar: defaultLatestBar,
 
@@ -232,7 +232,7 @@ export const useStockStore = create<StockState>((set, get) => ({
     const loader = barLoaders[loaderKey];
 
     if (loader) {
-      const templateBars = historicalBars[defaultSymbol] ?? historicalBars['TCS'] ?? [];
+      const templateBars = historicalBars[defaultSymbol] ?? [];
       const targetCmp = nifty500Prices[norm] ?? 500.0;
       const initialBars = generateSyntheticStockBars(norm, templateBars, targetCmp);
       applyStockState(norm, initialBars, targetDate, set);
@@ -254,7 +254,7 @@ export const useStockStore = create<StockState>((set, get) => ({
     }
 
     // 3. Fallback to synthetic bars for non-DuckDB stocks
-    const templateBars = historicalBars[defaultSymbol] ?? historicalBars['TCS'] ?? [];
+    const templateBars = historicalBars[defaultSymbol] ?? [];
     const targetCmp = nifty500Prices[norm] ?? 500.0;
     const syntheticBars = generateSyntheticStockBars(norm, templateBars, targetCmp);
     loadedBarsCache[norm] = syntheticBars;

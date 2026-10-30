@@ -14,12 +14,12 @@ describe('useStockStore & Forward Date Anchoring', () => {
     useSimulationStore.getState().reset();
   });
 
-  it('initializes with default APLAPOLLO metadata and historical bars', () => {
+  it('initializes with default TCS metadata and historical bars', () => {
     const { activeSymbol, bars, metadata, activeBar } = useStockStore.getState();
-    expect(activeSymbol).toBe('APLAPOLLO');
-    expect(bars.length).toBeGreaterThan(1000);
+    expect(activeSymbol).toBe('TCS');
+    expect(bars.length).toBeGreaterThan(5000);
     expect(metadata).not.toBeNull();
-    expect(metadata?.symbol).toBe('APLAPOLLO');
+    expect(metadata?.symbol).toBe('TCS');
     expect(activeBar).not.toBeNull();
   });
 

@@ -220,7 +220,7 @@ function useCockpitTelemetryState() {
   const { ledger, executeOrder } = usePortfolioStore();
   const strategyParams = useStrategyStore((s) => s.parameters);
 
-  const resolvedMeta = metadata ?? corporateRegistry[activeSymbol] ?? corporateRegistry['APLAPOLLO'] ?? null;
+  const resolvedMeta = metadata ?? corporateRegistry[activeSymbol] ?? corporateRegistry['TCS'] ?? null;
 
   const dashaState = useMemo(() => deriveActiveDasha(resolvedMeta, activeDate), [resolvedMeta, activeDate]);
 
@@ -234,7 +234,7 @@ function useCockpitTelemetryState() {
   }, [resolvedMeta, activeDate]);
 
   const auditResult = useMemo(() => {
-    const symFund = pitFundamentals[activeBar?.symbol ?? activeSymbol ?? 'APLAPOLLO'] ?? [];
+    const symFund = pitFundamentals[activeBar?.symbol ?? activeSymbol ?? 'TCS'] ?? [];
     return auditBalanceSheetPIT(symFund, activeDate);
   }, [activeBar?.symbol, activeSymbol, activeDate]);
 
@@ -255,7 +255,7 @@ function useCockpitTelemetryState() {
   );
 
   const telemetry = useMemo(() => serializeCockpitState({
-    activeSymbol: activeBar?.symbol ?? activeSymbol ?? 'APLAPOLLO',
+    activeSymbol: activeBar?.symbol ?? activeSymbol ?? 'TCS',
     activeDate,
     currentBar: activeBar,
     dashaState,
@@ -283,7 +283,7 @@ export const CockpitTerminal: React.FC = () => {
   const availableTickers = useMemo(() => Object.keys(corporateRegistry), []);
 
   React.useEffect(() => {
-    loadStock('APLAPOLLO', '2026-10-28');
+    loadStock('TCS', '2026-10-28');
   }, [loadStock]);
 
   const handleSelectStock = (sym: string, targetDate?: string) => {
@@ -304,7 +304,7 @@ export const CockpitTerminal: React.FC = () => {
         onOpenStrategy={() => setIsStrategyOpen(true)}
         onOpenPositions={() => setIsPositionsOpen(true)}
         onOpenScorecard={() => setIsScorecardOpen(true)}
-        onSyncToday={() => loadStock(metadata?.symbol ?? 'APLAPOLLO', '2026-10-28')}
+        onSyncToday={() => loadStock(metadata?.symbol ?? 'TCS', '2026-10-28')}
         availableTickers={availableTickers}
       />
       <main style={{ flex: 1, display: 'grid', gridTemplateColumns: '1.6fr 1.2fr', overflow: 'hidden' }}>
@@ -314,10 +314,10 @@ export const CockpitTerminal: React.FC = () => {
           dashaState={dashaState}
           activeDate={activeDate}
           metadata={metadata}
-          onSelectDate={(d) => loadStock(metadata?.symbol ?? 'APLAPOLLO', d)}
+          onSelectDate={(d) => loadStock(metadata?.symbol ?? 'TCS', d)}
           onSyncLatestSession={() => {
             const latest = bars[bars.length - 1];
-            if (latest) loadStock(metadata?.symbol ?? 'APLAPOLLO', latest.date);
+            if (latest) loadStock(metadata?.symbol ?? 'TCS', latest.date);
           }}
         />
         <RightTelemetryPanel
