@@ -172,3 +172,63 @@ DuckDB itself holds 802 symbols with real daily history. Only 11 of them reach t
 - I did not run the scanner end to end. The sign-id findings in 2.3 come from reading the code and comparing it with the data.
 - The Dasha check uses the registry's own birth data and a year length of 365.2425 days. It shows the stored schedule disagrees with that data, not that the registry's birth times are right.
 - Nothing was committed. The new file is the only change I made.
+
+---
+
+# Re-audit after fixes — 2026-10-30
+
+Re-run against commits `723ca4e`, `e13bd1d`, `f85f8b7` and `37d8277` (the other owner's fixes). The sections above describe the state before those commits.
+
+## Updated Scorecard
+
+| # | Pillar | Before | Now | One-line reason |
+|---|---|---|---|---|
+| 1a/1b | CMP vs Bhavcopy | PASS | **[PASS]** | 8 of 8 benchmarks and 3,372 of 3,372 equity symbols still exact. |
+| 1c | Non-equity exclusion | FAIL | **[PASS]** | 309 → 32 non-equity keys; the 32 left are BZ-series equities. The 17 stale keys are gone (3,404 keys = 3,372 + 32). |
+| 1d | EQ-over-BE priority | PARTIAL | **[PARTIAL]** | Unchanged; still no dual-series symbol to observe. |
+| 2a | Bars vs DuckDB | PARTIAL | **[PARTIAL]** | 802 symbols, 1,225,743 bars, 0 close differences, 0 duplicate dates. Open/high/low are real for 7 sessions only. |
+| 2b | Session counts | PASS | **[PASS]** | TCS now 5,487 sessions (adds the 7 bridged ones). |
+| 2c | End on 10-28 at official CMP | PARTIAL | **[PASS]** | 801 of 801 match NSE close, open, high, low and volume exactly. `PANSARI` ends 10-27. |
+| 2d | IGL low > 0 | PASS | **[PASS]** | Unchanged. |
+| 2e | APLAPOLLO | FAIL | **[PARTIAL]** | Duplicate 10-28 row removed, ends at ₹2,165.30. Still a synthetic template: not among the 802, max drawdown −10.85%. |
+| 2f | Drawdown | FAIL | **[PARTIAL]** | Adjusted by a price-ratio heuristic. TCS −66%, DIVISLAB −60% now. Heuristic is imperfect (see below). |
+| 3c | Sign-id indexing | PARTIAL | **[PASS]** | `moonSignId: (record.moon_sign_id ?? 1) - 1` at `universeScanner.ts:273`; precomputed ids 0-based. |
+| 3d | Precomputed astro | FAIL | **[PARTIAL]** | Signs, nakshatra and Mahadasha 857 of 857. Antardasha 684, Pratyantardasha 636, from an engine bug. |
+| 5a | LTCG exemption | PARTIAL | **[PASS]** | `FiscalYearTaxTracker` applies it once per FY. Per-trade fallback remains when no tracker is passed. |
+| 5b/4/3a/3b | STT, ephemeris, listing dates, Moon maths | PASS | **[PASS]** | Unchanged. |
+
+## What the pasted statement got right and wrong
+
+| Claim | Verdict |
+|---|---|
+| 802 of 802 stocks up to date; 801 end 10-28, `PANSARI` ends 10-27 | **Confirmed** (DuckDB: 801 on 10-28, 1 on 10-27). |
+| 1,225,743 bars | **Confirmed.** |
+| Oct 19–28 bridged with authentic OHLCV | **Confirmed for those 7 sessions**: 10-28 open/high/low/volume match the Bhavcopy exactly for all 801 symbols. Oct 20 is absent; I assume a market holiday but did not check. |
+| "Continuous 15–25 year history of authentic OHLCV" | **Not accurate.** 1,220,895 of 1,225,743 bars (99.6%) still have open = previous close and high/low = max/min of close and previous close. Only the 7 bridged sessions have real open/high/low. Close, volume and returns are real. |
+| Bonus and split adjustment applied | **Partly.** Done in the exporter by a ratio heuristic, not from corporate-action records. DuckDB's own columns are unchanged. |
+| 3,404 equities in `nifty500Prices.json`, purged | **Confirmed**, with 32 BZ-series symbols included. |
+| Astro matrix "100% accurate" | **Signs and nakshatra: confirmed. Dasha: not 100%.** |
+| "No synthetic gaps" | **Not accurate** for APLAPOLLO and for all open/high/low before 10-19. |
+
+## New and remaining findings
+
+1. **Antardasha bug in the first Mahadasha (new).** The stored fixture matches the app's engine for 856 of 857 stocks, but the engine disagrees with an independent calculation for 172 stocks, all of them in their first Mahadasha (227 stocks are). `generateMahadashas` creates the first period as only the remaining balance, and `resolveActiveSubLord` divides that shortened span into sub-periods. The sub-periods should be cut from the full Mahadasha length and the elapsed part skipped. Later Mahadashas are correct (0 mismatches). Affects `vimshottari.ts:74-98` and everything fed by it.
+2. **Drawdown heuristic limits.** It triggers on a one-day fall of more than 35% with a price ratio of at least 1.4. Of 248 trigger days, 27 match a split or bonus record, and 221 have no record (the corporate-action column is sparse; TCS 2018-05-31 is one). It missed `ECLERX` 2010-07-23 (Bonus 1:2, −32.6%). It rounds odd ratios, e.g. `RPOWER` Bonus 3:5 (ratio 1.74 → 2). A real one-day crash of more than 35% would be wrongly "adjusted". I did not test how many of the 221 are genuine crashes.
+3. **APLAPOLLO is the app's default symbol** and its history is the template that every non-DuckDB stock is built from (`stockStore.ts:20-28`, `:235`, `:257`). Its 3,679 earlier bars are unverified.
+4. **DuckDB was modified** by `bridgeMissingSessions.py` (7 sessions appended). That is a data-source change, not only a fixture change.
+5. **Tax gaps still open:** losses are floored at zero with no carry-forward, and holding is `> 365` days.
+
+## Provenance now
+
+| Category | Stocks | Real | Not real |
+|---|---|---|---|
+| A. Authentic history | 801 stocks ending 10-28 (+ `PANSARI`) | Close, volume, returns; open/high/low for Oct 19–28 | Open/high/low before Oct 19; adjusted drawdown is heuristic |
+| B. Template | APLAPOLLO | 10-28 close | Earlier bars |
+| C. Procedural | Stocks outside the 802 | Latest price | Everything else |
+
+## Limits of the re-audit
+
+- Historical closes were checked against DuckDB, not independently against NSE. Only 2026-10-28 was checked against the Bhavcopy.
+- I did not verify that Oct 20 was a holiday or that the bridged sessions for Oct 19–27 match NSE (only 10-28 was compared line by line).
+- The Dasha reference is my own implementation of Vimshottari with the registry's year length; the mismatch in point 1 is the engine versus that implementation.
+- Nothing was committed from this re-audit; the report update is uncommitted.
