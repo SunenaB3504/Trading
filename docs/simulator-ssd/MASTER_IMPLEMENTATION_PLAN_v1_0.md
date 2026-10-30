@@ -612,5 +612,19 @@ This Master Implementation Plan is permanently archived under [`docs/simulator-s
 - **Theoretical Start Alignment:** Calibrated `generateMahadashas()` and `resolveActive5FoldDasha()` in `vimshottari.ts` and `dashaTimelineScanner.ts` so that companies in their birth Mahadasha compute sub-periods from their full theoretical start date.
 - **Concordance:** Increased 1st Mahadasha sub-period accuracy from 24.2% (55/227) to **100.0% (227/227)**, achieving **857/857 (100.0%)** concordance across the entire Nifty 500 precomputed matrix.
 
-### 8.4 Roadmap Enhancement: Custom Stock Ingestion UI
-- Architecture approved for an interactive UI drawer allowing self-service ingestion of missing large-caps (`RELIANCE`, `INFY`, `HDFCBANK`, `SBIN`) from `data/raw/nse-bars` and new IPOs directly into local storage without CLI dependencies.
+### 8.4 Work Package Specification: WP-7.1 Interactive Stock Ingestion & Calibration Drawer
+* **Objective:** Enable one-click self-service ingestion of missing equities (e.g. Nifty 50 flagships: RELIANCE, INFY, HDFCBANK, SBIN, ITC) from raw Bhavcopy archives or live sources, and onboard newly listed IPOs without developer CLI scripts.
+* **Component Design:** `packages/simulator/src/ui/components/ingestion/StockIngestionDrawer.tsx` (< 300 LOC).
+* **Work Package Steps:**
+  1. **Discovery & Auto-Complete:** When the user types an un-ingested symbol in TopNavigationBar, present an "[+ Import Stock]" trigger.
+  2. **Natal Calibration Stage:** Auto-populate listing date, time, and coordinates from `corporateRegistry.json` (with manual override inputs for unlisted/SME IPOs). Display preview of Janma Nakshatra, Moon Sign, Lagna, and 1st Mahadasha theoretical start balance.
+  3. **Data Source Selector:**
+     - *Mode A: Local Bhavcopy Archive:* Scans `data/raw/nse-bars/nse-bhavcopy` across 7,918 files for the requested ticker/ISIN.
+     - *Mode B: Direct CSV Ingestion:* Drag-and-drop user-provided Bhavcopy/OHLCV CSV.
+  4. **Processing & Compounding Engine:** Calculate daily returns, detect corporate splits/bonuses, compound `adj_close_index`, `rolling_peak`, and `drawdown`.
+  5. **Persistence & Hot-Reload:** Write partition to local storage (`fixtures/bars/<SYMBOL>.json` or IndexedDB), update manifest, and immediately trigger `useStockStore.getState().loadStock(symbol)` with zero terminal reload.
+* **Deliverables:**
+  - `packages/simulator/src/core/data/ingestion/stockIngestionEngine.ts` (< 250 LOC).
+  - `packages/simulator/src/ui/components/ingestion/StockIngestionDrawer.tsx` (< 250 LOC).
+  - `packages/simulator/src/core/data/ingestion/stockIngestionEngine.test.ts` (< 200 LOC).
+* **Acceptance Criteria:** Successfully ingests RELIANCE from local Bhavcopy archive in < 3 seconds; displays 5,000+ authentic bars; opens immediately on the chart with 100% calibrated Dasha and Kota telemetry.

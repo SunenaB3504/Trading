@@ -591,6 +591,45 @@ The desktop application presents an integrated, single-window trading cockpit de
 
 ---
 
+
+### 6.7 Phase 7: Interactive Stock Ingestion & Custom IPO Calibration Subsystem (SSD v1.5)
+
+To ensure the terminal is fully extensible and never blocked by missing equities or newly listed IPOs, the system incorporates a dedicated self-service ingestion UI:
+
+```
++----------------------------------------------------------------------------------------------------+
+|                          STOCK INGESTION & HOROSCOPIC CALIBRATION DRAWER                            |
++----------------------------------------------------------------------------------------------------+
+|  Symbol: [ RELIANCE          ] (Auto-suggests from 3,404 Corporate Registry entries)               |
+|  Company Name: Reliance Industries Limited | Series: EQ | ISIN: INE002A01018                      |
+|                                                                                                    |
+|  [1] Astrological Natal Setup (Auto-Resolved with Manual Override):                                |
+|      • Listing Date: [ 1977-11-29 ]   Listing Time: [ 10:00:00 ] IST                               |
+|      • Venue: Bombay Stock Exchange (BSE Ring, Jeejeebhoy Towers: 18.9298° N, 72.8333° E)          |
+|      • Ayana: Chitrapaksha Lahiri (24.0°) | Ephemeris: Astronomical Algorithms (Meeus)             |
+|      • Calculated Natal: Pushya Nakshatra (Saturn) | Scorpio Lagna (Mars)                          |
+|      • Birth Mahadasha: Saturn (Balance: 8.42 Years | Theoretical Start: 1967-05-18)                |
+|                                                                                                    |
+|  [2] Historical Bar Data Pipeline:                                                                 |
+|      (•) Local Raw Bhavcopy Archive (Scans 7,918 files in data/raw/nse-bars)                        |
+|      ( ) Direct File Drop (User CSV: Date, Open, High, Low, Close, Volume)                         |
+|                                                                                                    |
+|  [3] Pre-Flight Data Quality & Corporate Action Audit:                                             |
+|      ✓ 5,420 Traded Sessions Ingested (2005-01-01 to 2026-10-28)                                   |
+|      ✓ Split/Bonus Detection: 1:1 Bonus (2009), 1:1 Bonus (2017), 1:1 Bonus (2024)                 |
+|      ✓ Final Close Aligned with Oct 28, 2026 CMP: ₹1,158.00                                        |
+|                                                                                                    |
+|               [ CANCEL ]                       [ INGEST & LAUNCH TERMINAL ]                        |
++----------------------------------------------------------------------------------------------------+
+```
+
+#### Key Architectural Requirements:
+1. **Dynamic Storage Adapter:** Writes partitioned bars directly to `fixtures/bars/<SYMBOL>.json` (in desktop/Electron) or `IndexedDB` (in browser mode) with zero UI freeze.
+2. **Instant Hot-Reload:** Upon clicking *"Ingest & Launch"*, `stockStore.loadStock(symbol)` is invoked, immediately transitioning the candlestick chart, Dasha Gantt, and Kota fortress radar to the newly imported stock.
+3. **New IPO Onboarding Protocol:** For freshly listed IPOs without pre-existing registry records, the UI provides input fields for Listing Date, Time, Exchange Coordinates, and First Day OHLCV, auto-computing the natal horoscope in real time.
+
+---
+
 ## 7. Architectural Verification & Modularity Compliance
 
 * **Strict Code Quality Gate:** Every pull request and file creation is verified against the **500 LOC maximum limit** via automated continuous integration lint checks (`eslint-plugin-max-lines`).
