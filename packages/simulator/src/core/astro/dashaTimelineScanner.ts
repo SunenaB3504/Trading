@@ -84,56 +84,70 @@ export function generateDashaSchedule(
     });
 
     if (maxLevel >= 2) {
-      const mdDuration = md.endTimeMs - md.startTimeMs;
+      const mdStartForSub = md.theoreticalStartMs ?? md.startTimeMs;
+      const mdDuration = md.endTimeMs - mdStartForSub;
       const startIndex = VIMSHOTTARI_LORDS.indexOf(md.lord);
-      let adStart = md.startTimeMs;
+      let adStart = mdStartForSub;
 
       for (let i = 0; i < 9; i++) {
         const adLord = VIMSHOTTARI_LORDS[(startIndex + i) % 9] ?? 'ketu';
         const adDuration = (mdDuration * VIMSHOTTARI_YEARS[adLord]) / TOTAL_VIMSHOTTARI_YEARS;
         const adEnd = adStart + adDuration;
-        const adRole = classifyLordRole(adLord, lagnaId);
-        const adTriad = formatTriadCode(mdRole, adRole, adRole);
-        const adStatus = evaluateEpochStatus(adStart, adEnd, refMs);
 
-        schedule.push({
-          level: 2,
-          mdLord: md.lord,
-          adLord,
-          startDate: formatDate(adStart),
-          endDate: formatDate(adEnd),
-          startTimeMs: adStart,
-          endTimeMs: adEnd,
-          durationDays: Math.round((adEnd - adStart) / MS_PER_DAY),
-          triadCode: adTriad,
-          ...adStatus,
-        });
+        // Clip AD to the active Mahadasha window
+        const effectiveAdStart = Math.max(adStart, md.startTimeMs);
+        const effectiveAdEnd = Math.min(adEnd, md.endTimeMs);
 
-        if (maxLevel >= 3) {
-          const pdStartIndex = VIMSHOTTARI_LORDS.indexOf(adLord);
-          let pdStart = adStart;
-          for (let j = 0; j < 9; j++) {
-            const pdLord = VIMSHOTTARI_LORDS[(pdStartIndex + j) % 9] ?? 'ketu';
-            const pdDuration = (adDuration * VIMSHOTTARI_YEARS[pdLord]) / TOTAL_VIMSHOTTARI_YEARS;
-            const pdEnd = pdStart + pdDuration;
-            const pdRole = classifyLordRole(pdLord, lagnaId);
-            const pdTriad = formatTriadCode(mdRole, adRole, pdRole);
-            const pdStatus = evaluateEpochStatus(pdStart, pdEnd, refMs);
+        if (effectiveAdEnd > effectiveAdStart) {
+          const adRole = classifyLordRole(adLord, lagnaId);
+          const adTriad = formatTriadCode(mdRole, adRole, adRole);
+          const adStatus = evaluateEpochStatus(effectiveAdStart, effectiveAdEnd, refMs);
 
-            schedule.push({
-              level: 3,
-              mdLord: md.lord,
-              adLord,
-              pdLord,
-              startDate: formatDate(pdStart),
-              endDate: formatDate(pdEnd),
-              startTimeMs: pdStart,
-              endTimeMs: pdEnd,
-              durationDays: Math.round((pdEnd - pdStart) / MS_PER_DAY),
-              triadCode: pdTriad,
-              ...pdStatus,
-            });
-            pdStart = pdEnd;
+          schedule.push({
+            level: 2,
+            mdLord: md.lord,
+            adLord,
+            startDate: formatDate(effectiveAdStart),
+            endDate: formatDate(effectiveAdEnd),
+            startTimeMs: effectiveAdStart,
+            endTimeMs: effectiveAdEnd,
+            durationDays: Math.round((effectiveAdEnd - effectiveAdStart) / MS_PER_DAY),
+            triadCode: adTriad,
+            ...adStatus,
+          });
+
+          if (maxLevel >= 3) {
+            const pdStartIndex = VIMSHOTTARI_LORDS.indexOf(adLord);
+            let pdStart = adStart;
+            for (let j = 0; j < 9; j++) {
+              const pdLord = VIMSHOTTARI_LORDS[(pdStartIndex + j) % 9] ?? 'ketu';
+              const pdDuration = (adDuration * VIMSHOTTARI_YEARS[pdLord]) / TOTAL_VIMSHOTTARI_YEARS;
+              const pdEnd = pdStart + pdDuration;
+
+              const effectivePdStart = Math.max(pdStart, effectiveAdStart);
+              const effectivePdEnd = Math.min(pdEnd, effectiveAdEnd);
+
+              if (effectivePdEnd > effectivePdStart) {
+                const pdRole = classifyLordRole(pdLord, lagnaId);
+                const pdTriad = formatTriadCode(mdRole, adRole, pdRole);
+                const pdStatus = evaluateEpochStatus(effectivePdStart, effectivePdEnd, refMs);
+
+                schedule.push({
+                  level: 3,
+                  mdLord: md.lord,
+                  adLord,
+                  pdLord,
+                  startDate: formatDate(effectivePdStart),
+                  endDate: formatDate(effectivePdEnd),
+                  startTimeMs: effectivePdStart,
+                  endTimeMs: effectivePdEnd,
+                  durationDays: Math.round((effectivePdEnd - effectivePdStart) / MS_PER_DAY),
+                  triadCode: pdTriad,
+                  ...pdStatus,
+                });
+              }
+              pdStart = pdEnd;
+            }
           }
         }
 
@@ -183,19 +197,23 @@ export function findDashaAtDate(
   for (const md of mahadashas) {
     if (targetMs >= md.startTimeMs && targetMs < md.endTimeMs) {
       const mdRole = classifyLordRole(md.lord, lagnaId);
-      const mdDuration = md.endTimeMs - md.startTimeMs;
+      const mdStartForSub = md.theoreticalStartMs ?? md.startTimeMs;
+      const mdDuration = md.endTimeMs - mdStartForSub;
       const startIndex = VIMSHOTTARI_LORDS.indexOf(md.lord);
-      let adStart = md.startTimeMs;
+      let adStart = mdStartForSub;
 
       for (let i = 0; i < 9; i++) {
         const adLord = VIMSHOTTARI_LORDS[(startIndex + i) % 9] ?? 'ketu';
         const adDuration = (mdDuration * VIMSHOTTARI_YEARS[adLord]) / TOTAL_VIMSHOTTARI_YEARS;
         const adEnd = adStart + adDuration;
 
-        if (targetMs >= adStart && targetMs < adEnd) {
+        const effectiveAdStart = Math.max(adStart, md.startTimeMs);
+        const effectiveAdEnd = Math.min(adEnd, md.endTimeMs);
+
+        if (targetMs >= effectiveAdStart && targetMs < effectiveAdEnd) {
           const adRole = classifyLordRole(adLord, lagnaId);
           const triadCode = formatTriadCode(mdRole, adRole, adRole);
-          const remainingDays = Math.max(0, Math.round((adEnd - targetMs) / MS_PER_DAY));
+          const remainingDays = Math.max(0, Math.round((effectiveAdEnd - targetMs) / MS_PER_DAY));
           return { mdLord: md.lord, adLord, triadCode, remainingDays };
         }
         adStart = adEnd;

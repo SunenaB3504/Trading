@@ -48,6 +48,10 @@ export function generateMahadashas(
   const startIndex = VIMSHOTTARI_LORDS.indexOf(startingLord);
   const mahadashas: DashaNode[] = [];
 
+  const fullYears = VIMSHOTTARI_YEARS[startingLord];
+  const elapsedYears = fullYears - balanceYears;
+  const theoreticalStartMs = birthTimestampMs - elapsedYears * msPerYear;
+
   let currentStartMs = birthTimestampMs;
   const firstEndMs = currentStartMs + balanceYears * msPerYear;
 
@@ -58,6 +62,7 @@ export function generateMahadashas(
     endTimeMs: firstEndMs,
     startDate: formatDate(currentStartMs),
     endDate: formatDate(firstEndMs),
+    theoreticalStartMs,
   });
 
   currentStartMs = firstEndMs;
@@ -74,6 +79,7 @@ export function generateMahadashas(
       endTimeMs: endMs,
       startDate: formatDate(currentStartMs),
       endDate: formatDate(endMs),
+      theoreticalStartMs: currentStartMs,
     });
 
     currentStartMs = endMs;
@@ -115,7 +121,8 @@ export function resolveActive5FoldDasha(
   const activeMd = mahadashas.find((md) => targetMs >= md.startTimeMs && targetMs < md.endTimeMs);
   if (!activeMd) return null;
 
-  const ad = resolveActiveSubLord(activeMd.startTimeMs, activeMd.endTimeMs, activeMd.lord, targetMs);
+  const mdStartForSub = activeMd.theoreticalStartMs ?? activeMd.startTimeMs;
+  const ad = resolveActiveSubLord(mdStartForSub, activeMd.endTimeMs, activeMd.lord, targetMs);
   const pd = resolveActiveSubLord(ad.startMs, ad.endMs, ad.lord, targetMs);
   const sd = resolveActiveSubLord(pd.startMs, pd.endMs, pd.lord, targetMs);
   const prana = resolveActiveSubLord(sd.startMs, sd.endMs, sd.lord, targetMs);

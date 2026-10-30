@@ -22,6 +22,7 @@ export interface DashaNode {
   endTimeMs: number;
   startDate: string; // YYYY-MM-DD
   endDate: string; // YYYY-MM-DD
+  theoreticalStartMs?: number;
   children?: DashaNode[];
 }
 
