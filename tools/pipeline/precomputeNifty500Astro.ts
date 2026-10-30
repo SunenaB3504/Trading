@@ -15,7 +15,7 @@ import { determineKotaRulers } from '../../packages/simulator/src/core/astro/kot
 import { evaluateSpecialYogas } from '../../packages/simulator/src/core/astro/yogaDetector';
 import { generateDashaSchedule } from '../../packages/simulator/src/core/astro/dashaTimelineScanner';
 import { calculateNakshatraAndBalance } from '../../packages/simulator/src/core/astro/vimshottari';
-import { SIGN_NAMES, MALAYALAM_SIGN_NAMES } from '../../packages/simulator/src/core/astro/constants';
+import { SIGN_NAMES, MALAYALAM_SIGN_NAMES, NAKSHATRAS } from '../../packages/simulator/src/core/astro/constants';
 import type { PlanetKey } from '../../packages/simulator/src/core/astro/types';
 
 export interface PrecomputedForwardDasha {
@@ -84,8 +84,9 @@ function getNifty500Symbols(registry: Record<string, CorporateRegistryRecord>): 
 }
 
 function computeNatalAstro(symbol: string, record: CorporateRegistryRecord) {
-  const lagnaId = record.lagna_sign_id;
-  const moonSignId = record.moon_sign_id;
+  // Normalize 1-based registry IDs (1=Aries..12=Pisces) to 0-based engine indices (0=Aries..11=Pisces)
+  const lagnaId = (record.lagna_sign_id ?? 1) - 1;
+  const moonSignId = (record.moon_sign_id ?? 1) - 1;
   const lagnaInfo = deriveLagnaLordships(lagnaId);
   const induInfo = calculateInduLagnaSign(lagnaId, moonSignId);
   const kotaRulers = determineKotaRulers(moonSignId);
@@ -111,6 +112,7 @@ function computeNatalAstro(symbol: string, record: CorporateRegistryRecord) {
 
   return {
     lagnaId,
+    moonSignId,
     lagnaInfo,
     induInfo,
     kotaRulers,
@@ -189,6 +191,10 @@ export function runPrecomputation(): { count: number; outPath: string } {
     const natal = computeNatalAstro(sym, record);
     const dashas = computeForwardDashas(record);
 
+    const moonSign1Based = record.moon_sign_id ?? 1;
+    const absMoonLong = (((moonSign1Based - 1) * 30.0) + record.moon_deg) % 360.0;
+    const nakBalance = calculateNakshatraAndBalance(absMoonLong);
+
     matrix[sym] = {
       symbol: sym,
       companyName: record.company_name,
@@ -197,9 +203,9 @@ export function runPrecomputation(): { count: number; outPath: string } {
       lagnaNameEn: natal.lagnaInfo.lagnaSignName,
       lagnaNameMl: MALAYALAM_SIGN_NAMES[natal.lagnaId] ?? natal.lagnaInfo.lagnaSignName,
       lagnaLord: natal.lagnaInfo.lagnaLord,
-      moonSignId: record.moon_sign_id,
-      janmaNakshatraId: calculateNakshatraAndBalance(record.moon_deg).nakshatraIndex,
-      moonNakshatra: record.moon_nakshatra,
+      moonSignId: natal.moonSignId,
+      janmaNakshatraId: nakBalance.nakshatraIndex,
+      moonNakshatra: NAKSHATRAS[nakBalance.nakshatraIndex] ?? record.moon_nakshatra,
       induLagnaSignId: natal.induInfo.induLagnaSignId,
       induLagnaKalas: natal.induInfo.totalKalas,
       kotaSwami: natal.kotaRulers.kotaSwami,

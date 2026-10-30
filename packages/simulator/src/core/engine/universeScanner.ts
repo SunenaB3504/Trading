@@ -270,7 +270,7 @@ export function scanSingleStock(
     ? pre.natalYogas
     : evaluateSpecialYogas({
         lagnaSignId: lagnaId,
-        moonSignId: record.moon_sign_id ?? 0,
+        moonSignId: (record.moon_sign_id ?? 1) - 1,
         planetSigns: transitSigns,
       }).activeYogaNames;
 

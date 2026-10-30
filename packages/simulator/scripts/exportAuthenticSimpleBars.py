@@ -115,6 +115,9 @@ def main():
     if "APLAPOLLO" in existing_bars:
         apla_bars = existing_bars["APLAPOLLO"]
         apla_cmp = prices_map.get("APLAPOLLO", 2165.30)
+        # Deduplicate 2026-10-28 row if duplicate exists
+        while len(apla_bars) >= 2 and apla_bars[-1].get("date") == "2026-10-28" and apla_bars[-2].get("date") == "2026-10-28":
+            apla_bars.pop(-2)
         # Update last bar to authentic CMP on 2026-10-28
         if apla_bars:
             last = apla_bars[-1]
@@ -122,6 +125,10 @@ def main():
             last["close"] = apla_cmp
             last["high"] = max(last.get("high", apla_cmp), apla_cmp)
             last["low"] = max(0.01, min(last.get("low", apla_cmp), apla_cmp))
+            if len(apla_bars) >= 2:
+                last["prev_close"] = apla_bars[-2]["close"]
+                prev_c = last["prev_close"]
+                last["daily_return"] = round((apla_cmp - prev_c) / prev_c, 4) if prev_c else 0.0
         output["APLAPOLLO"] = apla_bars
         print(f"  Calibrated APLAPOLLO template ({len(apla_bars)} sessions, last close {apla_cmp} on 2026-10-28).")
 
@@ -133,3 +140,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
