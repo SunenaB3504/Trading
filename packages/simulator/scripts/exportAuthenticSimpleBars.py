@@ -12,6 +12,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.pa
 DUCKDB_PATH = os.path.join(BASE_DIR, "data", "parquet", "market_data.duckdb")
 PRICES_PATH = os.path.join(BASE_DIR, "packages", "simulator", "src", "core", "data", "fixtures", "nifty500Prices.json")
 OUT_JSON_PATH = os.path.join(BASE_DIR, "packages", "simulator", "src", "core", "data", "fixtures", "historicalBars.json")
+OHLC_CACHE_PATH = os.path.join(BASE_DIR, "packages", "simulator", "src", "core", "data", "fixtures", "recentOhlcCache.json")
 
 BENCHMARK_SYMBOLS = [
     "TCS",
@@ -33,6 +34,14 @@ def main():
 
     with open(PRICES_PATH, "r", encoding="utf-8") as f:
         prices_map = json.load(f)
+
+    ohlc_cache = {}
+    if os.path.exists(OHLC_CACHE_PATH):
+        try:
+            with open(OHLC_CACHE_PATH, "r", encoding="utf-8") as f:
+                ohlc_cache = json.load(f)
+        except Exception:
+            pass
 
     # Load existing historicalBars to preserve APLAPOLLO template
     with open(OUT_JSON_PATH, "r", encoding="utf-8") as f:
@@ -89,14 +98,25 @@ def main():
                 rolling_peak = growth_idx
             drawdown = round((growth_idx - rolling_peak) / rolling_peak, 4)
 
+            open_val = prev_close_val
+            high_val = max(close_val, prev_close_val)
+            low_val = max(0.01, min(close_val, prev_close_val))
+
+            if date_str in ohlc_cache and sym_name in ohlc_cache[date_str]:
+                c_data = ohlc_cache[date_str][sym_name]
+                if c_data.get("open", 0) > 0:
+                    open_val = c_data["open"]
+                    high_val = c_data["high"]
+                    low_val = c_data["low"]
+
             bar = {
                 "symbol": sym_name,
                 "date": date_str,
                 "close": close_val,
                 "prev_close": prev_close_val,
-                "open": prev_close_val,
-                "high": max(close_val, prev_close_val),
-                "low": max(0.01, min(close_val, prev_close_val)),
+                "open": open_val,
+                "high": high_val,
+                "low": low_val,
                 "volume": vol,
                 "daily_return": daily_ret,
                 "adj_close_index": growth_idx,
@@ -105,32 +125,6 @@ def main():
                 "is_macro_crisis": is_crisis,
             }
             bar_list.append(bar)
-
-        # Check latest CMP on 2026-10-28
-        cmp = prices_map.get(sym)
-        if cmp and bar_list:
-            last_bar = bar_list[-1]
-            if last_bar["date"] < "2026-10-28":
-                ret = round((cmp / last_bar["close"]) - 1.0, 4)
-                growth_idx = round(last_bar["adj_close_index"] * (1.0 + ret), 4)
-                peak = max(last_bar["rolling_peak"], growth_idx)
-                dd = round((growth_idx - peak) / peak, 4)
-                final_bar = {
-                    "symbol": sym,
-                    "date": "2026-10-28",
-                    "close": round(cmp, 2),
-                    "prev_close": last_bar["close"],
-                    "open": last_bar["close"],
-                    "high": max(cmp, last_bar["close"]),
-                    "low": max(0.01, min(cmp, last_bar["close"])),
-                    "volume": last_bar["volume"],
-                    "daily_return": ret,
-                    "adj_close_index": growth_idx,
-                    "rolling_peak": peak,
-                    "drawdown": dd,
-                    "is_macro_crisis": False,
-                }
-                bar_list.append(final_bar)
 
         output[sym] = bar_list
         print(f"  Processed {len(bar_list)} authentic sessions for {sym} (last close: {bar_list[-1]['close']} on {bar_list[-1]['date']}).")

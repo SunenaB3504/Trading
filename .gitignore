@@ -41,5 +41,6 @@ packages/app/assets/learning-market.market
 # DuckDB binary databases and scratch logs
 data/parquet/*.duckdb
 data/parquet/*.duckdb.wal
+packages/simulator/src/core/data/fixtures/recentOhlcCache.json
 scratch-apk.log
 packages/app/assets/learning-funds.market
