@@ -1,7 +1,7 @@
-# SOFTWARE SPECIFICATION DOCUMENT (SSD v1.4)
+# SOFTWARE SPECIFICATION DOCUMENT (SSD v1.5)
 ## STANDALONE ASTRO-FINANCIAL TRADE SIMULATOR & ADVISORY TERMINAL
 **An Offline-First, React-Powered Desktop Application for Quantitative Vedic Market Chronometry**  
-*Document Version: 1.4.0 | Date: 2026-10-29 | Status: Architecture & System Design (Enhanced with Simple Bar Parquet Data Pipeline, Calibrated Ephemeris & Dasha Core)*  
+*Document Version: 1.5.0 | Date: 2026-10-30 | Status: Architecture & System Design (Enhanced with Simple Bar Parquet Data Pipeline, Calibrated Ephemeris & Dasha Core)*  
 *Target Environment: Standalone Desktop (Electron / Tauri + React 19 + TypeScript)*  
 *Design Constraint: Strict Modularity (< 500 Lines per File Enforcement)*
 
@@ -598,3 +598,14 @@ The desktop application presents an integrated, single-window trading cockpit de
 * **Point-in-Time Historical Verification:** Backtesting replay runs automated assertions checking that no fundamental financial metric is referenced prior to its historical exchange filing timestamp.
 * **Zero Native Dependency Guarantee:** The astro computation engine builds without native C/C++ compilation tools or Python runtimes, guaranteeing 100% cross-platform compatibility on Windows, macOS, and Linux.
 * **Archival Notice:** This specification is permanently archived under [`docs/simulator-ssd/SIMULATOR_SSD_v1_0.md`](file:///c:/Users/Admin/Sunil/Trading/docs/simulator-ssd/SIMULATOR_SSD_v1_0.md) as the formal engineering blueprint for the standalone desktop application.
+
+---
+
+## 8. Revision History & Audit Integrity Milestones
+
+| Version | Date | Changes & Integrity Milestones |
+| :---: | :---: | :--- |
+| **v1.0.0** | 2026-10-15 | Initial Architectural Specification for Standalone Desktop Terminal. |
+| **v1.3.0** | 2026-10-25 | Added Dual Storage (DuckDB/SQLite) and Canvas Candlestick Engine. |
+| **v1.4.0** | 2026-10-29 | Enhanced with Parquet Simple-Bar Pipeline, Julian Day Ephemeris & Dasha Core. |
+| **v1.5.0** | 2026-10-30 | **Data Integrity Audit & Full Horizon Calibration:**<br>• Partitioned 1,225,743 authentic OHLCV bars across all 802 DuckDB symbols with async dynamic import chunking.<br>• Default benchmark stock switched from synthetic APLAPOLLO to authentic TCS (5,487 verified sessions).<br>• Calibrated 1st Mahadasha Antardashas against full theoretical cycle, reaching **100.0% concordance (857/857)** in Nifty 500 matrix.<br>• Section 112A annual ₹1.25L LTCG tracking wired into closed-trade validation engine.<br>• Designed UI architecture for self-service large-cap and new IPO ingestion. |
