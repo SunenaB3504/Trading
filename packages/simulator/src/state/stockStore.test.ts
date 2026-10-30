@@ -109,5 +109,21 @@ describe('useStockStore & Forward Date Anchoring', () => {
     expect(fineorgRatio60).not.toBeCloseTo(railtelRatio60, 2);
     expect(ariesRatio60).not.toBeCloseTo(railtelRatio60, 2);
   });
-});
 
+  it('loads authentic partitioned bars for 802 universe equities asynchronously', async () => {
+    // Test ACE: one of the 802 authentic partitioned equities
+    await useStockStore.getState().loadStock('ACE', '2026-10-28');
+    const aceState = useStockStore.getState();
+    expect(aceState.activeSymbol).toBe('ACE');
+    expect(aceState.bars.length).toBeGreaterThan(4000);
+    expect(aceState.activeBar?.close).toBe(1022.8);
+    expect(aceState.activeBar?.date).toBe('2026-10-28');
+
+    // Test 20MICRONS: another partitioned stock
+    await useStockStore.getState().loadStock('20MICRONS', '2026-10-28');
+    const micronState = useStockStore.getState();
+    expect(micronState.activeSymbol).toBe('20MICRONS');
+    expect(micronState.bars.length).toBeGreaterThan(4000);
+    expect(micronState.activeBar?.date).toBe('2026-10-28');
+  });
+});

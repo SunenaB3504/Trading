@@ -10,13 +10,22 @@ import { useSimulationStore } from './simulationStore';
 import historicalBarsData from '../core/data/fixtures/historicalBars.json';
 import corporateRegistryData from '../core/data/corporateRegistry.json';
 import nifty500PricesData from '../core/data/fixtures/nifty500Prices.json';
+import barsManifestData from '../core/data/fixtures/barsManifest.json';
 
 const historicalBars = historicalBarsData as Record<string, DailyBar[]>;
 const corporateRegistry = corporateRegistryData as Record<string, CorporateRegistryRecord>;
 const nifty500Prices = nifty500PricesData as Record<string, number>;
+export const authenticUniverseSymbols: string[] = barsManifestData.symbols;
+
 const defaultSymbol = 'APLAPOLLO';
 const defaultBars = historicalBars[defaultSymbol] ?? historicalBars['TCS'] ?? [];
 const defaultLatestBar = defaultBars[defaultBars.length - 1] ?? null;
+
+const barLoaders = import.meta.glob<DailyBar[] | { default: DailyBar[] }>(
+  '../core/data/fixtures/bars/*.json'
+);
+
+const loadedBarsCache: Record<string, DailyBar[]> = { ...historicalBars };
 
 function hashSymbol(sym: string): number {
   let h = 0;
@@ -36,8 +45,8 @@ export function generateSyntheticStockBars(
   const h = hashSymbol(norm);
   const N = templateBars.length;
 
-  const p1 = 65 + (h % 35); // 65-100 day intermediate cycle
-  const p2 = 20 + ((h >> 2) % 15); // 20-35 day short-term swing
+  const p1 = 65 + (h % 35);
+  const p2 = 20 + ((h >> 2) % 15);
   const phi1 = ((h % 360) * Math.PI) / 180;
   const phi2 = (((h >> 4) % 360) * Math.PI) / 180;
 
@@ -46,7 +55,6 @@ export function generateSyntheticStockBars(
     Math.cos((2 * Math.PI * idx) / p2 + phi2) * 0.08;
 
   const endWave = rawWave(N - 1);
-
   let prevClose = Math.round(templateBars[0]!.close * scale * 100) / 100;
 
   return templateBars.map((b, i) => {
@@ -95,6 +103,81 @@ export function generateSyntheticStockBars(
   });
 }
 
+function resolveCorporateMeta(norm: string): CorporateRegistryRecord {
+  return (
+    corporateRegistry[norm] ?? {
+      symbol: norm,
+      company_name: norm,
+      listing_date: '2015-01-01',
+      listing_time: '09:15:00',
+      timezone_offset_minutes: 330,
+      latitude: 19.076,
+      longitude: 72.8777,
+      year_length_days: 365.2425,
+      primary_consonant: norm[0] || 'A',
+      ayanamsa: 24.0,
+      lagna_sign_id: 1,
+      lagna_sign: 'Aries',
+      lagna_deg: 15.0,
+      moon_sign_id: 1,
+      moon_sign: 'Aries',
+      moon_deg: 15.0,
+      moon_nakshatra: 'Ashwini',
+      pada: 1,
+      birth_md_lord: 'ketu',
+      starting_balance_years: 5.0,
+    }
+  );
+}
+
+function applyStockState(
+  norm: string,
+  bars: DailyBar[],
+  targetDate: string | undefined,
+  set: (partial: Partial<StockState>) => void
+): void {
+  const meta = resolveCorporateMeta(norm);
+  const simState = useSimulationStore.getState();
+  const evalDate = targetDate ?? simState.activeDate ?? '2026-10-28';
+
+  let targetIdx = -1;
+  let resolvedDate = evalDate;
+
+  if (bars.length > 0) {
+    const latestBar = bars[bars.length - 1]!;
+    const firstBar = bars[0]!;
+
+    if (evalDate >= latestBar.date) {
+      targetIdx = bars.length - 1;
+      resolvedDate = evalDate;
+    } else if (evalDate <= firstBar.date) {
+      targetIdx = 0;
+      resolvedDate = firstBar.date;
+    } else {
+      targetIdx = bars.findIndex((b) => b.date >= evalDate);
+      if (targetIdx === -1) {
+        targetIdx = bars.length - 1;
+      }
+      resolvedDate = evalDate;
+    }
+  }
+
+  const activeBar: DailyBar | null = targetIdx >= 0 && bars[targetIdx] ? (bars[targetIdx] ?? null) : null;
+
+  set({
+    activeSymbol: norm,
+    bars,
+    metadata: meta,
+    activeBar,
+  });
+
+  simState.setTotalSessions(bars.length);
+  if (targetIdx >= 0) {
+    simState.setCurrentIndex(targetIdx);
+  }
+  simState.setActiveDate(resolvedDate);
+}
+
 export interface StockState {
   activeSymbol: string;
   metadata: CorporateRegistryRecord | null;
@@ -106,7 +189,7 @@ export interface StockState {
   setMetadata: (metadata: CorporateRegistryRecord | null) => void;
   setBars: (bars: DailyBar[]) => void;
   syncActiveBar: (index: number) => void;
-  loadStock: (symbol: string, targetDate?: string) => void;
+  loadStock: (symbol: string, targetDate?: string) => Promise<DailyBar[]> | DailyBar[];
   reset: () => void;
 }
 
@@ -136,76 +219,47 @@ export const useStockStore = create<StockState>((set, get) => ({
 
   loadStock: (symbol: string, targetDate?: string) => {
     const norm = (symbol || defaultSymbol).toUpperCase();
-    let bars: DailyBar[] = historicalBars[norm] ?? [];
-    if (bars.length === 0) {
+
+    // 1. Check in-memory cache
+    if (loadedBarsCache[norm]) {
+      const bars = loadedBarsCache[norm]!;
+      applyStockState(norm, bars, targetDate, set);
+      return bars;
+    }
+
+    // 2. Check partitioned barLoaders
+    const loaderKey = `../core/data/fixtures/bars/${norm}.json`;
+    const loader = barLoaders[loaderKey];
+
+    if (loader) {
       const templateBars = historicalBars[defaultSymbol] ?? historicalBars['TCS'] ?? [];
       const targetCmp = nifty500Prices[norm] ?? 500.0;
-      bars = generateSyntheticStockBars(norm, templateBars, targetCmp);
+      const initialBars = generateSyntheticStockBars(norm, templateBars, targetCmp);
+      applyStockState(norm, initialBars, targetDate, set);
+
+      return loader()
+        .then((mod: unknown) => {
+          const modRecord = mod as { default?: DailyBar[] };
+          const loaded: DailyBar[] = Array.isArray(mod) ? mod : (modRecord?.default || []);
+          if (loaded.length > 0) {
+            loadedBarsCache[norm] = loaded;
+            if (get().activeSymbol === norm) {
+              applyStockState(norm, loaded, targetDate, set);
+            }
+            return loaded;
+          }
+          return initialBars;
+        })
+        .catch(() => initialBars);
     }
 
-    const meta = corporateRegistry[norm] ?? {
-      symbol: norm,
-      company_name: norm,
-      listing_date: '2015-01-01',
-      listing_time: '09:15:00',
-      timezone_offset_minutes: 330,
-      latitude: 19.0760,
-      longitude: 72.8777,
-      year_length_days: 365.2425,
-      primary_consonant: norm[0] || 'A',
-      ayanamsa: 24.0,
-      lagna_sign_id: 1,
-      lagna_sign: 'Aries',
-      lagna_deg: 15.0,
-      moon_sign_id: 1,
-      moon_sign: 'Aries',
-      moon_deg: 15.0,
-      moon_nakshatra: 'Ashwini',
-      pada: 1,
-      birth_md_lord: 'ketu',
-      starting_balance_years: 5.0,
-    };
-
-    const simState = useSimulationStore.getState();
-    const evalDate = targetDate ?? simState.activeDate ?? '2026-10-28';
-
-    let targetIdx = -1;
-    let resolvedDate = evalDate;
-
-    if (bars.length > 0) {
-      const latestBar = bars[bars.length - 1]!;
-      const firstBar = bars[0]!;
-
-      if (evalDate >= latestBar.date) {
-        // Forward evaluation: pin candle chart cursor to latest historical traded session
-        targetIdx = bars.length - 1;
-        resolvedDate = evalDate;
-      } else if (evalDate <= firstBar.date) {
-        targetIdx = 0;
-        resolvedDate = firstBar.date;
-      } else {
-        targetIdx = bars.findIndex((b) => b.date >= evalDate);
-        if (targetIdx === -1) {
-          targetIdx = bars.length - 1;
-        }
-        resolvedDate = evalDate;
-      }
-    }
-
-    const activeBar: DailyBar | null = targetIdx >= 0 && bars[targetIdx] ? (bars[targetIdx] ?? null) : null;
-
-    set({
-      activeSymbol: norm,
-      bars,
-      metadata: meta,
-      activeBar,
-    });
-
-    simState.setTotalSessions(bars.length);
-    if (targetIdx >= 0) {
-      simState.setCurrentIndex(targetIdx);
-    }
-    simState.setActiveDate(resolvedDate);
+    // 3. Fallback to synthetic bars for non-DuckDB stocks
+    const templateBars = historicalBars[defaultSymbol] ?? historicalBars['TCS'] ?? [];
+    const targetCmp = nifty500Prices[norm] ?? 500.0;
+    const syntheticBars = generateSyntheticStockBars(norm, templateBars, targetCmp);
+    loadedBarsCache[norm] = syntheticBars;
+    applyStockState(norm, syntheticBars, targetDate, set);
+    return syntheticBars;
   },
 
   reset: () =>
