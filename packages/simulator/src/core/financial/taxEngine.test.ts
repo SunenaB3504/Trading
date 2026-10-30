@@ -48,5 +48,27 @@ describe('Statutory Transaction Charges & Tax Engine', () => {
     expect(res.totalCharges).toBeGreaterThan(120);
     expect(res.netPnl).toBe(-res.totalCharges); // Net loss equals transaction friction
   });
+
+  it('exempts LTCG below statutory ₹1,25,000 limit for long-term investments (> 365 days)', () => {
+    // Buy 100 @ 1000 = 100,000, Sell 100 @ 1500 = 150,000 after 400 days (Gain ~50,000)
+    const res = calculateTradeTaxAndNetPnl(1000.0, 1500.0, 100, '2025-01-01', '2026-02-15');
+    expect(res.isLongTerm).toBe(true);
+    expect(res.grossPnl).toBe(50000);
+    expect(res.taxableGain).toBe(0); // Fully sheltered by ₹1.25L exemption
+    expect(res.capitalGainsTax).toBe(0);
+    expect(res.netPnl).toBe(50000 - res.totalCharges);
+  });
+
+  it('taxes LTCG exceeding ₹1,25,000 threshold strictly on excess at 13.0%', () => {
+    // Buy 1000 @ 1000 = 1,000,000, Sell 1000 @ 1250 = 1,250,000 after 400 days (Gain 250,000)
+    const res = calculateTradeTaxAndNetPnl(1000.0, 1250.0, 1000, '2025-01-01', '2026-02-15');
+    expect(res.isLongTerm).toBe(true);
+    expect(res.grossPnl).toBe(250000);
+    // Deductible charges exclude STT; gain ~ 250k - deductible ~ 249,700
+    // Taxable excess above 125k ~ 124,700
+    expect(res.taxableGain).toBeGreaterThan(120000);
+    expect(res.taxableGain).toBeLessThan(125000);
+    expect(res.capitalGainsTax).toBe(Math.round((res.taxableGain * 0.13) * 100) / 100);
+  });
 });
 

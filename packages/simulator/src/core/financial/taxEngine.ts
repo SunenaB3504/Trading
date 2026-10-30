@@ -115,22 +115,27 @@ export function calculateTradeTaxAndNetPnl(
   const sellCharges = calculateOrderCharges('SELL', sellPrice, shares);
   const totalCharges = Math.round((buyCharges.totalCharges + sellCharges.totalCharges) * 100) / 100;
 
-  // Taxable capital gain after regulatory transaction friction
-  const taxableGain = Math.max(0, Math.round((grossPnl - totalCharges) * 100) / 100);
+  // Under Section 48 of Income Tax Act, STT is non-deductible; other transaction charges are deductible
+  const totalStt = buyCharges.stt + sellCharges.stt;
+  const deductibleCharges = Math.max(0, Math.round((totalCharges - totalStt) * 100) / 100);
+  const netGain = Math.max(0, Math.round((grossPnl - deductibleCharges) * 100) / 100);
 
-  // Holding period check
+  // Holding period check (> 365 days is long-term)
   const bMs = new Date(buyDate).getTime();
   const sMs = new Date(sellDate).getTime();
   const holdingDays = Math.max(0, (sMs - bMs) / 86400000);
-  const isLongTerm = holdingDays >= STATUTORY_RATES.longTermHoldingDays;
+  const isLongTerm = holdingDays > STATUTORY_RATES.longTermHoldingDays;
 
   let capitalGainsTax = 0;
-  if (taxableGain > 0) {
+  let taxableGain = 0;
+  if (netGain > 0) {
     if (isLongTerm) {
-      // LTCG: 12.5% + 4% cess (subject to annual exemption, applied if exceeded)
+      // LTCG Section 112A: 12.5% + 4% cess after annual ₹1,25,000 exemption
+      taxableGain = Math.max(0, Math.round((netGain - STATUTORY_RATES.ltcgExemptionRupees) * 100) / 100);
       capitalGainsTax = Math.round(((taxableGain * STATUTORY_RATES.ltcgRatePct) / 100) * 100) / 100;
     } else {
-      // STCG: 20% + 4% cess (Section 111A)
+      // STCG Section 111A: 20% + 4% cess on full gain
+      taxableGain = netGain;
       capitalGainsTax = Math.round(((taxableGain * STATUTORY_RATES.stcgRatePct) / 100) * 100) / 100;
     }
   }

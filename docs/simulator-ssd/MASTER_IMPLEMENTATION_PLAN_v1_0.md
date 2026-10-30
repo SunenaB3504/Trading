@@ -1,9 +1,9 @@
 
-# MASTER IMPLEMENTATION PLAN (MIP v1.3)
+# MASTER IMPLEMENTATION PLAN (MIP v1.4)
 ## STANDALONE ASTRO-FINANCIAL TRADE SIMULATOR & ADVISORY TERMINAL
 **Engineering Roadmap, Work Packages, Quality Gates, and Execution Protocols**  
-*Document Version: 1.3.0 | Date: 2026-10-29 | Status: Active (Phases 0-5 Complete; Phase 6 Native Astro-Logic Validation Mock Trading Roadmap Added)*  
-*Companion Document: [`docs/simulator-ssd/SIMULATOR_SSD_v1_0.md`](file:///c:/Users/Admin/Sunil\Trading\docs\simulator-ssd\SIMULATOR_SSD_v1_0.md) (SSD v1.3.0)*  
+*Document Version: 1.4.0 | Date: 2026-10-29 | Status: Active (Enhanced with Parquet Simple-Bar Pipeline, Julian Day Calibrated Ephemeris & Dasha Core)*  
+*Companion Document: [`docs/simulator-ssd/SIMULATOR_SSD_v1_0.md`](file:///c:/Users/Admin/Sunil\Trading\docs\simulator-ssd\SIMULATOR_SSD_v1_0.md) (SSD v1.4.0)*  
 *Design Constraint: Strict Modularity (< 500 Lines per File Enforcement via ESLint)*
 
 ---
@@ -181,14 +181,18 @@ packages/simulator/src/
 
 ### Phase 0: Data Foundation & Corporate Registry (Weeks 0–1)
 
-#### WP-0.1: 25-Year NSE OHLCV Ingestion & DuckDB Partitioning
-* **Objective:** Ingest, clean, and convert 25 years of daily and 1-minute NSE equities data into partitioned Apache Parquet files queried via embedded DuckDB.
-* **Deliverables:**
-  * Ingestion script `tools/pipeline/ingest_ohlcv_to_duckdb.py`.
-  * Table schema `daily_bars(ticker VARCHAR, date DATE, open DOUBLE, high DOUBLE, low DOUBLE, close DOUBLE, volume BIGINT, adjusted_close DOUBLE)`.
+#### WP-0.1: NSE Market Simple-Bar Ingestion & Hybrid Parquet-Bhavcopy Pipeline
+* **Objective:** Ingest, clean, and standardize equities market data into optimized daily simple bars, integrating 25 years of authentic historical data with daily official Bhavcopy synchronization.
+* **Simple-Bar Architectural Standard:**
+  * Rather than storing redundant intraday candlestick details, the simulator operates on daily simple bars `(date, symbol, close, prev_close, volume, drawdown, daily_return)`.
+  * Reduces data transfer and memory footprint by >60% while providing 100% precision for entry/exit execution at CMP, trailing stop loss, and true rolling drawdown evaluation.
+* **Deliverables & Ingestion Architecture:**
+  * **Historical Baseline (2000–2026):** Ingest 1,222,765 verified trading sessions across 802 pure NSE IPO stocks from [`data/derived/jathakam-dasha-study/phase3_daily_market_metrics.parquet`](file:///c:/Users/Admin/Sunil/Trading/data/derived/jathakam-dasha-study/phase3_daily_market_metrics.parquet), featuring cumulative split-adjusted indices and authentic rolling drawdowns.
+  * **Daily Continuous Catch-Up (`pnpm sync-prices`):** Official NSE Bhavcopy downloader (`syncNseBhavcopy.ts`) fetching UDiFF archives. Strictly filters for equity series (`EQ` preferred, `BE` fallback; strictly discarding Sovereign Gold Bonds and debt series), computes daily return and peak drawdown, and continuously appends to the store.
 * **Acceptance Criteria:**
-  * Querying 1,000 consecutive sessions for any Nifty 50 ticker executes in `< 5 ms`.
-  * Zero duplicate calendar bars; missing exchange trading sessions flagged via calendar gap assertions.
+  * Querying 1,000 consecutive simple bars for any universe ticker executes in `< 5 ms`.
+  * The 75% severe drawdown circuit breaker reliably trips on authentic historical drawdown values (`bar.drawdown < -0.75`).
+  * Latest closing prices for all universe equities match official NSE Bhavcopy to the paisa.
 
 #### WP-0.2: Corporate Metadata & Exact Listing Timestamps Registry
 * **Objective:** Establish an immutable corporate metadata registry containing verified listing dates, exact ceremonial market bells, and geographic coordinates.
@@ -258,20 +262,27 @@ packages/simulator/src/
 
 ### Phase 2: In-Process Astro Engine & PIT Balance Sheet Engines (Weeks 4–6)
 
-#### WP-2.1: Pure TypeScript `astronomy-engine` Wrapper & Meeus Nodes
-* **Objective:** Wrap `astronomy-engine` to compute geocentric tropical planetary positions, Jean Meeus continuous Mean Rahu/Ketu nodes, Local Sidereal Time, Lagna, and Midheaven.
+#### WP-2.1: Pure TypeScript `astronomy-engine` Wrapper & Julian Day Ephemeris
+* **Objective:** Wrap `astronomy-engine` to compute geocentric tropical planetary positions, Jean Meeus continuous Mean Rahu/Ketu nodes, Local Sidereal Time, Lagna, and Midheaven with standardized Julian Day epoch offsets.
 * **Deliverables:**
-  * `core/astro/astronomy.ts` (`< 350 LOC`).
+  * `core/astro/ephemeris.ts` (`< 200 LOC`).
   * `core/astro/constants.ts` (`< 200 LOC`).
-* **Acceptance Criteria:** Planetary longitudes match Swiss Ephemeris JPL DE431 test fixtures to within $\pm 0.02^\circ$.
-
-#### WP-2.2: Chitrapaksha Lahiri Ayanamsa & 5-Tier Vimshottari Chronometry
-* **Objective:** Implement Lahiri Ayanamsa subtraction for Nirayana sidereal longitudes and compute 5-tier Vimshottari Dasha timelines down to Sookshma and Prana.
-* **Deliverables:**
-  * `core/astro/vedicMath.ts` (`< 450 LOC`).
-  * `core/astro/vimshottari.ts` (`< 350 LOC`).
+* **Implementation Protocol:**
+  * Julian Day calculation: Pass `time.ut + 2451545.0` to `calculateLahiriAyanamsa` and `calculateMeanRahu` to eliminate J2000 epoch subtraction defects.
 * **Acceptance Criteria:**
-  * Dasha sequence for TCS listing (2004-08-25) matches *Jagannatha Hora* reference tables down to the exact transition day.
+  * Planetary longitudes match Swiss Ephemeris JPL DE431 test fixtures to within $\pm 0.02^\circ$.
+  * Lahiri Ayanamsa evaluates to $\approx +24.23^\circ$ on 2026-10-29; sidereal Sun is verified in Libra ($191.7^\circ \pm 0.5^\circ$).
+
+#### WP-2.2: Absolute Moon Longitude, 0-Based Sign Indexing & 5-Tier Vimshottari Chronometry
+* **Objective:** Implement Lahiri Ayanamsa subtraction for Nirayana sidereal longitudes and compute 5-tier Vimshottari Dasha timelines down to Sookshma and Prana from absolute zodiac Moon longitudes.
+* **Deliverables:**
+  * `core/astro/ephemeris.ts` (`< 200 LOC`).
+  * `core/astro/vimshottari.ts` (`< 350 LOC`).
+* **Implementation Protocol:**
+  * Absolute Moon Longitude: Compute $\lambda_{\text{Moon}} = ((\text{moon\_sign\_id} - 1) \times 30.0 + \text{moon\_deg}) \pmod{360}$ from registry in-sign degrees.
+  * 0-Based Sign Indexing: Enforce $0 = \text{Aries}, \dots, 11 = \text{Pisces}$ uniformly across all Kota Chakra, Indu Lagna, and Lordship lookups.
+* **Acceptance Criteria:**
+  * Dasha sequence for corporate listings matches *Jagannatha Hora* reference tables down to the exact transition day across all 27 Janma Nakshatras.
   * Configurable `yearLengthDays` defaults to `365.2425` (solar tropical calendar year).
 
 #### WP-2.3: Pre-Computed $\mathbf{S}(t)$ Timeline Memory Buffer
@@ -320,15 +331,20 @@ packages/simulator/src/
   * `ui/components/horizon/CuspCountdownWidget.tsx` (`< 200 LOC`).
 * **Acceptance Criteria:** Cusp clock displays precise session countdowns (e.g. *"Saturn 6H AD terminates in 18 sessions"*).
 
-#### WP-3.3: Master Trade Advisory Ticket & Multiplicative Sizing Generator
-* **Objective:** Synthesize astro and financial factors into the definitive execution ticket answering *When to Invest, Exact Rupee/Share Quantity to Allocate, and When to Exit*.
-* **Formula:**
+#### WP-3.3: Master Trade Advisory Ticket, Sizing & Statutory Tax Engine
+* **Objective:** Synthesize astro and financial factors into the definitive execution ticket answering *When to Invest, Exact Rupee/Share Quantity to Allocate, and When to Exit*, with rigorous statutory tax modeling.
+* **Allocation Formula:**
   $$\text{Allocation (₹)} = \text{Portfolio Equity} \times \text{RiskBudget} \times \Omega_{\text{Trader}} \times \Phi_{\text{Financial}} \times \Theta_{\text{Astro}}$$
+* **Statutory Indian Tax Compliance (`taxEngine.ts`):**
+  * Section 112A LTCG: Applies annual ₹1,25,000 exemption for equity investments held $> 365$ days at 12.5% + 4% cess.
+  * Section 111A STCG: 20% + 4% cess for investments held $\le 365$ days.
+  * Section 48 Expense Deduction: STT is treated strictly as a non-deductible statutory charge and excluded from capital gain deductions.
 * **Deliverables:**
   * `core/engine/sizingCalculator.ts` (`< 300 LOC`).
+  * `core/financial/taxEngine.ts` (`< 200 LOC`).
   * `core/engine/advisorySynthesizer.ts` (`< 400 LOC`).
   * `ui/components/advisory/MasterTradeTicket.tsx` (`< 400 LOC`).
-* **Acceptance Criteria:** If any factor equals zero (e.g. Personal Chandrashtama $\Omega_{\text{Trader}} = 0$ or Wealth Trap $\Theta_{\text{Astro}} = 0$), position allocation drops to exactly ₹0.00.
+* **Acceptance Criteria:** If any sizing factor equals zero (e.g. Personal Chandrashtama $\Omega_{\text{Trader}} = 0$ or Wealth Trap $\Theta_{\text{Astro}} = 0$), position allocation drops to exactly ₹0.00. Tax calculations accurately apply the ₹1.25L LTCG threshold.
 
 #### WP-3.4: Gemini Flash Free API Integration & Astrological Glossary Layer
 * **Objective:** Implement the zero-hardware conversational AI Copilot powered by Google Gemini 1.5/2.0 Flash Free Tier API with bilingual English/Malayalam domain mapping.

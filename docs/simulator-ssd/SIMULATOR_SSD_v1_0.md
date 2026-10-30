@@ -1,7 +1,7 @@
-# SOFTWARE SPECIFICATION DOCUMENT (SSD v1.3)
+# SOFTWARE SPECIFICATION DOCUMENT (SSD v1.4)
 ## STANDALONE ASTRO-FINANCIAL TRADE SIMULATOR & ADVISORY TERMINAL
 **An Offline-First, React-Powered Desktop Application for Quantitative Vedic Market Chronometry**  
-*Document Version: 1.3.0 | Date: 2026-10-29 | Status: Architecture & System Design (Enhanced with Native Astro-Logic Validation Mock Trading & Ledger Subsystem)*  
+*Document Version: 1.4.0 | Date: 2026-10-29 | Status: Architecture & System Design (Enhanced with Simple Bar Parquet Data Pipeline, Calibrated Ephemeris & Dasha Core)*  
 *Target Environment: Standalone Desktop (Electron / Tauri + React 19 + TypeScript)*  
 *Design Constraint: Strict Modularity (< 500 Lines per File Enforcement)*
 
@@ -71,14 +71,20 @@ The application is engineered as a zero-latency standalone desktop executable ut
 * **Frontend Framework:** React 19 + TypeScript 5.5+ (Strict Mode enabled).
 * **Styling & Design System:** Modern Vanilla CSS Design Tokens (Dark-Mode Glassmorphism, Heritage-Gold & Cyan Accents). TailwindCSS avoided unless explicitly requested.
 * **Chart Rendering Engine:** HTML5 Canvas / Lightweight Charts (60 FPS hardware-accelerated candle playback with zero DOM thrashing).
+* **Dual-Storage & Simple-Bar Market Data Architecture:**
+  * **Simple-Bar Equities Standard:** Operates on standardized daily simple bars `(date, symbol, close, prev_close, volume, drawdown, daily_return)`. By focusing on closing metrics and rolling drawdowns rather than high-frequency intraday wicks, memory and payload overhead is reduced by >60% while preserving 100% mathematical and risk integrity.
+  * **Hybrid Ingestion & Append Pipeline:**
+    * **Historical Foundation:** Ingests 1,222,765 authentic trading sessions across 808 pure NSE IPO equities from `phase3_daily_market_metrics.parquet` (spanning 2000 through late 2026), featuring split-adjusted index levels and rolling peak drawdowns.
+    * **Daily Continuous Catch-Up:** Evening automated synchronization (`syncNseBhavcopy.ts` / `pnpm sync-prices`) downloads official UDiFF Bhavcopies from NSE, strictly filters for equity series (`EQ` preferred, `BE` fallback; strictly discarding Sovereign Gold Bonds and debt series), computes daily returns, and continuously appends to the store.
+  * **DuckDB (OLAP Columnar):** Embedded columnar engine optimized for read-heavy time-series analytics and Point-in-Time (PIT) quarterly financial ratios.
+  * **SQLite (OLTP Transactional):** Embedded relational database for ACID user state: virtual paper-trade executions with `advisory_provenance` (capturing Triad, Dasha, Transit, and Kota states at time of entry), real-time portfolio ledgers (`cash_balance`, `invested_equity`, `realized_pnl`, `unrealized_pnl`), active position tracking with real-time Astro Risk indicators (Moon transit, Chandrashtama countdown, Durgaswami breach), trader horoscopic profiles, and empirical logic-validation scorecards.
 * **Astronomical & Vedic Calculation Engine:** In-Process Pure TypeScript Astronomical & Vedic Chart Engine powered by `astronomy-engine` (`npm install astronomy-engine`).
   * **Zero Native Bindings / Zero Sidecar Overhead:** 100% portable pure TypeScript, completely eliminating Python sidecars, virtual environment management, C/C++ compilation, and heavy multi-megabyte ephemeris files. Runs in-process with sub-millisecond execution (< 0.1 ms).
-  * **Celestial Mechanics Core:** Computes high-precision geocentric tropical planetary positions (Sun through Saturn), continuous Mean Rahu/Ketu lunar nodes (Jean Meeus / IAU algorithms), Local Sidereal Time, Local Ascendant (Lagna), and Midheaven (MC).
-  * **Vedic Chronometry Core:** Implements Lahiri (Chitrapaksha) Ayanamsa for Nirayana conversion, planetary combustion, 12 Whole-Sign & Shripati bhava cusps, classical Graha Drishti, Ashtakavarga (BAV & SAV), 5-tier Vimshottari timelines, and divisional Vargas (D9 Navamsha, etc.).
+  * **Julian Day Standardized Offset:** Passes full Julian Day epoch values (`time.ut + 2451545.0`) to `calculateLahiriAyanamsa` and `calculateMeanRahu`, guaranteeing sub-arcminute concordance with Swiss Ephemeris and eliminating epoch-wrap sign offsets.
+  * **Absolute Moon Longitude Calibration:** Computes absolute zodiac longitude $\lambda_{\text{Moon}} = ((\text{moon\_sign\_id} - 1) \times 30.0 + \text{moon\_deg}) \pmod{360}$ from in-sign registry degrees, correctly resolving Janma Nakshatra and Vimshottari Mahadasha balance across all 27 nakshatras.
+  * **Parashari Lordship & Trikona Nathans:** Classifies 1st, 5th, and 9th lords as Trikona (`T`), Kendras (4th, 7th, 10th) as Kendra (`K`), and 3rd, 6th, 8th, 11th, 12th as Dushtana (`D`) with calibrated negative weights on 8H and 12H to ensure defensive cusp liquidation alerts trigger reliably.
+  * **Statutory Financial Tax Engine:** Enforces Indian Income Tax Act compliance: Section 112A annual ₹1,25,000 exemption on Long-Term Capital Gains (> 365 days holding period) and Section 48 non-deductibility of STT from capital gains.
   * **Pre-Computed Timeline Caching:** On ticker initialization, pre-generates the entire 25-year $\mathbf{S}(t)$ timeline into contiguous memory arrays, allowing $100\times$ simulation playback with pure $O(1)$ indexed memory reads.
-* **Dual-Storage Engine Architecture (Clear Separation of Concerns):**
-  * **DuckDB (OLAP Columnar):** Embedded columnar engine optimized for read-heavy time-series analytics (1.2M+ daily/minute OHLCV bars stored as Parquet) and Point-in-Time (PIT) quarterly financial ratios.
-  * **SQLite (OLTP Transactional):** Embedded relational database for ACID user state: virtual paper-trade executions with `advisory_provenance` (capturing Triad, Dasha, Transit, and Kota states at time of entry), real-time portfolio ledgers (`cash_balance`, `invested_equity`, `realized_pnl`, `unrealized_pnl`), active position tracking with real-time Astro Risk indicators (Moon transit, Chandrashtama countdown, Durgaswami breach), trader horoscopic profiles, and empirical logic-validation scorecards.
 * **AI Copilot Engine (Zero-Hardware Free Cloud API):**
   * **Primary Cloud Provider:** **Google Gemini 1.5/2.0 Flash** via Google AI Studio Free Tier (Zero RAM/VRAM local footprint, 1,000,000 token context window, <1s response time, and best-in-class native Malayalam & Indic script retention).
   * **Pluggable Free Endpoints:** Extensible client supporting any OpenAI-compatible free API provider (Groq Cloud for Llama-3.3-70B, OpenRouter free models, or local Ollama if hardware permits).

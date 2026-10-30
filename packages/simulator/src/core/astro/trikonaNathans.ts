@@ -45,7 +45,8 @@ const BASE_HOUSE_WEIGHTS: Readonly<Record<number, number>> = {
   1: 1.0, 5: 1.0, 9: 1.0,
   4: 0.5, 7: 0.5, 10: 0.5,
   3: -0.8, 6: -0.8, 11: -0.8,
-  2: 0.0, 8: 0.0, 12: 0.0,
+  8: -0.8, 12: -0.6,
+  2: 0.0,
 };
 
 function getHouseWeight(house: number, isLagnesha: boolean): number {

@@ -1,11 +1,23 @@
 import { describe, expect, it } from 'vitest';
-import { calculateTransitNakshatras, calculateLahiriAyanamsa } from './ephemeris';
+import { calculateTransitNakshatras, calculateTransitPositions, calculateLahiriAyanamsa } from './ephemeris';
 
 describe('ephemeris & transit nakshatra engine', () => {
   it('computes expected Lahiri ayanamsa for J2000 epoch (~23.85°)', () => {
     const jd2000 = 2451545.0;
     const ayanamsa = calculateLahiriAyanamsa(jd2000);
     expect(ayanamsa).toBeCloseTo(23.857, 2);
+  });
+
+  it('computes calibrated Lahiri ayanamsa and sidereal Sun for 2026-10-29', () => {
+    const positions = calculateTransitPositions('2026-10-29');
+    // Sun in late October is in Sidereal Libra (signIndex 6, 180° to 210°)
+    expect(positions.sun.signIndex).toBe(6);
+    expect(positions.sun.longitude).toBeGreaterThan(188.0);
+    expect(positions.sun.longitude).toBeLessThan(195.0);
+    // Rahu in late October 2026 sidereal is in Aquarius (signIndex 10, ~302°, retrograde)
+    expect(positions.rahu.signIndex).toBe(10);
+    expect(positions.rahu.longitude).toBeGreaterThan(300.0);
+    expect(positions.rahu.longitude).toBeLessThan(305.0);
   });
 
   it('computes 9 planetary transit nakshatras in valid range [0, 26]', () => {

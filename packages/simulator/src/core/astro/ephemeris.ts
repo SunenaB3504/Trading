@@ -59,7 +59,8 @@ export function calculateTransitPositions(dateStr: string): TransitPlanetaryPosi
   const safeDate = dateStr && dateStr.length >= 10 ? dateStr.slice(0, 10) : '2005-01-01';
   const dateObj = new Date(`${safeDate}T09:15:00Z`);
   const time = new Astronomy.AstroTime(dateObj);
-  const jd = time.ut;
+  // time.ut in astronomy-engine is days since J2000; add J2000 epoch to recover true Julian Day
+  const jd = time.ut + J2000;
   const ayanamsa = calculateLahiriAyanamsa(jd);
 
   const getDetailed = (body: Astronomy.Body): DetailedPlanetPosition => {
@@ -117,7 +118,8 @@ export function calculateTransitNakshatras(dateStr: string): TransitPlanetaryNak
   const safeDate = dateStr && dateStr.length >= 10 ? dateStr.slice(0, 10) : '2005-01-01';
   const dateObj = new Date(`${safeDate}T09:15:00Z`);
   const time = new Astronomy.AstroTime(dateObj);
-  const jd = time.ut;
+  // time.ut in astronomy-engine is days since J2000; add J2000 epoch to recover true Julian Day
+  const jd = time.ut + J2000;
   const ayanamsa = calculateLahiriAyanamsa(jd);
 
   const getBodyNakshatra = (body: Astronomy.Body): PlanetTransitInfo => {

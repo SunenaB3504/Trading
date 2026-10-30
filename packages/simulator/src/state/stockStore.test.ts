@@ -97,11 +97,13 @@ describe('useStockStore & Forward Date Anchoring', () => {
     useStockStore.getState().loadStock('RAILTEL', '2026-10-28');
     const railtelBars = useStockStore.getState().bars;
 
-    const idx60 = fineorgBars.length - 60;
+    const fIdx = fineorgBars.length - 60;
+    const aIdx = ariesBars.length - 60;
+    const rIdx = railtelBars.length - 60;
 
-    const fineorgRatio60 = fineorgBars[idx60]!.close / fineorgBars[fineorgBars.length - 1]!.close;
-    const ariesRatio60 = ariesBars[idx60]!.close / ariesBars[ariesBars.length - 1]!.close;
-    const railtelRatio60 = railtelBars[idx60]!.close / railtelBars[railtelBars.length - 1]!.close;
+    const fineorgRatio60 = fineorgBars[fIdx]!.close / fineorgBars[fineorgBars.length - 1]!.close;
+    const ariesRatio60 = ariesBars[aIdx]!.close / ariesBars[ariesBars.length - 1]!.close;
+    const railtelRatio60 = railtelBars[rIdx]!.close / railtelBars[railtelBars.length - 1]!.close;
 
     expect(fineorgRatio60).not.toBeCloseTo(ariesRatio60, 2);
     expect(fineorgRatio60).not.toBeCloseTo(railtelRatio60, 2);

@@ -115,11 +115,14 @@ export async function syncNsePrices(targetDate = '2026-10-28'): Promise<void> {
     const clsStr = parts[clsIdx]?.trim();
 
     if (!sym || !clsStr) continue;
-    // Keep Equity, BE, SM, ST series
-    if (srs === 'EQ' || srs === 'BE' || srs === 'SM' || srs === 'ST' || !nseCloses[sym]) {
+    // Strictly accept valid equity series (EQ preferred, followed by BE, SM, ST; reject debt/SGBs)
+    const VALID_EQUITY_SERIES = ['EQ', 'BE', 'SM', 'ST'];
+    if (srs && VALID_EQUITY_SERIES.includes(srs)) {
       const cls = parseFloat(clsStr);
       if (!isNaN(cls) && cls > 0) {
-        nseCloses[sym] = cls;
+        if (!nseCloses[sym] || srs === 'EQ') {
+          nseCloses[sym] = cls;
+        }
       }
     }
   }
@@ -165,3 +168,4 @@ export async function syncNsePrices(targetDate = '2026-10-28'): Promise<void> {
 // Execute when run directly
 const target = process.argv[2] ?? '2026-10-28';
 void syncNsePrices(target);
+

@@ -116,7 +116,10 @@ export interface UniverseScanSummary {
 function resolveDashaHierarchy(record: CorporateRegistryRecord, activeDate: string) {
   const birthStr = `${record.listing_date}T${record.listing_time || '10:00:00'}+05:30`;
   const birthMs = new Date(birthStr).getTime();
-  const mahadashas = generateMahadashas(birthMs, record.moon_deg, record.year_length_days);
+  const moonSign1Based = record.moon_sign_id ?? 1;
+  // record.moon_deg is within-sign (0-30 deg); compute absolute zodiac longitude (0-360 deg)
+  const absMoonLong = (((moonSign1Based - 1) * 30.0) + record.moon_deg) % 360.0;
+  const mahadashas = generateMahadashas(birthMs, absMoonLong, record.year_length_days);
   const sessionMs = new Date(`${activeDate}T12:00:00+05:30`).getTime();
   return resolveActive5FoldDasha(mahadashas, sessionMs);
 }
@@ -146,8 +149,11 @@ function evaluateConfluenceVectors(
   preJanmaNak?: number,
   preMoonSignId?: number
 ) {
-  const janmaNak = preJanmaNak ?? calculateNakshatraAndBalance(record.moon_deg).nakshatraIndex;
-  const moonSignId = preMoonSignId ?? (record.moon_sign_id ?? 0);
+  const moonSign1Based = record.moon_sign_id ?? 1;
+  const absMoonLong = (((moonSign1Based - 1) * 30.0) + record.moon_deg) % 360.0;
+  const janmaNak = preJanmaNak ?? calculateNakshatraAndBalance(absMoonLong).nakshatraIndex;
+  // Convert 1-based registry moon sign (1=Aries..12=Pisces) to 0-based index (0=Aries..11=Pisces)
+  const moonSignId = preMoonSignId ?? (moonSign1Based - 1);
 
   // 1. Kota Chakra
   const kota = evaluateKotaChakra(janmaNak, moonSignId, transitPositions);
@@ -211,7 +217,8 @@ export function scanSingleStock(
   strategyParams?: StrategyParameters
 ): UniverseStockScanItem {
   const pre = precomputedAstro[record.symbol];
-  const lagnaId = pre ? pre.lagnaSignId : (record.lagna_sign_id ?? 0);
+  // Normalize 1-based registry lagna (1=Aries..12=Pisces) to 0-based index (0..11)
+  const lagnaId = pre ? pre.lagnaSignId : ((record.lagna_sign_id ?? 1) - 1);
   const lagnaLord = pre ? pre.lagnaLord : (SIGN_LORDS[lagnaId] ?? 'mars');
   const lagnaName = pre ? pre.lagnaNameEn : (SIGN_NAMES[lagnaId] ?? 'Aries');
 
