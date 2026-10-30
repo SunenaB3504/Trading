@@ -198,3 +198,4 @@ export function buildNatalPreview(
     splitAdjustmentsApplied: 0,
   };
 }
+

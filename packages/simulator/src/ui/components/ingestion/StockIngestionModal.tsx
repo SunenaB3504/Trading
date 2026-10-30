@@ -354,3 +354,4 @@ export const StockIngestionModal: React.FC<StockIngestionModalProps> = ({
     </div>
   );
 };
+
