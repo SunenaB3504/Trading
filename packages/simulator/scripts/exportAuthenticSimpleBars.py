@@ -64,21 +64,45 @@ def main():
             continue
 
         bar_list = []
+        growth_idx = 1.0
+        rolling_peak = 1.0
+
         for r in rows:
+            sym_name = r[0]
+            date_str = r[1]
+            close_val = r[2]
+            prev_close_val = r[3]
+            vol = r[4]
+            raw_ret = r[5]
+            is_crisis = bool(r[9])
+
+            # Detect unadjusted split/bonus corporate actions:
+            # Single-day drop >= 35% with ratio >= 1.4 is an ex-bonus/split session on NSE
+            daily_ret = raw_ret
+            if prev_close_val > 0 and close_val > 0 and raw_ret < -0.35 and (prev_close_val / close_val) >= 1.4:
+                factor = round(prev_close_val / close_val)
+                if factor >= 2:
+                    daily_ret = round((close_val * factor - prev_close_val) / prev_close_val, 4)
+
+            growth_idx = round(growth_idx * (1.0 + daily_ret), 4)
+            if growth_idx > rolling_peak:
+                rolling_peak = growth_idx
+            drawdown = round((growth_idx - rolling_peak) / rolling_peak, 4)
+
             bar = {
-                "symbol": r[0],
-                "date": r[1],
-                "close": r[2],
-                "prev_close": r[3],
-                "open": r[3],
-                "high": max(r[2], r[3]),
-                "low": max(0.01, min(r[2], r[3])),
-                "volume": r[4],
-                "daily_return": r[5],
-                "adj_close_index": r[6],
-                "rolling_peak": r[7],
-                "drawdown": r[8],
-                "is_macro_crisis": bool(r[9]),
+                "symbol": sym_name,
+                "date": date_str,
+                "close": close_val,
+                "prev_close": prev_close_val,
+                "open": prev_close_val,
+                "high": max(close_val, prev_close_val),
+                "low": max(0.01, min(close_val, prev_close_val)),
+                "volume": vol,
+                "daily_return": daily_ret,
+                "adj_close_index": growth_idx,
+                "rolling_peak": rolling_peak,
+                "drawdown": drawdown,
+                "is_macro_crisis": is_crisis,
             }
             bar_list.append(bar)
 
@@ -88,9 +112,9 @@ def main():
             last_bar = bar_list[-1]
             if last_bar["date"] < "2026-10-28":
                 ret = round((cmp / last_bar["close"]) - 1.0, 4)
-                adj = round(last_bar["adj_close_index"] * (1.0 + ret), 4)
-                peak = max(last_bar["rolling_peak"], adj)
-                dd = round((adj - peak) / peak, 4)
+                growth_idx = round(last_bar["adj_close_index"] * (1.0 + ret), 4)
+                peak = max(last_bar["rolling_peak"], growth_idx)
+                dd = round((growth_idx - peak) / peak, 4)
                 final_bar = {
                     "symbol": sym,
                     "date": "2026-10-28",
@@ -101,7 +125,7 @@ def main():
                     "low": max(0.01, min(cmp, last_bar["close"])),
                     "volume": last_bar["volume"],
                     "daily_return": ret,
-                    "adj_close_index": adj,
+                    "adj_close_index": growth_idx,
                     "rolling_peak": peak,
                     "drawdown": dd,
                     "is_macro_crisis": False,

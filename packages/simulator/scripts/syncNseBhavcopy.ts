@@ -115,8 +115,8 @@ export async function syncNsePrices(targetDate = '2026-10-28'): Promise<void> {
     const clsStr = parts[clsIdx]?.trim();
 
     if (!sym || !clsStr) continue;
-    // Strictly accept valid equity series (EQ preferred, followed by BE, SM, ST; reject debt/SGBs)
-    const VALID_EQUITY_SERIES = ['EQ', 'BE', 'SM', 'ST'];
+    // Strictly accept valid equity series (EQ preferred, followed by BE, SM, ST, BZ; reject debt/SGBs)
+    const VALID_EQUITY_SERIES = ['EQ', 'BE', 'SM', 'ST', 'BZ'];
     if (srs && VALID_EQUITY_SERIES.includes(srs)) {
       const cls = parseFloat(clsStr);
       if (!isNaN(cls) && cls > 0) {
@@ -132,7 +132,16 @@ export async function syncNsePrices(targetDate = '2026-10-28'): Promise<void> {
   // Load existing database
   const currentPrices = JSON.parse(fs.readFileSync(PRICES_PATH, 'utf8')) as Record<string, number>;
   let updatedCount = 0;
+  let purgedCount = 0;
   const majorFixes: Array<{ symbol: string; oldPrice: number; newPrice: number }> = [];
+
+  // Purge legacy non-equity instruments and stale delisted keys not in authentic Bhavcopy
+  for (const sym of Object.keys(currentPrices)) {
+    if (!nseCloses[sym]) {
+      delete currentPrices[sym];
+      purgedCount++;
+    }
+  }
 
   for (const [sym, newPrice] of Object.entries(nseCloses)) {
     if (sym in currentPrices) {
@@ -154,7 +163,7 @@ export async function syncNsePrices(targetDate = '2026-10-28'): Promise<void> {
   // Write updated prices
   fs.writeFileSync(PRICES_PATH, JSON.stringify(currentPrices, null, 2) + '\n', 'utf8');
 
-  console.log(`[BhavcopySync] Updated ${updatedCount} stock prices in nifty500Prices.json!`);
+  console.log(`[BhavcopySync] Updated ${updatedCount} stock prices, purged ${purgedCount} non-equity/stale keys in nifty500Prices.json!`);
   console.log(`[BhavcopySync] Sample of prominent audit corrections:`);
   for (const fix of majorFixes.slice(0, 15)) {
     console.log(`  - ${fix.symbol.padEnd(12)}: ₹${fix.oldPrice.toFixed(2)} → ₹${fix.newPrice.toFixed(2)}`);

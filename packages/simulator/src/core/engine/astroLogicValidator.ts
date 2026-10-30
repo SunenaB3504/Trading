@@ -7,7 +7,7 @@
 
 import type { PaperTradeOrder } from '../data/types';
 import { parseAstroProvenance, type ParsedAstroProvenance } from './astroProvenanceSerializer';
-import { calculateTradeTaxAndNetPnl } from '../financial/taxEngine';
+import { calculateTradeTaxAndNetPnl, FiscalYearTaxTracker } from '../financial/taxEngine';
 
 export interface ClosedAstroTrade {
   symbol: string;
@@ -71,6 +71,7 @@ function resolveSetupCategory(p: ParsedAstroProvenance): string {
 export function reconstructClosedTrades(orders: PaperTradeOrder[]): ClosedAstroTrade[] {
   const buyQueue: Record<string, PaperTradeOrder[]> = {};
   const closed: ClosedAstroTrade[] = [];
+  const taxTracker = new FiscalYearTaxTracker();
 
   for (const ord of orders) {
     const sym = ord.symbol;
@@ -86,7 +87,8 @@ export function reconstructClosedTrades(orders: PaperTradeOrder[]): ClosedAstroT
         ord.price,
         shares,
         buyOrd.timestamp,
-        ord.timestamp
+        ord.timestamp,
+        taxTracker
       );
 
       closed.push({

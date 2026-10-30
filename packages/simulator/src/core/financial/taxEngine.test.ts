@@ -8,6 +8,8 @@ import {
   calculateOrderCharges,
   calculateTradeTaxAndNetPnl,
   STATUTORY_RATES,
+  getFiscalYearKey,
+  FiscalYearTaxTracker,
 } from './taxEngine';
 
 describe('Statutory Transaction Charges & Tax Engine', () => {
@@ -69,6 +71,47 @@ describe('Statutory Transaction Charges & Tax Engine', () => {
     expect(res.taxableGain).toBeGreaterThan(120000);
     expect(res.taxableGain).toBeLessThan(125000);
     expect(res.capitalGainsTax).toBe(Math.round((res.taxableGain * 0.13) * 100) / 100);
+  });
+
+  it('correctly maps dates to Indian Financial Years (April 1 to March 31)', () => {
+    expect(getFiscalYearKey('2026-03-31')).toBe('FY2025-26');
+    expect(getFiscalYearKey('2026-04-01')).toBe('FY2026-27');
+    expect(getFiscalYearKey('2026-10-28')).toBe('FY2026-27');
+    expect(getFiscalYearKey('2027-01-15')).toBe('FY2026-27');
+  });
+
+  it('aggregates LTCG exemption across multiple trades in the same FY', () => {
+    const tracker = new FiscalYearTaxTracker();
+    // Trade 1: Gain ~50,000 (Available: 125,000 -> Remaining: 75,000)
+    const t1 = calculateTradeTaxAndNetPnl(100.0, 150.0, 1000, '2025-01-01', '2026-06-15', tracker);
+    expect(t1.isLongTerm).toBe(true);
+    expect(t1.taxableGain).toBe(0);
+    expect(t1.capitalGainsTax).toBe(0);
+
+    // Trade 2: Gain ~50,000 (Available: 75,000 -> Remaining: 25,000)
+    const t2 = calculateTradeTaxAndNetPnl(100.0, 150.0, 1000, '2025-01-01', '2026-08-15', tracker);
+    expect(t2.isLongTerm).toBe(true);
+    expect(t2.taxableGain).toBe(0);
+    expect(t2.capitalGainsTax).toBe(0);
+
+    // Trade 3: Gain ~50,000 (Available: 25,000 -> Taxable: ~25,000)
+    const t3 = calculateTradeTaxAndNetPnl(100.0, 150.0, 1000, '2025-01-01', '2026-10-15', tracker);
+    expect(t3.isLongTerm).toBe(true);
+    expect(t3.taxableGain).toBeGreaterThan(24000);
+    expect(t3.taxableGain).toBeLessThan(26000);
+    expect(t3.capitalGainsTax).toBeGreaterThan(3000);
+
+    // Trade 4: Gain ~50,000 (Available: 0 -> Taxable: full ~50,000)
+    const t4 = calculateTradeTaxAndNetPnl(100.0, 150.0, 1000, '2025-01-01', '2026-12-15', tracker);
+    expect(t4.isLongTerm).toBe(true);
+    expect(t4.taxableGain).toBeGreaterThan(49000);
+    expect(t4.capitalGainsTax).toBeGreaterThan(6000);
+
+    // Trade 5: New FY (2027-04-10) -> Exemption resets to ₹1,25,000
+    const t5 = calculateTradeTaxAndNetPnl(100.0, 150.0, 1000, '2026-01-01', '2027-04-10', tracker);
+    expect(t5.isLongTerm).toBe(true);
+    expect(t5.taxableGain).toBe(0);
+    expect(t5.capitalGainsTax).toBe(0);
   });
 });
 

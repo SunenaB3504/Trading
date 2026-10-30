@@ -42,6 +42,45 @@ export const STATUTORY_RATES = {
 };
 
 /**
+ * Derives the Indian Financial Year key (e.g. "FY2026-27") for a given ISO date.
+ * Indian financial years run from April 1 to March 31.
+ */
+export function getFiscalYearKey(dateStr: string): string {
+  const d = new Date(dateStr);
+  const year = d.getFullYear();
+  const month = d.getMonth() + 1; // 1-12
+  const fyStart = month >= 4 ? year : year - 1;
+  return `FY${fyStart}-${String((fyStart + 1) % 100).padStart(2, '0')}`;
+}
+
+/**
+ * Tracks cumulative LTCG gains across a portfolio and applies the annual
+ * ₹1,25,000 exemption strictly once per financial year per Section 112A.
+ */
+export class FiscalYearTaxTracker {
+  private usedExemptions = new Map<string, number>();
+
+  getAvailableExemption(dateStr: string): number {
+    const fy = getFiscalYearKey(dateStr);
+    const used = this.usedExemptions.get(fy) ?? 0;
+    return Math.max(0, STATUTORY_RATES.ltcgExemptionRupees - used);
+  }
+
+  recordLtcgGain(dateStr: string, netGain: number): { exemptGain: number; taxableGain: number } {
+    const fy = getFiscalYearKey(dateStr);
+    const available = this.getAvailableExemption(dateStr);
+    const exemptGain = Math.min(netGain, available);
+    const taxableGain = Math.max(0, Math.round((netGain - exemptGain) * 100) / 100);
+    this.usedExemptions.set(fy, (this.usedExemptions.get(fy) ?? 0) + exemptGain);
+    return { exemptGain, taxableGain };
+  }
+
+  reset(): void {
+    this.usedExemptions.clear();
+  }
+}
+
+/**
  * Calculates statutory transaction costs and taxes for a single buy or sell order.
  */
 export function calculateOrderCharges(
@@ -104,7 +143,8 @@ export function calculateTradeTaxAndNetPnl(
   sellPrice: number,
   shares: number,
   buyDate: string,
-  sellDate: string
+  sellDate: string,
+  taxTracker?: FiscalYearTaxTracker | number
 ): TradeTaxResult {
   const buyCost = shares * buyPrice;
   const sellProceeds = shares * sellPrice;
@@ -131,7 +171,13 @@ export function calculateTradeTaxAndNetPnl(
   if (netGain > 0) {
     if (isLongTerm) {
       // LTCG Section 112A: 12.5% + 4% cess after annual ₹1,25,000 exemption
-      taxableGain = Math.max(0, Math.round((netGain - STATUTORY_RATES.ltcgExemptionRupees) * 100) / 100);
+      if (taxTracker && typeof taxTracker === 'object' && 'recordLtcgGain' in taxTracker) {
+        const recorded = taxTracker.recordLtcgGain(sellDate, netGain);
+        taxableGain = recorded.taxableGain;
+      } else {
+        const exemptionLimit = typeof taxTracker === 'number' ? taxTracker : STATUTORY_RATES.ltcgExemptionRupees;
+        taxableGain = Math.max(0, Math.round((netGain - exemptionLimit) * 100) / 100);
+      }
       capitalGainsTax = Math.round(((taxableGain * STATUTORY_RATES.ltcgRatePct) / 100) * 100) / 100;
     } else {
       // STCG Section 111A: 20% + 4% cess on full gain
