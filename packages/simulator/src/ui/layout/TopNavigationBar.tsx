@@ -147,6 +147,7 @@ export interface TopNavigationBarProps {
   onOpenStrategy?: () => void;
   onOpenPositions?: () => void;
   onOpenScorecard?: () => void;
+  onOpenIngestion?: () => void;
   onSyncToday?: () => void;
   availableTickers?: string[] | undefined;
 }
@@ -157,6 +158,7 @@ export const TopNavigationBar: React.FC<TopNavigationBarProps> = ({
   onOpenStrategy,
   onOpenPositions,
   onOpenScorecard,
+  onOpenIngestion,
   onSyncToday,
   availableTickers,
 }) => {
@@ -263,6 +265,23 @@ export const TopNavigationBar: React.FC<TopNavigationBarProps> = ({
             }}
           >
             📊 Scorecard
+          </button>
+        )}
+        {onOpenIngestion && (
+          <button
+            onClick={onOpenIngestion}
+            style={{
+              padding: '5px 10px',
+              borderRadius: '5px',
+              backgroundColor: '#1E2638',
+              color: '#34D399',
+              border: '1px solid #059669',
+              cursor: 'pointer',
+              fontSize: '11px',
+              fontWeight: 700,
+            }}
+          >
+            📥 Import Stock
           </button>
         )}
       </div>

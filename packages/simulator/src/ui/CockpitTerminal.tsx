@@ -26,6 +26,7 @@ import { HoroscopeDossierModal } from './components/astro/HoroscopeDossierModal'
 import { StrategyParameterDrawer, type StrategyParameters } from './components/settings/StrategyParameterDrawer';
 import { AstroPositionsDrawer } from './components/portfolio/AstroPositionsDrawer';
 import { AstroScorecardModal } from './components/portfolio/AstroScorecardModal';
+import { StockIngestionModal } from './components/ingestion/StockIngestionModal';
 import { serializeAstroProvenance } from '../core/engine/astroProvenanceSerializer';
 import { evaluateKotaChakra } from '../core/astro/kotaChakra';
 import { calculateTransitNakshatras, calculateTransitSigns } from '../core/astro/ephemeris';
@@ -279,6 +280,7 @@ export const CockpitTerminal: React.FC = () => {
   const [isStrategyOpen, setIsStrategyOpen] = React.useState(false);
   const [isPositionsOpen, setIsPositionsOpen] = React.useState(false);
   const [isScorecardOpen, setIsScorecardOpen] = React.useState(false);
+  const [isIngestionOpen, setIsIngestionOpen] = React.useState(false);
 
   const availableTickers = useMemo(() => Object.keys(corporateRegistry), []);
 
@@ -304,6 +306,7 @@ export const CockpitTerminal: React.FC = () => {
         onOpenStrategy={() => setIsStrategyOpen(true)}
         onOpenPositions={() => setIsPositionsOpen(true)}
         onOpenScorecard={() => setIsScorecardOpen(true)}
+        onOpenIngestion={() => setIsIngestionOpen(true)}
         onSyncToday={() => loadStock(metadata?.symbol ?? 'TCS', '2026-10-28')}
         availableTickers={availableTickers}
       />
@@ -363,6 +366,11 @@ export const CockpitTerminal: React.FC = () => {
       <AstroScorecardModal
         isOpen={isScorecardOpen}
         onClose={() => setIsScorecardOpen(false)}
+      />
+
+      <StockIngestionModal
+        isOpen={isIngestionOpen}
+        onClose={() => setIsIngestionOpen(false)}
       />
     </div>
   );

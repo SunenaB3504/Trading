@@ -190,6 +190,7 @@ export interface StockState {
   setBars: (bars: DailyBar[]) => void;
   syncActiveBar: (index: number) => void;
   loadStock: (symbol: string, targetDate?: string) => Promise<DailyBar[]> | DailyBar[];
+  registerCustomStock: (symbol: string, bars: DailyBar[], customMeta?: Partial<CorporateRegistryRecord>) => void;
   reset: () => void;
 }
 
@@ -260,6 +261,23 @@ export const useStockStore = create<StockState>((set, get) => ({
     loadedBarsCache[norm] = syntheticBars;
     applyStockState(norm, syntheticBars, targetDate, set);
     return syntheticBars;
+  },
+
+  registerCustomStock: (
+    symbol: string,
+    bars: DailyBar[],
+    customMeta?: Partial<CorporateRegistryRecord>
+  ) => {
+    const norm = symbol.trim().toUpperCase();
+    loadedBarsCache[norm] = bars;
+    if (customMeta) {
+      corporateRegistry[norm] = {
+        ...resolveCorporateMeta(norm),
+        ...customMeta,
+        symbol: norm,
+      };
+    }
+    applyStockState(norm, bars, bars[bars.length - 1]?.date, set);
   },
 
   reset: () =>
