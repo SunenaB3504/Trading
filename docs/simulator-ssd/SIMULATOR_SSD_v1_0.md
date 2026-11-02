@@ -354,10 +354,13 @@ $$\mathbf{Trade Ticket} = \Big\{ \text{When to Invest}, \quad \text{Quantity / R
   * Active MD, AD, and PD lords are evaluated in real time against the stock's Lagna chart using Parashari Dual Lordship resolution (`classifyLordRole`), producing the active Triad Code (e.g. `[D-T-D]`, `[T-T-T]`, `[D-T-T]`, `[T-D-T]`).
   * The ticket header renders a distinct monospace cyan badge displaying the active triad pattern (e.g. `[D-T-D]`), and the provenance multiplier row features a `Triad: [D-T-D]` tag.
   * The signal descriptor dynamically annotates the running lords (e.g. `Signal: NONE — [D-T-D] (ketu-venus-jupiter): Normal progression; no cusp edge boundary detected`) to ensure 100% transparency into the causal astrological engine state.
-* **Risk Veto State Machine & Zero-Allocation Guard:**
-  * When hard balance-sheet circuit breakers trip ($\Phi_{\text{Financial}} = 0.00$) or Chandrashtama is active ($\Omega_{\text{Trader}} = 0.00$), final calculated allocation evaluates to $\mathbf{₹0.00}$ ($0 \text{ shares}$).
-  * **Deterministic State Resolution:** In such conditions, the ticket automatically suppresses active `BUY` or `SELL` trade action buttons.
-  * The ticket header renders an explicit non-actionable status: **`BLOCKED: FINANCIAL RISK VETO`** (or **`BLOCKED: CHANDRASHTAMA VETO`**), clearly displaying the underlying reason (e.g. *Debt/Equity > 2.0* or *ICR < 1.5*) to avoid misleading traders into executing unfeasible orders.
+* **Trader Agency & Multi-Tier Execution Architecture (Universal Buy with Risk Disclosure):**
+  * Rather than acting as a rigid censor that hard-blocks orders, the advisory engine operates as an institutional-grade risk radar while preserving full trader discretion.
+  * **Tier 1 (Algorithmic Execution - Green):** Active when an edge signal (BUY) is cleared by ex-ante quality gates and risk multipliers ($\Phi > 0, \Omega > 0$). Renders [⚡ Buy (Algorithmic)] with automated mathematical position sizing.
+  * **Tier 2 (Anticipatory Ingress Accumulation - Sky Blue):** Active when a stock is in an auspicious cusp window ($\le 14$ sessions to planetary ingress). Allows traders to front-run or accumulate positions early prior to the astrological inflection point. Renders [⚡ Buy (Anticipatory Ingress)] with countdown telemetry.
+  * **Tier 3 (Discretionary Risk Override - Amber):** Active when an equity is in HOLD, BLOCKED, or subject to a Risk Veto (Quality Gate silence, D/E > 2.0, ICR < 1.5, or Chandrashtama). Rather than disabling the interface, the card renders [⚠️ Override & Buy]. Clicking it displays an explicit **Risk Warning & Disclosure Banner** identifying the exact tripping conditions. Traders can proceed by clicking [Confirm Discretionary Buy].
+  * **Universal Share Quantity Control:** Share sizing inputs remain interactive across all states (defaulting to 1 share when algorithmic allocation is ₹0.00), allowing precise custom lot allocation.
+  * **Provenance & Execution Mode Tagging:** Every trade records its provenance mode (ALGORITHMIC, ANTICIPATORY_INGRESS, or DISCRETIONARY_OVERRIDE) directly into the SQLite ledger (orders table), preserving a segregated audit trail to measure algorithmic alpha against discretionary override decisions.
 * **Exit Rules Stored in Ticket:**
   1. Calendar Cusp Exit Date (e.g., "Sell on 20-Jul-2023 at market open").
   2. Profit Target (e.g., $+16.6\%$ initial rebound harvest).

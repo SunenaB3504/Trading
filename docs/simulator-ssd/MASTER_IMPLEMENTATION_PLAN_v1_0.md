@@ -547,16 +547,22 @@ packages/simulator/src/
 
 ### Phase 6: Native Astro-Logic Validation Mock Trading & Verification Subsystem
 
-#### WP-6.1: Master Trade Ticket One-Click Execution & Astro Provenance Serializer
-* **Objective:** Allow direct execution of paper trade orders from `MasterTradeTicketCard.tsx` (`[Test Logic: Paper Buy]`) into the simulator's isolated SQLite ledger, recording detailed astrological reason strings.
+#### WP-6.1: Master Trade Ticket Trader Agency Execution & Multi-Tier Provenance Engine
+* **Objective:** Enable universal paper order execution across all market conditions (Algorithmic Clear, Anticipatory Ingress, and Discretionary Risk Overrides) with inline risk disclosures, dynamic share inputs, and segregated execution-tier provenance tracking in SQLite.
 * **Key Tasks:**
-  1. Wire `onExecuteOrder` in `MasterTradeTicketCard.tsx` to `portfolioStore.executeOrder()`.
-  2. Implement `astroProvenanceSerializer.ts` capturing active Triad (`[T-T-T]`), Dasha lords (MD-AD-PD), transit nakshatras, Indu Lagna activation, and planned exit windows (e.g. "Exit before Chandrashtama on YYYY-MM-DD").
-  3. Enforce zero look-ahead fills at current simulated session tick prices with cash allocation checks.
+  1. Implement Multi-Tier Order Execution UI in MasterTradeTicketCard.tsx:
+     - Tier 1: [⚡ Buy (Algorithmic)] (Green) for model-cleared BUY signals.
+     - Tier 2: [⚡ Buy (Anticipatory Ingress)] (Sky Blue) for equities within $\le 14$ sessions of an auspicious planetary ingress.
+     - Tier 3: [⚠️ Override & Buy] (Amber) with risk disclosure and explicit confirmation banner for HOLD, BLOCKED, or vetoed equities.
+  2. Unlock interactive share count input across all states, defaulting to 1 lot when algorithmic sizing evaluates to 0.
+  3. Wire execution handler in CockpitTerminal.tsx to serialize execution mode (ALGORITHMIC, ANTICIPATORY_INGRESS, DISCRETIONARY_OVERRIDE) into stroProvenanceSerializer.ts.
+  4. Persist order execution tier into SQLite ledger to facilitate empirical comparison of algorithmic vs discretionary performance.
 * **Deliverables:**
-  * `core/engine/astroProvenanceSerializer.ts` & `astroProvenanceSerializer.test.ts` (`< 150 LOC`).
-  * Integration into `ui/components/advisory/MasterTradeTicketCard.tsx` (`< 250 LOC`).
-* **Acceptance Criteria:** Clicking "Test Logic: Paper Buy" atomically executes order in SQLite, decreases cash, records full provenance string, and updates portfolio store in $<5\text{ ms}$.
+  * Updated core/engine/advisorySynthesizer.ts (ExecutionMode type & ticket metadata).
+  * Updated core/engine/astroProvenanceSerializer.ts & test suite.
+  * Updated ui/components/advisory/MasterTradeTicketCard.tsx (< 450 LOC).
+  * Updated ui/CockpitTerminal.tsx (< 400 LOC).
+* **Acceptance Criteria:** Any selected equity (including Ingress and Vetoed shares) can be bought with custom share counts; risky equities require explicit warning confirmation; provenance correctly records execution mode; passes all unit tests.
 
 #### WP-6.2: Collapsible Active Positions & Real-Time Planetary Risk Drawer
 * **Objective:** Render a docked, collapsible positions tray inside Cockpit Terminal that tracks active holdings against live planetary transits.

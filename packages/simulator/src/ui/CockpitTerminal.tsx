@@ -96,6 +96,8 @@ function RightTelemetryPanel({
   telemetry,
   activeDate,
   onSelectStock,
+  isUpcomingIngress,
+  daysToIngress,
 }: {
   ticket: MasterTradeTicket | null;
   onOrder: (t: MasterTradeTicket) => void;
@@ -104,6 +106,8 @@ function RightTelemetryPanel({
   telemetry: string;
   activeDate: string;
   onSelectStock: (sym: string) => void;
+  isUpcomingIngress?: boolean | undefined;
+  daysToIngress?: number | undefined;
 }): React.ReactElement {
   return (
     <section style={{ display: 'flex', flexDirection: 'column', gap: '12px', padding: '14px', overflowY: 'auto' }}>
@@ -113,7 +117,12 @@ function RightTelemetryPanel({
         registry={corporateRegistry}
         fundamentalsMap={pitFundamentals}
       />
-      <MasterTradeTicketCard ticket={ticket} onExecuteOrder={onOrder} />
+      <MasterTradeTicketCard
+        ticket={ticket}
+        onExecuteOrder={onOrder}
+        isUpcomingIngress={isUpcomingIngress}
+        daysToIngress={daysToIngress}
+      />
       <FinancialAuditCard auditResult={auditResult} />
       <KotaRadarCard kotaState={kotaState} />
       <CopilotChatCard cockpitTelemetry={telemetry} />
@@ -296,7 +305,7 @@ export const CockpitTerminal: React.FC = () => {
   };
 
   const handleOrder = (ticket: MasterTradeTicket) => {
-    if (ticket.action !== 'BUY' || ticket.shares <= 0) return;
+    if (ticket.shares <= 0) return;
     const provenanceStr = serializeAstroProvenance(ticket, dashaState);
     void executeOrder(ticket.symbol, 'BUY', ticket.shares, ticket.price, provenanceStr, activeDate);
   };
@@ -338,6 +347,8 @@ export const CockpitTerminal: React.FC = () => {
           telemetry={telemetry}
           activeDate={activeDate}
           onSelectStock={handleSelectStock}
+          isUpcomingIngress={Boolean(dashaState && dashaState.pdRemainingDays <= 14)}
+          daysToIngress={dashaState ? Math.round(dashaState.pdRemainingDays) : undefined}
         />
       </main>
       <BottomStatusBar />

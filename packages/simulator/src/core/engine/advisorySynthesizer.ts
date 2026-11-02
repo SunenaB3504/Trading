@@ -19,6 +19,7 @@ export interface ExitRules {
 }
 
 export type TicketAction = 'BUY' | 'SELL' | 'HOLD' | 'BLOCKED';
+export type ExecutionMode = 'ALGORITHMIC' | 'ANTICIPATORY_INGRESS' | 'DISCRETIONARY_OVERRIDE';
 
 export interface MasterTradeTicket {
   ticketId: string;
@@ -30,6 +31,7 @@ export interface MasterTradeTicket {
   targetAllocationRupees: number;
   actualInvestedRupees: number;
   exitRules: ExitRules;
+  executionMode?: ExecutionMode | undefined;
   provenance: {
     signal: string;
     reason: string;

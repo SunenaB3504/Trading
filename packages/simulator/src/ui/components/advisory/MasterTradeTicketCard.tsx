@@ -5,11 +5,13 @@
  */
 
 import React from 'react';
-import type { MasterTradeTicket } from '../../../core/engine/advisorySynthesizer';
+import type { MasterTradeTicket, ExecutionMode } from '../../../core/engine/advisorySynthesizer';
 
 export interface MasterTradeTicketCardProps {
   ticket: MasterTradeTicket | null;
-  onExecuteOrder?: (ticket: MasterTradeTicket) => void;
+  onExecuteOrder?: ((ticket: MasterTradeTicket) => void) | undefined;
+  isUpcomingIngress?: boolean | undefined;
+  daysToIngress?: number | undefined;
 }
 
 function MultiplierTag({ label, val }: { label: string; val: number }): React.ReactElement {
@@ -38,19 +40,46 @@ function TicketHeader({
   ticketId,
   isVetoed,
   triadCode,
+  isUpcomingIngress,
+  daysToIngress,
 }: {
   action: 'BUY' | 'SELL' | 'HOLD' | 'BLOCKED';
   symbol: string;
   price: number;
   ticketId: string;
   isVetoed: boolean;
-  triadCode?: string;
+  triadCode?: string | undefined;
+  isUpcomingIngress?: boolean | undefined;
+  daysToIngress?: number | undefined;
 }): React.ReactElement {
   const isBuy = action === 'BUY';
   const isBlocked = action === 'BLOCKED' || isVetoed;
-  const badgeBg = isBlocked ? '#7F1D1D' : isBuy ? '#065F46' : '#991B1B';
-  const badgeColor = isBlocked ? '#FECACA' : '#ECFDF5';
-  const badgeText = isBlocked ? 'BLOCKED: RISK VETO' : action;
+
+  let badgeBg = '#1E293B';
+  let badgeColor = '#94A3B8';
+  let badgeText = action as string;
+
+  if (isBlocked) {
+    badgeBg = '#7F1D1D';
+    badgeColor = '#FECACA';
+    badgeText = 'BLOCKED: RISK VETO';
+  } else if (isBuy) {
+    badgeBg = '#065F46';
+    badgeColor = '#ECFDF5';
+    badgeText = 'BUY';
+  } else if (isUpcomingIngress) {
+    badgeBg = '#082F49';
+    badgeColor = '#38BDF8';
+    badgeText = `⚡ INGRESS (${daysToIngress ?? 0}d)`;
+  } else if (action === 'SELL') {
+    badgeBg = '#991B1B';
+    badgeColor = '#FEE2E2';
+    badgeText = 'SELL';
+  } else {
+    badgeBg = '#1E293B';
+    badgeColor = '#94A3B8';
+    badgeText = 'HOLD';
+  }
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -224,23 +253,27 @@ function TicketMetricsGrid({
 
 function TicketFooter({
   cuspExitDate,
-  isBuy,
-  isVetoed,
-  onExecute,
+  tier,
+  daysToIngress,
+  onExecuteAlgorithmic,
+  onExecuteIngress,
+  onInitiateOverride,
 }: {
   cuspExitDate: string;
-  isBuy: boolean;
-  isVetoed: boolean;
-  onExecute?: (() => void) | undefined;
+  tier: 'ALGORITHMIC' | 'INGRESS' | 'OVERRIDE';
+  daysToIngress?: number | undefined;
+  onExecuteAlgorithmic?: (() => void) | undefined;
+  onExecuteIngress?: (() => void) | undefined;
+  onInitiateOverride?: (() => void) | undefined;
 }): React.ReactElement {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
       <span style={{ fontSize: '10px', color: '#64748B' }}>
         Cusp Exit: <strong>{cuspExitDate}</strong>
       </span>
-      {isBuy && !isVetoed && onExecute && (
+      {tier === 'ALGORITHMIC' && onExecuteAlgorithmic && (
         <button
-          onClick={onExecute}
+          onClick={onExecuteAlgorithmic}
           style={{
             padding: '6px 14px',
             borderRadius: '6px',
@@ -252,7 +285,41 @@ function TicketFooter({
             cursor: 'pointer',
           }}
         >
-          Test Logic: Paper Buy
+          ⚡ Paper Buy (Algorithmic)
+        </button>
+      )}
+      {tier === 'INGRESS' && onExecuteIngress && (
+        <button
+          onClick={onExecuteIngress}
+          style={{
+            padding: '6px 14px',
+            borderRadius: '6px',
+            backgroundColor: '#0284C7',
+            color: '#FFF',
+            fontSize: '11px',
+            fontWeight: 700,
+            border: 'none',
+            cursor: 'pointer',
+          }}
+        >
+          ⚡ Ingress Buy ({daysToIngress ?? 0}d)
+        </button>
+      )}
+      {tier === 'OVERRIDE' && onInitiateOverride && (
+        <button
+          onClick={onInitiateOverride}
+          style={{
+            padding: '6px 14px',
+            borderRadius: '6px',
+            backgroundColor: '#D97706',
+            color: '#FFF',
+            fontSize: '11px',
+            fontWeight: 700,
+            border: 'none',
+            cursor: 'pointer',
+          }}
+        >
+          ⚠️ Override & Buy
         </button>
       )}
     </div>
@@ -295,12 +362,19 @@ function MultipliersRow({
   );
 }
 
-export const MasterTradeTicketCard: React.FC<MasterTradeTicketCardProps> = ({ ticket, onExecuteOrder }) => {
-  const [customShares, setCustomShares] = React.useState<number>(ticket?.shares ?? 1);
+export const MasterTradeTicketCard: React.FC<MasterTradeTicketCardProps> = ({
+  ticket,
+  onExecuteOrder,
+  isUpcomingIngress = false,
+  daysToIngress,
+}) => {
+  const [customShares, setCustomShares] = React.useState<number>(ticket?.shares && ticket.shares > 0 ? ticket.shares : 1);
+  const [showWarningModal, setShowWarningModal] = React.useState(false);
 
   React.useEffect(() => {
     if (ticket) {
-      setCustomShares(ticket.shares);
+      setCustomShares(ticket.shares > 0 ? ticket.shares : 1);
+      setShowWarningModal(false);
     }
   }, [ticket?.ticketId, ticket?.shares]);
 
@@ -315,17 +389,28 @@ export const MasterTradeTicketCard: React.FC<MasterTradeTicketCardProps> = ({ ti
   const p = ticket.provenance;
   const isBuy = ticket.action === 'BUY';
   const isVetoed = p.isVetoed;
+  const isAlgorithmicBuy = isBuy && !isVetoed;
+  const isIngressTier = !isAlgorithmicBuy && isUpcomingIngress;
+  const tier: 'ALGORITHMIC' | 'INGRESS' | 'OVERRIDE' = isAlgorithmicBuy
+    ? 'ALGORITHMIC'
+    : isIngressTier
+    ? 'INGRESS'
+    : 'OVERRIDE';
+
   const isCustomized = customShares !== ticket.shares;
   const currentInvested = Math.round(customShares * ticket.price * 10) / 10;
 
-  const handleExecute = () => {
+  const handleExecute = (mode: ExecutionMode) => {
     if (!onExecuteOrder) return;
     const orderTicket: MasterTradeTicket = {
       ...ticket,
-      shares: customShares,
+      action: 'BUY',
+      shares: Math.max(1, customShares),
       actualInvestedRupees: currentInvested,
+      executionMode: mode,
     };
     onExecuteOrder(orderTicket);
+    setShowWarningModal(false);
   };
 
   return (
@@ -336,11 +421,20 @@ export const MasterTradeTicketCard: React.FC<MasterTradeTicketCardProps> = ({ ti
         gap: '12px',
         padding: '16px',
         background: '#0B0E14',
-        border: `1px solid ${isVetoed ? '#475569' : isBuy ? '#059669' : '#DC2626'}`,
+        border: `1px solid ${isVetoed ? '#475569' : isAlgorithmicBuy ? '#059669' : isIngressTier ? '#0284C7' : '#D97706'}`,
         borderRadius: '8px',
       }}
     >
-      <TicketHeader action={ticket.action} symbol={ticket.symbol} price={ticket.price} ticketId={ticket.ticketId} isVetoed={isVetoed} triadCode={p.triadCode} />
+      <TicketHeader
+        action={ticket.action}
+        symbol={ticket.symbol}
+        price={ticket.price}
+        ticketId={ticket.ticketId}
+        isVetoed={isVetoed}
+        triadCode={p.triadCode}
+        isUpcomingIngress={isUpcomingIngress}
+        daysToIngress={daysToIngress}
+      />
       <div style={{ fontSize: '11px', color: '#CBD5E1' }}><strong>Signal:</strong> {p.signal} — {p.reason}</div>
       <MultipliersRow omegaTrader={p.omegaTrader} phiFinancial={p.phiFinancial} thetaAstro={p.thetaAstro} triadCode={p.triadCode} />
       <TicketMetricsGrid
@@ -348,20 +442,42 @@ export const MasterTradeTicketCard: React.FC<MasterTradeTicketCardProps> = ({ ti
         actualInvested={currentInvested}
         targetPrice={ticket.exitRules.profitTargetPrice}
         stopPrice={ticket.exitRules.stopLossPrice}
-        onSharesChange={isBuy && !isVetoed ? setCustomShares : undefined}
+        onSharesChange={setCustomShares}
         isCustomized={isCustomized}
-        onResetShares={() => setCustomShares(ticket.shares)}
+        onResetShares={() => setCustomShares(ticket.shares > 0 ? ticket.shares : 1)}
       />
+      {isIngressTier && (
+        <div style={{ padding: '8px 10px', borderRadius: '6px', backgroundColor: '#082F49', border: '1px solid #0284C7', color: '#BAE6FD', fontSize: '11px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <span>⚡</span>
+          <span>Impending Auspicious Ingress: Ingress cusp in {daysToIngress ?? 0} sessions. Early accumulation enabled.</span>
+        </div>
+      )}
       {isVetoed && p.vetoReason && (
         <div style={{ padding: '8px 10px', borderRadius: '6px', backgroundColor: '#450A0A', border: '1px solid #7F1D1D', color: '#FECACA', fontSize: '11px', fontWeight: 600 }}>
           ⛔ {p.vetoReason}
         </div>
       )}
+      {showWarningModal && (
+        <div style={{ padding: '10px 12px', borderRadius: '6px', backgroundColor: '#451A03', border: '1px solid #D97706', color: '#FEF3C7', fontSize: '11px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <div style={{ fontWeight: 700, color: '#FBBF24', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span>⚠️</span><span>DISCRETIONARY RISK OVERRIDE WARNING</span>
+          </div>
+          <div style={{ lineHeight: 1.4 }}>
+            Recommendation is <strong>{ticket.action}</strong> {p.vetoReason ? `(${p.vetoReason})` : `(${p.reason})`}. Proceeding executes a manual order with <strong>{customShares} shares (₹{currentInvested.toLocaleString('en-IN')})</strong> bypassing risk vetoes.
+          </div>
+          <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+            <button onClick={() => setShowWarningModal(false)} style={{ padding: '4px 10px', borderRadius: '4px', background: '#374151', color: '#D1D5DB', border: 'none', cursor: 'pointer', fontSize: '11px', fontWeight: 600 }}>Cancel</button>
+            <button onClick={() => handleExecute('DISCRETIONARY_OVERRIDE')} style={{ padding: '4px 12px', borderRadius: '4px', background: '#D97706', color: '#FFF', border: 'none', cursor: 'pointer', fontSize: '11px', fontWeight: 700 }}>Confirm & Buy</button>
+          </div>
+        </div>
+      )}
       <TicketFooter
         cuspExitDate={ticket.exitRules.calendarCuspExitDate}
-        isBuy={isBuy}
-        isVetoed={isVetoed}
-        onExecute={onExecuteOrder ? handleExecute : undefined}
+        tier={tier}
+        daysToIngress={daysToIngress}
+        onExecuteAlgorithmic={onExecuteOrder ? () => handleExecute('ALGORITHMIC') : undefined}
+        onExecuteIngress={onExecuteOrder ? () => handleExecute('ANTICIPATORY_INGRESS') : undefined}
+        onInitiateOverride={onExecuteOrder ? () => setShowWarningModal(true) : undefined}
       />
     </div>
   );

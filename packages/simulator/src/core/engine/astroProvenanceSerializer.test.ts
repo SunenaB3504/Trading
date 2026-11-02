@@ -73,4 +73,24 @@ describe('astroProvenanceSerializer', () => {
     expect(parsed.triadCode).toBe('[N/A]');
     expect(parsed.reason).toBe(raw);
   });
+
+  it('serializes and parses discretionary override and anticipatory ingress execution modes', () => {
+    const overrideTicket: MasterTradeTicket = {
+      ...mockTicket,
+      executionMode: 'DISCRETIONARY_OVERRIDE',
+    };
+    const serialized = serializeAstroProvenance(overrideTicket, mockDasha);
+    expect(serialized).toContain('MODE:DISCRETIONARY_OVERRIDE');
+    const parsed = parseAstroProvenance(serialized);
+    expect(parsed.executionMode).toBe('DISCRETIONARY_OVERRIDE');
+
+    const ingressTicket: MasterTradeTicket = {
+      ...mockTicket,
+      executionMode: 'ANTICIPATORY_INGRESS',
+    };
+    const sIngress = serializeAstroProvenance(ingressTicket, mockDasha);
+    expect(sIngress).toContain('MODE:ANTICIPATORY_INGRESS');
+    const pIngress = parseAstroProvenance(sIngress);
+    expect(pIngress.executionMode).toBe('ANTICIPATORY_INGRESS');
+  });
 });

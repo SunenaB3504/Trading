@@ -16,6 +16,7 @@ export interface ParsedAstroProvenance {
   targetPrice: number;
   stopPrice: number;
   plannedCuspExit: string;
+  executionMode?: string | undefined;
   multipliers: {
     omega: number;
     phi: number;
@@ -38,8 +39,9 @@ export function serializeAstroProvenance(
   const omega = p.omegaTrader?.toFixed(2) ?? '1.00';
   const phi = p.phiFinancial?.toFixed(2) ?? '1.00';
   const theta = p.thetaAstro?.toFixed(2) ?? '1.00';
+  const mode = ticket.executionMode || 'ALGORITHMIC';
 
-  return `TRIAD:${triad}|DASHA:${dasha}|SIG:${p.signal}|REASON:${p.reason}|TGT:${target}|STP:${stop}|CUSP:${cusp}|MULT:Ω${omega},Φ${phi},Θ${theta}`;
+  return `TRIAD:${triad}|DASHA:${dasha}|SIG:${p.signal}|REASON:${p.reason}|TGT:${target}|STP:${stop}|CUSP:${cusp}|MULT:Ω${omega},Φ${phi},Θ${theta}|MODE:${mode}`;
 }
 
 export function parseAstroProvenance(raw: string): ParsedAstroProvenance {
@@ -66,6 +68,7 @@ export function parseAstroProvenance(raw: string): ParsedAstroProvenance {
     targetPrice: parseFloat(dict['TGT'] || '0'),
     stopPrice: parseFloat(dict['STP'] || '0'),
     plannedCuspExit: dict['CUSP'] || 'N/A',
+    executionMode: dict['MODE'] || 'ALGORITHMIC',
     multipliers: { omega, phi, theta },
   };
 }
