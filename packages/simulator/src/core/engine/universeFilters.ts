@@ -90,3 +90,4 @@ export function filterUniverseByIngress(
     (i) => i.upcomingIngress && i.upcomingIngress.isAuspicious && i.upcomingIngress.daysUntil <= maxDays
   );
 }
+

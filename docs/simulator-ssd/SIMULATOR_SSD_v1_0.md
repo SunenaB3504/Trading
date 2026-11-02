@@ -385,6 +385,10 @@ $$\mathbf{Trade Ticket} = \Big\{ \text{When to Invest}, \quad \text{Quantity / R
   * `ui/components/screener/RadarStockTable.tsx` (< 250 LOC): Constituent data table with Confluence badges (★ 0..4/4) and Cockpit deep-dive routing.
   * `ui/components/screener/DailyActionFeed.tsx` (< 300 LOC): Prioritized market-wide execution table.
 * **Core Capabilities:**
+  * **Real-Time Symbol & Company Name Search Engine:**
+    - High-speed in-memory substring search indexing both NSE ticker symbols (e.g. CENTRALBK, AXISBANK, TCS) and registered corporate names (e.g. Central Bank of India).
+    - Operates conjunctively with active Triad, Yoga, Dasha Lord, Action, and Confluence filters.
+    - Zero-latency execution (< 1ms) across 802 universe equities with quick-clear (✕) button and live match count indicator.
   * **27-Triad Permutation Engine:**
     - Evaluates the complete Cartesian product $\{T, K, D\}_{\text{MD}} \times \{T, K, D\}_{\text{AD}} \times \{T, K, D\}_{\text{PD}}$ ($3^3 = 27$ distinct triads).
     - Quick-filter pills to view all stocks in $[T\text{-}T\text{-}T]$ (Bull Runs), $[D\text{-}T\text{-}T]$ (Turnarounds), $[D\text{-}D\text{-}D]$ (Peak Astrological Stress), $[T\text{-}D\text{-}T]$ (Impending Exits), or custom sets (e.g. $[K\text{-}T\text{-}T]$).

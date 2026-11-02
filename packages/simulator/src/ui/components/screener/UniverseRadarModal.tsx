@@ -44,6 +44,7 @@ const INITIAL_FILTERS: RadarFiltersState = {
   minConfluence: 0,
   mdLordFilter: 'ALL',
   adLordFilter: 'ALL',
+  searchQuery: '',
 };
 
 const MS_PER_DAY = 86400000;
@@ -110,6 +111,14 @@ export const UniverseRadarModal: React.FC<UniverseRadarModalProps> = ({
     } else if (filters.actionFilter !== 'ALL') {
       res = res.filter((i) => i.action === filters.actionFilter && !i.isBlocked);
     }
+
+    if (filters.searchQuery && filters.searchQuery.trim().length > 0) {
+      const q = filters.searchQuery.trim().toLowerCase();
+      res = res.filter(
+        (i) => i.symbol.toLowerCase().includes(q) || (i.companyName && i.companyName.toLowerCase().includes(q))
+      );
+    }
+
     return res;
   }, [summary.items, filters]);
 

@@ -20,6 +20,7 @@ export interface RadarFiltersState {
   minConfluence: number;
   mdLordFilter: PlanetKey | 'ALL';
   adLordFilter: PlanetKey | 'ALL';
+  searchQuery: string;
 }
 
 export interface RadarFiltersBarProps {
@@ -48,6 +49,7 @@ export const RadarFiltersBar: React.FC<RadarFiltersBarProps> = ({
     return ['ALL', ...keys];
   }, [summary.triadDistribution]);
   const hasActiveFilter =
+    Boolean(filters.searchQuery?.trim()) ||
     filters.selectedTriad !== 'ALL' ||
     filters.selectedYoga !== 'ALL' ||
     filters.actionFilter !== 'ALL' ||
@@ -70,8 +72,49 @@ export const RadarFiltersBar: React.FC<RadarFiltersBarProps> = ({
         backgroundColor: '#090C12',
       }}
     >
-      {/* Row 1: Macro Filters (Triad, Yoga, Action, MD Lord, AD Lord, Reset) */}
+      {/* Row 1: Macro Filters (Search, Triad, Yoga, Action, MD Lord, AD Lord, Reset) */}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'center' }}>
+        {/* Symbol / Company Search */}
+        <div style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
+          <span style={{ position: 'absolute', left: '7px', color: '#64748B', fontSize: '11px', pointerEvents: 'none' }}>
+            🔍
+          </span>
+          <input
+            type="text"
+            placeholder="Search symbol / name..."
+            value={filters.searchQuery}
+            onChange={(e) => onChange('searchQuery', e.target.value)}
+            style={{
+              padding: '3px 22px 3px 24px',
+              backgroundColor: '#111827',
+              border: '1px solid #1E2638',
+              color: '#F8FAFC',
+              borderRadius: '4px',
+              fontSize: '11px',
+              width: '160px',
+              outline: 'none',
+            }}
+          />
+          {Boolean(filters.searchQuery?.trim()) && (
+            <button
+              onClick={() => onChange('searchQuery', '')}
+              style={{
+                position: 'absolute',
+                right: '5px',
+                background: 'none',
+                border: 'none',
+                color: '#94A3B8',
+                fontSize: '11px',
+                cursor: 'pointer',
+                padding: '0 2px',
+              }}
+              title="Clear search"
+            >
+              ✕
+            </button>
+          )}
+        </div>
+
         <div style={{ display: 'flex', alignItems: 'center', gap: '5px', flexWrap: 'wrap' }}>
           <span style={{ color: '#94A3B8', fontSize: '11px', fontWeight: 700 }}>Triad:</span>
           {availableTriads.slice(0, 7).map((t) => {

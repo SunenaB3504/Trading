@@ -518,6 +518,17 @@ packages/simulator/src/
   * `ui/components/screener/RadarFiltersBar.tsx` (< 250 LOC).
 * **Acceptance Criteria:** Returns precise transition calendar dates; highlights active and impending triads; verified by unit tests.
 
+#### WP-5.9: Real-Time Symbol & Company Name Search Engine for Market Universe Radar
+* **Objective:** Enable instantaneous search and navigation by stock ticker and registered company name across the entire equity universe in the Market Universe Radar.
+* **Key Tasks:**
+  1. Add `searchQuery` state to `RadarFiltersState` and integrate search input with clear (`✕`) action in `RadarFiltersBar.tsx`.
+  2. Implement sub-millisecond in-memory filtering in `UniverseRadarModal.tsx` indexing both `symbol` and `companyName`.
+  3. Ensure seamless multi-factor intersection with active Triad, Yoga, Dasha Lord, Action, and Confluence filters.
+* **Deliverables:**
+  * Updated `ui/components/screener/RadarFiltersBar.tsx` (`< 300 LOC`).
+  * Updated `ui/components/screener/UniverseRadarModal.tsx` (`< 400 LOC`).
+* **Acceptance Criteria:** Typing any part of a symbol (e.g. "CENT") or company name (e.g. "Central Bank") filters the table instantly (< 1ms); resets cleanly via ✕ button or Reset toolbar; strictly adheres to modularity limit (< 500 LOC).
+
 ---
 
 ### Phase 6: Native Astro-Logic Validation Mock Trading & Verification Subsystem
