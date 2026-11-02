@@ -138,7 +138,7 @@ function applyStockState(
 ): void {
   const meta = resolveCorporateMeta(norm);
   const simState = useSimulationStore.getState();
-  const evalDate = targetDate ?? simState.activeDate ?? '2026-10-28';
+  const evalDate = targetDate ?? simState.activeDate ?? '2026-10-30';
 
   let targetIdx = -1;
   let resolvedDate = evalDate;

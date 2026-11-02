@@ -302,6 +302,11 @@ packages/simulator/src/
   * **Dual Price Series Handling:**
     * **Split- and Dividend-Adjusted OHLCV:** Used for true portfolio P&L equity tracking, drawdowns, and ROI calculations across corporate splits/bonuses.
     * **Unadjusted Nominal Close:** Used strictly for absolute penny-stock risk filters (e.g. $P_{t-1} < ₹20.00$ Ex-Ante Quality Gate).
+  * **Automated Online Market Data Sync & Historical Gap-Healing Engine:**
+    - Automatic detection of missing weekday sessions between local database horizon and current system date.
+    - Online probe to official NSE Capital Market UDiFF Bhavcopy archives (https://nsearchives.nseindia.com/content/cm/BhavCopy_NSE_CM_...csv.zip).
+    - Automated multi-session gap decompression, OHLCV parsing, stock-split factor adjustments, growth index computation, and atomic append across all 857 Nifty 500 equities.
+    - Integrated TopNavigationBar action [🌐 Sync Online] with live progress indication and zero-reload reactive state update.
 
 ---
 

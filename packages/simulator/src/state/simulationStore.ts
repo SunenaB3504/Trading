@@ -33,7 +33,7 @@ export const useSimulationStore = create<SimulationState>((set) => ({
   speed: 1,
   currentIndex: 5486,
   totalSessions: 5487,
-  activeDate: '2026-10-28',
+  activeDate: '2026-10-30',
 
   setSpeed: (speed: PlaybackSpeed) => set({ speed }),
 

@@ -529,6 +529,20 @@ packages/simulator/src/
   * Updated `ui/components/screener/UniverseRadarModal.tsx` (`< 400 LOC`).
 * **Acceptance Criteria:** Typing any part of a symbol (e.g. "CENT") or company name (e.g. "Central Bank") filters the table instantly (< 1ms); resets cleanly via ✕ button or Reset toolbar; strictly adheres to modularity limit (< 500 LOC).
 
+#### WP-5.10: Automated Online EOD Market Data Sync & Historical Gap-Healing Engine
+* **Objective:** Provide automated online synchronization with official National Stock Exchange Bhavcopy archives, detecting and healing backdated session gaps automatically.
+* **Key Tasks:**
+  1. Implement marketSyncService.ts to detect calendar gaps between manifest max_date and current date.
+  2. Automate multi-session UDiFF Bhavcopy zip retrieval, parsing, and atomic append across all 857 Nifty 500 equities.
+  3. Add [🌐 Sync Online] action button to TopNavigationBar.tsx with live feedback states (Idle, Syncing, Updated).
+  4. Advance active simulation anchor dynamically to latest finalized market session (2026-10-30).
+* **Deliverables:**
+  * core/data/sync/marketSyncService.ts (< 200 LOC).
+  * scripts/syncLatestNseMarketData.py (< 250 LOC).
+  * Updated ui/layout/TopNavigationBar.tsx (< 350 LOC).
+  * Updated ui/CockpitTerminal.tsx (< 400 LOC).
+* **Acceptance Criteria:** Successfully probes missing dates, downloads official archives, recalculates returns & drawdowns, advances manifest max_date to latest closed trading session without manual intervention, and refreshes cockpit chart.
+
 ---
 
 ### Phase 6: Native Astro-Logic Validation Mock Trading & Verification Subsystem

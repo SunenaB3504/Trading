@@ -4,7 +4,7 @@
  * Decomposed into small sub-components (< 60 LOC each).
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useSimulationStore, type PlaybackSpeed } from '../../state/simulationStore';
 import { useStockStore } from '../../state/stockStore';
 import { usePortfolioStore } from '../../state/portfolioStore';
@@ -149,6 +149,7 @@ export interface TopNavigationBarProps {
   onOpenScorecard?: () => void;
   onOpenIngestion?: () => void;
   onSyncToday?: () => void;
+  onSyncOnline?: () => Promise<void> | void;
   availableTickers?: string[] | undefined;
 }
 
@@ -160,12 +161,31 @@ export const TopNavigationBar: React.FC<TopNavigationBarProps> = ({
   onOpenScorecard,
   onOpenIngestion,
   onSyncToday,
+  onSyncOnline,
   availableTickers,
 }) => {
   const { isPlaying, speed, activeDate, currentIndex, totalSessions } = useSimulationStore();
   const { activeSymbol, setActiveSymbol } = useStockStore();
   const { ledger } = usePortfolioStore();
   const positionsCount = Object.values(ledger.positions).filter((p) => p.shares > 0).length;
+
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [syncStatus, setSyncStatus] = useState<string | null>(null);
+
+  const handleSyncOnlineClick = async () => {
+    if (!onSyncOnline || isSyncing) return;
+    setIsSyncing(true);
+    try {
+      await onSyncOnline();
+      setSyncStatus('Updated');
+      setTimeout(() => setSyncStatus(null), 3000);
+    } catch {
+      setSyncStatus('Error');
+      setTimeout(() => setSyncStatus(null), 3000);
+    } finally {
+      setIsSyncing(false);
+    }
+  };
 
   return (
     <header
@@ -291,6 +311,28 @@ export const TopNavigationBar: React.FC<TopNavigationBarProps> = ({
           Session: <strong style={{ color: '#F3F4F6' }}>{currentIndex + 1}</strong> / {totalSessions || '—'} | Date:{' '}
           <strong style={{ color: '#F3F4F6' }}>{activeDate || '—'}</strong>
         </div>
+        {onSyncOnline && (
+          <button
+            onClick={handleSyncOnlineClick}
+            disabled={isSyncing}
+            title="Fetch latest completed EOD Bhavcopies from NSE online archives and heal missing sessions"
+            style={{
+              padding: '4px 8px',
+              borderRadius: '4px',
+              backgroundColor: isSyncing ? '#1E293B' : syncStatus === 'Updated' ? '#064E3B' : '#0B2942',
+              color: syncStatus === 'Updated' ? '#6EE7B7' : isSyncing ? '#94A3B8' : '#38BDF8',
+              border: `1px solid ${syncStatus === 'Updated' ? '#059669' : '#0284C7'}`,
+              cursor: isSyncing ? 'wait' : 'pointer',
+              fontSize: '10px',
+              fontWeight: 700,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+            }}
+          >
+            {isSyncing ? '⏳ Syncing...' : syncStatus === 'Updated' ? '✅ Updated' : '🌐 Sync Online'}
+          </button>
+        )}
         {onSyncToday && (
           <button
             onClick={onSyncToday}

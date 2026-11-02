@@ -28,6 +28,7 @@ import { AstroPositionsDrawer } from './components/portfolio/AstroPositionsDrawe
 import { AstroScorecardModal } from './components/portfolio/AstroScorecardModal';
 import { StockIngestionModal } from './components/ingestion/StockIngestionModal';
 import { serializeAstroProvenance } from '../core/engine/astroProvenanceSerializer';
+import { syncOnlineMarketData, getManifestMaxDate } from '../core/data/sync/marketSyncService';
 import { evaluateKotaChakra } from '../core/astro/kotaChakra';
 import { calculateTransitNakshatras, calculateTransitSigns } from '../core/astro/ephemeris';
 import { evaluateSpecialYogas } from '../core/astro/yogaDetector';
@@ -287,7 +288,7 @@ export const CockpitTerminal: React.FC = () => {
   const availableTickers = useMemo(() => Object.keys(corporateRegistry), []);
 
   React.useEffect(() => {
-    loadStock('TCS', '2026-10-28');
+    loadStock('TCS', getManifestMaxDate());
   }, [loadStock]);
 
   const handleSelectStock = (sym: string, targetDate?: string) => {
@@ -309,7 +310,11 @@ export const CockpitTerminal: React.FC = () => {
         onOpenPositions={() => setIsPositionsOpen(true)}
         onOpenScorecard={() => setIsScorecardOpen(true)}
         onOpenIngestion={() => setIsIngestionOpen(true)}
-        onSyncToday={() => loadStock(metadata?.symbol ?? 'TCS', '2026-10-28')}
+        onSyncToday={() => loadStock(metadata?.symbol ?? 'TCS', getManifestMaxDate())}
+        onSyncOnline={async () => {
+          const res = await syncOnlineMarketData();
+          loadStock(metadata?.symbol ?? 'TCS', res.maxDate || getManifestMaxDate());
+        }}
         availableTickers={availableTickers}
       />
       <main style={{ flex: 1, display: 'grid', gridTemplateColumns: '1.6fr 1.2fr', overflow: 'hidden' }}>

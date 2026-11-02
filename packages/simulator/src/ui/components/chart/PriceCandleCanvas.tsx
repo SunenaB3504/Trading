@@ -345,7 +345,7 @@ export const PriceCandleCanvas: React.FC<PriceCandleCanvasProps> = ({
           }}
         >
           {isLatestSession ? (
-            <span style={{ color: '#10B981', fontWeight: 800 }}>🟢 LIVE (2026-10-28)</span>
+            <span style={{ color: '#10B981', fontWeight: 800 }}>🟢 LIVE ({displayBar.date})</span>
           ) : (
             <span style={{ color: '#D4AF37', fontWeight: 800 }}>⏪ REPLAY SESSION</span>
           )}
