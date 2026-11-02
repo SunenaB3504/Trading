@@ -199,3 +199,63 @@ export function buildNatalPreview(
   };
 }
 
+export async function fetchOnlineYahooBars(symbol: string): Promise<RawCsvBarInput[]> {
+  const norm = symbol.trim().toUpperCase();
+  const ticker = norm.endsWith('.NS') || norm.endsWith('.BO') ? norm : `${norm}.NS`;
+
+  // Proxy through Vite in browser, or direct URL
+  const proxyUrl = `/api/yfinance/v8/finance/chart/${ticker}?period1=0&period2=9999999999&interval=1d`;
+  const fallbackUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?period1=0&period2=9999999999&interval=1d`;
+
+  let response: Response;
+  try {
+    response = await fetch(proxyUrl);
+    if (!response.ok) throw new Error(`Proxy error: ${response.status}`);
+  } catch {
+    response = await fetch(fallbackUrl);
+    if (!response.ok) throw new Error(`Online feed error: ${response.status}`);
+  }
+
+  const data = await response.json();
+  const result = data?.chart?.result?.[0];
+  if (!result || !result.timestamp || result.timestamp.length === 0) {
+    throw new Error(`No historical market data found online for ${ticker}`);
+  }
+
+  const timestamps: number[] = result.timestamp;
+  const quote = result.indicators?.quote?.[0];
+  if (!quote) throw new Error(`No quote data in online feed for ${ticker}`);
+
+  const opens: (number | null)[] = quote.open || [];
+  const highs: (number | null)[] = quote.high || [];
+  const lows: (number | null)[] = quote.low || [];
+  const closes: (number | null)[] = quote.close || [];
+  const volumes: (number | null)[] = quote.volume || [];
+
+  const rawBars: RawCsvBarInput[] = [];
+
+  for (let i = 0; i < timestamps.length; i++) {
+    const ts = timestamps[i]!;
+    const close = closes[i];
+    if (close == null || isNaN(close) || close <= 0) continue;
+
+    const dateStr = new Date(ts * 1000).toISOString().slice(0, 10);
+    const open = opens[i] != null && !isNaN(opens[i]!) ? opens[i]! : close;
+    const high = highs[i] != null && !isNaN(highs[i]!) ? highs[i]! : Math.max(open, close);
+    const low = lows[i] != null && !isNaN(lows[i]!) ? lows[i]! : Math.min(open, close);
+    const volume = volumes[i] != null && !isNaN(volumes[i]!) ? Math.round(volumes[i]!) : 10000;
+
+    rawBars.push({
+      date: dateStr,
+      open: Math.round(open * 100) / 100,
+      high: Math.round(high * 100) / 100,
+      low: Math.round(low * 100) / 100,
+      close: Math.round(close * 100) / 100,
+      volume,
+    });
+  }
+
+  return rawBars.sort((a, b) => a.date.localeCompare(b.date));
+}
+
+

@@ -10,6 +10,7 @@ import {
   parseRawCsvText,
   processAndCompoundDailyBars,
   buildNatalPreview,
+  fetchOnlineYahooBars,
   type IngestionPreviewResult,
 } from '../../../core/data/ingestion/stockIngestionEngine';
 
@@ -29,12 +30,51 @@ export const StockIngestionModal: React.FC<StockIngestionModalProps> = ({
   const [listingTime, setListingTime] = useState('10:00:00');
   const [csvContent, setCsvContent] = useState('');
   const [preview, setPreview] = useState<IngestionPreviewResult | null>(null);
+  const [isFetchingOnline, setIsFetchingOnline] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [statusMsg, setStatusMsg] = useState<string | null>(null);
 
   const { registerCustomStock } = useStockStore();
 
   if (!isOpen) return null;
+
+  const handleFetchOnline = async () => {
+    try {
+      setIsFetchingOnline(true);
+      setErrorMsg(null);
+      setStatusMsg(`Connecting to online feed for ${symbolInput.trim().toUpperCase()}...`);
+
+      const rawBars = await fetchOnlineYahooBars(symbolInput);
+      if (rawBars.length === 0) {
+        throw new Error(`No bars returned for ${symbolInput}`);
+      }
+
+      // Convert bars to formatted CSV text in the textarea
+      const header = 'Date,Open,High,Low,Close,Volume';
+      const rows = rawBars.map(
+        (b) => `${b.date},${b.open},${b.high},${b.low},${b.close},${b.volume}`
+      );
+      setCsvContent([header, ...rows].join('\n'));
+
+      // Also trigger natal resolution if not done
+      const natal = buildNatalPreview(symbolInput, listingDate, listingTime);
+      setPreview(natal);
+      setListingDate(natal.listingDate);
+      setListingTime(natal.listingTime);
+
+      const firstD = rawBars[0]?.date;
+      const lastD = rawBars[rawBars.length - 1]?.date;
+      const lastClose = rawBars[rawBars.length - 1]?.close;
+
+      setStatusMsg(
+        `✓ Downloaded ${rawBars.length} authentic trading sessions (${firstD} to ${lastD}). Last CMP: ₹${lastClose}`
+      );
+    } catch (err: unknown) {
+      setErrorMsg((err as Error).message || 'Failed to download market data online');
+    } finally {
+      setIsFetchingOnline(false);
+    }
+  };
 
   const handleResolveNatal = () => {
     try {
@@ -279,7 +319,26 @@ export const StockIngestionModal: React.FC<StockIngestionModalProps> = ({
           <span style={{ fontSize: '12px', fontWeight: 700, color: '#38BDF8' }}>
             2. Historical Market Data Ingestion
           </span>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+            <button
+              onClick={handleFetchOnline}
+              disabled={isFetchingOnline}
+              style={{
+                backgroundColor: isFetchingOnline ? '#475569' : '#059669',
+                color: '#FFFFFF',
+                padding: '6px 14px',
+                borderRadius: '6px',
+                fontSize: '12px',
+                cursor: isFetchingOnline ? 'wait' : 'pointer',
+                fontWeight: 700,
+                border: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+              }}
+            >
+              {isFetchingOnline ? '⏳ Downloading...' : '🌐 Fetch Online (NSE/Yahoo)'}
+            </button>
             <label
               style={{
                 backgroundColor: '#334155',
@@ -295,7 +354,7 @@ export const StockIngestionModal: React.FC<StockIngestionModalProps> = ({
               <input type="file" accept=".csv" onChange={handleFileUpload} style={{ display: 'none' }} />
             </label>
             <span style={{ fontSize: '11px', color: '#94A3B8' }}>
-              Or paste historical CSV lines (Date, Open, High, Low, Close, Volume) below:
+              Or auto-fetch complete 15-25Y daily history directly online.
             </span>
           </div>
 
