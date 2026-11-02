@@ -74,15 +74,16 @@ export function computeJathakam(
   record: CorporateRegistryRecord,
   referenceDate: string = '2005-01-01'
 ): CachedJathakam {
-  const lagnaId = record.lagna_sign_id ?? 0;
+  const lagnaId = (record.lagna_sign_id ?? 1) - 1;
   const lagnaLord = SIGN_LORDS[lagnaId] ?? 'mars';
-  const moonId = record.moon_sign_id ?? 0;
+  const moonId = (record.moon_sign_id ?? 1) - 1;
   const moonLord = SIGN_LORDS[moonId] ?? 'moon';
 
   const birthStr = `${record.listing_date}T${record.listing_time || '10:00:00'}+05:30`;
   const birthMs = new Date(birthStr).getTime();
-  const mahadashas = generateMahadashas(birthMs, record.moon_deg, record.year_length_days);
-  const nak = calculateNakshatraAndBalance(record.moon_deg);
+  const absMoonLong = ((moonId * 30.0) + record.moon_deg) % 360.0;
+  const mahadashas = generateMahadashas(birthMs, absMoonLong, record.year_length_days);
+  const nak = calculateNakshatraAndBalance(absMoonLong);
   const indu = calculateInduLagnaSign(lagnaId, moonId);
   const lordships = deriveLagnaLordships(lagnaId);
 

@@ -132,7 +132,7 @@ function deriveTradeTicket(
 ): MasterTradeTicket | null {
   if (!bar) return null;
 
-  const lagnaId = metadata?.lagna_sign_id ?? 0;
+  const lagnaId = metadata ? ((metadata.lagna_sign_id ?? 1) - 1) : 0;
   const mdCategory = dashaState ? classifyLordRole(dashaState.mahadasha, lagnaId) : 'neutral';
   const adCategory = dashaState ? classifyLordRole(dashaState.antardasha, lagnaId) : 'neutral';
   const pdCategory = dashaState ? classifyLordRole(dashaState.pratyantardasha, lagnaId) : 'neutral';
@@ -142,7 +142,7 @@ function deriveTradeTicket(
   };
   const activeYogas = evaluateSpecialYogas({
     lagnaSignId: lagnaId,
-    moonSignId: metadata?.moon_sign_id ?? 0,
+    moonSignId: metadata?.moon_sign_id ? metadata.moon_sign_id - 1 : 0,
     planetSigns: transitSigns,
   }).activeYogaNames;
   const hasVry = activeYogas.some((y) => y.startsWith('VRY'));
@@ -210,7 +210,9 @@ function deriveActiveDasha(meta: CorporateRegistryRecord | null, activeDate: str
   if (!meta || !activeDate) return null;
   const birthDateStr = `${meta.listing_date}T${meta.listing_time || '10:00:00'}+05:30`;
   const birthMs = new Date(birthDateStr).getTime();
-  const mahadashas = generateMahadashas(birthMs, meta.moon_deg, meta.year_length_days);
+  const moonSign1Based = meta.moon_sign_id ?? 1;
+  const absMoonLong = (((moonSign1Based - 1) * 30.0) + meta.moon_deg) % 360.0;
+  const mahadashas = generateMahadashas(birthMs, absMoonLong, meta.year_length_days);
   const sessionMs = new Date(`${activeDate}T12:00:00+05:30`).getTime();
   return resolveActive5FoldDasha(mahadashas, sessionMs);
 }
