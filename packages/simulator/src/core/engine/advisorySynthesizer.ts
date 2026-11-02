@@ -75,7 +75,9 @@ export function synthesizeTradeTicket(
     sizing.multipliers.omegaTrader <= 0;
   const action: TicketAction = isVetoed ? 'BLOCKED' : edge.action;
 
-  let vetoReason = sizing.vetoReason;
+  let vetoReason = (edge.isSilencedByQualityGate && edge.qualityGateReason)
+    ? `Quality Gate Veto: ${edge.qualityGateReason}`
+    : sizing.vetoReason;
   if (isVetoed && !vetoReason) {
     if (sizing.multipliers.phiFinancial <= 0) {
       vetoReason = 'Financial Risk Veto: Balance-sheet circuit breaker tripped (D/E > 2.0 or ICR < 1.5)';
