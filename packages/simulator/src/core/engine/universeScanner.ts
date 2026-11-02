@@ -51,7 +51,17 @@ interface PrecomputedStockRecord {
     ad: PlanetKey;
     pd: PlanetKey;
     triad: string;
+    isTrikonaPrime?: boolean;
   }>;
+}
+
+export interface UpcomingIngressInfo {
+  triadCode: string;
+  startDate: string;
+  daysUntil: number;
+  lords: { md: PlanetKey; ad: PlanetKey; pd: PlanetKey };
+  isPureTrikona: boolean; // [T-T-T]
+  isAuspicious: boolean; // [T-T-T] or High-T
 }
 
 const precomputedAstro = precomputedAstroData as Record<string, PrecomputedStockRecord>;
@@ -100,6 +110,9 @@ export interface UniverseStockScanItem {
   targetReturnPct: number;
   stopLossPct: number;
   cuspExitDate: string;
+
+  // Upcoming Ingress Metrics
+  upcomingIngress?: UpcomingIngressInfo | undefined;
 }
 
 export interface UniverseScanSummary {
@@ -110,6 +123,7 @@ export interface UniverseScanSummary {
   turnaroundBuyCount: number;
   defensiveExitCount: number;
   blockedCount: number;
+  upcomingIngressCount: number;
   items: UniverseStockScanItem[];
 }
 
@@ -230,10 +244,12 @@ export function scanSingleStock(
   let mdRole: 'trikona' | 'kendra' | 'dusthana' = 'dusthana';
   let adRole: 'trikona' | 'kendra' | 'dusthana' = 'dusthana';
   let pdRole: 'trikona' | 'kendra' | 'dusthana' = 'dusthana';
+  let upcomingIngress: UpcomingIngressInfo | undefined = undefined;
 
   if (pre && activeDate >= '2026-10-01' && pre.forwardSchedule5Y) {
-    const match = pre.forwardSchedule5Y.find((f) => f.startDate <= activeDate && f.endDate >= activeDate);
-    if (match) {
+    const matchIdx = pre.forwardSchedule5Y.findIndex((f) => f.startDate <= activeDate && f.endDate >= activeDate);
+    if (matchIdx !== -1) {
+      const match = pre.forwardSchedule5Y[matchIdx]!;
       mdLord = match.md;
       adLord = match.ad;
       pdLord = match.pd;
@@ -243,6 +259,22 @@ export function scanSingleStock(
       pdRole = classifyLordRole(pdLord, lagnaId);
       const msLeft = new Date(`${match.endDate}T12:00:00+05:30`).getTime() - new Date(`${activeDate}T12:00:00+05:30`).getTime();
       daysToCusp = Math.max(1, Math.round(msLeft / 86400000));
+
+      const next = pre.forwardSchedule5Y[matchIdx + 1];
+      if (next) {
+        const msUntil = new Date(`${next.startDate}T12:00:00+05:30`).getTime() - new Date(`${activeDate}T12:00:00+05:30`).getTime();
+        const daysUntil = Math.max(1, Math.round(msUntil / 86400000));
+        const isPure = next.triad === '[T-T-T]';
+        const isAuspicious = isPure || next.isTrikonaPrime || next.triad.includes('T-T');
+        upcomingIngress = {
+          triadCode: next.triad,
+          startDate: next.startDate,
+          daysUntil,
+          lords: { md: next.md, ad: next.ad, pd: next.pd },
+          isPureTrikona: isPure,
+          isAuspicious,
+        };
+      }
     } else {
       const dasha = resolveDashaHierarchy(record, activeDate);
       mdLord = dasha?.mahadasha ?? 'ketu';
@@ -366,6 +398,7 @@ export function scanSingleStock(
     targetReturnPct,
     stopLossPct,
     cuspExitDate,
+    upcomingIngress,
     ...confluence,
   };
 }
@@ -386,6 +419,7 @@ export function scanUniverse(
   let turnaroundBuy = 0;
   let defensiveExit = 0;
   let blocked = 0;
+  let upcomingIngressCount = 0;
 
   for (const record of Object.values(registry)) {
     const funds = fundamentalsMap[record.symbol] ?? [];
@@ -397,6 +431,9 @@ export function scanUniverse(
     if (item.signal === 'BULL_HARVEST' || (item.triadCode === '[T-T-T]' && item.action === 'BUY')) strongBuy++;
     if (item.signal === 'TURNAROUND_INCEPTION') turnaroundBuy++;
     if (item.signal === 'DEFENSIVE_EXIT') defensiveExit++;
+    if (item.upcomingIngress && item.upcomingIngress.isAuspicious && item.upcomingIngress.daysUntil <= 14) {
+      upcomingIngressCount++;
+    }
   }
 
   return {
@@ -407,84 +444,12 @@ export function scanUniverse(
     turnaroundBuyCount: turnaroundBuy,
     defensiveExitCount: defensiveExit,
     blockedCount: blocked,
+    upcomingIngressCount,
     items,
   };
 }
 
-export function filterUniverseByTriad(items: UniverseStockScanItem[], triadFilter: string): UniverseStockScanItem[] {
-  if (!triadFilter || triadFilter === 'ALL') return items;
-  return items.filter((item) => item.triadCode === triadFilter);
-}
-
-export function filterUniverseByYoga(
-  items: UniverseStockScanItem[],
-  yogaFilter: 'ALL' | 'VRY' | 'NBRY' | 'DHANA' | 'MAHAPURUSHA'
-): UniverseStockScanItem[] {
-  if (yogaFilter === 'ALL') return items;
-  if (yogaFilter === 'VRY') return items.filter((i) => i.hasVry);
-  if (yogaFilter === 'NBRY') return items.filter((i) => i.hasNbry);
-  if (yogaFilter === 'DHANA') return items.filter((i) => i.activeYogas.includes('DHANA YOGA'));
-  if (yogaFilter === 'MAHAPURUSHA') {
-    return items.filter((i) => i.activeYogas.some((y) => y.includes('YOGA') && !y.includes('DHANA') && !y.includes('VRY')));
-  }
-  return items;
-}
-
-export function filterUniverseByKota(
-  items: UniverseStockScanItem[],
-  kotaFilter: 'ALL' | 'FORTIFIED' | 'BREACHED'
-): UniverseStockScanItem[] {
-  if (kotaFilter === 'ALL') return items;
-  if (kotaFilter === 'FORTIFIED') return items.filter((i) => i.isKotaFortified);
-  if (kotaFilter === 'BREACHED') return items.filter((i) => i.isKotaBreached);
-  return items;
-}
-
-export function filterUniverseBySBC(
-  items: UniverseStockScanItem[],
-  sbcFilter: 'ALL' | 'SUBHA' | 'CLEAN' | 'AFFLICTED'
-): UniverseStockScanItem[] {
-  if (sbcFilter === 'ALL') return items;
-  return items.filter((i) => i.sbcStatus === sbcFilter);
-}
-
-export function filterUniverseByInduLagna(
-  items: UniverseStockScanItem[],
-  induFilter: 'ALL' | 'ACTIVE' | 'NEUTRAL'
-): UniverseStockScanItem[] {
-  if (induFilter === 'ALL') return items;
-  if (induFilter === 'ACTIVE') return items.filter((i) => i.isInduLagnaActive);
-  return items.filter((i) => !i.isInduLagnaActive);
-}
-
-export function filterUniverseByTara(
-  items: UniverseStockScanItem[],
-  taraFilter: 'ALL' | 'AUSPICIOUS' | 'NEUTRAL' | 'INAUSPICIOUS'
-): UniverseStockScanItem[] {
-  if (taraFilter === 'ALL') return items;
-  return items.filter((i) => i.taraCategory === taraFilter);
-}
-
-export function filterUniverseByDashaLord(
-  items: UniverseStockScanItem[],
-  level: 'MD' | 'AD' | 'PD',
-  lord: PlanetKey | 'ALL'
-): UniverseStockScanItem[] {
-  if (!lord || lord === 'ALL') return items;
-  if (level === 'MD') return items.filter((i) => i.mdLord === lord);
-  if (level === 'AD') return items.filter((i) => i.adLord === lord);
-  return items.filter((i) => i.pdLord === lord);
-}
-
-export function filterUniverseByDashaRole(
-  items: UniverseStockScanItem[],
-  level: 'MD' | 'AD' | 'PD',
-  role: 'T' | 'K' | 'D' | 'ALL'
-): UniverseStockScanItem[] {
-  if (!role || role === 'ALL') return items;
-  const idx = level === 'MD' ? 1 : level === 'AD' ? 3 : 5;
-  return items.filter((i) => i.triadCode[idx] === role);
-}
+export * from './universeFilters';
 
 export function getPrioritizedDailyActionFeed(items: UniverseStockScanItem[]): UniverseStockScanItem[] {
   const priorityOrder: Record<string, number> = { BUY: 1, SELL: 2, HOLD: 3 };

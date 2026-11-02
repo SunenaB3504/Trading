@@ -7,6 +7,7 @@ import {
   filterUniverseBySBC,
   filterUniverseByInduLagna,
   filterUniverseByTara,
+  filterUniverseByIngress,
   getPrioritizedDailyActionFeed,
 } from './universeScanner';
 import type { CorporateRegistryRecord, QuarterlyFundamental } from '../data/types';
@@ -191,6 +192,18 @@ describe('Market Universe Scanner Engine (universeScanner)', () => {
     // Blocked item must be at the bottom
     const lastItem = prioritized[prioritized.length - 1];
     expect(lastItem?.isBlocked).toBe(true);
+  });
+
+  it('correctly tracks upcoming auspicious ingress and filters by ingress window', () => {
+    const summary = scanUniverse(sampleRegistry, '2026-10-28', sampleFundamentals);
+    expect(typeof summary.upcomingIngressCount).toBe('number');
+    const ingressItems = filterUniverseByIngress(summary.items, 14);
+    expect(Array.isArray(ingressItems)).toBe(true);
+    ingressItems.forEach((i) => {
+      expect(i.upcomingIngress).toBeDefined();
+      expect(i.upcomingIngress!.isAuspicious).toBe(true);
+      expect(i.upcomingIngress!.daysUntil).toBeLessThanOrEqual(14);
+    });
   });
 
   it('TC-08 Benchmark: scans universe stocks in under 50ms', () => {

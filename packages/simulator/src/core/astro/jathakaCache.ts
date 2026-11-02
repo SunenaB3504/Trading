@@ -74,9 +74,9 @@ export function computeJathakam(
   record: CorporateRegistryRecord,
   referenceDate: string = '2005-01-01'
 ): CachedJathakam {
-  const lagnaId = (record.lagna_sign_id ?? 1) - 1;
+  const lagnaId = record.lagna_sign_id ?? 0;
   const lagnaLord = SIGN_LORDS[lagnaId] ?? 'mars';
-  const moonId = (record.moon_sign_id ?? 1) - 1;
+  const moonId = record.moon_sign_id ?? 0;
   const moonLord = SIGN_LORDS[moonId] ?? 'moon';
 
   const birthStr = `${record.listing_date}T${record.listing_time || '10:00:00'}+05:30`;

@@ -11,7 +11,7 @@ import { scanUniverse, type UniverseStockScanItem } from '../../../core/engine/u
 import { useStrategyStore } from '../../../state/strategyStore';
 import { usePortfolioStore } from '../../../state/portfolioStore';
 
-export type FilterTab = 'ALL' | 'BUY' | 'SELL' | 'HOLDINGS';
+export type FilterTab = 'ALL' | 'BUY' | 'SELL' | 'INGRESS' | 'HOLDINGS';
 export type SortOption = 'URGENCY' | 'PROFIT' | 'SCORE' | 'FINANCIAL';
 
 export interface DailyActionFeedProps {
@@ -86,6 +86,7 @@ export const DailyActionFeed: React.FC<DailyActionFeedProps> = ({
 
   const buyCount = summary.strongBuyCount + summary.turnaroundBuyCount;
   const sellCount = summary.defensiveExitCount;
+  const ingressCount = summary.upcomingIngressCount ?? 0;
   const holdingsCount = useMemo(
     () => summary.items.filter((i) => heldSymbols.has(i.symbol)).length,
     [summary.items, heldSymbols]
@@ -97,6 +98,8 @@ export const DailyActionFeed: React.FC<DailyActionFeedProps> = ({
       list = list.filter((i) => i.action === 'BUY' && !i.isBlocked);
     } else if (filterTab === 'SELL') {
       list = list.filter((i) => i.action === 'SELL');
+    } else if (filterTab === 'INGRESS') {
+      list = list.filter((i) => i.upcomingIngress && i.upcomingIngress.isAuspicious && i.upcomingIngress.daysUntil <= 14);
     } else if (filterTab === 'HOLDINGS') {
       list = list.filter((i) => heldSymbols.has(i.symbol));
     } else {
@@ -104,6 +107,13 @@ export const DailyActionFeed: React.FC<DailyActionFeedProps> = ({
     }
 
     return [...list].sort((a, b) => {
+      if (filterTab === 'INGRESS') {
+        const dA = a.upcomingIngress?.daysUntil ?? 999;
+        const dB = b.upcomingIngress?.daysUntil ?? 999;
+        if (dA !== dB) return dA - dB;
+        return (b.upcomingIngress?.isPureTrikona ? 1 : 0) - (a.upcomingIngress?.isPureTrikona ? 1 : 0);
+      }
+
       const aHeldSell = heldSymbols.has(a.symbol) && a.action === 'SELL';
       const bHeldSell = heldSymbols.has(b.symbol) && b.action === 'SELL';
       if (aHeldSell !== bHeldSell) return aHeldSell ? -1 : 1;
@@ -164,6 +174,7 @@ export const DailyActionFeed: React.FC<DailyActionFeedProps> = ({
         <TabBtn active={filterTab === 'ALL'} label={`All (${buyCount + sellCount})`} onClick={() => setFilterTab('ALL')} />
         <TabBtn active={filterTab === 'BUY'} label={`Buy (${buyCount})`} color="#10B981" onClick={() => setFilterTab('BUY')} />
         <TabBtn active={filterTab === 'SELL'} label={`Sell (${sellCount})`} color="#F59E0B" onClick={() => setFilterTab('SELL')} />
+        <TabBtn active={filterTab === 'INGRESS'} label={`⚡ Ingress (${ingressCount})`} color="#38BDF8" onClick={() => setFilterTab('INGRESS')} />
         {holdingsCount > 0 && (
           <TabBtn active={filterTab === 'HOLDINGS'} label={`My Holdings (${holdingsCount})`} color="#818CF8" onClick={() => setFilterTab('HOLDINGS')} />
         )}
@@ -181,6 +192,7 @@ export const DailyActionFeed: React.FC<DailyActionFeedProps> = ({
               item={item}
               onSelect={onSelectStock}
               heldShares={heldPositions[item.symbol]?.shares}
+              isIngressTab={filterTab === 'INGRESS'}
             />
           ))
         )}
@@ -193,15 +205,18 @@ function ActionFeedRow({
   item,
   onSelect,
   heldShares,
+  isIngressTab = false,
 }: {
   item: UniverseStockScanItem;
   onSelect: (sym: string) => void;
   heldShares?: number | undefined;
+  isIngressTab?: boolean;
 }): React.ReactElement {
   const badgeStyle = getActionBadgeStyle(item);
   const isHeld = (heldShares ?? 0) > 0;
   const isUrgent = item.daysToCusp <= 7;
   const cuspDateFormatted = formatCuspDate(item.cuspExitDate);
+  const hasUpcomingIngress = Boolean(item.upcomingIngress && item.upcomingIngress.isAuspicious && item.upcomingIngress.daysUntil <= 14);
 
   return (
     <div
@@ -212,28 +227,47 @@ function ActionFeedRow({
         justifyContent: 'space-between',
         padding: '7px 10px',
         borderRadius: '5px',
-        backgroundColor: isHeld && item.action === 'SELL' ? '#3B0707' : '#111827',
-        border: `1px solid ${isHeld && item.action === 'SELL' ? '#DC2626' : '#1E2638'}`,
+        backgroundColor: isIngressTab ? '#082F49' : (isHeld && item.action === 'SELL' ? '#3B0707' : '#111827'),
+        border: `1px solid ${isIngressTab ? '#0284C7' : (isHeld && item.action === 'SELL' ? '#DC2626' : '#1E2638')}`,
         cursor: 'pointer',
         fontSize: '11px',
         gap: '8px',
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
-        <span style={{ fontWeight: 800, color: '#F8FAFC', width: '65px' }}>{item.symbol}</span>
+        <span style={{ fontWeight: 800, color: '#F8FAFC', width: '65px' }}>
+          {item.symbol}
+          {hasUpcomingIngress && !isIngressTab && (
+            <span title="Upcoming Auspicious Ingress" style={{ color: '#38BDF8', marginLeft: '3px', fontSize: '9px' }}>⚡</span>
+          )}
+        </span>
         <span style={{ color: '#94A3B8', fontSize: '10px', fontWeight: 600, width: '55px' }}>
           ₹{item.cmp.toFixed(item.cmp < 100 ? 1 : 0)}
         </span>
-        <span style={{ fontFamily: 'monospace', color: '#00F2FE', fontSize: '10px', fontWeight: 700 }}>
+        <span style={{ fontFamily: 'monospace', color: isIngressTab ? '#94A3B8' : '#00F2FE', fontSize: '10px', fontWeight: 700 }}>
           {item.triadCode}
         </span>
-        <span style={{ ...badgeStyle, padding: '2px 6px', borderRadius: '3px', fontSize: '9px', fontWeight: 800 }}>
-          {item.isBlocked ? 'VETO' : item.action}
-        </span>
+        {isIngressTab ? (
+          <span style={{ backgroundColor: '#0369A1', color: '#E0F2FE', border: '1px solid #38BDF8', padding: '2px 6px', borderRadius: '3px', fontSize: '9px', fontWeight: 800 }}>
+            ⚡ INGRESS
+          </span>
+        ) : (
+          <span style={{ ...badgeStyle, padding: '2px 6px', borderRadius: '3px', fontSize: '9px', fontWeight: 800 }}>
+            {item.isBlocked ? 'VETO' : item.action}
+          </span>
+        )}
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', overflow: 'hidden' }}>
-        {item.action === 'BUY' && !item.isBlocked ? (
+        {isIngressTab && item.upcomingIngress ? (
+          <span style={{ fontSize: '10px', color: '#E0F2FE', whiteSpace: 'nowrap' }}>
+            <span style={{ color: '#64748B' }}>Next: </span>
+            <span style={{ color: '#38BDF8', fontWeight: 800, fontFamily: 'monospace' }}>{item.upcomingIngress.triadCode}</span>
+            <span style={{ color: '#94A3B8', fontSize: '9px', marginLeft: '4px' }}>
+              ({item.upcomingIngress.lords.md[0]?.toUpperCase()}-{item.upcomingIngress.lords.ad[0]?.toUpperCase()}-{item.upcomingIngress.lords.pd[0]?.toUpperCase()})
+            </span>
+          </span>
+        ) : item.action === 'BUY' && !item.isBlocked ? (
           <span style={{ fontSize: '10px', color: '#94A3B8', whiteSpace: 'nowrap' }}>
             <span style={{ color: '#34D399', fontWeight: 700 }}>+{item.targetReturnPct}%</span>
             <span style={{ color: '#64748B' }}> / </span>
@@ -266,16 +300,29 @@ function ActionFeedRow({
       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
         {item.hasVry && <span style={{ color: '#A855F7', fontSize: '9px', fontWeight: 700 }}>VRY</span>}
         {item.hasNbry && <span style={{ color: '#EC4899', fontSize: '9px', fontWeight: 700 }}>NBRY</span>}
-        <span
-          style={{
-            color: isUrgent ? '#F87171' : '#94A3B8',
-            fontSize: '10px',
-            fontWeight: isUrgent ? 800 : 500,
-            whiteSpace: 'nowrap',
-          }}
-        >
-          {Math.round(item.daysToCusp)}d ({cuspDateFormatted})
-        </span>
+        {isIngressTab && item.upcomingIngress ? (
+          <span
+            style={{
+              color: '#38BDF8',
+              fontSize: '10px',
+              fontWeight: 800,
+              whiteSpace: 'nowrap',
+            }}
+          >
+            in {item.upcomingIngress.daysUntil}d ({formatCuspDate(item.upcomingIngress.startDate)})
+          </span>
+        ) : (
+          <span
+            style={{
+              color: isUrgent ? '#F87171' : '#94A3B8',
+              fontSize: '10px',
+              fontWeight: isUrgent ? 800 : 500,
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {Math.round(item.daysToCusp)}d ({cuspDateFormatted})
+          </span>
+        )}
         <span style={{ color: '#38BDF8', fontSize: '10px', fontWeight: 700 }}>Jump ↗</span>
       </div>
     </div>
