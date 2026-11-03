@@ -82334,6 +82334,21 @@
       "rolling_peak": 40.4972,
       "drawdown": -0.4563,
       "is_macro_crisis": false
+    },
+    {
+      "symbol": "TCS",
+      "date": "2026-11-02",
+      "close": 2501.7,
+      "prev_close": 2502.6,
+      "open": 2523,
+      "high": 2549.9,
+      "low": 2492.9,
+      "volume": 2817192,
+      "daily_return": -0.0004,
+      "adj_close_index": 22.0098,
+      "rolling_peak": 40.4972,
+      "drawdown": -0.4565,
+      "is_macro_crisis": false
     }
   ],
   "DIVISLAB": [
@@ -170146,6 +170161,21 @@
       "rolling_peak": 1259.1604,
       "drawdown": 0,
       "is_macro_crisis": false
+    },
+    {
+      "symbol": "DIVISLAB",
+      "date": "2026-11-02",
+      "close": 9945.5,
+      "prev_close": 9780,
+      "open": 9900,
+      "high": 9990,
+      "low": 9868,
+      "volume": 914498,
+      "daily_return": 0.0169,
+      "adj_close_index": 1280.4683,
+      "rolling_peak": 1280.4683,
+      "drawdown": 0,
+      "is_macro_crisis": false
     }
   ],
   "BIOCON": [
@@ -253937,6 +253967,21 @@
       "adj_close_index": 13.0171,
       "rolling_peak": 18.9203,
       "drawdown": -0.312,
+      "is_macro_crisis": false
+    },
+    {
+      "symbol": "BIOCON",
+      "date": "2026-11-02",
+      "close": 354.7,
+      "prev_close": 351.8,
+      "open": 354.7,
+      "high": 358,
+      "low": 351.5,
+      "volume": 2174472,
+      "daily_return": 0.0082,
+      "adj_close_index": 13.1244,
+      "rolling_peak": 18.9203,
+      "drawdown": -0.3063,
       "is_macro_crisis": false
     }
   ],
@@ -337849,6 +337894,21 @@
       "adj_close_index": 34.5901,
       "rolling_peak": 43.1771,
       "drawdown": -0.1989,
+      "is_macro_crisis": false
+    },
+    {
+      "symbol": "PETRONET",
+      "date": "2026-11-02",
+      "close": 300.95,
+      "prev_close": 289.5,
+      "open": 289.8,
+      "high": 301.4,
+      "low": 289.8,
+      "volume": 4485259,
+      "daily_return": 0.0396,
+      "adj_close_index": 35.9582,
+      "rolling_peak": 43.1771,
+      "drawdown": -0.1672,
       "is_macro_crisis": false
     }
   ],
@@ -422692,6 +422752,21 @@
       "rolling_peak": 57.5387,
       "drawdown": -0.5079,
       "is_macro_crisis": false
+    },
+    {
+      "symbol": "IGL",
+      "date": "2026-11-02",
+      "close": 132.92,
+      "prev_close": 139.19,
+      "open": 130,
+      "high": 133.94,
+      "low": 125.63,
+      "volume": 8579977,
+      "daily_return": -0.045,
+      "adj_close_index": 27.0367,
+      "rolling_peak": 57.5387,
+      "drawdown": -0.5301,
+      "is_macro_crisis": false
     }
   ],
   "YESBANK": [
@@ -501714,6 +501789,21 @@
       "rolling_peak": 44.1215,
       "drawdown": -0.9212,
       "is_macro_crisis": false
+    },
+    {
+      "symbol": "YESBANK",
+      "date": "2026-11-02",
+      "close": 15.57,
+      "prev_close": 15.15,
+      "open": 15.22,
+      "high": 15.63,
+      "low": 15.14,
+      "volume": 98898604,
+      "daily_return": 0.0277,
+      "adj_close_index": 3.5735,
+      "rolling_peak": 44.1215,
+      "drawdown": -0.919,
+      "is_macro_crisis": false
     }
   ],
   "SUZLON": [
@@ -579730,6 +579820,21 @@
       "adj_close_index": 0.6153,
       "rolling_peak": 4.291,
       "drawdown": -0.8566,
+      "is_macro_crisis": false
+    },
+    {
+      "symbol": "SUZLON",
+      "date": "2026-11-02",
+      "close": 35.25,
+      "prev_close": 33.9,
+      "open": 33.7,
+      "high": 35.57,
+      "low": 33.34,
+      "volume": 118903115,
+      "daily_return": 0.0398,
+      "adj_close_index": 0.6398,
+      "rolling_peak": 4.291,
+      "drawdown": -0.8509,
       "is_macro_crisis": false
     }
   ],
@@ -676168,6 +676273,21 @@
       "rolling_peak": 15.9302,
       "drawdown": -0.7294,
       "is_macro_crisis": false
+    },
+    {
+      "symbol": "BALAJITELE",
+      "date": "2026-11-02",
+      "close": 87.78,
+      "prev_close": 87.45,
+      "open": 87.02,
+      "high": 90.88,
+      "low": 85.51,
+      "volume": 137075,
+      "daily_return": 0.0038,
+      "adj_close_index": 4.3268,
+      "rolling_peak": 15.9302,
+      "drawdown": -0.7284,
+      "is_macro_crisis": false
     }
   ],
   "FINEORG": [
@@ -707009,6 +707129,21 @@
       "adj_close_index": 6.9111,
       "rolling_peak": 9.618,
       "drawdown": -0.2814,
+      "is_macro_crisis": false
+    },
+    {
+      "symbol": "FINEORG",
+      "date": "2026-11-02",
+      "close": 5220,
+      "prev_close": 5049,
+      "open": 5049.5,
+      "high": 5250,
+      "low": 5035,
+      "volume": 16762,
+      "daily_return": 0.0339,
+      "adj_close_index": 7.1452,
+      "rolling_peak": 9.618,
+      "drawdown": -0.2571,
       "is_macro_crisis": false
     }
   ],
@@ -776702,6 +776837,21 @@
       "rolling_peak": 3.7988,
       "drawdown": -0.1463,
       "is_macro_crisis": false
+    },
+    {
+      "symbol": "ARIES",
+      "date": "2026-11-02",
+      "close": 430.1,
+      "prev_close": 430.1,
+      "open": 433.5,
+      "high": 434.3,
+      "low": 415.6,
+      "volume": 9031,
+      "daily_return": 0,
+      "adj_close_index": 3.2429,
+      "rolling_peak": 3.7988,
+      "drawdown": -0.1463,
+      "is_macro_crisis": false
     }
   ],
   "RAILTEL": [
@@ -797703,6 +797853,21 @@
       "adj_close_index": 2.2506,
       "rolling_peak": 5.2849,
       "drawdown": -0.5741,
+      "is_macro_crisis": false
+    },
+    {
+      "symbol": "RAILTEL",
+      "date": "2026-11-02",
+      "close": 232.63,
+      "prev_close": 222.4,
+      "open": 222.4,
+      "high": 235,
+      "low": 220.06,
+      "volume": 1015595,
+      "daily_return": 0.046,
+      "adj_close_index": 2.3541,
+      "rolling_peak": 5.2849,
+      "drawdown": -0.5546,
       "is_macro_crisis": false
     }
   ]
