@@ -7,20 +7,13 @@
 import type { CorporateRegistryRecord, DailyBar } from '../types';
 import corporateRegistryData from '../corporateRegistry.json';
 import nifty500PricesData from '../fixtures/nifty500Prices.json';
-import recentOhlcCacheData from '../fixtures/recentOhlcCache.json';
+import { recentOhlcCache } from '../fixtures/recentOhlcCache';
 import { calculateNakshatraAndBalance } from '../../astro/vimshottari';
 import { VIMSHOTTARI_YEARS } from '../../astro/constants';
 import type { PlanetKey } from '../../astro/types';
 
 const corporateRegistry = corporateRegistryData as Record<string, CorporateRegistryRecord>;
 const nifty500Prices = nifty500PricesData as Record<string, number>;
-const recentOhlcCache = recentOhlcCacheData as Record<string, Record<string, {
-  open: number;
-  high: number;
-  low: number;
-  close: number;
-  volume: number;
-}>>;
 
 export interface RawCsvBarInput {
   date: string;
