@@ -22,6 +22,7 @@ export interface ParsedAstroProvenance {
   debtToEquity?: string | undefined;
   roce?: string | undefined;
   promoterPledge?: string | undefined;
+  traderStatus?: string | undefined;
   multipliers: {
     omega: number;
     phi: number;
@@ -35,6 +36,7 @@ export interface ExtraProvenanceContext {
   debtToEquity?: number | undefined;
   roce?: number | undefined;
   promoterPledge?: number | undefined;
+  traderStatus?: string | undefined;
 }
 
 export function serializeAstroProvenance(
@@ -59,8 +61,9 @@ export function serializeAstroProvenance(
   const de = extra?.debtToEquity !== undefined ? extra.debtToEquity.toFixed(2) : 'N/A';
   const roce = extra?.roce !== undefined ? extra.roce.toFixed(1) : 'N/A';
   const pledge = extra?.promoterPledge !== undefined ? extra.promoterPledge.toFixed(1) : 'N/A';
+  const trader = extra?.traderStatus || (p.omegaTrader && p.omegaTrader <= 0 ? 'Restricted' : 'Safe');
 
-  return `TRIAD:${triad}|DASHA:${dasha}|SIG:${p.signal}|REASON:${p.reason}|TGT:${target}|STP:${stop}|CUSP:${cusp}|MULT:Ω${omega},Φ${phi},Θ${theta}|MODE:${mode}|INGRESS:${ingress}|CUSPDAYS:${dToCusp}|DE:${de}|ROCE:${roce}|PLG:${pledge}`;
+  return `TRIAD:${triad}|DASHA:${dasha}|SIG:${p.signal}|REASON:${p.reason}|TGT:${target}|STP:${stop}|CUSP:${cusp}|MULT:Ω${omega},Φ${phi},Θ${theta}|MODE:${mode}|INGRESS:${ingress}|CUSPDAYS:${dToCusp}|DE:${de}|ROCE:${roce}|PLG:${pledge}|TRADER:${trader}`;
 }
 
 export function parseAstroProvenance(raw: string): ParsedAstroProvenance {
@@ -93,6 +96,7 @@ export function parseAstroProvenance(raw: string): ParsedAstroProvenance {
     debtToEquity: dict['DE'],
     roce: dict['ROCE'],
     promoterPledge: dict['PLG'],
+    traderStatus: dict['TRADER'] || (omega <= 0 ? 'Restricted' : 'Safe'),
     multipliers: { omega, phi, theta },
   };
 }

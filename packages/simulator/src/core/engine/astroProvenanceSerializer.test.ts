@@ -52,6 +52,7 @@ describe('astroProvenanceSerializer', () => {
     expect(serialized).toContain('STP:1705');
     expect(serialized).toContain('CUSP:2026-11-04');
     expect(serialized).toContain('MULT:Ω1.00,Φ1.25,Θ1.50');
+    expect(serialized).toContain('TRADER:Safe');
   });
 
   it('parses serialized provenance back into structured object', () => {
@@ -65,6 +66,7 @@ describe('astroProvenanceSerializer', () => {
     expect(parsed.stopPrice).toBe(1705);
     expect(parsed.plannedCuspExit).toBe('2026-11-04');
     expect(parsed.multipliers.theta).toBe(1.5);
+    expect(parsed.traderStatus).toBe('Safe');
   });
 
   it('handles fallback gracefully when dasha or rules are missing', () => {

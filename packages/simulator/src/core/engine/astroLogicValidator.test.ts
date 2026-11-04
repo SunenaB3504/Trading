@@ -104,9 +104,10 @@ describe('astroLogicValidator', () => {
     const csv = generateTradesCsv(closed);
 
     expect(csv).toContain('Symbol,Buy Date,Sell Date,Holding Days,Shares');
-    expect(csv).toContain('Entry Triad,Entry Dasha,Ingress Status');
+    expect(csv).toContain('Setup Category,Trader Status at Entry,Trader Omega Multiplier,Entry Triad,Entry Dasha');
     expect(csv).toContain('Exit Reason');
     expect(csv).toContain('APLAPOLLO,2026-10-30,2026-11-03,4,50,1795.00,1850.00');
+    expect(csv).toContain('"Safe",1.00');
     expect(csv).toContain('TCS,2026-10-25,2026-10-29,4,20,4000.00,3950.00');
     expect(csv).toContain('TARGET_HIT');
   });

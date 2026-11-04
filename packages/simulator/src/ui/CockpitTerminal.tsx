@@ -321,6 +321,7 @@ export const CockpitTerminal: React.FC = () => {
       debtToEquity: auditResult?.ratios?.debtToEquity,
       roce: auditResult?.ratios?.roce,
       promoterPledge: auditResult?.ratios?.promoterPledging,
+      traderStatus: ticket.provenance.omegaTrader && ticket.provenance.omegaTrader <= 0 ? 'Restricted' : 'Safe',
     });
     void executeOrder(ticket.symbol, 'BUY', ticket.shares, ticket.price, provenanceStr, activeDate);
   };

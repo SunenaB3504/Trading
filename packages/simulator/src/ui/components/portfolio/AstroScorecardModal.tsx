@@ -221,7 +221,8 @@ export const AstroScorecardModal: React.FC<AstroScorecardModalProps> = ({ isOpen
                     <tr style={{ borderBottom: '1px solid #1E293B', color: '#94A3B8' }}>
                       <th style={{ padding: '8px' }}>Symbol</th>
                       <th style={{ padding: '8px' }}>Period</th>
-                      <th style={{ padding: '8px' }}>Entry Status</th>
+                      <th style={{ padding: '8px' }}>Trader Status</th>
+                      <th style={{ padding: '8px' }}>Entry Setup</th>
                       <th style={{ padding: '8px' }}>Exit Trigger</th>
                       <th style={{ padding: '8px' }}>Price Range</th>
                       <th style={{ padding: '8px', textAlign: 'right' }}>Gross P&L</th>
@@ -233,9 +234,52 @@ export const AstroScorecardModal: React.FC<AstroScorecardModalProps> = ({ isOpen
                     {scorecard.closedTrades.map((t: ClosedAstroTrade) => (
                       <tr key={t.buyOrderId} style={{ borderBottom: '1px solid #1E293B' }}>
                         <td style={{ padding: '8px', fontWeight: 700, color: '#38BDF8' }}>{t.symbol}</td>
-                        <td style={{ padding: '8px', color: '#94A3B8' }}>{t.buyDate} → {t.sellDate}</td>
-                        <td style={{ padding: '8px' }}>{t.setupCategory}</td>
-                        <td style={{ padding: '8px' }}>₹{t.buyPrice} → ₹{t.sellPrice}</td>
+                        <td style={{ padding: '8px', color: '#94A3B8' }}>
+                          {t.buyDate} → {t.sellDate}
+                          <span style={{ display: 'block', fontSize: '10px', color: '#64748B' }}>({t.holdingDays}d hold)</span>
+                        </td>
+                        <td style={{ padding: '8px' }}>
+                          <span
+                            style={{
+                              display: 'inline-block',
+                              padding: '2px 6px',
+                              borderRadius: '4px',
+                              fontSize: '10px',
+                              fontWeight: 600,
+                              backgroundColor: t.provenance.multipliers.omega > 0 ? '#064E3B' : '#7F1D1D',
+                              color: t.provenance.multipliers.omega > 0 ? '#34D399' : '#FCA5A5',
+                            }}
+                          >
+                            Ω {t.provenance.multipliers.omega.toFixed(1)}: {t.provenance.traderStatus || 'Safe'}
+                          </span>
+                        </td>
+                        <td style={{ padding: '8px' }}>
+                          <span style={{ color: '#F1F5F9', fontWeight: 600 }}>{t.setupCategory}</span>
+                          <span style={{ display: 'block', fontSize: '10px', color: '#94A3B8' }}>
+                            {t.provenance.triadCode} • {t.provenance.ingressStatus || 'STANDARD'}
+                          </span>
+                        </td>
+                        <td style={{ padding: '8px' }}>
+                          <span
+                            style={{
+                              display: 'inline-block',
+                              padding: '2px 6px',
+                              borderRadius: '4px',
+                              fontSize: '10px',
+                              fontWeight: 600,
+                              backgroundColor: t.exitReason === 'TARGET_HIT' ? '#064E3B' : t.exitReason === 'STOP_LOSS' ? '#7F1D1D' : '#1E293B',
+                              color: t.exitReason === 'TARGET_HIT' ? '#34D399' : t.exitReason === 'STOP_LOSS' ? '#FCA5A5' : '#94A3B8',
+                            }}
+                          >
+                            {t.exitReason}
+                          </span>
+                          {t.exitDasha && t.exitDasha !== 'N/A' && (
+                            <span style={{ display: 'block', fontSize: '10px', color: '#64748B' }}>
+                              Dasha: {t.exitDasha}
+                            </span>
+                          )}
+                        </td>
+                        <td style={{ padding: '8px' }}>₹{t.buyPrice.toFixed(2)} → ₹{t.sellPrice.toFixed(2)}</td>
                         <td style={{ padding: '8px', textAlign: 'right', color: '#94A3B8' }}>
                           {formatCurrency(t.realizedPnl)} ({t.returnPct >= 0 ? `+${t.returnPct.toFixed(2)}` : t.returnPct.toFixed(2)}%)
                         </td>
