@@ -390,7 +390,7 @@ export const MasterTradeTicketCard: React.FC<MasterTradeTicketCardProps> = ({
   const isBuy = ticket.action === 'BUY';
   const isVetoed = p.isVetoed;
   const isAlgorithmicBuy = isBuy && !isVetoed;
-  const isIngressTier = !isAlgorithmicBuy && isUpcomingIngress;
+  const isIngressTier = !isVetoed && isUpcomingIngress;
   const tier: 'ALGORITHMIC' | 'INGRESS' | 'OVERRIDE' = isAlgorithmicBuy
     ? 'ALGORITHMIC'
     : isIngressTier
