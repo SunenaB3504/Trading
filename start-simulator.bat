@@ -11,3 +11,4 @@ start "" powershell -WindowStyle Hidden -Command "Start-Sleep -Seconds 3; Start-
 
 :: Launch simulator
 call pnpm run simulator
+

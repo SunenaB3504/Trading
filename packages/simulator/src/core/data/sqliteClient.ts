@@ -56,13 +56,23 @@ export class SQLiteClient {
   }
 
   /**
+   * Retrieves current portfolio ledger snapshot synchronously for store hydration.
+   */
+  public getSnapshotSync(): { ledger: PortfolioLedgerState; orders: PaperTradeOrder[] } {
+    return {
+      ledger: {
+        ...this.ledgerState,
+        positions: { ...this.ledgerState.positions },
+      },
+      orders: [...this.orders],
+    };
+  }
+
+  /**
    * Retrieves current portfolio ledger snapshot.
    */
   public async getPortfolioLedger(): Promise<PortfolioLedgerState> {
-    return {
-      ...this.ledgerState,
-      positions: { ...this.ledgerState.positions },
-    };
+    return this.getSnapshotSync().ledger;
   }
 
   /**

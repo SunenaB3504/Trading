@@ -230,7 +230,7 @@ function deriveActiveDasha(meta: CorporateRegistryRecord | null, activeDate: str
 function useCockpitTelemetryState() {
   const { currentIndex, activeDate } = useSimulationStore();
   const { bars, activeBar, metadata, activeSymbol } = useStockStore();
-  const { ledger, executeOrder } = usePortfolioStore();
+  const { ledger, executeOrder, refreshLedger } = usePortfolioStore();
   const strategyParams = useStrategyStore((s) => s.parameters);
 
   const resolvedMeta = metadata ?? corporateRegistry[activeSymbol] ?? corporateRegistry['TCS'] ?? null;
@@ -279,11 +279,11 @@ function useCockpitTelemetryState() {
     portfolio: ledger,
   }), [activeBar, activeSymbol, activeDate, dashaState, auditResult, kotaState, ledger]);
 
-  return { currentIndex, activeDate, bars, dashaState, kotaState, auditResult, tradeTicket, telemetry, executeOrder, metadata: resolvedMeta };
+  return { currentIndex, activeDate, bars, dashaState, kotaState, auditResult, tradeTicket, telemetry, executeOrder, refreshLedger, metadata: resolvedMeta };
 }
 
 export const CockpitTerminal: React.FC = () => {
-  const { currentIndex, activeDate, bars, dashaState, kotaState, auditResult, tradeTicket, telemetry, executeOrder, metadata } =
+  const { currentIndex, activeDate, bars, dashaState, kotaState, auditResult, tradeTicket, telemetry, executeOrder, refreshLedger, metadata } =
     useCockpitTelemetryState();
   const { loadStock } = useStockStore();
 
@@ -297,11 +297,19 @@ export const CockpitTerminal: React.FC = () => {
   const availableTickers = useMemo(() => Object.keys(corporateRegistry), []);
 
   React.useEffect(() => {
-    loadStock('TCS', getManifestMaxDate());
-  }, [loadStock]);
+    const savedStock = typeof window !== 'undefined' ? window.localStorage?.getItem('astro_simulator_active_stock_v1') : null;
+    const savedDate = typeof window !== 'undefined' ? window.localStorage?.getItem('astro_simulator_active_date_v1') : null;
+    loadStock(savedStock || 'TCS', savedDate || getManifestMaxDate());
+    void refreshLedger();
+  }, [loadStock, refreshLedger]);
 
   const handleSelectStock = (sym: string, targetDate?: string) => {
-    loadStock(sym, targetDate ?? activeDate);
+    const d = targetDate ?? activeDate;
+    if (typeof window !== 'undefined' && window.localStorage) {
+      window.localStorage.setItem('astro_simulator_active_stock_v1', sym);
+      if (d) window.localStorage.setItem('astro_simulator_active_date_v1', d);
+    }
+    loadStock(sym, d);
   };
 
   const handleOrder = (ticket: MasterTradeTicket) => {
@@ -319,10 +327,20 @@ export const CockpitTerminal: React.FC = () => {
         onOpenPositions={() => setIsPositionsOpen(true)}
         onOpenScorecard={() => setIsScorecardOpen(true)}
         onOpenIngestion={() => setIsIngestionOpen(true)}
-        onSyncToday={() => loadStock(metadata?.symbol ?? 'TCS', getManifestMaxDate())}
+        onSyncToday={() => {
+          const maxD = getManifestMaxDate();
+          if (typeof window !== 'undefined' && window.localStorage) {
+            window.localStorage.setItem('astro_simulator_active_date_v1', maxD);
+          }
+          loadStock(metadata?.symbol ?? 'TCS', maxD);
+        }}
         onSyncOnline={async () => {
           const res = await syncOnlineMarketData();
-          loadStock(metadata?.symbol ?? 'TCS', res.maxDate || getManifestMaxDate());
+          const targetD = res.maxDate || getManifestMaxDate();
+          if (typeof window !== 'undefined' && window.localStorage) {
+            window.localStorage.setItem('astro_simulator_active_date_v1', targetD);
+          }
+          loadStock(metadata?.symbol ?? 'TCS', targetD);
         }}
         availableTickers={availableTickers}
       />
@@ -333,10 +351,20 @@ export const CockpitTerminal: React.FC = () => {
           dashaState={dashaState}
           activeDate={activeDate}
           metadata={metadata}
-          onSelectDate={(d) => loadStock(metadata?.symbol ?? 'TCS', d)}
+          onSelectDate={(d) => {
+            if (typeof window !== 'undefined' && window.localStorage) {
+              window.localStorage.setItem('astro_simulator_active_date_v1', d);
+            }
+            loadStock(metadata?.symbol ?? 'TCS', d);
+          }}
           onSyncLatestSession={() => {
             const latest = bars[bars.length - 1];
-            if (latest) loadStock(metadata?.symbol ?? 'TCS', latest.date);
+            if (latest) {
+              if (typeof window !== 'undefined' && window.localStorage) {
+                window.localStorage.setItem('astro_simulator_active_date_v1', latest.date);
+              }
+              loadStock(metadata?.symbol ?? 'TCS', latest.date);
+            }
           }}
         />
         <RightTelemetryPanel

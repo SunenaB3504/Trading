@@ -26,23 +26,19 @@ export interface PortfolioState {
   resetAccount: (initialCapital?: number) => void;
 }
 
-export const usePortfolioStore = create<PortfolioState>((set) => ({
-  ledger: {
-    cash_balance: 1000000.0,
-    invested_equity: 0.0,
-    total_equity: 1000000.0,
-    realized_pnl: 0.0,
-    unrealized_pnl: 0.0,
-    positions: {},
-  },
-  orders: [],
+export const usePortfolioStore = create<PortfolioState>((set) => {
+  const initialSnapshot = SQLiteClient.getInstance().getSnapshotSync();
 
-  refreshLedger: async () => {
-    const sqlite = SQLiteClient.getInstance();
-    const ledger = await sqlite.getPortfolioLedger();
-    const orders = await sqlite.getOrderHistory();
-    set({ ledger, orders });
-  },
+  return {
+    ledger: initialSnapshot.ledger,
+    orders: initialSnapshot.orders,
+
+    refreshLedger: async () => {
+      const sqlite = SQLiteClient.getInstance();
+      const ledger = await sqlite.getPortfolioLedger();
+      const orders = await sqlite.getOrderHistory();
+      set({ ledger, orders });
+    },
 
   executeOrder: async (symbol, side, quantity, price, advisoryProvenance, timestamp) => {
     const sqlite = SQLiteClient.getInstance();
@@ -82,4 +78,4 @@ export const usePortfolioStore = create<PortfolioState>((set) => ({
       orders: [],
     });
   },
-}));
+}; });

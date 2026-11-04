@@ -7,3 +7,4 @@ $sc.IconLocation = "shell32.dll,242"
 $sc.Description = "Astro-Financial Trading Simulator"
 $sc.Save()
 Write-Host "Desktop shortcut created successfully at: $desk"
+
