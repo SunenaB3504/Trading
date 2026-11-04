@@ -13,3 +13,4 @@ export interface CachedOhlc {
 }
 
 export const recentOhlcCache: Record<string, Record<string, CachedOhlc>> = {};
+

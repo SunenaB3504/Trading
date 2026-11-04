@@ -73,6 +73,43 @@ export const AstroScorecardModal: React.FC<AstroScorecardModalProps> = ({ isOpen
 
   const totalDeductions = scorecard.totalCharges + scorecard.totalTax;
 
+  const handleExportBackup = () => {
+    const backup = {
+      orders: localStorage.getItem('astro_simulator_orders_v1'),
+      ledger: localStorage.getItem('astro_simulator_ledger_v1'),
+      stock: localStorage.getItem('astro_simulator_selected_stock'),
+      date: localStorage.getItem('astro_simulator_current_date'),
+      exportedAt: new Date().toISOString(),
+    };
+    const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `astro_portfolio_backup_${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleImportBackup = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const text = event.target?.result as string;
+        const backup = JSON.parse(text);
+        if (backup.orders) localStorage.setItem('astro_simulator_orders_v1', backup.orders);
+        if (backup.ledger) localStorage.setItem('astro_simulator_ledger_v1', backup.ledger);
+        if (backup.stock) localStorage.setItem('astro_simulator_selected_stock', backup.stock);
+        if (backup.date) localStorage.setItem('astro_simulator_current_date', backup.date);
+        window.location.reload();
+      } catch {
+        alert('Invalid backup file. Please select a valid astro terminal JSON backup.');
+      }
+    };
+    reader.readAsText(file);
+  };
+
   return (
     <div
       style={{
@@ -200,25 +237,65 @@ export const AstroScorecardModal: React.FC<AstroScorecardModalProps> = ({ isOpen
           )}
         </div>
 
-        <div style={{ padding: '14px 20px', borderTop: '1px solid #1E293B', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <button
-            onClick={() => {
-              if (confirm('Reset virtual paper trading ledger back to ₹10,00,000 initial capital?')) {
-                resetAccount(1000000.0);
-              }
-            }}
-            style={{
-              padding: '6px 12px',
-              borderRadius: '6px',
-              backgroundColor: '#1E293B',
-              color: '#F87171',
-              border: '1px solid #7F1D1D',
-              fontSize: '11px',
-              cursor: 'pointer',
-            }}
-          >
-            Reset Virtual Account
-          </button>
+        <div style={{ padding: '14px 20px', borderTop: '1px solid #1E293B', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <button
+              onClick={() => {
+                if (confirm('Reset virtual paper trading ledger back to ₹10,00,000 initial capital?')) {
+                  resetAccount(1000000.0);
+                }
+              }}
+              style={{
+                padding: '6px 12px',
+                borderRadius: '6px',
+                backgroundColor: '#1E293B',
+                color: '#F87171',
+                border: '1px solid #7F1D1D',
+                fontSize: '11px',
+                cursor: 'pointer',
+              }}
+            >
+              Reset Virtual Account
+            </button>
+            <button
+              onClick={handleExportBackup}
+              title="Download your full trading history, positions, and scorecard as a backup file"
+              style={{
+                padding: '6px 12px',
+                borderRadius: '6px',
+                backgroundColor: '#1E293B',
+                color: '#38BDF8',
+                border: '1px solid #0284C7',
+                fontSize: '11px',
+                fontWeight: 600,
+                cursor: 'pointer',
+              }}
+            >
+              💾 Export Backup
+            </button>
+            <label
+              title="Restore a previously exported portfolio backup JSON file"
+              style={{
+                padding: '6px 12px',
+                borderRadius: '6px',
+                backgroundColor: '#1E293B',
+                color: '#34D399',
+                border: '1px solid #059669',
+                fontSize: '11px',
+                fontWeight: 600,
+                cursor: 'pointer',
+                display: 'inline-block',
+              }}
+            >
+              📂 Import Backup
+              <input
+                type="file"
+                accept=".json"
+                onChange={handleImportBackup}
+                style={{ display: 'none' }}
+              />
+            </label>
+          </div>
           <button
             onClick={onClose}
             style={{
