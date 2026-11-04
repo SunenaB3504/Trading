@@ -193,20 +193,58 @@ export function buildNatalPreview(
 }
 
 export async function fetchOnlineYahooBars(symbol: string): Promise<RawCsvBarInput[]> {
-  const norm = symbol.trim().toUpperCase();
-  const ticker = norm.endsWith('.NS') || norm.endsWith('.BO') ? norm : `${norm}.NS`;
+  let norm = symbol.trim().toUpperCase();
+  if (!norm) throw new Error('Please enter a valid stock symbol');
 
-  // Proxy through Vite in browser, or direct URL
-  const proxyUrl = `/api/yfinance/v8/finance/chart/${ticker}?period1=0&period2=9999999999&interval=1d`;
-  const fallbackUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?period1=0&period2=9999999999&interval=1d`;
+  // Auto-correct trailing O or typo if found in registry
+  if (!corporateRegistry[norm] && corporateRegistry[norm.replace(/O$/, '')]) {
+    norm = norm.replace(/O$/, '');
+  }
 
-  let response: Response;
+  // 1. Try local bundled static bars first (zero-latency instant load)
   try {
-    response = await fetch(proxyUrl);
-    if (!response.ok) throw new Error(`Proxy error: ${response.status}`);
+    const base = ((import.meta.env?.BASE_URL as string) || '/');
+    const cleanBase = base.endsWith('/') ? base : `${base}/`;
+    const localRes = await fetch(`${cleanBase}data/bars/${norm}.json`);
+    if (localRes.ok) {
+      const localBars = (await localRes.json()) as DailyBar[];
+      if (Array.isArray(localBars) && localBars.length > 0) {
+        return localBars.map((b) => ({
+          date: b.date,
+          open: b.open,
+          high: b.high,
+          low: b.low,
+          close: b.close,
+          volume: b.volume || 10000,
+        })).sort((a, b) => a.date.localeCompare(b.date));
+      }
+    }
   } catch {
-    response = await fetch(fallbackUrl);
-    if (!response.ok) throw new Error(`Online feed error: ${response.status}`);
+    // Proceed to network fetch
+  }
+
+  const ticker = norm.endsWith('.NS') || norm.endsWith('.BO') ? norm : `${norm}.NS`;
+  const proxyUrl = `/api/yfinance/v8/finance/chart/${ticker}?range=5y&interval=1d`;
+  const directUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?range=5y&interval=1d`;
+  const corsProxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(directUrl)}`;
+
+  let response: Response | null = null;
+  const urlsToTry = [proxyUrl, corsProxyUrl, directUrl];
+
+  for (const url of urlsToTry) {
+    try {
+      const res = await fetch(url);
+      if (res.ok) {
+        response = res;
+        break;
+      }
+    } catch {
+      // try next URL
+    }
+  }
+
+  if (!response) {
+    throw new Error(`Failed to fetch online market data for ${ticker}. Check symbol or internet connection.`);
   }
 
   const data = await response.json();

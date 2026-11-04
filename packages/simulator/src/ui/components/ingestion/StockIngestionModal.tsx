@@ -42,11 +42,16 @@ export const StockIngestionModal: React.FC<StockIngestionModalProps> = ({
     try {
       setIsFetchingOnline(true);
       setErrorMsg(null);
-      setStatusMsg(`Connecting to online feed for ${symbolInput.trim().toUpperCase()}...`);
+      let targetSym = symbolInput.trim().toUpperCase();
+      if (targetSym === 'JINDALPHOTO') {
+        targetSym = 'JINDALPHOT';
+        setSymbolInput('JINDALPHOT');
+      }
+      setStatusMsg(`Connecting to online feed for ${targetSym}...`);
 
-      const rawBars = await fetchOnlineYahooBars(symbolInput);
+      const rawBars = await fetchOnlineYahooBars(targetSym);
       if (rawBars.length === 0) {
-        throw new Error(`No bars returned for ${symbolInput}`);
+        throw new Error(`No bars returned for ${targetSym}`);
       }
 
       // Convert bars to formatted CSV text in the textarea
@@ -57,7 +62,7 @@ export const StockIngestionModal: React.FC<StockIngestionModalProps> = ({
       setCsvContent([header, ...rows].join('\n'));
 
       // Also trigger natal resolution if not done
-      const natal = buildNatalPreview(symbolInput, listingDate, listingTime);
+      const natal = buildNatalPreview(targetSym, listingDate, listingTime);
       setPreview(natal);
       setListingDate(natal.listingDate);
       setListingTime(natal.listingTime);
