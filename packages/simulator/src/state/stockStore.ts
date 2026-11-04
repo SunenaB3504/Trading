@@ -138,7 +138,7 @@ function applyStockState(
 ): void {
   const meta = resolveCorporateMeta(norm);
   const simState = useSimulationStore.getState();
-  const evalDate = targetDate ?? simState.activeDate ?? '2026-10-30';
+  const evalDate = targetDate ?? simState.activeDate ?? '2026-11-03';
 
   let targetIdx = -1;
   let resolvedDate = evalDate;
@@ -190,6 +190,7 @@ export interface StockState {
   setBars: (bars: DailyBar[]) => void;
   syncActiveBar: (index: number) => void;
   loadStock: (symbol: string, targetDate?: string) => Promise<DailyBar[]> | DailyBar[];
+  invalidateBarsCache: () => void;
   registerCustomStock: (symbol: string, bars: DailyBar[], customMeta?: Partial<CorporateRegistryRecord>) => void;
   reset: () => void;
 }
@@ -199,6 +200,12 @@ export const useStockStore = create<StockState>((set, get) => ({
   metadata: corporateRegistry[defaultSymbol] ?? null,
   bars: defaultBars,
   activeBar: defaultLatestBar,
+
+  invalidateBarsCache: () => {
+    for (const key of Object.keys(loadedBarsCache)) {
+      delete loadedBarsCache[key];
+    }
+  },
 
   setActiveSymbol: (activeSymbol: string) => {
     get().loadStock(activeSymbol);

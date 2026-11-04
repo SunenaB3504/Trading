@@ -31,9 +31,9 @@ export interface SimulationState {
 export const useSimulationStore = create<SimulationState>((set) => ({
   isPlaying: false,
   speed: 1,
-  currentIndex: 5486,
-  totalSessions: 5487,
-  activeDate: '2026-10-30',
+  currentIndex: 5488,
+  totalSessions: 5489,
+  activeDate: '2026-11-03',
 
   setSpeed: (speed: PlaybackSpeed) => set({ speed }),
 

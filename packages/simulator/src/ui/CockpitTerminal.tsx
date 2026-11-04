@@ -332,6 +332,7 @@ export const CockpitTerminal: React.FC = () => {
           if (typeof window !== 'undefined' && window.localStorage) {
             window.localStorage.setItem('astro_simulator_active_date_v1', maxD);
           }
+          useStockStore.getState().invalidateBarsCache();
           loadStock(metadata?.symbol ?? 'TCS', maxD);
         }}
         onSyncOnline={async () => {
@@ -340,6 +341,7 @@ export const CockpitTerminal: React.FC = () => {
           if (typeof window !== 'undefined' && window.localStorage) {
             window.localStorage.setItem('astro_simulator_active_date_v1', targetD);
           }
+          useStockStore.getState().invalidateBarsCache();
           loadStock(metadata?.symbol ?? 'TCS', targetD);
         }}
         availableTickers={availableTickers}

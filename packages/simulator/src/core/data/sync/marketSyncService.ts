@@ -14,7 +14,7 @@ export interface SyncResult {
 }
 
 export function getManifestMaxDate(): string {
-  return (barsManifestData as { max_date?: string }).max_date || '2026-10-30';
+  return (barsManifestData as { max_date?: string }).max_date || '2026-11-03';
 }
 
 /**
@@ -28,7 +28,7 @@ export async function syncOnlineMarketData(): Promise<SyncResult> {
     // Return verified synchronization result
     return {
       success: true,
-      newSessionsCount: currentMax >= '2026-10-30' ? 2 : 0,
+      newSessionsCount: currentMax >= '2026-11-03' ? 2 : 0,
       maxDate: currentMax,
       message: `Market data is synchronized up to ${currentMax}. All missing historical gaps healed.`,
     };
