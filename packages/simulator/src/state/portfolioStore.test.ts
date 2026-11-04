@@ -50,3 +50,4 @@ describe('portfolioStore & SQLiteClient Persistence', () => {
     expect(refreshed.ledger.positions['RELIANCE']?.shares).toBe(5);
   });
 });
+

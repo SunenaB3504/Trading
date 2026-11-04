@@ -21,11 +21,24 @@ const defaultSymbol = 'TCS';
 const defaultBars = historicalBars[defaultSymbol] ?? [];
 const defaultLatestBar = defaultBars[defaultBars.length - 1] ?? null;
 
-const barLoaders = import.meta.glob<DailyBar[] | { default: DailyBar[] }>(
-  '../core/data/fixtures/bars/*.json'
-);
-
 const loadedBarsCache: Record<string, DailyBar[]> = { ...historicalBars };
+
+async function fetchStockBars(symbol: string): Promise<DailyBar[] | null> {
+  if (typeof window === 'undefined' || typeof fetch === 'undefined') {
+    return null;
+  }
+  try {
+    const base = ((import.meta.env?.BASE_URL as string) || '/');
+    const cleanBase = base.endsWith('/') ? base : `${base}/`;
+    const url = `${cleanBase}data/bars/${symbol.toUpperCase()}.json`;
+    const res = await fetch(url);
+    if (!res.ok) return null;
+    const bars = (await res.json()) as DailyBar[];
+    return bars;
+  } catch {
+    return null;
+  }
+}
 
 function hashSymbol(sym: string): number {
   let h = 0;
@@ -235,39 +248,24 @@ export const useStockStore = create<StockState>((set, get) => ({
       return bars;
     }
 
-    // 2. Check partitioned barLoaders
-    const loaderKey = `../core/data/fixtures/bars/${norm}.json`;
-    const loader = barLoaders[loaderKey];
-
-    if (loader) {
-      const templateBars = historicalBars[defaultSymbol] ?? [];
-      const targetCmp = nifty500Prices[norm] ?? 500.0;
-      const initialBars = generateSyntheticStockBars(norm, templateBars, targetCmp);
-      applyStockState(norm, initialBars, targetDate, set);
-
-      return loader()
-        .then((mod: unknown) => {
-          const modRecord = mod as { default?: DailyBar[] };
-          const loaded: DailyBar[] = Array.isArray(mod) ? mod : (modRecord?.default || []);
-          if (loaded.length > 0) {
-            loadedBarsCache[norm] = loaded;
-            if (get().activeSymbol === norm) {
-              applyStockState(norm, loaded, targetDate, set);
-            }
-            return loaded;
-          }
-          return initialBars;
-        })
-        .catch(() => initialBars);
-    }
-
-    // 3. Fallback to synthetic bars for non-DuckDB stocks
+    // 2. Fetch on-demand from static data endpoint
     const templateBars = historicalBars[defaultSymbol] ?? [];
     const targetCmp = nifty500Prices[norm] ?? 500.0;
-    const syntheticBars = generateSyntheticStockBars(norm, templateBars, targetCmp);
-    loadedBarsCache[norm] = syntheticBars;
-    applyStockState(norm, syntheticBars, targetDate, set);
-    return syntheticBars;
+    const initialBars = generateSyntheticStockBars(norm, templateBars, targetCmp);
+    applyStockState(norm, initialBars, targetDate, set);
+
+    return fetchStockBars(norm)
+      .then((loaded) => {
+        if (loaded && loaded.length > 0) {
+          loadedBarsCache[norm] = loaded;
+          if (get().activeSymbol === norm) {
+            applyStockState(norm, loaded, targetDate, set);
+          }
+          return loaded;
+        }
+        return initialBars;
+      })
+      .catch(() => initialBars);
   },
 
   registerCustomStock: (

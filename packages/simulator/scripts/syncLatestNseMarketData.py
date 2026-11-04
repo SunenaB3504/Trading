@@ -21,7 +21,7 @@ if hasattr(sys.stdout, "reconfigure"):
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 FIXTURES_DIR = os.path.join(BASE_DIR, "packages", "simulator", "src", "core", "data", "fixtures")
-BARS_DIR = os.path.join(FIXTURES_DIR, "bars")
+BARS_DIR = os.path.join(BASE_DIR, "packages", "simulator", "public", "data", "bars")
 MANIFEST_PATH = os.path.join(FIXTURES_DIR, "barsManifest.json")
 OHLC_CACHE_PATH = os.path.join(FIXTURES_DIR, "recentOhlcCache.json")
 PRICES_PATH = os.path.join(FIXTURES_DIR, "nifty500Prices.json")
