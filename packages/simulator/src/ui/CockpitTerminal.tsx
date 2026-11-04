@@ -4,7 +4,7 @@
  * Decomposed into small layout sub-panels & custom hooks (< 60 LOC each).
  */
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { useSimulationStore } from '../state/simulationStore';
 import { useStockStore } from '../state/stockStore';
 import { usePortfolioStore } from '../state/portfolioStore';
@@ -230,8 +230,14 @@ function deriveActiveDasha(meta: CorporateRegistryRecord | null, activeDate: str
 function useCockpitTelemetryState() {
   const { currentIndex, activeDate } = useSimulationStore();
   const { bars, activeBar, metadata, activeSymbol } = useStockStore();
-  const { ledger, executeOrder, refreshLedger } = usePortfolioStore();
+  const { ledger, executeOrder, refreshLedger, syncMarketPricesForDate } = usePortfolioStore();
   const strategyParams = useStrategyStore((s) => s.parameters);
+
+  useEffect(() => {
+    if (activeDate) {
+      void syncMarketPricesForDate(activeDate);
+    }
+  }, [activeDate, syncMarketPricesForDate]);
 
   const resolvedMeta = metadata ?? corporateRegistry[activeSymbol] ?? corporateRegistry['TCS'] ?? null;
 

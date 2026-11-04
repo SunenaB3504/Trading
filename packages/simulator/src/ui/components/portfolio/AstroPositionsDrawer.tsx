@@ -4,7 +4,7 @@
  * Decomposed into small sub-components (< 60 LOC each, file < 380 LOC).
  */
 
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { usePortfolioStore } from '../../../state/portfolioStore';
 import {
   parseAstroProvenance,
@@ -275,8 +275,14 @@ export const AstroPositionsDrawer: React.FC<AstroPositionsDrawerProps> = ({
   activeDate,
   onSelectStock,
 }) => {
-  const { ledger, orders, executeOrder } = usePortfolioStore();
+  const { ledger, orders, executeOrder, syncMarketPricesForDate } = usePortfolioStore();
   const [filterTab, setFilterTab] = useState<PositionFilterTab>('ALL');
+
+  useEffect(() => {
+    if (activeDate && isOpen) {
+      void syncMarketPricesForDate(activeDate);
+    }
+  }, [activeDate, isOpen, syncMarketPricesForDate]);
 
   const positionsList: PortfolioPosition[] = useMemo(
     () => Object.values(ledger.positions).filter((p) => p.shares > 0),
