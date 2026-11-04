@@ -29,8 +29,8 @@ function evaluateAstroTransitRisk(symbol: string, activeDate: string): AstroRisk
 
   const transits = calculateTransitPositions(activeDate);
   const transitMoonSign = transits.moon.signIndex;
-  const janmaMoonSign = meta.moon_sign_id ?? 0;
-  const bhavaFromJanma = ((transitMoonSign - janmaMoonSign + 12) % 12) + 1;
+  const janmaMoon0Based = (meta.moon_sign_id ?? 1) - 1;
+  const bhavaFromJanma = ((transitMoonSign - janmaMoon0Based + 12) % 12) + 1;
 
   if (bhavaFromJanma === 8) {
     return { label: '🔴 CHANDRASHTAMA (8H)', color: '#FCA5A5', bg: '#7F1D1D', isAlert: true };
