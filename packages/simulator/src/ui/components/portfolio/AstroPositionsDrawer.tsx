@@ -6,7 +6,7 @@
 
 import React, { useMemo } from 'react';
 import { usePortfolioStore } from '../../../state/portfolioStore';
-import { parseAstroProvenance } from '../../../core/engine/astroProvenanceSerializer';
+import { parseAstroProvenance, serializeExitProvenance } from '../../../core/engine/astroProvenanceSerializer';
 import { calculateTransitPositions } from '../../../core/astro/ephemeris';
 import { SIGN_NAMES } from '../../../core/astro/constants';
 import type { PortfolioPosition, PaperTradeOrder } from '../../../core/data/types';
@@ -168,12 +168,31 @@ export const AstroPositionsDrawer: React.FC<AstroPositionsDrawerProps> = ({
   if (!isOpen) return null;
 
   const handleCloseTrade = (pos: PortfolioPosition) => {
+    const buyOrd = latestBuyOrders[pos.symbol];
+    let exitReason: 'CUSP_DIRECTIVE' | 'TARGET_HIT' | 'STOP_HIT' | 'MANUAL_EXIT' = 'MANUAL_EXIT';
+    if (buyOrd) {
+      const parsed = parseAstroProvenance(buyOrd.advisory_provenance);
+      if (parsed.targetPrice > 0 && pos.current_price >= parsed.targetPrice) {
+        exitReason = 'TARGET_HIT';
+      } else if (parsed.stopPrice > 0 && pos.current_price <= parsed.stopPrice) {
+        exitReason = 'STOP_HIT';
+      } else if (parsed.plannedCuspExit !== 'N/A' && activeDate >= parsed.plannedCuspExit) {
+        exitReason = 'CUSP_DIRECTIVE';
+      }
+    }
+
+    const provenance = serializeExitProvenance({
+      exitReason,
+      exitDate: activeDate,
+      exitPrice: pos.current_price,
+    });
+
     void executeOrder(
       pos.symbol,
       'SELL',
       pos.shares,
       pos.current_price,
-      `Astro Logic Close on ${activeDate}`,
+      provenance,
       activeDate
     );
   };

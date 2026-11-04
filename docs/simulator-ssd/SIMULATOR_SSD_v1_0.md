@@ -642,6 +642,35 @@ To ensure the terminal is fully extensible and never blocked by missing equities
 
 ---
 
+### 6.8 Phase 8: Comprehensive Transaction & Status Audit Log with 1-Click CSV Journal Export (SSD v1.6)
+
+To enable rigorous quantitative post-trade analysis, empirical setup validation, and attribution modeling, every paper execution records a multi-dimensional state snapshot at both **Entry (BUY)** and **Exit (SELL)**:
+
+```
++----------------------------------------------------------------------------------------------------+
+|                         TRANSACTION & ASTRO STATUS AUDIT LOG SCHEMA                                 |
++----------------------------------------------------------------------------------------------------+
+|  [ENTRY SNAPSHOT (BUY)]                                                                            |
+|  ├── Ingress & Risk Status: Standard vs. Ingress Warning (with remaining days to cusp)             |
+|  ├── Astrological Triad Alignment: [T-T-T], [T-D-T], [D-D-D], etc.                                |
+|  ├── Active Dasha Hierarchy: MD Lord - AD Lord - PD Lord                                           |
+|  ├── Trikona Nathans: 1H (Tanu), 5H (Punya), and 9H (Bhagya) planetary lords                      |
+|  ├── PIT Fundamentals: Debt-to-Equity, ROCE %, Promoter Pledge %                                   |
+|  └── Planned Exit Rules: Target Price, Stop Loss Price, Calendar Cusp Exit Date                    |
+|                                                                                                    |
+|  [EXIT SNAPSHOT (SELL)]                                                                            |
+|  ├── Exit Reason: Cusp Directive, Target Hit, Stop-Loss Hit, or Manual Liquidation                 |
+|  ├── Exit Astrological State: Running Triad and Dasha hierarchy at exit date                       |
+|  ├── Holding Duration: Exact calendar and trading days held                                        |
+|  └── Financial Attribution: Gross P&L, STT & Statutory Taxes, Net Take-Home P&L, Net Return %      |
+|                                                                                                    |
+|  [OFFLINE CSV AUDIT EXPORT]                                                                        |
+|  └── 1-Click RFC-4180 CSV Download for offline Excel, Python, and statistical regression modeling.  |
++----------------------------------------------------------------------------------------------------+
+```
+
+---
+
 ## 7. Architectural Verification & Modularity Compliance
 
 * **Strict Code Quality Gate:** Every pull request and file creation is verified against the **500 LOC maximum limit** via automated continuous integration lint checks (`eslint-plugin-max-lines`).
@@ -660,3 +689,4 @@ To ensure the terminal is fully extensible and never blocked by missing equities
 | **v1.3.0** | 2026-10-25 | Added Dual Storage (DuckDB/SQLite) and Canvas Candlestick Engine. |
 | **v1.4.0** | 2026-10-29 | Enhanced with Parquet Simple-Bar Pipeline, Julian Day Ephemeris & Dasha Core. |
 | **v1.5.0** | 2026-10-30 | **Data Integrity Audit & Full Horizon Calibration:**<br>• Partitioned 1,225,743 authentic OHLCV bars across all 802 DuckDB symbols with async dynamic import chunking.<br>• Default benchmark stock switched from synthetic APLAPOLLO to authentic TCS (5,487 verified sessions).<br>• Calibrated 1st Mahadasha Antardashas against full theoretical cycle, reaching **100.0% concordance (857/857)** in Nifty 500 matrix.<br>• Section 112A annual ₹1.25L LTCG tracking wired into closed-trade validation engine.<br>• Designed UI architecture for self-service large-cap and new IPO ingestion. |
+| **v1.6.0** | 2026-11-04 | **Transaction Status Audit Log & Offline Export Pipeline:**<br>• Designed Entry Snapshot and Exit Snapshot schema capturing Triad, Dasha, Ingress warnings, PIT ratios, and exit triggers.<br>• Added RFC-4180 1-click CSV Trade Journal export for statistical regression and pattern attribution analysis.<br>• Integrated seamless 1-click Portfolio Backup & Restore directly into the scorecard interface. |

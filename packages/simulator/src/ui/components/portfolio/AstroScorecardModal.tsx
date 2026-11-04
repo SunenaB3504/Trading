@@ -8,6 +8,7 @@ import React, { useMemo } from 'react';
 import { usePortfolioStore } from '../../../state/portfolioStore';
 import {
   generateAstroScorecard,
+  generateTradesCsv,
   type AstroValidationScorecard,
   type SetupCategoryStats,
   type ClosedAstroTrade,
@@ -72,6 +73,21 @@ export const AstroScorecardModal: React.FC<AstroScorecardModalProps> = ({ isOpen
   if (!isOpen) return null;
 
   const totalDeductions = scorecard.totalCharges + scorecard.totalTax;
+
+  const handleExportCsv = () => {
+    if (scorecard.closedTrades.length === 0) {
+      alert('No closed trades to export yet. Close positions to record completed round trips.');
+      return;
+    }
+    const csv = generateTradesCsv(scorecard.closedTrades);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'astro_trade_journal_' + new Date().toISOString().slice(0, 10) + '.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   const handleExportBackup = () => {
     const backup = {
@@ -205,7 +221,8 @@ export const AstroScorecardModal: React.FC<AstroScorecardModalProps> = ({ isOpen
                     <tr style={{ borderBottom: '1px solid #1E293B', color: '#94A3B8' }}>
                       <th style={{ padding: '8px' }}>Symbol</th>
                       <th style={{ padding: '8px' }}>Period</th>
-                      <th style={{ padding: '8px' }}>Setup</th>
+                      <th style={{ padding: '8px' }}>Entry Status</th>
+                      <th style={{ padding: '8px' }}>Exit Trigger</th>
                       <th style={{ padding: '8px' }}>Price Range</th>
                       <th style={{ padding: '8px', textAlign: 'right' }}>Gross P&L</th>
                       <th style={{ padding: '8px', textAlign: 'right' }}>Taxes & Fees</th>

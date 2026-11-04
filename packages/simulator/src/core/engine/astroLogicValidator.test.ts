@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { reconstructClosedTrades, generateAstroScorecard } from './astroLogicValidator';
+import { reconstructClosedTrades, generateAstroScorecard, generateTradesCsv } from './astroLogicValidator';
 import type { PaperTradeOrder } from '../data/types';
 
 describe('astroLogicValidator', () => {
@@ -64,9 +64,13 @@ describe('astroLogicValidator', () => {
     expect(aplTrade?.returnPct).toBeCloseTo(3.06, 1);
     expect(aplTrade?.setupCategory).toBe('[T-T-T] Pure Triad');
     expect(aplTrade?.hitTarget).toBe(true);
+    expect(aplTrade?.holdingDays).toBe(4);
+    expect(aplTrade?.exitReason).toBe('TARGET_HIT');
 
     const tcsTrade = closed.find((t) => t.symbol === 'TCS');
     expect(tcsTrade).toBeDefined();
+    expect(tcsTrade?.holdingDays).toBe(4);
+    expect(tcsTrade?.exitReason).toBe('MANUAL_EXIT');
     expect(tcsTrade?.realizedPnl).toBe(-1000);
     expect(tcsTrade?.tax).toBe(0); // 0 tax on loss
     expect(tcsTrade?.charges).toBeGreaterThan(150);
@@ -93,6 +97,18 @@ describe('astroLogicValidator', () => {
     expect(vryGroup).toBeDefined();
     expect(vryGroup?.winRatePct).toBe(0.0);
     expect(vryGroup?.totalRealizedPnl).toBe(-1000);
+  });
+
+  it('generates standard RFC-4180 CSV with complete entry and exit status audit log', () => {
+    const closed = reconstructClosedTrades(sampleOrders);
+    const csv = generateTradesCsv(closed);
+
+    expect(csv).toContain('Symbol,Buy Date,Sell Date,Holding Days,Shares');
+    expect(csv).toContain('Entry Triad,Entry Dasha,Ingress Status');
+    expect(csv).toContain('Exit Reason');
+    expect(csv).toContain('APLAPOLLO,2026-10-30,2026-11-03,4,50,1795.00,1850.00');
+    expect(csv).toContain('TCS,2026-10-25,2026-10-29,4,20,4000.00,3950.00');
+    expect(csv).toContain('TARGET_HIT');
   });
 });
 

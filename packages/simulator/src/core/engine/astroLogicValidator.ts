@@ -15,6 +15,7 @@ export interface ClosedAstroTrade {
   sellOrderId: string;
   buyDate: string;
   sellDate: string;
+  holdingDays: number;
   shares: number;
   buyPrice: number;
   sellPrice: number;
@@ -24,6 +25,9 @@ export interface ClosedAstroTrade {
   setupCategory: string;
   hitTarget: boolean;
   hitStop: boolean;
+  exitReason: string;
+  exitTriad?: string | undefined;
+  exitDasha?: string | undefined;
   charges: number;     // Statutory friction: STT, Stamp Duty, DP, Exchange, SEBI, GST
   tax: number;         // STCG or LTCG
   netPnl: number;      // Net Post-Tax P&L
@@ -91,12 +95,37 @@ export function reconstructClosedTrades(orders: PaperTradeOrder[]): ClosedAstroT
         taxTracker
       );
 
+      const holdingDays = Math.max(
+        0,
+        Math.round((new Date(ord.timestamp).getTime() - new Date(buyOrd.timestamp).getTime()) / 86400000)
+      );
+
+      let exitReason = 'MANUAL_EXIT';
+      let exitTriad = 'N/A';
+      let exitDasha = 'N/A';
+
+      if (ord.advisory_provenance.includes('EXIT_REASON:')) {
+        const exitParts = ord.advisory_provenance.split('|');
+        for (const part of exitParts) {
+          if (part.startsWith('EXIT_REASON:')) exitReason = part.slice(12);
+          if (part.startsWith('EXIT_TRIAD:')) exitTriad = part.slice(11);
+          if (part.startsWith('EXIT_DASHA:')) exitDasha = part.slice(11);
+        }
+      } else if (prov.targetPrice > 0 && ord.price >= prov.targetPrice) {
+        exitReason = 'TARGET_HIT';
+      } else if (prov.stopPrice > 0 && ord.price <= prov.stopPrice) {
+        exitReason = 'STOP_LOSS';
+      } else if (prov.plannedCuspExit !== 'N/A' && ord.timestamp >= prov.plannedCuspExit) {
+        exitReason = 'CUSP_DIRECTIVE';
+      }
+
       closed.push({
         symbol: sym,
         buyOrderId: buyOrd.id,
         sellOrderId: ord.id,
         buyDate: buyOrd.timestamp,
         sellDate: ord.timestamp,
+        holdingDays,
         shares,
         buyPrice: buyOrd.price,
         sellPrice: ord.price,
@@ -106,6 +135,9 @@ export function reconstructClosedTrades(orders: PaperTradeOrder[]): ClosedAstroT
         setupCategory: resolveSetupCategory(prov),
         hitTarget: prov.targetPrice > 0 && ord.price >= prov.targetPrice,
         hitStop: prov.stopPrice > 0 && ord.price <= prov.stopPrice,
+        exitReason,
+        exitTriad,
+        exitDasha,
         charges: taxResult.totalCharges,
         tax: taxResult.capitalGainsTax,
         netPnl: taxResult.netPnl,
@@ -214,4 +246,70 @@ export function generateAstroScorecard(orders: PaperTradeOrder[]): AstroValidati
     categoryBreakdown,
     closedTrades,
   };
+}
+
+export function generateTradesCsv(trades: ClosedAstroTrade[]): string {
+  const headers = [
+    'Symbol',
+    'Buy Date',
+    'Sell Date',
+    'Holding Days',
+    'Shares',
+    'Buy Price (INR)',
+    'Sell Price (INR)',
+    'Invested (INR)',
+    'Gross PnL (INR)',
+    'Gross Return %',
+    'Taxes & Charges (INR)',
+    'Net PnL (INR)',
+    'Net Return %',
+    'Setup Category',
+    'Entry Triad',
+    'Entry Dasha',
+    'Ingress Status',
+    'Days to Ingress at Entry',
+    'Entry Signal',
+    'Debt to Equity',
+    'ROCE %',
+    'Promoter Pledge %',
+    'Exit Reason',
+    'Exit Triad',
+    'Exit Dasha',
+    'Target Price (INR)',
+    'Stop Price (INR)',
+    'Planned Cusp Date',
+  ];
+
+  const rows = trades.map((t) => [
+    t.symbol,
+    t.buyDate,
+    t.sellDate,
+    t.holdingDays.toString(),
+    t.shares.toString(),
+    t.buyPrice.toFixed(2),
+    t.sellPrice.toFixed(2),
+    (t.shares * t.buyPrice).toFixed(2),
+    t.realizedPnl.toFixed(2),
+    t.returnPct.toFixed(2),
+    (t.charges + t.tax).toFixed(2),
+    t.netPnl.toFixed(2),
+    t.netReturnPct.toFixed(2),
+    `"${t.setupCategory}"`,
+    t.provenance.triadCode,
+    t.provenance.dashaHierarchy,
+    t.provenance.ingressStatus || 'STANDARD',
+    t.provenance.daysToCusp !== undefined ? t.provenance.daysToCusp.toString() : 'N/A',
+    `"${t.provenance.signal}"`,
+    t.provenance.debtToEquity || 'N/A',
+    t.provenance.roce || 'N/A',
+    t.provenance.promoterPledge || 'N/A',
+    t.exitReason,
+    t.exitTriad || 'N/A',
+    t.exitDasha || 'N/A',
+    t.provenance.targetPrice > 0 ? t.provenance.targetPrice.toFixed(2) : 'N/A',
+    t.provenance.stopPrice > 0 ? t.provenance.stopPrice.toFixed(2) : 'N/A',
+    t.provenance.plannedCuspExit,
+  ]);
+
+  return [headers.join(','), ...rows.map((r) => r.join(','))].join('\r\n');
 }

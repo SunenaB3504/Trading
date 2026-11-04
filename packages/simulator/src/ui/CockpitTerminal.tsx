@@ -314,7 +314,14 @@ export const CockpitTerminal: React.FC = () => {
 
   const handleOrder = (ticket: MasterTradeTicket) => {
     if (ticket.shares <= 0) return;
-    const provenanceStr = serializeAstroProvenance(ticket, dashaState);
+    const isIngress = Boolean(dashaState && dashaState.pdRemainingDays <= 14);
+    const provenanceStr = serializeAstroProvenance(ticket, dashaState, {
+      ingressStatus: isIngress ? 'INGRESS_WARNING' : 'STANDARD',
+      daysToIngress: dashaState ? Math.round(dashaState.pdRemainingDays) : undefined,
+      debtToEquity: auditResult?.ratios?.debtToEquity,
+      roce: auditResult?.ratios?.roce,
+      promoterPledge: auditResult?.ratios?.promoterPledging,
+    });
     void executeOrder(ticket.symbol, 'BUY', ticket.shares, ticket.price, provenanceStr, activeDate);
   };
 

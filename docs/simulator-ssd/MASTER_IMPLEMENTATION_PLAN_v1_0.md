@@ -659,3 +659,18 @@ This Master Implementation Plan is permanently archived under [`docs/simulator-s
   - `packages/simulator/src/ui/components/ingestion/StockIngestionDrawer.tsx` (< 250 LOC).
   - `packages/simulator/src/core/data/ingestion/stockIngestionEngine.test.ts` (< 200 LOC).
 * **Acceptance Criteria:** Successfully ingests RELIANCE from local Bhavcopy archive in < 3 seconds; displays 5,000+ authentic bars; opens immediately on the chart with 100% calibrated Dasha and Kota telemetry.
+
+---
+
+### 8.5 Work Package Specification: WP-8.1 Transaction Status Audit Log & 1-Click CSV Journal Export
+* **Objective:** Capture comprehensive state snapshots at both Entry (BUY) and Exit (SELL) for post-trade empirical attribution modeling, pattern analysis, and offline Excel/Python analytics.
+* **Work Package Steps:**
+  1. **Entry Status Capture:** Enrich `PaperTradeOrder.advisory_provenance` or order schema with Triad, Dasha hierarchy, Trikona Nathans, Ingress risk status, days-to-cusp, and Point-in-Time balance-sheet metrics (D/E, ROCE, Pledging %).
+  2. **Exit Status Capture:** When closing positions in `AstroPositionsDrawer`, capture exit reason (Cusp Directive, Stop Hit, Target Hit, Manual), exit Triad, exit Dasha, and holding days.
+  3. **Trade Journal Table UI:** Expand `AstroScorecardModal` with a granular audit table comparing Entry Status vs. Exit Status for every closed round trip.
+  4. **1-Click RFC-4180 CSV Export:** Provide a 1-click download button generating a full CSV with columns for Symbol, Dates, Holding Days, Prices, Shares, Entry Triad, Entry Dasha, Ingress Status, Exit Trigger, Gross P&L, Taxes, and Net Return.
+  5. **1-Click JSON Backup & Restore:** Enable exporting and importing user portfolio state across machines and cloud deployments directly from the scorecard.
+* **Deliverables:**
+  - Enhanced `astroLogicValidator.ts` and `astroProvenanceSerializer.ts`.
+  - Enriched `AstroScorecardModal.tsx` with audit log columns and CSV export.
+  - Automated unit tests in `astroLogicValidator.test.ts`.
