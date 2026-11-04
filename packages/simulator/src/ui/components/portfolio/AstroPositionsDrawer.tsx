@@ -1,7 +1,7 @@
 /**
  * packages/simulator/src/ui/components/portfolio/AstroPositionsDrawer.tsx
  * Docked slide-over drawer for active paper trading positions with live Astro risk monitoring.
- * Decomposed into small sub-components (< 60 LOC each, file < 380 LOC).
+ * Decomposed into small sub-components (< 60 LOC each, file < 490 LOC).
  */
 
 import React, { useMemo, useState, useEffect } from 'react';
@@ -15,8 +15,12 @@ import { calculateTransitPositions } from '../../../core/astro/ephemeris';
 import { SIGN_NAMES } from '../../../core/astro/constants';
 import type { PortfolioPosition, PaperTradeOrder } from '../../../core/data/types';
 import corporateRegistryData from '../../../core/data/corporateRegistry.json';
+import recentOhlcCacheData from '../../../core/data/fixtures/recentOhlcCache.json';
+import nifty500PricesData from '../../../core/data/fixtures/nifty500Prices.json';
 
 const corporateRegistry = corporateRegistryData as Record<string, any>;
+const recentOhlcCache = recentOhlcCacheData as Record<string, Record<string, any>>;
+const nifty500Prices = nifty500PricesData as Record<string, number>;
 
 export type PositionFilterTab = 'ALL' | 'SELL_TODAY' | 'TARGET_HIT' | 'SAFE';
 
@@ -48,15 +52,9 @@ function evaluateAstroTransitRisk(symbol: string, activeDate: string): AstroRisk
   const janmaMoon0Based = (meta.moon_sign_id ?? 1) - 1;
   const bhavaFromJanma = ((transitMoonSign - janmaMoon0Based + 12) % 12) + 1;
 
-  if (bhavaFromJanma === 8) {
-    return { label: '🔴 CHANDRASHTAMA (8H)', color: '#FCA5A5', bg: '#7F1D1D', isAlert: true };
-  }
-  if (bhavaFromJanma === 7) {
-    return { label: '🟡 Approaching 8H (~2d)', color: '#FDE68A', bg: '#78350F', isAlert: false };
-  }
-  if (bhavaFromJanma === 6 || bhavaFromJanma === 12) {
-    return { label: `⚠️ Dusthana (${bhavaFromJanma}H)`, color: '#FED7AA', bg: '#7C2D12', isAlert: false };
-  }
+  if (bhavaFromJanma === 8) return { label: '🔴 CHANDRASHTAMA (8H)', color: '#FCA5A5', bg: '#7F1D1D', isAlert: true };
+  if (bhavaFromJanma === 7) return { label: '🟡 Approaching 8H (~2d)', color: '#FDE68A', bg: '#78350F', isAlert: false };
+  if (bhavaFromJanma === 6 || bhavaFromJanma === 12) return { label: `⚠️ Dusthana (${bhavaFromJanma}H)`, color: '#FED7AA', bg: '#7C2D12', isAlert: false };
   return { label: `🟢 Safe (${bhavaFromJanma}H - ${SIGN_NAMES[transitMoonSign]})`, color: '#6EE7B7', bg: '#064E3B', isAlert: false };
 }
 
@@ -66,8 +64,12 @@ function evaluatePositionExitVerdict(
   risk: AstroRiskVerdict,
   activeDate: string
 ): PositionExitVerdict {
-  const isStopHit = prov.stopPrice > 0 && pos.current_price <= prov.stopPrice;
-  const isTargetHit = prov.targetPrice > 0 && pos.current_price >= prov.targetPrice;
+  const livePrice =
+    recentOhlcCache[activeDate]?.[pos.symbol]?.close ??
+    nifty500Prices[pos.symbol] ??
+    pos.current_price;
+  const isStopHit = prov.stopPrice > 0 && livePrice <= prov.stopPrice;
+  const isTargetHit = prov.targetPrice > 0 && livePrice >= prov.targetPrice;
   const isCuspDue = prov.plannedCuspExit !== 'N/A' && activeDate >= prov.plannedCuspExit;
   const isChandrashtama = risk.isAlert;
 
@@ -75,18 +77,17 @@ function evaluatePositionExitVerdict(
 
   let urgencyReason: string | null = null;
   let urgencyColor = '#94A3B8';
-
   if (isStopHit) {
-    urgencyReason = `🛑 STOP HIT (CMP ₹${pos.current_price.toFixed(1)} ≤ ₹${prov.stopPrice.toFixed(1)})`;
+    urgencyReason = `🛑 STOP HIT (CMP ₹${livePrice.toFixed(1)} ≤ ₹${prov.stopPrice.toFixed(1)})`;
     urgencyColor = '#EF4444';
   } else if (isTargetHit) {
-    urgencyReason = `🎯 TARGET ACHIEVED (CMP ₹${pos.current_price.toFixed(1)} ≥ ₹${prov.targetPrice.toFixed(1)})`;
+    urgencyReason = `🎯 TARGET ACHIEVED (CMP ₹${livePrice.toFixed(1)} ≥ ₹${prov.targetPrice.toFixed(1)})`;
     urgencyColor = '#10B981';
   } else if (isCuspDue) {
     urgencyReason = `⏳ CUSP EXIT REACHED (${prov.plannedCuspExit})`;
     urgencyColor = '#F59E0B';
   } else if (isChandrashtama) {
-    urgencyReason = `🔴 CHANDRASHTAMA (8H Lunar Transit)`;
+    urgencyReason = '🔴 CHANDRASHTAMA (8H Lunar Transit)';
     urgencyColor = '#F87171';
   }
 
@@ -154,6 +155,7 @@ function PositionRow({
   prov,
   risk,
   verdict,
+  activeDate,
   onCloseTrade,
   onSelectStock,
 }: {
@@ -161,10 +163,18 @@ function PositionRow({
   prov: ParsedAstroProvenance;
   risk: AstroRiskVerdict;
   verdict: PositionExitVerdict;
+  activeDate: string;
   onCloseTrade: (pos: PortfolioPosition) => void;
   onSelectStock?: ((sym: string) => void) | undefined;
 }): React.ReactElement {
-  const pnl = pos.unrealized_pnl;
+  const livePrice =
+    recentOhlcCache[activeDate]?.[pos.symbol]?.close ??
+    nifty500Prices[pos.symbol] ??
+    pos.current_price;
+  const costBasis = pos.shares * pos.average_cost;
+  const marketVal = pos.shares * livePrice;
+  const pnl = marketVal - costBasis;
+  const returnPct = costBasis > 0 ? (pnl / costBasis) * 100 : 0;
   const isProfit = pnl >= 0;
 
   return (
@@ -222,9 +232,9 @@ function PositionRow({
         </div>
         <div style={{ textAlign: 'right' }}>
           <div style={{ fontSize: '13px', fontWeight: 700, color: isProfit ? '#34D399' : '#F87171' }}>
-            {isProfit ? '+' : ''}₹{pnl.toFixed(0)} ({pos.unrealized_return_pct.toFixed(2)}%)
+            {isProfit ? '+' : ''}₹{pnl.toFixed(0)} ({returnPct.toFixed(2)}%)
           </div>
-          <div style={{ fontSize: '10px', color: '#64748B' }}>CMP: ₹{pos.current_price.toFixed(1)}</div>
+          <div style={{ fontSize: '10px', color: '#64748B' }}>CMP: ₹{livePrice.toFixed(1)}</div>
         </div>
       </div>
 
@@ -320,6 +330,26 @@ export const AstroPositionsDrawer: React.FC<AstroPositionsDrawerProps> = ({
     [positionsWithVerdicts]
   );
 
+  const { totalInvested, totalUnrealized, totalEquity } = useMemo(() => {
+    let inv = 0;
+    let unrl = 0;
+    for (const p of positionsList) {
+      const live =
+        recentOhlcCache[activeDate]?.[p.symbol]?.close ??
+        nifty500Prices[p.symbol] ??
+        p.current_price;
+      const cost = p.shares * p.average_cost;
+      const mv = p.shares * live;
+      inv += cost;
+      unrl += (mv - cost);
+    }
+    return {
+      totalInvested: inv,
+      totalUnrealized: unrl,
+      totalEquity: ledger.cash_balance + inv + unrl,
+    };
+  }, [positionsList, activeDate, ledger.cash_balance]);
+
   const filteredItems = useMemo(() => {
     let list = positionsWithVerdicts;
     if (filterTab === 'SELL_TODAY') {
@@ -340,13 +370,18 @@ export const AstroPositionsDrawer: React.FC<AstroPositionsDrawerProps> = ({
   if (!isOpen) return null;
 
   const handleCloseTrade = (pos: PortfolioPosition) => {
+    const liveExitPrice =
+      recentOhlcCache[activeDate]?.[pos.symbol]?.close ??
+      nifty500Prices[pos.symbol] ??
+      pos.current_price;
+
     const buyOrd = latestBuyOrders[pos.symbol];
     let exitReason: 'CUSP_DIRECTIVE' | 'TARGET_HIT' | 'STOP_HIT' | 'MANUAL_EXIT' = 'MANUAL_EXIT';
     if (buyOrd) {
       const parsed = parseAstroProvenance(buyOrd.advisory_provenance);
-      if (parsed.targetPrice > 0 && pos.current_price >= parsed.targetPrice) {
+      if (parsed.targetPrice > 0 && liveExitPrice >= parsed.targetPrice) {
         exitReason = 'TARGET_HIT';
-      } else if (parsed.stopPrice > 0 && pos.current_price <= parsed.stopPrice) {
+      } else if (parsed.stopPrice > 0 && liveExitPrice <= parsed.stopPrice) {
         exitReason = 'STOP_HIT';
       } else if (parsed.plannedCuspExit !== 'N/A' && activeDate >= parsed.plannedCuspExit) {
         exitReason = 'CUSP_DIRECTIVE';
@@ -356,14 +391,14 @@ export const AstroPositionsDrawer: React.FC<AstroPositionsDrawerProps> = ({
     const provenance = serializeExitProvenance({
       exitReason,
       exitDate: activeDate,
-      exitPrice: pos.current_price,
+      exitPrice: liveExitPrice,
     });
 
     void executeOrder(
       pos.symbol,
       'SELL',
       pos.shares,
-      pos.current_price,
+      liveExitPrice,
       provenance,
       activeDate
     );
@@ -404,11 +439,11 @@ export const AstroPositionsDrawer: React.FC<AstroPositionsDrawerProps> = ({
 
       <div style={{ padding: '10px 16px', backgroundColor: '#0B0F19', borderBottom: '1px solid #1E293B', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', fontSize: '11px' }}>
         <div>Cash: <strong style={{ color: '#F8FAFC' }}>₹{ledger.cash_balance.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</strong></div>
-        <div>Invested: <strong style={{ color: '#F8FAFC' }}>₹{ledger.invested_equity.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</strong></div>
-        <div>Total Equity: <strong style={{ color: '#D4AF37' }}>₹{ledger.total_equity.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</strong></div>
+        <div>Invested: <strong style={{ color: '#F8FAFC' }}>₹{totalInvested.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</strong></div>
+        <div>Total Equity: <strong style={{ color: '#D4AF37' }}>₹{totalEquity.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</strong></div>
         <div>
-          Unrealized: <strong style={{ color: ledger.unrealized_pnl >= 0 ? '#34D399' : '#F87171' }}>
-            {ledger.unrealized_pnl >= 0 ? '+' : ''}₹{ledger.unrealized_pnl.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+          Unrealized: <strong style={{ color: totalUnrealized >= 0 ? '#34D399' : '#F87171' }}>
+            {totalUnrealized >= 0 ? '+' : ''}₹{totalUnrealized.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
           </strong>
         </div>
       </div>
@@ -443,6 +478,7 @@ export const AstroPositionsDrawer: React.FC<AstroPositionsDrawerProps> = ({
               prov={prov}
               risk={risk}
               verdict={verdict}
+              activeDate={activeDate}
               onCloseTrade={handleCloseTrade}
               onSelectStock={onSelectStock}
             />

@@ -4,13 +4,41 @@
  * Enforces strict modularity (< 250 LOC, functions < 60 LOC, complexity <= 10).
  */
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { usePortfolioStore } from '../../state/portfolioStore';
+import { useSimulationStore } from '../../state/simulationStore';
+import recentOhlcCacheData from '../../core/data/fixtures/recentOhlcCache.json';
+import nifty500PricesData from '../../core/data/fixtures/nifty500Prices.json';
+
+const recentOhlcCache = recentOhlcCacheData as Record<string, Record<string, any>>;
+const nifty500Prices = nifty500PricesData as Record<string, number>;
 
 export const BottomStatusBar: React.FC = () => {
   const { ledger } = usePortfolioStore();
+  const { activeDate } = useSimulationStore();
 
-  const isProfit = ledger.unrealized_pnl >= 0;
+  const { invested, unrealized, totalEquity } = useMemo(() => {
+    let inv = 0;
+    let unrl = 0;
+    const ohlc = recentOhlcCache[activeDate];
+
+    for (const pos of Object.values(ledger.positions)) {
+      if (pos.shares <= 0) continue;
+      const live = ohlc?.[pos.symbol]?.close ?? nifty500Prices[pos.symbol] ?? pos.current_price;
+      const cost = pos.shares * pos.average_cost;
+      const mv = pos.shares * live;
+      inv += cost;
+      unrl += (mv - cost);
+    }
+
+    return {
+      invested: inv,
+      unrealized: unrl,
+      totalEquity: ledger.cash_balance + inv + unrl,
+    };
+  }, [ledger.positions, ledger.cash_balance, activeDate]);
+
+  const isProfit = unrealized >= 0;
   const pnlColor = isProfit ? '#34D399' : '#F87171';
 
   return (
@@ -37,13 +65,13 @@ export const BottomStatusBar: React.FC = () => {
         <span>
           INVESTED:{' '}
           <strong style={{ color: '#F3F4F6' }}>
-            ₹{ledger.invested_equity.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+            ₹{invested.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
           </strong>
         </span>
         <span>
           TOTAL EQUITY:{' '}
           <strong style={{ color: '#D4AF37' }}>
-            ₹{ledger.total_equity.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+            ₹{totalEquity.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
           </strong>
         </span>
       </div>
@@ -52,17 +80,17 @@ export const BottomStatusBar: React.FC = () => {
         <span>
           UNREALIZED P&L:{' '}
           <strong style={{ color: pnlColor }}>
-            {isProfit ? '+' : ''}₹{ledger.unrealized_pnl.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+            {isProfit ? '+' : ''}₹{unrealized.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
           </strong>
         </span>
         <span>
           REALIZED:{' '}
           <strong style={{ color: ledger.realized_pnl >= 0 ? '#34D399' : '#F87171' }}>
-            ₹{ledger.realized_pnl.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+            {ledger.realized_pnl >= 0 ? '+' : ''}₹{ledger.realized_pnl.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
           </strong>
         </span>
         <span style={{ color: '#64748B' }}>
-          ENGINE: <strong>DUAL DuckDB + SQLite (0 MB GPU VRAM)</strong>
+          ENGINE: DUAL DuckDB + SQLite (0 MB GPU VRAM)
         </span>
       </div>
     </footer>

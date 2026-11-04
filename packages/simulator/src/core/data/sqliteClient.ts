@@ -157,27 +157,37 @@ export class SQLiteClient {
   public updateMarketPrices(priceMap: Record<string, number>): void {
     let invested = 0;
     let unrealized = 0;
+    const newPositions: Record<string, PortfolioPosition> = {};
 
     for (const [sym, pos] of Object.entries(this.ledgerState.positions)) {
-      if (pos.shares <= 0) {
-        delete this.ledgerState.positions[sym];
-        continue;
-      }
-      const currentPrice = priceMap[sym] ?? pos.current_price;
-      pos.current_price = currentPrice;
-      pos.market_value = pos.shares * currentPrice;
-      const costBasis = pos.shares * pos.average_cost;
-      pos.unrealized_pnl = pos.market_value - costBasis;
-      pos.unrealized_return_pct =
-        costBasis > 0 ? (pos.unrealized_pnl / costBasis) * 100 : 0;
+      if (pos.shares <= 0) continue;
 
-      invested += pos.market_value;
-      unrealized += pos.unrealized_pnl;
+      const currentPrice = priceMap[sym] ?? pos.current_price;
+      const marketValue = pos.shares * currentPrice;
+      const costBasis = pos.shares * pos.average_cost;
+      const pnl = marketValue - costBasis;
+      const retPct = costBasis > 0 ? (pnl / costBasis) * 100 : 0;
+
+      newPositions[sym] = {
+        ...pos,
+        current_price: currentPrice,
+        market_value: marketValue,
+        unrealized_pnl: pnl,
+        unrealized_return_pct: retPct,
+      };
+
+      invested += marketValue;
+      unrealized += pnl;
     }
 
-    this.ledgerState.invested_equity = invested;
-    this.ledgerState.unrealized_pnl = unrealized;
-    this.ledgerState.total_equity = this.ledgerState.cash_balance + invested;
+    this.ledgerState = {
+      ...this.ledgerState,
+      positions: newPositions,
+      invested_equity: invested,
+      unrealized_pnl: unrealized,
+      total_equity: this.ledgerState.cash_balance + invested,
+    };
+    this.saveToStorage();
   }
 
   private recalculateTotalEquity(): void {
