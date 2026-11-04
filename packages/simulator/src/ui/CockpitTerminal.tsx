@@ -351,6 +351,7 @@ export const CockpitTerminal: React.FC = () => {
           }
           useStockStore.getState().invalidateBarsCache();
           loadStock(metadata?.symbol ?? 'TCS', targetD);
+          return res;
         }}
         availableTickers={availableTickers}
       />

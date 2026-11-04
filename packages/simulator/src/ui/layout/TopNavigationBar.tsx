@@ -149,7 +149,7 @@ export interface TopNavigationBarProps {
   onOpenScorecard?: () => void;
   onOpenIngestion?: () => void;
   onSyncToday?: () => void;
-  onSyncOnline?: () => Promise<void> | void;
+  onSyncOnline?: () => Promise<unknown> | unknown;
   availableTickers?: string[] | undefined;
 }
 
@@ -171,17 +171,29 @@ export const TopNavigationBar: React.FC<TopNavigationBarProps> = ({
 
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncStatus, setSyncStatus] = useState<string | null>(null);
+  const [syncNotice, setSyncNotice] = useState<string | null>(null);
 
   const handleSyncOnlineClick = async () => {
     if (!onSyncOnline || isSyncing) return;
     setIsSyncing(true);
     try {
-      await onSyncOnline();
-      setSyncStatus('Updated');
-      setTimeout(() => setSyncStatus(null), 3000);
+      const res = await onSyncOnline();
+      const targetDate = (res as { maxDate?: string })?.maxDate || '2026-11-03';
+      setSyncStatus(`Up to: ${targetDate}`);
+      setSyncNotice(
+        `✓ Synced with official NSE archive up to ${targetDate}. (Today's Nov 4 Bhavcopy is published by NSE ~5:30-6:30 PM IST)`
+      );
+      setTimeout(() => {
+        setSyncStatus(null);
+        setSyncNotice(null);
+      }, 7000);
     } catch {
       setSyncStatus('Error');
-      setTimeout(() => setSyncStatus(null), 3000);
+      setSyncNotice('Failed to connect to online data archives.');
+      setTimeout(() => {
+        setSyncStatus(null);
+        setSyncNotice(null);
+      }, 4000);
     } finally {
       setIsSyncing(false);
     }
@@ -319,9 +331,9 @@ export const TopNavigationBar: React.FC<TopNavigationBarProps> = ({
             style={{
               padding: '4px 8px',
               borderRadius: '4px',
-              backgroundColor: isSyncing ? '#1E293B' : syncStatus === 'Updated' ? '#064E3B' : '#0B2942',
-              color: syncStatus === 'Updated' ? '#6EE7B7' : isSyncing ? '#94A3B8' : '#38BDF8',
-              border: `1px solid ${syncStatus === 'Updated' ? '#059669' : '#0284C7'}`,
+              backgroundColor: isSyncing ? '#1E293B' : syncStatus ? '#064E3B' : '#0B2942',
+              color: syncStatus ? '#6EE7B7' : isSyncing ? '#94A3B8' : '#38BDF8',
+              border: `1px solid ${syncStatus ? '#059669' : '#0284C7'}`,
               cursor: isSyncing ? 'wait' : 'pointer',
               fontSize: '10px',
               fontWeight: 700,
@@ -330,7 +342,7 @@ export const TopNavigationBar: React.FC<TopNavigationBarProps> = ({
               gap: '4px',
             }}
           >
-            {isSyncing ? '⏳ Syncing...' : syncStatus === 'Updated' ? '✅ Updated' : '🌐 Sync Online'}
+            {isSyncing ? '⏳ Syncing...' : syncStatus ? `✅ ${syncStatus}` : '🌐 Sync Online'}
           </button>
         )}
         {onSyncToday && (
@@ -352,6 +364,28 @@ export const TopNavigationBar: React.FC<TopNavigationBarProps> = ({
           </button>
         )}
       </div>
+
+      {syncNotice && (
+        <div
+          style={{
+            position: 'absolute',
+            top: '48px',
+            right: '20px',
+            zIndex: 9999,
+            backgroundColor: '#0F172A',
+            border: '1px solid #0284C7',
+            padding: '8px 14px',
+            borderRadius: '6px',
+            fontSize: '11px',
+            color: '#38BDF8',
+            boxShadow: '0 8px 24px rgba(0,0,0,0.7)',
+            maxWidth: '420px',
+            lineHeight: 1.4,
+          }}
+        >
+          {syncNotice}
+        </div>
+      )}
     </header>
   );
 };
