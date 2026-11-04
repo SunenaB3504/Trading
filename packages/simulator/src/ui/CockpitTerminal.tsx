@@ -324,9 +324,9 @@ export const CockpitTerminal: React.FC = () => {
     const provenanceStr = serializeAstroProvenance(ticket, dashaState, {
       ingressStatus: isIngress ? 'INGRESS_WARNING' : 'STANDARD',
       daysToIngress: dashaState ? Math.round(dashaState.pdRemainingDays) : undefined,
-      debtToEquity: auditResult?.ratios?.debtToEquity,
-      roce: auditResult?.ratios?.roce,
-      promoterPledge: auditResult?.ratios?.promoterPledging,
+      debtToEquity: auditResult?.filingUsed?.debt_to_equity,
+      roce: auditResult?.filingUsed?.roce,
+      promoterPledge: auditResult?.filingUsed?.pledging_pct,
       traderStatus: ticket.provenance.omegaTrader && ticket.provenance.omegaTrader <= 0 ? 'Restricted' : 'Safe',
     });
     void executeOrder(ticket.symbol, 'BUY', ticket.shares, ticket.price, provenanceStr, activeDate);

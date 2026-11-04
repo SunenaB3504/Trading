@@ -7,10 +7,9 @@
 import React, { useMemo } from 'react';
 import { usePortfolioStore } from '../../state/portfolioStore';
 import { useSimulationStore } from '../../state/simulationStore';
-import recentOhlcCacheData from '../../core/data/fixtures/recentOhlcCache.json';
 import nifty500PricesData from '../../core/data/fixtures/nifty500Prices.json';
+import { recentOhlcCache } from '../../core/data/fixtures/recentOhlcCache';
 
-const recentOhlcCache = recentOhlcCacheData as Record<string, Record<string, any>>;
 const nifty500Prices = nifty500PricesData as Record<string, number>;
 
 export const BottomStatusBar: React.FC = () => {

@@ -4,7 +4,7 @@
  * Enforces strict modularity (< 300 LOC).
  */
 
-import type { PaperTradeOrder, PortfolioLedgerState } from './types';
+import type { PaperTradeOrder, PortfolioLedgerState, PortfolioPosition } from './types';
 import { calculateOrderCharges } from '../financial/taxEngine';
 
 const STORAGE_KEY_ORDERS = 'astro_simulator_orders_v1';

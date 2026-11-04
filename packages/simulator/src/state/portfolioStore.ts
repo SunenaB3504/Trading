@@ -7,10 +7,9 @@
 import { create } from 'zustand';
 import type { PaperTradeOrder, PortfolioLedgerState } from '../core/data/types';
 import { SQLiteClient } from '../core/data/sqliteClient';
-import recentOhlcCacheData from '../core/data/fixtures/recentOhlcCache.json';
 import nifty500PricesData from '../core/data/fixtures/nifty500Prices.json';
+import { recentOhlcCache } from '../core/data/fixtures/recentOhlcCache';
 
-const recentOhlcCache = recentOhlcCacheData as Record<string, Record<string, any>>;
 const nifty500Prices = nifty500PricesData as Record<string, number>;
 
 export interface PortfolioState {

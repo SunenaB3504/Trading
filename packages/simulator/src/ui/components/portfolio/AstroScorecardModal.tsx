@@ -319,6 +319,22 @@ export const AstroScorecardModal: React.FC<AstroScorecardModalProps> = ({ isOpen
               Reset Virtual Account
             </button>
             <button
+              onClick={handleExportCsv}
+              title="Download closed trades journal as CSV"
+              style={{
+                padding: '6px 12px',
+                borderRadius: '6px',
+                backgroundColor: '#1E293B',
+                color: '#A78BFA',
+                border: '1px solid #7C3AED',
+                fontSize: '11px',
+                fontWeight: 600,
+                cursor: 'pointer',
+              }}
+            >
+              📄 Export CSV
+            </button>
+            <button
               onClick={handleExportBackup}
               title="Download your full trading history, positions, and scorecard as a backup file"
               style={{

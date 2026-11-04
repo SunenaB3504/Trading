@@ -15,11 +15,10 @@ import { calculateTransitPositions } from '../../../core/astro/ephemeris';
 import { SIGN_NAMES } from '../../../core/astro/constants';
 import type { PortfolioPosition, PaperTradeOrder } from '../../../core/data/types';
 import corporateRegistryData from '../../../core/data/corporateRegistry.json';
-import recentOhlcCacheData from '../../../core/data/fixtures/recentOhlcCache.json';
 import nifty500PricesData from '../../../core/data/fixtures/nifty500Prices.json';
+import { recentOhlcCache } from '../../../core/data/fixtures/recentOhlcCache';
 
 const corporateRegistry = corporateRegistryData as Record<string, any>;
-const recentOhlcCache = recentOhlcCacheData as Record<string, Record<string, any>>;
 const nifty500Prices = nifty500PricesData as Record<string, number>;
 
 export type PositionFilterTab = 'ALL' | 'SELL_TODAY' | 'TARGET_HIT' | 'SAFE';

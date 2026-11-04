@@ -211,9 +211,9 @@ export async function fetchOnlineYahooBars(symbol: string): Promise<RawCsvBarInp
       if (Array.isArray(localBars) && localBars.length > 0) {
         return localBars.map((b) => ({
           date: b.date,
-          open: b.open,
-          high: b.high,
-          low: b.low,
+          open: b.open ?? b.close,
+          high: b.high ?? b.close,
+          low: b.low ?? b.close,
           close: b.close,
           volume: b.volume || 10000,
         })).sort((a, b) => a.date.localeCompare(b.date));
