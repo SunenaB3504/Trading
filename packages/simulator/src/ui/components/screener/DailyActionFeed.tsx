@@ -84,8 +84,14 @@ export const DailyActionFeed: React.FC<DailyActionFeedProps> = ({
     [registry, effectiveDate, fundamentalsMap, strategyParams]
   );
 
-  const buyCount = summary.strongBuyCount + summary.turnaroundBuyCount;
-  const sellCount = summary.defensiveExitCount;
+  const buyCount = useMemo(
+    () => summary.items.filter((i) => i.action === 'BUY' && !i.isBlocked).length,
+    [summary.items]
+  );
+  const sellCount = useMemo(
+    () => summary.items.filter((i) => i.action === 'SELL').length,
+    [summary.items]
+  );
   const ingressCount = summary.upcomingIngressCount ?? 0;
   const holdingsCount = useMemo(
     () => summary.items.filter((i) => heldSymbols.has(i.symbol)).length,
