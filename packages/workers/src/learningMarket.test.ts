@@ -1,7 +1,10 @@
 import type { BarUnadj } from '@trading/core';
 import type { InstrumentIdentity } from '@trading/data-service';
 import { describe, expect, it } from 'vitest';
-import { MARKET_ID, assembleMarket, identityFor, suggestionsFor } from './learningMarket';
+import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { MARKET_ID, assembleMarket, identityFor, simulatorSymbols, suggestionsFor } from './learningMarket';
 
 const bar = (id: string, date: string): BarUnadj => ({
   instrumentId: id,
@@ -77,5 +80,19 @@ describe('exchange-traded funds in the learning list (MIP v4.1 Stage 3)', () => 
     const { ETFS } = await import('./learningMarket');
     expect(Object.keys(ETFS).sort()).toEqual(['BANKBEES', 'GOLDBEES', 'ITBEES', 'JUNIORBEES', 'LIQUIDBEES', 'NIFTYBEES', 'SILVERBEES']);
     expect(Object.entries(ETFS).filter(([, v]) => v.sttFree).map(([k]) => k).sort()).toEqual(['GOLDBEES', 'LIQUIDBEES', 'SILVERBEES']);
+  });
+});
+
+describe('simulator stock lists (D44: whatever the simulator offers is offered here)', () => {
+  it('joins every list the simulator keeps, in its own shape, and skips one that is missing', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'sim-'));
+    mkdirSync(join(dir, 'fixtures'));
+    writeFileSync(join(dir, 'fixtures', 'barsManifest.json'), JSON.stringify({ symbols: ['TCS', 'infy '] }));
+    writeFileSync(join(dir, 'fixtures', 'nifty500Prices.json'), JSON.stringify({ TCS: 2495.7, CUBEXTUB: 187.68 }));
+    writeFileSync(join(dir, 'corporateRegistry.json'), JSON.stringify([{ symbol: 'CPCAP' }, { name: 'no symbol' }]));
+    // recentOhlcCache.json is missing on purpose
+    expect(simulatorSymbols(dir)).toEqual(['CPCAP', 'CUBEXTUB', 'INFY', 'TCS']);
+    expect(simulatorSymbols('none')).toEqual([]);
+    expect(simulatorSymbols(join(dir, 'absent'))).toEqual([]);
   });
 });

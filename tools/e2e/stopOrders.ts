@@ -61,7 +61,7 @@ async function target(page: Page): Promise<void> {
   await page.getByTestId('place-order').click();
   await page.getByText(/Order h-0003 placed/).waitFor({ timeout: 10_000 });
   const screen = await page.getByTestId('trade-screen').innerText();
-  check('a GTT target reached by the prices sells the position', /No open positions/.test(screen), screen.slice(0, 400));
+  check('a GTT target reached by the prices sells the position', /You hold no shares yet/.test(screen), screen.slice(0, 400));
 }
 
 async function main(): Promise<void> {

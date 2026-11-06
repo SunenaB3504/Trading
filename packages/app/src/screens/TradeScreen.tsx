@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useKeyboardHeight } from '../hooks/useKeyboardHeight';
-import { formatPaise } from '../format/rupees';
 import { addBefore } from '../journal/journalStore';
 import type { BeforeFields } from '../journal/journalStore';
 import type { KeyValueStore } from '../store/kv';
@@ -9,14 +8,15 @@ import { previewCosts } from '../trading/costPreview';
 import type { OrderForm } from '../trading/orderRequest';
 import type { Market } from '../trading/market';
 import { PaperSession } from '../trading/paperSession';
-import type { SessionView } from '../trading/paperSession';
+import type { Holding, SessionView } from '../trading/paperSession';
+import { Holdings, holdingLine } from './Holdings';
+import { OrderBar } from './OrderBar';
 import { Note, Row, Section, colors } from '../ui/Section';
 import { preTrade } from '@trading/tutor';
 import { AskPanel } from '../tutor/AskPanel';
 import type { TutorEnv } from '../tutor/run';
 import { CoachHint } from '../ui/CoachHint';
 import { useUnsaved } from '../ui/unsaved';
-import { quoteOf } from '../trading/quote';
 import { loadList, pushRecent, recentKey, toggleWatch, watchlistKey } from '../trading/stockLists';
 import { StockPicker } from './StockPicker';
 import type { StockGroup } from './StockPicker';
@@ -105,17 +105,6 @@ function Book({ view, onCancel }: { view: SessionView; onCancel: (id: string) =>
   const [open, setOpen] = useState<string | null>(null);
   return (
     <>
-      <Section title="Cash and positions">
-        <Row label="Cash" value={view.cash} />
-        {view.positions.length === 0 ? <Note>No open positions.</Note> : null}
-        {view.positions.map((p) => (
-          <Row
-            key={p.instrumentId}
-            label={`${p.symbol}, ${p.quantity} shares`}
-            value={`basis ${p.basis}`}
-          />
-        ))}
-      </Section>
       <Section title="Orders">
         <Note>Tap an order to see its contract note once it has filled.</Note>
         {view.orders.length === 0 ? <Note>No orders yet.</Note> : null}
@@ -145,7 +134,7 @@ function Book({ view, onCancel }: { view: SessionView; onCancel: (id: string) =>
   );
 }
 
-type SetField = <K extends keyof OrderForm>(k: K, v: OrderForm[K]) => void;
+import type { SetField } from './OrderBar';
 
 /** What to tell the person after an order is accepted: the next open, or why it will wait. */
 function placedMessage(r: { orderId: string; state: string }, market: Market, form: OrderForm): string {
@@ -217,7 +206,13 @@ function useTrade(kv: KeyValueStore, now: () => number, market: Market) {
     },
     [session],
   );
-  return { view, form, message, set, submit, cancel, journal, setJournal, touched };
+  // A holding tapped: a market sell of all of it, ready to check and place.
+  const prepareSell = (h: Holding) => {
+    setForm((f) => ({ ...f, instrumentId: h.instrumentId, side: 'sell', type: 'market', quantity: String(h.quantity) }));
+    setTouched(true);
+    setMessage(`Ready to sell ${String(h.quantity)} ${h.symbol}. Change the quantity to sell part, then tap Place sell order.`);
+  };
+  return { view, form, message, set, submit, cancel, journal, setJournal, touched, prepareSell };
 }
 
 /** The stocks offered before anything is typed: what the book holds, the watchlist, and recent picks. */
@@ -310,6 +305,7 @@ function OrderFields(props: {
   form: OrderForm;
   set: SetField;
   lists: ReturnType<typeof useStockLists>;
+  holding: Holding | undefined;
 }) {
   const { market, form, set, lists } = props;
   return (
@@ -324,6 +320,7 @@ function OrderFields(props: {
         groups={lists.groups}
         watched={lists.watching(form.instrumentId)}
         onToggleWatch={() => lists.toggle(form.instrumentId)}
+        {...(props.holding === undefined ? {} : { holding: holdingLine(props.holding) })}
       />
       <Choice
         label="Type"
@@ -383,63 +380,9 @@ function CostSection({ market, form }: { market: Market; form: OrderForm }) {
 
 const orderText = (f: OrderForm): string => `${f.side} ${f.quantity || '?'} of ${f.instrumentId || '(no stock chosen)'}, ${f.type} order`;
 
-/**
- * Always in reach at the bottom: Buy or Sell, what the order comes to at the last close, and the button that places
- * it, coloured by side so a sell never looks like a buy.
- */
-function OrderBar(props: { market: Market; form: OrderForm; set: SetField; submit: () => void; message: string | null }) {
-  const { market, form, set } = props;
-  const quote = form.instrumentId === '' ? null : quoteOf(market, form.instrumentId, form.date);
-  const qty = Number(form.quantity);
-  const name = market.symbols[form.instrumentId] ?? form.instrumentId;
-  const verb = form.side === 'buy' ? 'Buy' : 'Sell';
-  const summary =
-    form.instrumentId === ''
-      ? 'Choose a stock to trade.'
-      : quote === null || !Number.isSafeInteger(qty) || qty <= 0
-        ? `${verb} ${name}: enter a quantity.`
-        : `${verb} ${String(qty)} × ${name} ≈ ${formatPaise(quote.close * qty)} at the last close`;
-  return (
-    <View style={styles.bar} testID="order-bar">
-      {props.message !== null ? (
-        <Text style={styles.message} testID="order-message">
-          {props.message}
-        </Text>
-      ) : null}
-      <View style={styles.sides} testID="pick-side">
-        {(['buy', 'sell'] as const).map((side) => {
-          const on = form.side === side;
-          const tone = side === 'buy' ? colors.gain : colors.loss;
-          return (
-            <Pressable
-              key={side}
-              accessibilityRole="button"
-              accessibilityState={{ selected: on }}
-              onPress={() => set('side', side)}
-              style={[styles.side, { borderColor: tone }, on ? { backgroundColor: tone } : null]}
-            >
-              <Text style={[styles.sideText, { color: on ? '#fff' : tone }]}>{side === 'buy' ? 'Buy' : 'Sell'}</Text>
-            </Pressable>
-          );
-        })}
-      </View>
-      <Text style={styles.summary} testID="order-summary">
-        {summary}
-      </Text>
-      <Pressable
-        accessibilityRole="button"
-        onPress={props.submit}
-        style={[styles.place, { backgroundColor: form.side === 'buy' ? colors.gain : colors.loss }]}
-        testID="place-order"
-      >
-        <Text style={styles.placeText}>{`Place ${form.side} order`}</Text>
-      </Pressable>
-    </View>
-  );
-}
-
 export function TradeScreen({ kv, now, market, env, embedded = false }: { kv: KeyValueStore; now: () => number; market: Market; env: TutorEnv; embedded?: boolean }) {
-  const { view, form, message, set, submit, cancel, journal, setJournal, touched } = useTrade(kv, now, market);
+  const { view, form, message, set, submit, cancel, journal, setJournal, touched, prepareSell } = useTrade(kv, now, market);
+  const holding = view?.positions.find((p) => p.instrumentId === form.instrumentId);
   const lists = useStockLists(kv, now, market, view);
   useUnsaved('trade', touched, 'an order you have not placed');
   // While a field is being typed in, the bar steps aside so the keyboard leaves room for the field itself.
@@ -447,9 +390,10 @@ export function TradeScreen({ kv, now, market, env, embedded = false }: { kv: Ke
   const content = (
     <>
       <CoachHint screen="trade" />
+      {view !== null ? <Holdings cash={view.cash} holdings={view.positions} onSell={prepareSell} /> : null}
       <View>
         <Section title="New order (virtual money)">
-          <OrderFields market={market} form={form} set={set} lists={lists} />
+          <OrderFields market={market} form={form} set={set} lists={lists} holding={holding} />
           <JournalFields value={journal} onChange={setJournal} />
           <AskPanel env={env} label="Check my plan before I trade" testID="pre-trade" build={() => preTrade({ order: orderText(form), facts: [{ key: 'side', label: 'side', value: form.side }, { key: 'quantity', label: 'quantity', value: form.quantity || 'not set' }], flags: [], journal, symbols: form.instrumentId === '' ? [] : [form.instrumentId], names: env.names, lessonIds: ['habits-that-help', 'types-of-risk'] })} />
         </Section>
@@ -458,7 +402,7 @@ export function TradeScreen({ kv, now, market, env, embedded = false }: { kv: Ke
       {view !== null ? <Book view={view} onCancel={(id) => void cancel(id)} /> : <Note>Loading the book...</Note>}
     </>
   );
-  const bar = <OrderBar market={market} form={form} set={set} submit={() => void submit()} message={message} />;
+  const bar = <OrderBar market={market} form={form} set={set} submit={() => void submit()} message={message} holding={holding} />;
   // Inside a Time Machine session the page already scrolls, so the bar follows the form instead of floating.
   if (embedded)
     return (
@@ -482,19 +426,6 @@ export function TradeScreen({ kv, now, market, env, embedded = false }: { kv: Ke
 const styles = StyleSheet.create({
   screen: { flex: 1 },
   page: { padding: 16, maxWidth: 720, width: '100%', alignSelf: 'center' },
-  bar: {
-    borderTopWidth: 1,
-    borderTopColor: colors.line,
-    backgroundColor: colors.background,
-    paddingHorizontal: 16,
-    paddingTop: 8,
-    paddingBottom: 10,
-    gap: 6,
-  },
-  sides: { flexDirection: 'row', gap: 8 },
-  side: { flex: 1, borderWidth: 2, borderRadius: 8, minHeight: 44, alignItems: 'center', justifyContent: 'center' },
-  sideText: { fontWeight: '700', fontSize: 16 },
-  summary: { color: colors.text, fontSize: 13 },
   field: { marginBottom: 10 },
   label: { color: colors.muted, fontSize: 13, marginBottom: 4 },
   input: {
@@ -519,15 +450,6 @@ const styles = StyleSheet.create({
   choiceOn: { borderColor: colors.accent, backgroundColor: colors.selected },
   choiceText: { color: colors.text },
   choiceTextOn: { color: colors.accent, fontWeight: '600' },
-  place: {
-    backgroundColor: colors.accent,
-    borderRadius: 6,
-    minHeight: 48,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  placeText: { color: '#fff', fontWeight: '700', fontSize: 16 },
-  message: { color: colors.text },
   cancel: { minHeight: 44, justifyContent: 'center', marginBottom: 6 },
   contractNote: { paddingLeft: 12, marginBottom: 8 },
   tapRow: { minHeight: 44, justifyContent: 'center' },

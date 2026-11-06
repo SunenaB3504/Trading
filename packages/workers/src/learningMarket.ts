@@ -26,11 +26,12 @@ import { option } from './universe';
  * already on this machine. Each asked-for symbol is matched with every symbol its company traded under (by ISIN),
  * so a renamed stock keeps its whole history; a symbol that is not found is reported with close names.
  *
- * The core list keeps its whole history. Every other stock the simulator tracks (its bars manifest) is added with only
- * the rolling window of D44, so the owner can trade what the simulator picks without the file growing past budget.
+ * The core list keeps its whole history. Every other stock the simulator knows (any of its lists: price history,
+ * company registry, latest prices, recent sessions) is added with only the rolling window of D44, so whatever the
+ * simulator picks can be traded here, without the file growing past budget.
  *
  * Usage:  pnpm market:build [--symbols data/market/learning_symbols.txt] [--raw data/raw/nse-bars]
- *            [--extra packages/simulator/src/core/data/fixtures/barsManifest.json | none]
+ *            [--extra packages/simulator/src/core/data | none]
  *            [--from 2005-01-01] [--out data/derived/market/learning-market-v1.json]
  */
 export const MARKET_ID = 'nse-learning-v1';
@@ -137,13 +138,33 @@ export function assembleMarket(input: {
   return trimMarket(market, new Map());
 }
 
-/** The symbols in the simulator's bars manifest, or none when the file is absent or `none` is asked for. */
-export function extraSymbols(path: string): string[] {
-  if (path === 'none' || !existsSync(path)) return [];
-  const manifest = JSON.parse(readFileSync(path, 'utf8')) as { symbols?: unknown };
-  return Array.isArray(manifest.symbols)
-    ? manifest.symbols.filter((s): s is string => typeof s === 'string').map((s) => s.trim().toUpperCase())
-    : [];
+/** The simulator's lists of stocks, relative to its data folder, and how each names its symbols. */
+const SIMULATOR_LISTS: ReadonlyArray<[string, (json: unknown) => unknown[]]> = [
+  // price history: { symbols: [...] }
+  ['fixtures/barsManifest.json', (j) => ((j as { symbols?: unknown }).symbols as unknown[] | undefined) ?? []],
+  // latest price of every NSE equity: { SYMBOL: price }
+  ['fixtures/nifty500Prices.json', (j) => Object.keys(j as object)],
+  // company registry for the charts: [{ symbol }] or { key: { symbol } }
+  ['corporateRegistry.json', (j) => Object.values(j as object).map((r) => (r as { symbol?: unknown }).symbol)],
+  // the last sessions it shows: { date: { SYMBOL: bar } }
+  ['fixtures/recentOhlcCache.json', (j) => Object.values(j as object).flatMap((day) => Object.keys(day as object))],
+];
+
+/**
+ * Every symbol the simulator can show or pick, from all of its lists (owner, 2026-11-06: whatever is available in the
+ * simulator has to be available here). `none` or a missing folder gives none; a missing list is skipped.
+ */
+export function simulatorSymbols(dataDir: string): string[] {
+  if (dataDir === 'none' || !existsSync(dataDir)) return [];
+  const found = new Set<string>();
+  for (const [file, read] of SIMULATOR_LISTS) {
+    const path = `${dataDir}/${file}`;
+    if (!existsSync(path)) continue;
+    for (const s of read(JSON.parse(readFileSync(path, 'utf8')))) {
+      if (typeof s === 'string' && s.trim() !== '') found.add(s.trim().toUpperCase());
+    }
+  }
+  return [...found].sort();
 }
 
 /**
@@ -187,13 +208,13 @@ async function main(): Promise<void> {
   const rawDir = option(args, '--raw') ?? 'data/raw/nse-bars';
   const from = option(args, '--from') ?? '2005-01-01';
   const out = option(args, '--out') ?? 'data/derived/market/learning-market-v1.json';
-  const extraFile = option(args, '--extra') ?? 'packages/simulator/src/core/data/fixtures/barsManifest.json';
+  const simulatorDir = option(args, '--extra') ?? 'packages/simulator/src/core/data';
   const core = readFileSync(symbolsFile, 'utf8')
     .split(/\r?\n/)
     .map((s) => s.trim().toUpperCase())
     .filter((s) => s !== '' && !s.startsWith('#'));
   const wanted = new Set(core);
-  const extras = [...new Set(extraSymbols(extraFile))].filter((s) => !wanted.has(s));
+  const extras = simulatorSymbols(simulatorDir).filter((s) => !wanted.has(s));
   const rolling = new Set(extras);
   const requested = [...core, ...extras];
   const store = new FileRawStore(rawDir);
@@ -212,6 +233,7 @@ async function main(): Promise<void> {
   for (const m of market.missing) console.log(`NOT FOUND ${m.symbol}; close names: ${m.suggestions.join(', ')}`);
   const rollingCount = market.instruments.filter((i) => i.history === 'rolling').length;
   console.log(`${String(rollingCount)} more stocks from the simulator with prices from ${cut} (rolling window)`);
+  console.log(`${String(market.missing.length)} simulator symbols have no NSE share rows in the archive (listed above)`);
   console.log(`${market.instruments.length} instruments, ${market.actions.length} corporate actions, data to ${market.to}; written to ${out}`);
 }
 

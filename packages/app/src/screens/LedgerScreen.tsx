@@ -110,14 +110,15 @@ export function LedgerScreen({ kv, now }: { kv: KeyValueStore; now: () => number
   return (
     <ScrollView contentContainerStyle={styles.page} testID="ledger-screen">
       <CoachHint screen="ledger" />
-      <Section title="Own trades (Ledger A), demo scenario">
+      <Text style={styles.notYours} testID="ledger-demo-banner">
+        Demo example, not your trades. Your own holdings, their value and profit are on Practise, Trade, under Your
+        holdings.
+      </Text>
+      <Section title="Demo example: own trades (Ledger A)">
         {view.totals.map((r) => (
           <Row key={r.label} label={r.label} value={r.value} />
         ))}
         <Note>Virtual money. Not investment advice.</Note>
-        <Note>
-          This is a fixed demo scenario. The orders you place yourself are on the Trade tab.
-        </Note>
       </Section>
       <Section title="Open positions">
         {view.positions.length === 0 ? <Note>No open positions.</Note> : null}
@@ -141,6 +142,7 @@ export function LedgerScreen({ kv, now }: { kv: KeyValueStore; now: () => number
 }
 
 const styles = StyleSheet.create({
+  notYours: { color: colors.warn, fontWeight: '600', marginBottom: 12 },
   page: { padding: 16, maxWidth: 720, width: '100%', alignSelf: 'center' },
   position: { paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: colors.line },
   symbol: { fontWeight: '600', color: colors.text },

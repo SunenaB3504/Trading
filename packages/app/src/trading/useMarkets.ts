@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { parseLearningMarket } from '@trading/core';
+import { parseOwnLearningMarket } from '@trading/core';
 import type { LearningMarket } from '@trading/core';
 import type { DataServiceClient } from '../dataClient/client';
 import { getStamped, putStamped } from '../store/kv';
@@ -27,7 +27,7 @@ export interface Markets {
 
 async function savedReal(device: KeyValueStore): Promise<LearningMarket | null> {
   const saved = await getStamped<unknown>(device, REAL_MARKET_KEY);
-  return saved === null ? null : parseLearningMarket(saved.value);
+  return saved === null ? null : parseOwnLearningMarket(saved.value);
 }
 
 /**
@@ -46,7 +46,8 @@ export function useMarkets(
     let live = true;
     void (async () => {
       let saved = await savedReal(device);
-      const bundled = await bundledMarket();
+      // the shipped file is read in full only when it is newer than the saved copy (a new app version)
+      const bundled = await bundledMarket(saved?.builtAt ?? null);
       if (!live) return;
       if (bundled !== null && (saved === null || bundled.builtAt > saved.builtAt)) {
         await putStamped(device, REAL_MARKET_KEY, bundled, now());

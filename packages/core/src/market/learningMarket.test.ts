@@ -5,8 +5,10 @@ import {
   LEARNING_MARKET_VERSION,
   NSE_TICK_PAISE,
   marketSnapshot,
+  marketBuiltAtOf,
   orderedStart,
   parseLearningMarket,
+  parseOwnLearningMarket,
   rollingStart,
   toCompactBar,
   trimMarket,
@@ -118,5 +120,21 @@ describe('rolling history (D44)', () => {
     const once = trimMarket(wide, new Map());
     expect(once).not.toBe(wide);
     expect(trimMarket(once, new Map())).toBe(once);
+  });
+});
+
+describe("reading the app's own market files quickly (D44)", () => {
+  it('accepts a sound file, refuses a broken header, a broken end bar or a series that is not a list', () => {
+    const ok = JSON.parse(JSON.stringify(market()));
+    expect(parseOwnLearningMarket(ok)).toEqual(parseLearningMarket(ok));
+    expect(parseOwnLearningMarket({ ...ok, format: 'other' })).toBeNull();
+    expect(parseOwnLearningMarket({ ...ok, bars: { RELIANCE: [['2026-10-16', 1.5, 1, 1, 1, 1, 0]] } })).toBeNull();
+    expect(parseOwnLearningMarket({ ...ok, bars: { RELIANCE: 'no' } })).toBeNull();
+    expect(parseOwnLearningMarket(null)).toBeNull();
+  });
+
+  it('finds the build time at the start of the file without parsing it', () => {
+    expect(marketBuiltAtOf(JSON.stringify(market({ builtAt: 1793008122190 })))).toBe(1793008122190);
+    expect(marketBuiltAtOf('')).toBeNull();
   });
 });

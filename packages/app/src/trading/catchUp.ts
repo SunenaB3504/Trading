@@ -22,29 +22,44 @@ const isDate = (t: string): boolean => /^\d{4}-\d{2}-\d{2}$/.test(t);
 const isSane = (b: CompactBar): boolean =>
   b[2] >= Math.max(b[1], b[4]) && b[3] <= Math.min(b[1], b[4]) && Number.isSafeInteger(b[5]) && b[5] >= 0 && isDate(b[0]);
 
-/** One line as a row, or null when it is not an EQ row or its prices do not read cleanly. */
-function readLine(f: readonly string[], c: Columns): DayRow | null {
+/**
+ * The share series kept, as in the laptop build: the main board (EQ), trade-to-trade (BE, BZ) and the SME platform
+ * (SM, ST). The simulator can pick from all of them, so a BE stock must keep getting prices too.
+ */
+const SHARE_SERIES: readonly string[] = ['EQ', 'BE', 'BZ', 'SM', 'ST'];
+
+/** One line as a row, or null when it is not a share row or its prices do not read cleanly. */
+function readLine(f: readonly string[], c: Columns): (DayRow & { rank: number }) | null {
   const cell = (i: number): string => (f[i] ?? '').trim();
   const [sym, ser, isin, dt, o, h, l, cl, v] = c;
-  if (cell(ser) !== 'EQ') return null;
+  const rank = SHARE_SERIES.indexOf(cell(ser));
+  if (rank < 0) return null;
   try {
     const bar: CompactBar = [cell(dt), parsePaise(cell(o)), parsePaise(cell(h)), parsePaise(cell(l)), parsePaise(cell(cl)), Number(cell(v)), 0];
-    return isSane(bar) ? { isin: cell(isin), symbol: cell(sym), bar } : null;
+    return isSane(bar) ? { isin: cell(isin), symbol: cell(sym), bar, rank } : null;
   } catch {
     return null;
   }
 }
 
-/** Equity (EQ series) rows of one day's UDiFF file; rows that do not read cleanly are left out. */
+/**
+ * Share rows (EQ, BE, BZ, SM, ST) of one day's UDiFF file; rows that do not read cleanly are left out. A company with
+ * rows in two series that day keeps one, the main board first, so its day is never counted twice.
+ */
 export function parseDay(csv: string): DayRow[] {
   const lines = csv.split(/\r?\n/);
   const header = (lines[0] ?? '').split(',').map((h) => h.trim());
   const at = UDIFF_COLUMNS.map((c) => header.indexOf(c));
   if (at.some((i) => i < 0)) return [];
-  return lines
-    .slice(1)
-    .map((line) => readLine(line.split(','), at as Columns))
-    .filter((r): r is DayRow => r !== null);
+  const best = new Map<string, DayRow & { rank: number }>();
+  for (const line of lines.slice(1)) {
+    const r = readLine(line.split(','), at as Columns);
+    if (r === null) continue;
+    const key = r.isin === '' ? r.symbol : r.isin;
+    const seen = best.get(key);
+    if (seen === undefined || r.rank < seen.rank) best.set(key, r);
+  }
+  return [...best.values()].map(({ isin, symbol, bar }) => ({ isin, symbol, bar }));
 }
 
 /** NSE's daily PR archive for a trading day: its `bc` file lists the corporate actions with their ex-dates. */

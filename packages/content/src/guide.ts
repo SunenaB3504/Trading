@@ -16,7 +16,7 @@ Six levels, each with lessons and a self-check. Mark a lesson done, then take th
 
 ## Practise
 
-- Trade: buy and sell shares and exchange-traded funds with market, limit, stop and other orders. Charges are taken on every trade. Tap the stock box to open the search screen: type a few letters and tap the stock (your holdings, watchlist and recent picks are listed before you type). Prices are always the real NSE ones. Every stock the simulator tracks is here: the core list keeps its whole history, the others keep the last 13 months, and a stock you have ordered keeps everything from a year before your first order.
+- Trade: buy and sell shares and exchange-traded funds with market, limit, stop and other orders. Charges are taken on every trade. Your holdings are at the top of Trade: each with its number of shares, average price, value at the last close and profit so far, and the totals. Tap a holding to sell it: the stock, Sell and all your shares are filled in, and the bar shows the profit before charges; change the quantity to sell part. Tap the stock box to open the search screen: type a few letters and tap the stock (your holdings, watchlist and recent picks are listed before you type). Prices are always the real NSE ones. Every stock the simulator tracks is here: the core list keeps its whole history, the others keep the last 13 months, and a stock you have ordered keeps everything from a year before your first order.
 - Funds: mutual funds at the end-of-day NAV.
 - Time Machine: move through past dates and see only the prices up to that date.
 - Builder and Charts: build a mix of holdings and read charts with averages and RSI.

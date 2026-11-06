@@ -122,6 +122,17 @@ export const rollingStart = (lastDate: string): string => shiftMonths(lastDate, 
 export const orderedStart = (firstOrder: string): string =>
   shiftMonths(firstOrder, ORDERED_LOOKBACK_MONTHS, firstOrder.slice(8, 10));
 
+/** Where a rolling stock's kept prices start: the window, or earlier for a stock that was ordered. */
+const keptFrom = (cut: string, firstOrder: string | undefined): string =>
+  firstOrder === undefined ? cut : [cut, orderedStart(firstOrder)].sort()[0] ?? cut;
+
+/** The bars from `from` on, or null when none would go. */
+function keptBars(series: readonly CompactBar[], from: string): CompactBar[] | null {
+  // most stocks have nothing to drop: checking the first bar avoids copying thousands of arrays at every start
+  if ((series[0]?.[0] ?? from) >= from) return null;
+  return series.filter((b) => b[0] >= from);
+}
+
 /**
  * Drops the old prices of rolling stocks (D44). Full-history stocks are untouched; a stock in `firstOrders` (its first
  * order date in any book) keeps everything from twelve months before that order. A rolling stock's corporate actions
@@ -135,12 +146,10 @@ export function trimMarket(m: LearningMarket, firstOrders: ReadonlyMap<string, s
   const keepFrom = new Map<string, string>();
   const instruments = m.instruments.map((i) => {
     if (i.history !== 'rolling') return i;
-    const ordered = firstOrders.get(i.id);
-    const from = ordered === undefined ? cut : [cut, orderedStart(ordered)].sort()[0] ?? cut;
+    const from = keptFrom(cut, firstOrders.get(i.id));
     keepFrom.set(i.id, from);
-    const series = m.bars[i.id] ?? [];
-    const kept = series.filter((b) => b[0] >= from);
-    if (kept.length === series.length) return i;
+    const kept = keptBars(m.bars[i.id] ?? [], from);
+    if (kept === null) return i;
     changed = true;
     bars[i.id] = kept;
     return { ...i, firstDate: kept[0]?.[0] ?? i.firstDate };
@@ -152,4 +161,30 @@ export function trimMarket(m: LearningMarket, firstOrders: ReadonlyMap<string, s
   });
   if (actions.length !== m.actions.length) changed = true;
   return changed ? { ...m, instruments, bars, actions } : m;
+}
+
+const isObject = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null && !Array.isArray(v);
+const barShape = compactBarSchema.safeParse.bind(compactBarSchema);
+
+/**
+ * A lighter check for market files the app itself shipped or saved (D44: over 3,500 stocks): every field and every
+ * instrument and action is checked, but each stock's bars only at both ends, which is where a cut or a wrong format
+ * shows. Full checking of a million bars took seconds on a phone at every start. Data from the network still goes
+ * through `parseLearningMarket`.
+ */
+export function parseOwnLearningMarket(value: unknown): LearningMarket | null {
+  if (!isObject(value) || !isObject(value.bars)) return null;
+  const head = learningMarketSchema.omit({ bars: true }).safeParse(value);
+  if (!head.success) return null;
+  for (const series of Object.values(value.bars)) {
+    if (!Array.isArray(series)) return null;
+    if (series.length > 0 && (!barShape(series[0]).success || !barShape(series[series.length - 1]).success)) return null;
+  }
+  return { ...head.data, bars: value.bars as LearningMarket['bars'] };
+}
+
+/** The build time written near the start of a market file, read without parsing the whole file; null if absent. */
+export function marketBuiltAtOf(text: string): number | null {
+  const found = /"builtAt"\s*:\s*(\d+)/.exec(text.slice(0, 400));
+  return found === null ? null : Number(found[1]);
 }

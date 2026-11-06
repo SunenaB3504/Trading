@@ -41,7 +41,7 @@ function StockRow(props: { market: Market; id: string; selected: boolean; onPres
 }
 
 /** The chosen stock: price, the day's change, the 52-week range and, when offered, a watchlist toggle. */
-function SelectedCard(props: { market: Market; id: string; watched?: boolean; onToggleWatch?: () => void }) {
+function SelectedCard(props: { market: Market; id: string; watched?: boolean; onToggleWatch?: () => void; holding?: string }) {
   const { market, id } = props;
   const q = quoteOf(market, id);
   const limited = market.rolling[id] === true;
@@ -68,6 +68,11 @@ function SelectedCard(props: { market: Market; id: string; watched?: boolean; on
           <Text style={styles.muted}>{`Close on ${q.date} · 52-week range ${formatPaise(q.low52)} to ${formatPaise(q.high52)}`}</Text>
         </>
       )}
+      {props.holding !== undefined ? (
+        <Text style={styles.holding} testID="selected-holding">
+          {props.holding}
+        </Text>
+      ) : null}
       {limited ? <Text style={styles.muted}>Prices from the last 13 months (not one of the core stocks).</Text> : null}
     </View>
   );
@@ -170,6 +175,8 @@ export function StockPicker(props: {
   groups?: readonly StockGroup[];
   watched?: boolean;
   onToggleWatch?: () => void;
+  /** What the person holds of the chosen stock, in words. */
+  holding?: string;
 }) {
   const { market } = props;
   const [searching, setSearching] = useState(false);
@@ -194,6 +201,7 @@ export function StockPicker(props: {
           id={props.value}
           {...(props.watched === undefined ? {} : { watched: props.watched })}
           {...(props.onToggleWatch === undefined ? {} : { onToggleWatch: props.onToggleWatch })}
+          {...(props.holding === undefined ? {} : { holding: props.holding })}
         />
       ) : (
         <Text style={styles.muted} testID="no-stock">
@@ -242,4 +250,5 @@ const styles = StyleSheet.create({
   watch: { minHeight: 44, justifyContent: 'center', paddingHorizontal: 8, flexShrink: 0 },
   watchText: { color: colors.accent, fontWeight: '600' },
   muted: { color: colors.muted, fontSize: 13, marginTop: 4 },
+  holding: { color: colors.text, fontSize: 14, fontWeight: '600', marginTop: 4 },
 });

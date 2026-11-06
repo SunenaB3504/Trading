@@ -23,7 +23,7 @@ import {
 const GOLDEN = 'e0b425cce01d3276c53909e3af23d198a90d49d14f140fafca9a8a2be9b4b3a8';
 const { checks, check } = checkLog();
 
-const LEDGER_TITLE = 'Own trades (Ledger A), demo scenario';
+const LEDGER_TITLE = 'Demo example: own trades (Ledger A)';
 
 async function startFixtures(): Promise<{
   web: Server;

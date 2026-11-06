@@ -29,9 +29,28 @@ const REPORT_SEED = 'win-loss-report-v1';
 
 type Stored = StoredOrder;
 
+/**
+ * One open position as the person needs it before selling: how many, what they cost on average, what they are worth at
+ * the last close, and the profit or loss so far (before selling charges). Paise throughout; null mark with no price.
+ */
+export interface Holding {
+  instrumentId: string;
+  symbol: string;
+  quantity: number;
+  /** What the shares still held cost, charges on buying included. */
+  basis: string;
+  basisPaise: number;
+  averagePaise: number;
+  /** Close on the market's last date, adjusted for later splits and bonuses; null when the stock has no price then. */
+  markPaise: number | null;
+  valuePaise: number | null;
+  pnlPaise: number | null;
+  pnlRatio: number | null;
+}
+
 export interface SessionView {
   cash: string;
-  positions: Array<{ instrumentId: string; symbol: string; quantity: number; basis: string }>;
+  positions: Holding[];
   orders: Array<{ id: string; line: string; state: OrderRecord['state']; reason: string | null; note: Array<[string, string]> | null }>;
 }
 
@@ -170,14 +189,10 @@ export class PaperSession {
     const byId = new Map(this.stored.map((s) => [s.request.order.id, s.request]));
     const fills = new Map(this.adapter.result().fills.map((f) => [f.orderId, f]));
     const symbolOf = (id: string): string => this.market.symbols[id] ?? id;
+    const marks = marksAsOf(this.market.snapshot, this.market.config.actions, this.adapter.result().state, this.market.lastDate);
     return {
       cash: formatPaise(cash),
-      positions: positions.map((p) => ({
-        instrumentId: p.instrumentId,
-        symbol: this.market.symbols[p.instrumentId] ?? p.instrumentId,
-        quantity: p.quantity,
-        basis: formatPaise(p.basisPaise),
-      })),
+      positions: positions.map((p) => holdingOf(p, symbolOf(p.instrumentId), marks[p.instrumentId] ?? null)),
       orders: orders
         .map((o) => ({
           id: o.orderId,
@@ -189,6 +204,23 @@ export class PaperSession {
         .reverse(),
     };
   }
+}
+
+function holdingOf(p: Position, symbol: string, mark: number | null): Holding {
+  const value = mark === null ? null : mark * p.quantity;
+  const pnl = value === null ? null : value - p.basisPaise;
+  return {
+    instrumentId: p.instrumentId,
+    symbol,
+    quantity: p.quantity,
+    basis: formatPaise(p.basisPaise),
+    basisPaise: p.basisPaise,
+    averagePaise: p.quantity > 0 ? Math.round(p.basisPaise / p.quantity) : 0,
+    markPaise: mark,
+    valuePaise: value,
+    pnlPaise: pnl,
+    pnlRatio: pnl === null || p.basisPaise === 0 ? null : pnl / p.basisPaise,
+  };
 }
 
 function noteOf(fill: Fill | undefined, symbolOf: (id: string) => string, cfg: ReplayConfig): Array<[string, string]> | null {

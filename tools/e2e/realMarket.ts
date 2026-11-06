@@ -76,6 +76,12 @@ async function main(): Promise<void> {
     const book = await placeReliance(page);
     check('a real order fills at the next open under its symbol', /buy 10 of 10 RELIANCE/.test(book) && /filled/.test(book), book.slice(0, 400));
     check('the position shows the stock symbol', /RELIANCE, 10 shares/.test(book));
+    const holdings = await page.getByTestId('holdings').innerText();
+    check('Your holdings shows quantity, average, value now and profit', /RELIANCE, 10 shares/.test(holdings) && /average ₹/.test(holdings) && /now ₹/.test(holdings) && /value ₹/.test(holdings) && /Total /.test(holdings), holdings);
+    await page.getByTestId('holding-RELIANCE').click();
+    const bar = await page.getByTestId('order-bar').innerText();
+    check('tapping a holding prepares a sell of all of it, with the profit before charges', /Sell 10 × RELIANCE/.test(bar) && /profit ≈/.test(bar) && /Place sell order/.test(bar), bar);
+    check('the chosen stock says what is held of it', /You hold 10 · average ₹/.test(await page.getByTestId('selected-holding').innerText()));
     service.close();
     await page.goto(appOrigin); // no data helper now: the saved copy must serve
     await appReady(page);

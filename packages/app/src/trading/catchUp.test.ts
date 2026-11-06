@@ -10,6 +10,8 @@ const csv = [
   '2026-10-19,RELIANCE,BE,INE002A01018,1.00,1.00,1.00,1.00,1',
   '2026-10-19,TMPV,EQ,INE155A01022,700.00,710.00,690.00,705.00,9000',
   '2026-10-19,BAD,EQ,INE000000000,10.00,9.00,8.00,9.50,1',
+  '2026-10-19,CUBEXTUB,BE,INE144D01012,186.00,190.00,185.00,187.68,1200',
+  '2026-10-19,BONDX,N1,INE999X01010,100.00,100.00,100.00,100.00,5',
 ].join('\n');
 
 const m: LearningMarket = {
@@ -37,9 +39,11 @@ describe('daily catch-up (MIP v4.1 Stage 2)', () => {
     expect(missingWeekdays('2026-10-16', '2026-10-17')).toEqual([]);
   });
 
-  it('reads EQ rows only and drops a row whose prices are inconsistent', () => {
+  it('reads every share series, keeps the main board when a company has two rows, and drops bad rows', () => {
     const rows = parseDay(csv);
-    expect(rows.map((r) => r.symbol)).toEqual(['RELIANCE', 'TMPV']);
+    // RELIANCE's BE row gives way to its EQ row; CUBEXTUB trades only in BE (trade to trade) and is kept;
+    // BONDX is a bond series and BAD has a high below its open
+    expect(rows.map((r) => r.symbol)).toEqual(['RELIANCE', 'TMPV', 'CUBEXTUB']);
     expect(rows[0]?.bar).toEqual(['2026-10-19', 121_500, 123_050, 121_000, 122_525, 5_000, 0]);
     expect(parseDay('nothing useful')).toEqual([]);
   });
