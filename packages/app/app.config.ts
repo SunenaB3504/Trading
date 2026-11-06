@@ -14,9 +14,12 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   slug: 'market-learning',
   version: '0.1.0',
   orientation: 'portrait',
-  web: { bundler: 'metro', output: 'single' },
+  // Placeholder icon (2026-11-06; tools/app-icon/make_icon.py); the owner will replace it.
+  icon: './assets/icon.png',
+  web: { bundler: 'metro', output: 'single', favicon: './assets/icon.png' },
   android: {
     package: 'in.sunil.marketlearning',
+    adaptiveIcon: { foregroundImage: './assets/adaptive-icon.png', backgroundColor: '#1a56db' },
     versionCode: 1,
     // nothing beyond the internet is needed: files are shared through the system share sheet
     permissions: ['android.permission.INTERNET'],

@@ -32,7 +32,8 @@ describe('when an order trades (owner, 2026-11-06)', () => {
     expect(applyTiming(form(), { when: 'date', date: '2026-11-05' }, FRI_2PM).ok).toBe(false);
     const holiday = applyTiming(form(), { when: 'date', date: '2026-11-07' }, FRI_2PM);
     expect(holiday).toMatchObject({ ok: false, error: expect.stringContaining('2026-11-09') as unknown });
-    expect(applyTiming(form(), { when: 'date', date: '2027-01-04' }, FRI_2PM).ok).toBe(false);
+    expect(applyTiming(form(), { when: 'date', date: '2028-01-03' }, FRI_2PM).ok).toBe(false);
+    expect(applyTiming(form(), { when: 'date', date: '2027-01-04' }, FRI_2PM).ok).toBe(true);
     expect(applyTiming(form(), { when: 'date', date: '6-11-2026' }, FRI_2PM).ok).toBe(false);
   });
 

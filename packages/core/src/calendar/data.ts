@@ -1,5 +1,5 @@
 /**
- * NSE equity (cash) trading calendar, 2020-2026. NSE and BSE are assumed to share one calendar
+ * NSE equity (cash) trading calendar, 2020-2027. NSE and BSE are assumed to share one calendar
  * (not separately verified for BSE). Source and confidence are recorded for every entry.
  *
  * Confidence:
@@ -43,7 +43,7 @@ export interface SpecialSession {
 }
 
 export const SUPPORTED_FROM = ARCHIVE_FROM;
-export const SUPPORTED_TO = '2026-12-31';
+export const SUPPORTED_TO = '2027-12-31';
 export const REGULAR_WINDOW: SessionWindow = { open: '09:15', close: '15:30' };
 
 type Row = [monthDay: string, name: string];
@@ -167,6 +167,24 @@ export const HOLIDAYS: HolidayEntry[] = [
     ['11-24', 'Gurunanak Jayanti'],
     ['12-25', 'Christmas'],
   ]),
+  // 2027 is PROVISIONAL (owner, 2026-11-06: the calendar ran out on 2026-12-31). NSE had not issued its 2027 circular
+  // (it normally does in December). Weekday dates on which the published lists agree: calendarlabs.com,
+  // financecalendar.com and gstmunshi.com, read 2026-11-06; marketholidays.in and ipotrack.in list only Republic Day.
+  // Mahavir Jayanti is on two of the three lists, Muharram is 15 June on two and 16 June on one. Weekend festivals
+  // (Mahashivratri 6 Mar, Maharashtra Day 1 May, Ganesh Chaturthi 4 Sep, Gandhi Jayanti 2 Oct, Dussehra 10 Oct,
+  // Guru Nanak Jayanti 14 Nov, Christmas 25 Dec) need no entry. Replace with the circular when it is out.
+  ...year(2027, 'public lists, 2026-11-06; NSE circular not yet issued', 'unconfirmed', [
+    ['01-26', 'Republic Day'],
+    ['03-10', 'Id-ul-Fitr (Ramzan Id)'],
+    ['03-22', 'Holi'],
+    ['03-26', 'Good Friday'],
+    ['04-14', 'Dr. Baba Saheb Ambedkar Jayanti'],
+    ['04-15', 'Shri Ram Navami'],
+    ['04-19', 'Shri Mahavir Jayanti'],
+    ['05-17', 'Bakri Id (Eid-ul-Adha)'],
+    ['06-15', 'Muharram'],
+    ['10-29', 'Diwali Laxmi Pujan'],
+  ]),
   // Ad hoc closures notified after the annual circulars (secondary: news reports citing circulars).
   { date: '2024-01-22', name: 'Ram Mandir consecration', confidence: 'secondary', source: 'news' },
   {
@@ -251,4 +269,6 @@ export const SPECIAL_SESSIONS: SpecialSession[] = [
     'unconfirmed',
     'NSE/CMTR/71775; times not yet notified in the annual circular',
   ),
+  // 2027: the usual evening muhurat on Diwali Laxmi Pujan; one public list gives 18:15-19:15 (provisional)
+  special('2027-10-29', 'muhurat', MUHURAT_EVENING, 'unconfirmed', 'unconfirmed', 'gstmunshi.com 2026-10-11; NSE circular not yet issued'),
 ];

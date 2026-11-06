@@ -158,7 +158,7 @@ describe('queries', () => {
 
   it('refuses dates outside the supported range', () => {
     expect(() => sessionOn('2009-12-31')).toThrow(CalendarRangeError);
-    expect(() => sessionOn('2027-01-01')).toThrow(CalendarRangeError);
+    expect(() => sessionOn('2028-01-03')).toThrow(CalendarRangeError);
   });
 
   it('covers 2018 and 2019 from the exchange archive (15 and 17 weekday closures, found from the files NSE published)', () => {
@@ -205,5 +205,21 @@ describe('queries', () => {
         },
       ),
     );
+  });
+});
+
+describe('2027 (provisional until the NSE circular, owner 2026-11-06)', () => {
+  it('knows the 2027 weekday holidays the public lists agree on, all marked unconfirmed', () => {
+    for (const d of ['2027-01-26', '2027-03-10', '2027-03-22', '2027-03-26', '2027-04-14', '2027-04-15', '2027-04-19', '2027-05-17', '2027-06-15'])
+      expect(sessionOn(d).kind).toBe('closed');
+    expect(HOLIDAYS.filter((h) => h.date.startsWith('2027')).every((h) => h.confidence === 'unconfirmed')).toBe(true);
+  });
+
+  it('has ordinary sessions, weekends and the year-end turn', () => {
+    expect(sessionOn('2027-01-04').kind).toBe('regular');
+    expect(sessionOn('2027-01-02').kind).toBe('closed');
+    expect(nextRegularTradingDay('2026-12-31')).toBe('2027-01-01');
+    expect(nextRegularTradingDay('2027-01-25')).toBe('2027-01-27');
+    expect(sessionOn('2027-10-29').kind).toBe('muhurat');
   });
 });

@@ -61,7 +61,7 @@ const RANK: Record<Confidence, number> = {
 };
 const weakest = (a: Confidence, b: Confidence): Confidence => (RANK[a] >= RANK[b] ? a : b);
 
-/** What the exchange did on `date`. Throws outside 2020-01-01..2026-12-31. */
+/** What the exchange did on `date`. Throws outside the calendar's range (SUPPORTED_FROM..SUPPORTED_TO). */
 export function sessionOn(date: string): DaySession {
   assertSupported(date);
   const sp = specialByDate.get(date);
