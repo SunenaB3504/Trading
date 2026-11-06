@@ -20,7 +20,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   android: {
     package: 'in.sunil.marketlearning',
     adaptiveIcon: { foregroundImage: './assets/adaptive-icon.png', backgroundColor: '#1a56db' },
-    versionCode: 1,
+    versionCode: 2,
     // nothing beyond the internet is needed: files are shared through the system share sheet
     permissions: ['android.permission.INTERNET'],
     blockedPermissions: [
