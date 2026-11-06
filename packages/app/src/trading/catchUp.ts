@@ -1,5 +1,5 @@
-import { parsePaise } from '@trading/core';
-import type { CompactBar, LearningMarket } from '@trading/core';
+import { nseToCorporateActions, parseNseActionsFile, parsePaise } from '@trading/core';
+import type { CompactBar, CorporateAction, LearningMarket } from '@trading/core';
 
 /** One equity row of a day's NSE file, reduced to what the learning market keeps. */
 export interface DayRow {
@@ -47,6 +47,33 @@ export function parseDay(csv: string): DayRow[] {
     .filter((r): r is DayRow => r !== null);
 }
 
+/** NSE's daily PR archive for a trading day: its `bc` file lists the corporate actions with their ex-dates. */
+export function prFileUrl(date: string): string {
+  const [y, m, d] = date.split('-');
+  return `https://nsearchives.nseindia.com/archives/equities/bhavcopy/pr/PR${d ?? ''}${m ?? ''}${(y ?? '').slice(2)}.zip`;
+}
+
+/**
+ * The splits, bonuses and dividends in one day's `bc` file for the stocks of this market (matched by current symbol),
+ * so a share held through a split keeps its value instead of seeming to halve (D44). Anything else is left out, as in
+ * the laptop build.
+ */
+export function readActions(m: LearningMarket, bcText: string): CorporateAction[] {
+  const bySymbol = new Map(m.instruments.map((i) => [i.symbol, i.id]));
+  const found = parseNseActionsFile(bcText).actions;
+  return nseToCorporateActions(found, (symbol) => bySymbol.get(symbol)).actions;
+}
+
+/** Adds actions the market does not have yet (same id), keeping the list in ex-date order. */
+export function addActions(m: LearningMarket, actions: readonly CorporateAction[]): LearningMarket {
+  const known = new Set(m.actions.map((a) => a.id));
+  const fresh = actions.filter((a) => !known.has(a.id));
+  if (fresh.length === 0) return m;
+  for (const a of fresh) known.add(a.id);
+  const all = [...m.actions, ...fresh].sort((a, b) => (a.exDate === b.exDate ? (a.id < b.id ? -1 : 1) : a.exDate < b.exDate ? -1 : 1));
+  return { ...m, actions: all };
+}
+
 /** Weekdays after `last` up to and including `today`, oldest first. Holidays are found by the missing file. */
 export function missingWeekdays(last: string, today: string): string[] {
   const out: string[] = [];
@@ -60,7 +87,7 @@ export function missingWeekdays(last: string, today: string): string[] {
 /**
  * Adds one or more days of rows to a market. A stock is matched by ISIN, so a renamed company keeps its history; a day
  * a stock has no row for is simply a day without a bar. Days not later than the market's end are ignored, so running
- * it twice changes nothing. Corporate actions after the build date are not known here.
+ * it twice changes nothing. Corporate actions come separately, from the day's PR file (`addActions`).
  */
 export function addDays(m: LearningMarket, days: ReadonlyMap<string, DayRow[]>): LearningMarket {
   const dates = [...days.keys()].filter((d) => d > m.to).sort();

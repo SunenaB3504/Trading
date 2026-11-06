@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { corporateActionSchema } from '../domain/market';
 import type { BarUnadj, CorporateAction } from '../domain/market';
 import { tradingDateSchema } from '../domain/primitives';
+import { lazyRecord } from '../replay/lazyRecord';
 import type { ReplaySnapshot } from '../replay/types';
 
 /**
@@ -37,6 +38,8 @@ export const marketInstrumentSchema = z.object({
   kind: z.enum(['equity', 'etf']).optional(),
   /** True for ETFs that pay no securities transaction tax (gold, silver, liquid). */
   sttFree: z.boolean().optional(),
+  /** `rolling` keeps only the recent window (D44); absent means the whole history is kept. */
+  history: z.enum(['full', 'rolling']).optional(),
 });
 export type MarketInstrument = z.infer<typeof marketInstrumentSchema>;
 
@@ -87,12 +90,9 @@ export const NSE_TICK_PAISE = 5;
 
 /** The replay snapshot of a market: every instrument's unadjusted bars, price bands unknown. */
 export function marketSnapshot(m: LearningMarket): ReplaySnapshot {
-  const bars: Record<string, BarUnadj[]> = {};
-  const bandPct: Record<string, number | null> = {};
-  for (const i of m.instruments) {
-    bars[i.id] = (m.bars[i.id] ?? []).map((c) => fromCompact(i.id, m.id, c));
-    bandPct[i.id] = null;
-  }
+  const ids = m.instruments.map((i) => i.id);
+  const bars = lazyRecord(ids, (id) => (m.bars[id] ?? []).map((c) => fromCompact(id, m.id, c)));
+  const bandPct: Record<string, number | null> = Object.fromEntries(ids.map((id) => [id, null]));
   return { id: m.id, bars, bandPct, tickPaise: NSE_TICK_PAISE };
 }
 
@@ -102,4 +102,54 @@ export const marketActions = (m: LearningMarket): CorporateAction[] => m.actions
 export function parseLearningMarket(value: unknown): LearningMarket | null {
   const parsed = learningMarketSchema.safeParse(value);
   return parsed.success ? parsed.data : null;
+}
+
+/** Full calendar months a rolling stock keeps before the current month (D44): at least the 252 sessions of the rules. */
+export const ROLLING_MONTHS = 13;
+/** A stock that was ordered keeps this many months before its first order, so the chart at the time stays. */
+export const ORDERED_LOOKBACK_MONTHS = 12;
+
+function shiftMonths(date: string, months: number, day: string): string {
+  const index = Number(date.slice(0, 4)) * 12 + Number(date.slice(5, 7)) - 1 - months;
+  const year = Math.floor(index / 12);
+  return `${String(year).padStart(4, '0')}-${String((index % 12) + 1).padStart(2, '0')}-${day}`;
+}
+
+/** The first date a rolling stock keeps when prices run to `lastDate`: the first day of the month 13 months earlier. */
+export const rollingStart = (lastDate: string): string => shiftMonths(lastDate, ROLLING_MONTHS, '01');
+
+/** The first date kept for a stock first ordered on `firstOrder`: the same day twelve months earlier. */
+export const orderedStart = (firstOrder: string): string =>
+  shiftMonths(firstOrder, ORDERED_LOOKBACK_MONTHS, firstOrder.slice(8, 10));
+
+/**
+ * Drops the old prices of rolling stocks (D44). Full-history stocks are untouched; a stock in `firstOrders` (its first
+ * order date in any book) keeps everything from twelve months before that order. A rolling stock's corporate actions
+ * dated before its kept window go too.
+ * Returns the same object when nothing is dropped, so a caller saves only when the file changed.
+ */
+export function trimMarket(m: LearningMarket, firstOrders: ReadonlyMap<string, string>): LearningMarket {
+  const cut = rollingStart(m.to);
+  let changed = false;
+  const bars: LearningMarket['bars'] = { ...m.bars };
+  const keepFrom = new Map<string, string>();
+  const instruments = m.instruments.map((i) => {
+    if (i.history !== 'rolling') return i;
+    const ordered = firstOrders.get(i.id);
+    const from = ordered === undefined ? cut : [cut, orderedStart(ordered)].sort()[0] ?? cut;
+    keepFrom.set(i.id, from);
+    const series = m.bars[i.id] ?? [];
+    const kept = series.filter((b) => b[0] >= from);
+    if (kept.length === series.length) return i;
+    changed = true;
+    bars[i.id] = kept;
+    return { ...i, firstDate: kept[0]?.[0] ?? i.firstDate };
+  });
+  // An action before every kept bar of a stock adjusts nothing that is left, so it goes with the bars.
+  const actions = m.actions.filter((a) => {
+    const from = keepFrom.get(a.instrumentId);
+    return from === undefined || a.exDate >= from;
+  });
+  if (actions.length !== m.actions.length) changed = true;
+  return changed ? { ...m, instruments, bars, actions } : m;
 }

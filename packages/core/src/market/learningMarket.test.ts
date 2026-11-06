@@ -5,8 +5,11 @@ import {
   LEARNING_MARKET_VERSION,
   NSE_TICK_PAISE,
   marketSnapshot,
+  orderedStart,
   parseLearningMarket,
+  rollingStart,
   toCompactBar,
+  trimMarket,
 } from './learningMarket';
 import type { LearningMarket } from './learningMarket';
 
@@ -60,5 +63,60 @@ describe('learning market file (MIP v4.1 Stage 2, laptop slice)', () => {
 
   it('gives an instrument with no bars an empty series, not an error', () => {
     expect(marketSnapshot(market({ bars: {} })).bars.RELIANCE).toEqual([]);
+  });
+});
+
+describe('rolling history (D44)', () => {
+  const dates = ['2024-06-03', '2025-09-30', '2025-10-01', '2026-03-02', '2026-11-05'];
+  const series = (id: string) => dates.map((d) => toCompactBar({ ...bar(d, 300_000), instrumentId: id }));
+  const inst = (id: string, history?: 'full' | 'rolling') => ({
+    id,
+    symbol: id,
+    requested: id,
+    isin: null,
+    firstDate: '2024-06-03',
+    lastDate: '2026-11-05',
+    ...(history === undefined ? {} : { history }),
+  });
+  const wide = market({
+    to: '2026-11-05',
+    instruments: [inst('CORE'), inst('OLDFILE', 'full'), inst('ROLL', 'rolling'), inst('HELD', 'rolling')],
+    bars: { CORE: series('CORE'), OLDFILE: series('OLDFILE'), ROLL: series('ROLL'), HELD: series('HELD') },
+  });
+
+  it('starts the window on the first day of the month thirteen months back', () => {
+    expect(rollingStart('2026-11-05')).toBe('2025-10-01');
+    expect(rollingStart('2026-01-02')).toBe('2024-12-01');
+    expect(orderedStart('2026-03-02')).toBe('2025-03-02');
+  });
+
+  it('trims rolling stocks only, and keeps an ordered stock from a year before its first order', () => {
+    const t = trimMarket(wide, new Map([['HELD', '2025-06-10']]));
+    expect(t.bars.CORE).toHaveLength(5);
+    expect(t.bars.OLDFILE).toHaveLength(5);
+    expect(t.bars.ROLL?.map((b) => b[0])).toEqual(['2025-10-01', '2026-03-02', '2026-11-05']);
+    expect(t.instruments.find((i) => i.id === 'ROLL')?.firstDate).toBe('2025-10-01');
+    expect(t.bars.HELD?.map((b) => b[0])).toEqual(['2024-06-03', '2025-09-30', '2025-10-01', '2026-03-02', '2026-11-05'].filter((d) => d >= '2024-06-10'));
+  });
+
+  it("drops a rolling stock's actions from before its kept window, and keeps every action of a full-history stock", () => {
+    const action = (instrumentId: string, exDate: string) => ({
+      id: `${instrumentId}-split-${exDate}`,
+      instrumentId,
+      type: 'split' as const,
+      exDate,
+      ratio: { numerator: 2, denominator: 1 },
+      dividendPaisePerShare: null,
+      source: 'test',
+      effectiveAt: 0,
+    });
+    const withActions = { ...wide, actions: [action('CORE', '2024-07-01'), action('ROLL', '2024-07-01'), action('ROLL', '2026-03-02')] };
+    expect(trimMarket(withActions, new Map()).actions.map((a) => a.id)).toEqual(['CORE-split-2024-07-01', 'ROLL-split-2026-03-02']);
+  });
+
+  it('returns the same file when nothing is dropped, and trimming twice changes nothing more', () => {
+    const once = trimMarket(wide, new Map());
+    expect(once).not.toBe(wide);
+    expect(trimMarket(once, new Map())).toBe(once);
   });
 });

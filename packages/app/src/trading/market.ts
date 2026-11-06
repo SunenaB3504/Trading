@@ -20,6 +20,8 @@ export interface Market {
   symbols: Readonly<Record<string, string>>;
   /** `etf` for an exchange-traded fund; absent means an ordinary share. */
   kinds: Readonly<Record<string, 'equity' | 'etf'>>;
+  /** Stocks that keep only the recent prices (D44); absent means the whole history is there. */
+  rolling: Readonly<Record<string, true>>;
   /** Last date with prices. */
   lastDate: string;
   /** First date an order may be placed (the cost schedule starts then). */
@@ -48,6 +50,7 @@ export function demoMarket(): Market {
     instruments,
     symbols: Object.fromEntries(instruments.map((i) => [i, i])),
     kinds: {},
+    rolling: {},
     lastDate: dates.reduce((a, b) => (a > b ? a : b)),
     firstTradeDate: dates.reduce((a, b) => (a < b ? a : b)),
     config: s.config,
@@ -71,6 +74,7 @@ export function realMarket(file: LearningMarket): Market {
     instruments: byName.map((i) => i.id),
     symbols: Object.fromEntries(byName.map((i) => [i.id, i.symbol])),
     kinds: Object.fromEntries(byName.filter((i) => i.kind === 'etf').map((i) => [i.id, 'etf' as const])),
+    rolling: Object.fromEntries(byName.filter((i) => i.history === 'rolling').map((i) => [i.id, true as const])),
     lastDate: file.to,
     firstTradeDate: file.tradableFrom,
     config: {

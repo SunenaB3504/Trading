@@ -12,11 +12,11 @@ Six levels, each with lessons and a self-check. Mark a lesson done, then take th
 
 ## Practise
 
-- Trade: buy and sell shares and exchange-traded funds with market, limit, stop and other orders. Charges are taken on every trade.
+- Trade: buy and sell shares and exchange-traded funds with market, limit, stop and other orders. Charges are taken on every trade. Every stock the simulator tracks is here: the core list keeps its whole history, the others keep the last 13 months, and a stock you have ordered keeps everything from a year before your first order.
 - Funds: mutual funds at the end-of-day NAV.
 - Time Machine: move through past dates and see only the prices up to that date.
 - Builder and Charts: build a mix of holdings and read charts with averages and RSI.
-- Strategy Lab and Robo: test fixed rules on past prices and follow automatic accounts.
+- Strategy Lab and Robo: test fixed rules on past prices and follow automatic accounts. They use the core list only, because the other stocks keep just 13 months of prices.
 - F&O and Options Lab: Nifty, Bank Nifty and USD/INR futures, Nifty and Bank Nifty options, and a picture of how an option price changes. Prices are modelled from index funds and the dollar-rupee rate, not taken from the exchange. Lot sizes, margins and charges are approximate.
 - Tax and Bonds: a financial-year tax estimate of your practice trades, and a bond price, yield and duration calculator.
 - Ledger, Universe, Compare, Report: every record, the list of stocks and why each passes or fails, what holding longer would have done, and your results.
@@ -31,7 +31,7 @@ The built-in coach is always on. The AI tutor is off until you switch it on in t
 
 ## Profiles, backup and data
 
-Each person has a profile. In Settings, Backup exports a profile to a file and imports it on the other device. The file never contains your AI key. Data shows the price data you have and lets you update it when you are online.
+Each person has a profile. In Settings, Backup exports a profile to a file and imports it on the other device. The file never contains your AI key. Data shows the price data you have. On the phone, prices update by themselves when you open the app online, including splits and bonuses; at the start of each month the oldest month of the stocks you have never ordered is dropped.
 
 ## When something looks wrong
 

@@ -66,13 +66,29 @@ function toEvent(
   return null;
 }
 
+/** Actions grouped by instrument once per list: a market of a thousand stocks is adjusted daily, stock by stock. */
+const byInstrument = new WeakMap<readonly CorporateAction[], Map<string, CorporateAction[]>>();
+
+function actionsOf(actions: readonly CorporateAction[], id: string | undefined): CorporateAction[] {
+  let grouped = byInstrument.get(actions);
+  if (grouped === undefined) {
+    grouped = new Map();
+    for (const a of actions) {
+      const list = grouped.get(a.instrumentId);
+      if (list === undefined) grouped.set(a.instrumentId, [a]);
+      else list.push(a);
+    }
+    byInstrument.set(actions, grouped);
+  }
+  return id === undefined ? [] : (grouped.get(id) ?? []);
+}
+
 function buildEvents(
   bars: readonly BarUnadj[],
   actions: readonly CorporateAction[],
   opts: AdjustOptions,
 ): AdjustEvent[] {
-  const id = bars[0]?.instrumentId;
-  const mine = actions.filter((a) => a.instrumentId === id);
+  const mine = actionsOf(actions, bars[0]?.instrumentId);
   const events: AdjustEvent[] = [];
   for (const a of normalizeActions(mine)) {
     if (opts.asOf !== undefined && a.exDate > opts.asOf) continue;

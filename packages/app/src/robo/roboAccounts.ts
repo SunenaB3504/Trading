@@ -64,7 +64,8 @@ export function setupFor(market: Market, id: RoboId, sandbox: StrategyParams): S
   return {
     snapshot: market.snapshot,
     actions: market.config.actions,
-    universe: id === 'index' ? [] : market.instruments.filter((i) => market.kinds[i] !== 'etf'),
+    // full-history shares only: a start a year back plus indicator warm-up reaches past the rolling window (D44)
+    universe: id === 'index' ? [] : market.instruments.filter((i) => market.kinds[i] !== 'etf' && market.rolling[i] !== true),
     params: s.params,
     capitalPaise: ROBO_CAPITAL_PAISE,
     ...(hold === undefined ? {} : { hold }),

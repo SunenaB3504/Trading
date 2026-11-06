@@ -7,6 +7,7 @@ import type { KeyValueStore } from '../store/kv';
 import { PLATFORM } from '../platform/device';
 import { bundledMarket } from './bundledMarket';
 import { catchUp, fetchBytesOnDevice } from './catchUpRun';
+import { trimForDevice } from './marketTrim';
 import { demoMarket, realMarket } from './market';
 import type { Market } from './market';
 
@@ -58,22 +59,31 @@ export function useMarkets(
         await putStamped(device, REAL_MARKET_KEY, bundled, now());
         saved = bundled;
       }
+      // the first open in a new month drops the oldest month of the rolling stocks, never of an ordered one (D44)
+      if (saved !== null) {
+        const trimmed = await trimForDevice(device, saved);
+        if (trimmed !== saved) await putStamped(device, REAL_MARKET_KEY, trimmed, now());
+        saved = trimmed;
+      }
+      if (!live) return;
       if (saved !== null) setFile(saved);
       setKind(choice === 'real' ? 'real' : 'demo');
       const r = await client.market();
       if (!live) return;
-      if (r.ok && (saved === null || r.data.builtAt > saved.builtAt)) {
-        await putStamped(device, REAL_MARKET_KEY, r.data, now());
-        setFile(r.data);
+      const helper = r.ok ? await trimForDevice(device, r.data) : null;
+      if (helper !== null && (saved === null || helper.builtAt > saved.builtAt)) {
+        await putStamped(device, REAL_MARKET_KEY, helper, now());
+        setFile(helper);
       }
       setFresh(r.ok ? 'fresh' : saved !== null ? 'saved' : 'none');
       // the phone has no helper: it reads the exchange's daily files itself for the days since the saved prices end
-      const base = r.ok ? r.data : saved;
-      if (PLATFORM === 'android' && !r.ok && base !== null) {
+      const base = helper ?? saved;
+      if (PLATFORM === 'android' && helper === null && base !== null) {
         const up = await catchUp(base, new Date(now() + IST_OFFSET_MS).toISOString().slice(0, 10), fetchBytesOnDevice);
         if (live && up.added > 0) {
-          await putStamped(device, REAL_MARKET_KEY, up.market, now());
-          setFile(up.market);
+          const updated = await trimForDevice(device, up.market);
+          await putStamped(device, REAL_MARKET_KEY, updated, now());
+          setFile(updated);
         }
       }
     })();

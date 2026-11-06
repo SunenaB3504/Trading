@@ -11,6 +11,7 @@ import {
   postExit,
 } from '../analytics/comparators';
 import type { Excursions } from '../analytics/comparators';
+import { lazyRecord } from './lazyRecord';
 
 /** Windows of SSD §11.2: C1 and C2 over 5, 20 and 60 sessions; C4 at +1, +5 and +20 after the exit. */
 export const HOLD_HORIZONS = [5, 20, 60] as const;
@@ -65,10 +66,9 @@ export interface LedgerBOptions {
 type Adjusted = Record<string, BarAdj[]>;
 
 function adjustedBars(snapshot: ReplaySnapshot, actions: readonly CorporateAction[]): Adjusted {
-  const out: Adjusted = {};
-  for (const [id, bars] of Object.entries(snapshot.bars))
-    out[id] = adjustSeries(bars as readonly BarUnadj[], actions, { includeDividends: false });
-  return out;
+  return lazyRecord(Object.keys(snapshot.bars), (id) =>
+    adjustSeries((snapshot.bars[id] ?? []) as readonly BarUnadj[], actions, { includeDividends: false }),
+  );
 }
 
 /** Converts an unadjusted fill price to the adjusted basis the bars are on, using the fill day's own bar. */

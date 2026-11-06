@@ -8,13 +8,19 @@ import type { ReplaySnapshot } from './types';
 
 /** Builds the fill simulator's view of the world from a snapshot. */
 export function contextProvider(s: ReplaySnapshot): ContextProvider {
+  // Indexed per instrument on first use: a large market decodes only the stocks that are actually traded.
   const index = new Map<string, Map<string, number>>();
-  for (const [id, bars] of Object.entries(s.bars)) {
-    index.set(id, new Map(bars.map((b, i) => [b.date, i])));
-  }
+  const indexOf = (id: string): Map<string, number> | undefined => {
+    let found = index.get(id);
+    if (found === undefined && id in s.bars) {
+      found = new Map((s.bars[id] ?? []).map((b, i) => [b.date, i]));
+      index.set(id, found);
+    }
+    return found;
+  };
   return (instrumentId, date): FillContext => {
     const bars = s.bars[instrumentId] ?? [];
-    const i = index.get(instrumentId)?.get(date);
+    const i = indexOf(instrumentId)?.get(date);
     const bar: BarUnadj | null = i === undefined ? null : (bars[i] ?? null);
     const prev = i === undefined || i === 0 ? null : (bars[i - 1]?.close ?? null);
     return {
@@ -48,8 +54,10 @@ export function marksAsOf(
   date: string,
 ): Record<string, number> {
   const marks: Record<string, number> = {};
-  for (const [id, bars] of Object.entries(s.bars)) {
+  // Keys first and bars only for held stocks, so the stocks nobody holds are never decoded.
+  for (const id of Object.keys(s.bars)) {
     if (quantityHeld(state, id) <= 0) continue;
+    const bars = s.bars[id] ?? [];
     // Only the latest bar's close is needed, and its factor depends on actions after it, not on bars before it.
     const tail = tailUpTo(bars, date);
     if (tail.length === 0) continue;
