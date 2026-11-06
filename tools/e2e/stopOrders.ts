@@ -21,6 +21,8 @@ async function form(page: Page): Promise<void> {
   await openTab(page, 'Trade');
   await page.getByText('New order (virtual money)').waitFor({ timeout: 30_000 });
   check('a market order shows no trigger or lifetime fields', (await page.getByTestId('trigger-input').count()) === 0 && (await page.getByTestId('pick-validity').count()) === 0);
+  check('Express, the default, offers no order types', (await page.getByTestId('pick-type').count()) === 0);
+  await page.getByTestId('mode-advanced').click();
   await pick(page, 'pick-type', 'Stop-loss limit (SL)');
   check('a stop-loss limit order shows trigger, limit and lifetime', (await page.getByTestId('trigger-input').count()) === 1 && (await page.getByTestId('limit-input').count()) === 1 && (await page.getByTestId('pick-validity').count()) === 1);
   await pick(page, 'pick-type', 'Market');

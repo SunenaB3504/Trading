@@ -39,9 +39,34 @@ async function placeReliance(page: Page): Promise<string> {
   await page.getByTestId('stock-search').fill('reli');
   await page.getByTestId('pick-instrument').getByText('RELIANCE', { exact: true }).click();
   await page.getByText('Selected: RELIANCE').waitFor({ timeout: 5_000 });
+  check('Express is the default: no order types on the form', (await page.getByTestId('pick-type').count()) === 0);
+  check("the clock is during the session, so today's close is offered", /at today's close/.test(await page.getByTestId('order-summary').innerText()));
+  await page.getByTestId('reason-e-simulator').click();
   await page.getByTestId('place-order').click();
   await page.getByText(/Order h-0001 placed/).waitFor({ timeout: 30_000 });
   return page.getByTestId('trade-screen').innerText();
+}
+
+/** Express by rupees, then a sale of the holding with an exit reason, then the trade counted by reason. */
+async function expressAndReasons(page: Page): Promise<void> {
+  await page.getByTestId('stock-search-open').click();
+  await page.getByTestId('stock-search').fill('reliance');
+  await page.getByTestId('pick-instrument').getByText('RELIANCE', { exact: true }).click();
+  await page.getByTestId('pick-qty-by').getByText('Rupees', { exact: true }).click();
+  await page.getByTestId('amount-input').fill('5000');
+  check('an amount in rupees becomes whole shares at the last close', /That buys \d+ shares at the last close/.test(await page.getByTestId('trade-screen').innerText()));
+  await page.getByTestId('pick-qty-by').getByText('Shares', { exact: true }).click();
+  await page.getByTestId('holding-RELIANCE').click();
+  await page.getByTestId('reason-x-target').click();
+  await page.getByTestId('place-order').click();
+  await page.getByText(/Order h-0002 placed/).waitFor({ timeout: 30_000 });
+  await openTab(page, 'Report');
+  await page.getByTestId('by-reason-entry').waitFor({ timeout: 30_000 });
+  const entry = await page.getByTestId('by-reason-entry').innerText();
+  const exit = await page.getByTestId('by-reason-exit').innerText();
+  check('the closed trade is counted under its buying and selling reasons', /Simulator signal/.test(entry) && /1 trade/.test(entry) && /Target reached/.test(exit), `${entry} | ${exit}`);
+  check('the trades can be exported as a spreadsheet', await page.getByTestId('export-trades').isVisible());
+  await openTab(page, 'Trade');
 }
 
 /** The first regular session after `date`: an exit date the plan accepts. */
@@ -92,7 +117,8 @@ async function main(): Promise<void> {
   });
   const service = await startServer(handler, { port: 0, allowedOrigin: appOrigin });
   const serviceUrl = `http://127.0.0.1:${(service.address() as AddressInfo).port}`;
-  const url = `${appOrigin}/?service=${encodeURIComponent(serviceUrl)}`;
+  // a fixed clock during the last session with prices, so an order for today's close fills
+  const url = `${appOrigin}/?service=${encodeURIComponent(serviceUrl)}&asOf=${market.to}T14:00`;
   const browser = await chromium.launch({ channel: 'chrome', headless: true });
   const page = await (await browser.newContext({ viewport: { width: 390, height: 900 } })).newPage();
   const errors: string[] = [];
@@ -116,12 +142,16 @@ async function main(): Promise<void> {
     check('the chosen stock says what is held of it', /You hold 10 · average ₹/.test(await page.getByTestId('selected-holding').innerText()));
     await exitPlan(page, market.to);
     service.close();
-    await page.goto(appOrigin); // no data helper now: the saved copy must serve
+    await page.goto(`${appOrigin}/?asOf=${market.to}T14:00`); // no data helper now: the saved copy must serve
     await appReady(page);
-    check('the saved copy is said to be used', /saved copy/.test(await pricesNote(page, market.to)));
+    await pricesNote(page, market.to);
+    // the note says "saved copy" once the data helper has failed to answer, a moment after the prices show
+    await page.getByTestId('data-screen').getByText(/saved copy/).waitFor({ timeout: 30_000 });
+    check('the saved copy is said to be used', true);
     await openRealTrade(page);
     await page.getByText(/RELIANCE, 10 shares/).waitFor({ timeout: 30_000 });
     check('without the data helper the saved real prices and the real book still open', true);
+    await expressAndReasons(page);
     // a brand-new browser with no data helper: the history shipped inside the app serves (MIP v4.1 Stage 2)
     const fresh = await (await browser.newContext({ viewport: { width: 390, height: 900 } })).newPage();
     await fresh.goto(appOrigin);

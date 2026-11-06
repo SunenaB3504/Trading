@@ -63,7 +63,7 @@ export function offerFile(filename: string, text: string): Promise<boolean> {
   };
   if (g.document === undefined || g.URL === undefined || g.Blob === undefined)
     return Promise.resolve(false);
-  const url = g.URL.createObjectURL(new g.Blob([text], { type: 'application/json' }));
+  const url = g.URL.createObjectURL(new g.Blob([text], { type: filename.endsWith('.csv') ? 'text/csv' : 'application/json' }));
   const a = g.document.createElement('a');
   a.href = url;
   a.download = filename;

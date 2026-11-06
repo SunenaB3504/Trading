@@ -90,7 +90,7 @@ async function editDate(page: Page): Promise<void> {
   );
   await date.fill('2026-03-07');
   await page.getByTestId('place-order').click();
-  await page.getByText(/must be a regular trading day/).waitFor({ timeout: 10_000 });
+  await page.getByTestId('order-message').getByText(/is not a trading day\. The next one is/).waitFor({ timeout: 10_000 });
   check('a Saturday is refused with a clear message', true);
   await date.fill('2026-03-02');
   check('the date can be typed again', (await date.inputValue()) === '2026-03-02');

@@ -58,6 +58,8 @@ async function placeBuy(page: Page, note: boolean): Promise<void> {
   await openTab(page, 'Trade');
   await page.getByText('New order (virtual money)').waitFor({ timeout: 30_000 });
   if (note) {
+    // the full journal is part of the Advanced form
+    await page.getByTestId('mode-advanced').click();
     await page.getByTestId('journal-why').fill('Steady results');
     await page.getByTestId('journal-exit').fill('Sell if it closes below 900');
     await page.getByTestId('journal-confidence').getByText('4', { exact: true }).click();

@@ -22,6 +22,8 @@ export interface Market {
   kinds: Readonly<Record<string, 'equity' | 'etf'>>;
   /** Stocks that keep only the recent prices (D44); absent means the whole history is there. */
   rolling: Readonly<Record<string, true>>;
+  /** The live market, traded at the device's own date and time; false for demo prices and Time Machine. */
+  live: boolean;
   /** Last date with prices. */
   lastDate: string;
   /** First date an order may be placed (the cost schedule starts then). */
@@ -51,6 +53,7 @@ export function demoMarket(): Market {
     symbols: Object.fromEntries(instruments.map((i) => [i, i])),
     kinds: {},
     rolling: {},
+    live: false,
     lastDate: dates.reduce((a, b) => (a > b ? a : b)),
     firstTradeDate: dates.reduce((a, b) => (a < b ? a : b)),
     config: s.config,
@@ -75,6 +78,7 @@ export function realMarket(file: LearningMarket): Market {
     symbols: Object.fromEntries(byName.map((i) => [i.id, i.symbol])),
     kinds: Object.fromEntries(byName.filter((i) => i.kind === 'etf').map((i) => [i.id, 'etf' as const])),
     rolling: Object.fromEntries(byName.filter((i) => i.history === 'rolling').map((i) => [i.id, true as const])),
+    live: true,
     lastDate: file.to,
     firstTradeDate: file.tradableFrom,
     config: {

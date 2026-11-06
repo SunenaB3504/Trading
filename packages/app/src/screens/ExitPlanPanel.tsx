@@ -76,16 +76,16 @@ function ModeChoice(props: { mode: 'auto' | 'ask'; onChange: (m: 'auto' | 'ask')
 }
 
 /** Set, change or take away the exit plan of one holding: stop, target, exit date (at its close), shares, and mode. */
-/** The form's starting values: the plan being changed, or all the shares, asking first. */
-const initialInput = (h: Holding): ExitPlanInput =>
+/** The form's starting values: the plan being changed, or all the shares, asking first, with the journal's prices. */
+const initialInput = (h: Holding, suggest: { stop: string; target: string } | undefined): ExitPlanInput =>
   h.plan === null
-    ? { quantity: String(h.quantity), stop: '', target: '', exitDate: '', mode: 'ask' }
+    ? { quantity: String(h.quantity), stop: suggest?.stop ?? '', target: suggest?.target ?? '', exitDate: '', mode: 'ask' }
     : { quantity: String(h.plan.quantity), stop: rupees(h.plan.stopPaise), target: rupees(h.plan.targetPaise), exitDate: h.plan.exitDate ?? '', mode: h.plan.mode };
 
-function PlanForm(props: { h: Holding; actions: PlanActions; onClose: () => void }) {
+function PlanForm(props: { h: Holding; actions: PlanActions; onClose: () => void; suggest?: { stop: string; target: string } }) {
   const { h } = props;
   const p = h.plan;
-  const [input, setInput] = useState<ExitPlanInput>(() => initialInput(h));
+  const [input, setInput] = useState<ExitPlanInput>(() => initialInput(h, props.suggest));
   const [error, setError] = useState<string | null>(null);
   const set = (k: keyof ExitPlanInput) => (v: string) => setInput((i) => ({ ...i, [k]: v }));
   const save = () =>
@@ -93,6 +93,7 @@ function PlanForm(props: { h: Holding; actions: PlanActions; onClose: () => void
   return (
     <View style={styles.form} testID="exit-plan-form">
       <Text style={styles.formTitle}>{`Exit plan for ${h.symbol}: whichever comes first sells`}</Text>
+      {p === null && props.suggest !== undefined ? <Text style={styles.hint}>Stop and target filled in from your journal for this buy.</Text> : null}
       <Field label="Stop price (₹): sell if it falls to" value={input.stop} onChange={set('stop')} placeholder="e.g. 855.43" testID="plan-stop" numeric />
       <Field label="Target price (₹): sell if it rises to" value={input.target} onChange={set('target')} placeholder="e.g. 1049.92" testID="plan-target" numeric />
       <Field label="Exit date: sell at that day's close (YYYY-MM-DD)" value={input.exitDate} onChange={set('exitDate')} placeholder="e.g. 2026-11-06" testID="plan-date" />
@@ -101,7 +102,7 @@ function PlanForm(props: { h: Holding; actions: PlanActions; onClose: () => void
       <ModeChoice mode={input.mode} onChange={(mode) => setInput((i) => ({ ...i, mode }))} />
       <Text style={styles.hint}>
         {input.mode === 'ask'
-          ? 'Nothing is sold by itself: the app tells you and you decide. A sale you confirm goes at the next open.'
+          ? "Nothing is sold by itself: the app tells you and you decide. A sale you confirm goes at the next close."
           : 'The first of stop, target or date sells by itself, at that price or that close, and the others are dropped.'}
       </Text>
       {error !== null ? <Text style={styles.error}>{error}</Text> : null}
@@ -129,7 +130,7 @@ function Reached(props: { h: Holding; actions: PlanActions; onEdit: () => void }
   return (
     <View style={styles.reached} testID={`plan-reached-${h.symbol}`}>
       <Text style={styles.reachedTitle}>{`Exit plan reached: ${h.symbol}`}</Text>
-      <Text style={styles.text}>{`${reachedText(p)} Sell ${String(Math.min(p.quantity, h.quantity))} shares now? The sale goes at the next open, so the price can differ.`}</Text>
+      <Text style={styles.text}>{`${reachedText(p)} Sell ${String(Math.min(p.quantity, h.quantity))} shares now? The sale goes at today's close if the market is still open, otherwise at the next trading day's close, so the price can differ.`}</Text>
       <View style={styles.buttons}>
         <Pressable accessibilityRole="button" onPress={() => void props.actions.remove(h.instrumentId)} style={[styles.button, styles.quiet]} testID="plan-keep">
           <Text style={styles.quietText}>Keep shares</Text>
@@ -146,10 +147,10 @@ function Reached(props: { h: Holding; actions: PlanActions; onEdit: () => void }
 }
 
 /** Under a holding: its exit plan in one line with a button to set or change it, the form, or the reached prompt. */
-export function ExitPlanPanel(props: { h: Holding; actions: PlanActions }) {
+export function ExitPlanPanel(props: { h: Holding; actions: PlanActions; suggest?: { stop: string; target: string } }) {
   const [editing, setEditing] = useState(false);
   const { h } = props;
-  if (editing) return <PlanForm h={h} actions={props.actions} onClose={() => setEditing(false)} />;
+  if (editing) return <PlanForm h={h} actions={props.actions} onClose={() => setEditing(false)} {...(props.suggest === undefined ? {} : { suggest: props.suggest })} />;
   if (h.plan?.status === 'reached') return <Reached h={h} actions={props.actions} onEdit={() => setEditing(true)} />;
   return (
     <View style={styles.line}>

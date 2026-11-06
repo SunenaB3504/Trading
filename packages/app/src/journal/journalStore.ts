@@ -18,6 +18,10 @@ export interface JournalEntry {
   exitPlan: string;
   /** 1 to 5, or null when not given. */
   confidence: number | null;
+  /** Ids from the master reason list (`reasons.ts`): entry reasons for a buy, the exit reason for a sell; main first. */
+  reasons?: string[];
+  /** The simulator's ticket the trade came from, as plain text (no astrology, D42). */
+  ticket?: string;
   after?: { what: string; learned: string; emotion: Emotion | null; at: number };
 }
 
@@ -29,9 +33,12 @@ export interface BeforeFields {
   target: string;
   exitPlan: string;
   confidence: number | null;
+  reasons?: string[];
+  ticket?: string;
 }
 
-export const hasBefore = (b: BeforeFields): boolean => [b.why, b.target, b.exitPlan].some((s) => s.trim() !== '') || b.confidence !== null;
+export const hasBefore = (b: BeforeFields): boolean =>
+  [b.why, b.target, b.exitPlan, b.ticket ?? ''].some((s) => s.trim() !== '') || b.confidence !== null || (b.reasons ?? []).length > 0;
 
 const isText = (v: unknown): boolean => typeof v === 'string';
 const isConfidence = (v: unknown): boolean => v === null || (typeof v === 'number' && v >= 1 && v <= 5);
@@ -57,7 +64,11 @@ const same = (a: JournalEntry, market: string, orderId: string): boolean => a.ma
 export async function addBefore(kv: KeyValueStore, market: string, orderId: string, b: BeforeFields, now: number): Promise<void> {
   if (!hasBefore(b)) return;
   const rest = (await loadJournal(kv)).filter((e) => !same(e, market, orderId));
-  await saveJournal(kv, [...rest, { orderId, market, at: now, why: clip(b.why), target: clip(b.target), exitPlan: clip(b.exitPlan), confidence: b.confidence }], now);
+  const extra = {
+    ...((b.reasons ?? []).length > 0 ? { reasons: (b.reasons ?? []).slice(0, 3) } : {}),
+    ...((b.ticket ?? '').trim() !== '' ? { ticket: clip(b.ticket ?? '').slice(0, 80) } : {}),
+  };
+  await saveJournal(kv, [...rest, { orderId, market, at: now, why: clip(b.why), target: clip(b.target), exitPlan: clip(b.exitPlan), confidence: b.confidence, ...extra }], now);
 }
 
 /** Adds the note made after the trade closed; makes an entry if there was no note before. */

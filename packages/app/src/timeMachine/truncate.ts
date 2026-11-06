@@ -41,6 +41,7 @@ export function marketAsOf(full: Market, o: { id: string; date: string; symbols:
     instruments,
     lastDate: o.date,
     defaultDate: o.date,
+    live: false,
     config: {
       ...full.config,
       capitalPaise: o.capitalPaise,

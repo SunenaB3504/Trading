@@ -21,8 +21,12 @@ export interface OrderForm {
   until?: string;
   /** Rupees, optional stop for a buy (sizes the risk check). */
   stop: string;
-  /** Decision date `YYYY-MM-DD`: the order is placed after that day's close. */
+  /** Decision date `YYYY-MM-DD`: the order is placed after that day's close; for a close fill, the day it fills. */
   date: string;
+  /** `close`: a market order filled at the close of `date` (market on close), given at `placedAt`. */
+  fillAt?: 'close';
+  /** When a close-fill order was given (epoch milliseconds); it must be before that day's close. */
+  placedAt?: number;
 }
 
 export type Built = { ok: true; request: OrderRequest } | { ok: false; error: string };
@@ -125,6 +129,8 @@ export function makeOrderRequest(form: OrderForm, seq: number): Built {
     return { ok: false, error: problems.join(String.fromCharCode(10)) };
   }
   const id = `h-${String(seq).padStart(4, '0')}`;
+  // only a plain market order can be filled at the close
+  const onClose = form.fillAt === 'close' && form.type === 'market';
   return {
     ok: true,
     request: {
@@ -140,12 +146,12 @@ export function makeOrderRequest(form: OrderForm, seq: number): Built {
         quantity,
         limitPaise: prices.limit,
         ...lifetime(form, prices),
-        placedAt: istToUtcMillis(form.date, '16:00'),
+        placedAt: onClose ? (form.placedAt ?? istToUtcMillis(form.date, '09:00')) : istToUtcMillis(form.date, '16:00'),
         tradingDate: form.date,
         status: 'open',
         source: 'human',
         rationale: 'manual order',
-        fillRuleId: 'next-open@1',
+        fillRuleId: onClose ? 'moc@1' : 'next-open@1',
         blockedReason: null,
       },
     },

@@ -55,14 +55,14 @@ export function HomeScreen(props: {
     <ScrollView contentContainerStyle={styles.page} testID="home-screen">
       <CoachHint screen="home" />
       <Text style={styles.hello}>{`Hello, ${props.profile.name}`}</Text>
-      <Section title={`Your practice account (${props.market.label.toLowerCase()})`}>
+      <Section title="Your practice account">
         <Row label="Cash" value={view?.cash ?? '...'} />
         <Row label="Open positions" value={view === null ? '...' : String(view.positions.length)} />
         <Row label="Orders placed" value={view === null ? '...' : String(view.orders.length)} />
         <Note>
           {props.market.kind === 'real'
-            ? `Real NSE prices to ${props.market.lastDate}. Switch between demo and real prices at the top of Practise.`
-            : 'Built-in demo prices. Real NSE prices can be chosen at the top of Practise on the laptop.'}
+            ? `Real NSE prices to ${props.market.lastDate}.`
+            : 'Real NSE prices are not loaded yet; until they are, the small built-in demo set is shown.'}
         </Note>
         <Button label="Go to Practise" onPress={() => props.onGo('practise')} quiet />
       </Section>

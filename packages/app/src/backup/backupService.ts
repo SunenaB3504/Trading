@@ -87,9 +87,16 @@ async function booksOf(kv: KeyValueStore): Promise<Map<string, StoredOrder[]>> {
 /** Time Machine sessions and everything inside them live under this key prefix of the profile's store. */
 export const TM_PREFIX = 'tm/';
 
+/**
+ * Profile keys a backup carries as they are: Time Machine, and since 2026-11-06 the exit plans, the reason list, the
+ * order form's mode, and the watchlist and recent picks (owner: nothing set up in the app should be lost on a restore).
+ */
+const CARRIED = [TM_PREFIX, 'practise/exitPlans@', 'journal/reasons', 'practise/orderMode', 'practise/watchlist@', 'practise/recent@'];
+const carried = (key: string): boolean => CARRIED.some((p) => key.startsWith(p));
+
 async function tmItems(kv: KeyValueStore): Promise<BackupItem[]> {
   const out: BackupItem[] = [];
-  for (const key of (await kv.keys()).filter((k) => k.startsWith(TM_PREFIX)).sort()) {
+  for (const key of (await kv.keys()).filter(carried).sort()) {
     const value = await kv.get(key);
     if (value !== null) out.push({ t: 'tm', key, value });
   }
@@ -196,11 +203,11 @@ function header(tagged: Array<Record<string, unknown>>): Pick<ReadBackup, 'profi
   return { profile: p.data, settings: s?.data ?? null };
 }
 
-/** The Time Machine records of a tagged backup, or null when one is not a key under the Time Machine prefix with a text value. */
+/** The carried records of a tagged backup (Time Machine and the rest), or null when one is not a carried key with a text value. */
 function tmRecords(tagged: Array<Record<string, unknown>>): ReadBackup['tm'] | null {
   const out: ReadBackup['tm'] = [];
   for (const i of tagged.filter((x) => x.t === 'tm')) {
-    if (typeof i.key !== 'string' || !i.key.startsWith(TM_PREFIX) || typeof i.value !== 'string') return null;
+    if (typeof i.key !== 'string' || !carried(i.key) || typeof i.value !== 'string') return null;
     out.push({ key: i.key, value: i.value });
   }
   return out;
@@ -327,7 +334,7 @@ async function putBooks(kv: KeyValueStore, books: Record<string, StoredOrder[]>,
   if (extra !== undefined) {
     await putStamped(kv, FUND_ORDERS_KEY, extra.funds, now);
     await saveJournal(kv, extra.journal, now);
-    for (const k of (await kv.keys()).filter((x) => x.startsWith(TM_PREFIX))) await kv.delete(k);
+    for (const k of (await kv.keys()).filter(carried)) await kv.delete(k);
     for (const r of extra.tm) await kv.set(r.key, r.value);
     if (extra.progress !== null) await saveProgress(kv, extra.progress, now);
   }

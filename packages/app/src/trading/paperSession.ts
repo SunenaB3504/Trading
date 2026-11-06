@@ -9,7 +9,7 @@ import {
   istToUtcMillis,
   winLossReport,
 } from '@trading/core';
-import type { Fill, Flag, MistakeLimits, OrderRecord, Position, ReplayConfig, Trade, WinLossReport } from '@trading/core';
+import type { Fill, Flag, MistakeLimits, OrderRecord, OrderRequest, Position, ReplayConfig, Trade, WinLossReport } from '@trading/core';
 import { REQUESTS_KEY } from '../backup/backupService';
 import type { StoredOrder } from '../backup/backupService';
 import { formatPaise } from '../format/rupees';
@@ -22,6 +22,7 @@ import type { Market } from './market';
 import { exitEvent, exitRequest, loadExitPlans, readExitPlan, saveExitPlans } from './exitPlans';
 import type { ExitPlan, ExitPlanInput } from './exitPlans';
 import { makeOrderRequest } from './orderRequest';
+import { applyTiming, defaultTiming, marketNow } from './orderTiming';
 import { describeOrder, reasonText } from './orderText';
 import { shareNoteLines } from './shareNote';
 import type { OrderForm } from './orderRequest';
@@ -55,7 +56,15 @@ export interface Holding {
 export interface SessionView {
   cash: string;
   positions: Holding[];
-  orders: Array<{ id: string; line: string; state: OrderRecord['state']; reason: string | null; note: Array<[string, string]> | null }>;
+  orders: Array<{
+    id: string;
+    instrumentId: string;
+    side: 'buy' | 'sell';
+    line: string;
+    state: OrderRecord['state'];
+    reason: string | null;
+    note: Array<[string, string]> | null;
+  }>;
 }
 
 export type PlaceOutcome =
@@ -188,8 +197,12 @@ export class PaperSession {
     const plan = this.plans.find((p) => p.instrumentId === instrumentId && p.status === 'reached');
     const held = (await this.adapter.getPositions()).find((p) => p.instrumentId === instrumentId)?.quantity ?? 0;
     if (plan === undefined || held === 0) return { ok: false, error: 'There is nothing to sell for this plan.' };
-    const form: OrderForm = { instrumentId, side: 'sell', type: 'market', quantity: String(Math.min(plan.quantity, held)), limit: '', stop: '', date: this.market.lastDate };
-    const placed = await this.place(form);
+    // the moment has passed: sell at today's close if it is still open, otherwise at the next trading day's close
+    const at = marketNow(this.market, this.now());
+    const base: OrderForm = { instrumentId, side: 'sell', type: 'market', quantity: String(Math.min(plan.quantity, held)), limit: '', stop: '', date: this.market.lastDate };
+    const timed = applyTiming(base, defaultTiming(at), at);
+    if (!timed.ok) return timed;
+    const placed = await this.place(timed.form);
     if (!placed.ok) return placed;
     plan.status = 'done';
     plan.orderId = placed.orderId;
@@ -267,6 +280,19 @@ export class PaperSession {
     return this.adapter.result().state.trades.filter((t) => t.closedOn !== null);
   }
 
+  /**
+   * Every closed round trip with the orders behind it, for the reason report and the spreadsheet: the buy and sell order
+   * ids (joined to the journal), the prices, the charges, the profit, and what set off an exit plan's sale.
+   */
+  roundTrips(): RoundTrip[] {
+    const { state, fills } = this.adapter.result();
+    const fillById = new Map(fills.map((f) => [f.id, f]));
+    const requests = new Map(this.stored.map((x) => [x.request.order.id, x.request]));
+    return state.trades
+      .filter((t) => t.closedOn !== null && t.exitFillId !== null)
+      .map((t) => tripOf(t, fillById.get(t.entryFillId), fillById.get(t.exitFillId ?? ''), requests, this.market));
+  }
+
   /** Win/loss report with bootstrap intervals; the seed is fixed so the same book gives the same numbers. */
   report(): WinLossReport {
     return winLossReport(this.adapter.result().state.trades, createRng(REPORT_SEED));
@@ -291,6 +317,8 @@ export class PaperSession {
       orders: orders
         .map((o) => ({
           id: o.orderId,
+          instrumentId: byId.get(o.orderId)?.order.instrumentId ?? '',
+          side: byId.get(o.orderId)?.order.side ?? 'buy',
           line: describeOrder(o, byId.get(o.orderId), (id) => this.market.symbols[id] ?? id),
           state: o.state,
           reason: reasonText(o.reason),
@@ -299,6 +327,52 @@ export class PaperSession {
         .reverse(),
     };
   }
+}
+
+/** What set off an exit plan's sale, from the tags of the sell order. */
+function planExitOf(tags: readonly string[]): RoundTrip['planExit'] {
+  if (!tags.includes('exit-plan')) return null;
+  return (tags.find((x) => x === 'stop' || x === 'target' || x === 'date') ?? null) as RoundTrip['planExit'];
+}
+
+const NO_FILL = { orderId: '', pricePaise: 0 };
+
+function tripOf(t: Trade, buyFill: Fill | undefined, sellFill: Fill | undefined, requests: ReadonlyMap<string, OrderRequest>, market: Market): RoundTrip {
+  const buy = buyFill ?? NO_FILL;
+  const sell = sellFill ?? NO_FILL;
+  return {
+    instrumentId: t.instrumentId,
+    symbol: market.symbols[t.instrumentId] ?? t.instrumentId,
+    buyOrderId: buy.orderId,
+    sellOrderId: sell.orderId,
+    openedOn: t.openedOn,
+    closedOn: t.closedOn ?? t.openedOn,
+    quantity: t.quantity,
+    buyPricePaise: buy.pricePaise,
+    sellPricePaise: sell.pricePaise,
+    chargesPaise: t.entryCostsPaise + t.exitCostsPaise,
+    basisPaise: t.basisPaise,
+    netPnlPaise: t.netPnlPaise ?? 0,
+    planExit: planExitOf(requests.get(sell.orderId)?.meta.tags ?? []),
+  };
+}
+
+/** One bought-and-sold round trip, as the analytics need it. */
+export interface RoundTrip {
+  instrumentId: string;
+  symbol: string;
+  buyOrderId: string;
+  sellOrderId: string;
+  openedOn: string;
+  closedOn: string;
+  quantity: number;
+  buyPricePaise: number;
+  sellPricePaise: number;
+  chargesPaise: number;
+  basisPaise: number;
+  netPnlPaise: number;
+  /** What sold it, when an exit plan did. */
+  planExit: 'stop' | 'target' | 'date' | null;
 }
 
 function holdingOf(p: Position, symbol: string, mark: number | null): Omit<Holding, 'plan'> {

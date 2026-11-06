@@ -26,10 +26,12 @@ function HoldingRow({
   h,
   onSell,
   plans,
+  suggest,
 }: {
   h: Holding;
   onSell: (h: Holding) => void;
   plans: PlanActions;
+  suggest: { stop: string; target: string } | undefined;
 }) {
   return (
     <View style={styles.holding}>
@@ -51,7 +53,7 @@ function HoldingRow({
         </Text>
         <Text style={styles.sell}>Tap to sell now</Text>
       </Pressable>
-      <ExitPlanPanel h={h} actions={plans} />
+      <ExitPlanPanel h={h} actions={plans} {...(suggest === undefined ? {} : { suggest })} />
     </View>
   );
 }
@@ -65,6 +67,8 @@ export function Holdings(props: {
   holdings: readonly Holding[];
   onSell: (h: Holding) => void;
   plans: PlanActions;
+  /** Stop and target written in the journal of each stock's last buy, offered when a plan is set. */
+  suggestions?: Readonly<Record<string, { stop: string; target: string }>>;
 }) {
   const priced = props.holdings.filter((h) => h.valuePaise !== null);
   const invested = priced.reduce((a, h) => a + h.basisPaise, 0);
@@ -75,7 +79,13 @@ export function Holdings(props: {
       <View testID="holdings">
         {props.holdings.length === 0 ? <Note>You hold no shares yet.</Note> : null}
         {props.holdings.map((h) => (
-          <HoldingRow key={h.instrumentId} h={h} onSell={props.onSell} plans={props.plans} />
+          <HoldingRow
+            key={h.instrumentId}
+            h={h}
+            onSell={props.onSell}
+            plans={props.plans}
+            suggest={props.suggestions?.[h.instrumentId]}
+          />
         ))}
         {priced.length > 0 ? (
           <View style={styles.total} testID="holdings-total">

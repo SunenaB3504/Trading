@@ -47,7 +47,7 @@ export async function offerFile(filename: string, text: string): Promise<boolean
   if (file.exists) file.delete();
   file.create();
   file.write(text);
-  await shareAsync(file.uri, { mimeType: 'application/json', dialogTitle: filename });
+  await shareAsync(file.uri, { mimeType: filename.endsWith('.csv') ? 'text/csv' : 'application/json', dialogTitle: filename });
   return true;
 }
 

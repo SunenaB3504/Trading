@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { LEARNING_MARKET_FORMAT, LEARNING_MARKET_VERSION } from '@trading/core';
+import { istToUtcMillis, LEARNING_MARKET_FORMAT, LEARNING_MARKET_VERSION } from '@trading/core';
 import type { BarUnadj, CompactBar, LearningMarket } from '@trading/core';
 import { MemoryKv } from '../store/kv';
 import { exitEvent, readExitPlan } from './exitPlans';
@@ -132,18 +132,19 @@ describe('exit plans in the book', () => {
     expect(v.orders.filter((o) => o.id.startsWith('x-')).map((o) => o.state)).toEqual(['filled']);
   });
 
-  it('ask: nothing sells; the plan waits as reached until the person confirms, then sells at the next open', async () => {
+  it('ask: nothing sells; the plan waits as reached until the person confirms, then sells at the next close', async () => {
     const kv = new MemoryKv();
     const s = await PaperSession.open(kv, () => 1, realMarket(fileUpTo('2026-10-16')));
     await s.place(buy);
     await s.setExitPlan('X', { quantity: '6', stop: '', target: '', exitDate: '2026-10-19', mode: 'ask' });
-    const later = await PaperSession.open(kv, () => 2, realMarket(fileUpTo('2026-10-21')));
+    // confirmed on the evening of the 21st, after the close: the sale is at the next trading day's close
+    const later = await PaperSession.open(kv, () => istToUtcMillis('2026-10-21', '18:00'), realMarket(fileUpTo('2026-10-21')));
     const held = (await later.view()).positions[0];
     expect(held?.quantity).toBe(10);
     expect(held?.plan).toMatchObject({ status: 'reached', event: { kind: 'date', date: '2026-10-19' } });
     const sold = await later.sellReached('X');
     expect(sold.ok).toBe(true);
-    // placed after the 21st: it waits for the next session's prices, then sells 6 of the 10
+    // it waits for the 22nd's prices, then sells 6 of the 10 at that close
     expect((await later.view()).positions[0]?.quantity).toBe(10);
     const next = await PaperSession.open(kv, () => 3, realMarket(fileUpTo('2026-10-22')));
     expect((await next.view()).positions[0]).toMatchObject({ quantity: 4, plan: null });

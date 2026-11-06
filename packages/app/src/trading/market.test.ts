@@ -151,4 +151,30 @@ describe('real-price market (MIP v4.1 Stage 2, laptop slice)', () => {
     expect((await (await PaperSession.open(restored, () => NOW, m)).view()).orders).toHaveLength(1);
     expect((await (await PaperSession.open(restored, () => NOW)).view()).orders).toHaveLength(1);
   });
+
+  it('carries the exit plans, the reason list, the order mode and the watchlist through a backup (2026-11-06)', async () => {
+    let n = 0;
+    const hex = () => (++n).toString(16).padStart(16, '0').repeat(4);
+    const make = async () => {
+      const kv = new MemoryKv();
+      const profiles = new ProfileStore(kv, new MemorySecureStore(), () => NOW, hex);
+      return { kv, profiles, profile: await profiles.create('Sunil') };
+    };
+    const a = await make();
+    const scope = a.profiles.scope(a.profile.id);
+    await (await PaperSession.open(scope, () => NOW, m)).place(form());
+    const carried: Record<string, string> = {
+      'practise/exitPlans@nse-learning-v1': '{"savedAt":1,"value":[]}',
+      'journal/reasons': '{"savedAt":1,"value":[{"id":"e-own-1","group":"entry","label":"Ingress"}]}',
+      'practise/orderMode': '{"savedAt":1,"value":"advanced"}',
+      'practise/watchlist@nse-learning-v1': '{"savedAt":1,"value":["RELIANCE"]}',
+    };
+    for (const [k, v] of Object.entries(carried)) await scope.set(k, v);
+    const out = await exportProfile({ device: a.kv, profileKv: scope, profile: a.profile, snapshotId: demoMarket().id, now: NOW, randomHex: () => 'a1'.repeat(32) });
+    const b = await make();
+    const read = await readBackup(b.kv, out.text, '', demoMarket().id);
+    if (!read.ok) throw new Error(read.message);
+    const restored = b.profiles.scope((await applyImport(read.backup, b.profiles, NOW)).id);
+    for (const [k, v] of Object.entries(carried)) expect(await restored.get(k)).toBe(v);
+  });
 });

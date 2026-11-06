@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { istToUtcMillis } from '@trading/core';
 import { DataServiceClient } from './dataClient/client';
 import type { FetchLike } from './dataClient/client';
 import { useKeyboardHeight } from './hooks/useKeyboardHeight';
@@ -93,6 +94,18 @@ const browserFetch: FetchLike = (url, init) => fetch(url, init);
 
 const DEFAULT_SERVICE = 'http://127.0.0.1:8787';
 
+/**
+ * A fixed clock for laptop testing (web only): `?asOf=2026-11-04T14:00` makes "now" that moment in India, so an order
+ * for today's close can be tried on a day whose prices are already there. The phone always uses its own clock.
+ */
+function testClock(): (() => number) | null {
+  if (typeof window === 'undefined' || typeof window.location?.search !== 'string') return null;
+  const m = /^(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2})$/.exec(new URLSearchParams(window.location.search).get('asOf') ?? '');
+  if (m === null) return null;
+  const at = istToUtcMillis(m[1] as string, m[2] as string);
+  return () => at;
+}
+
 function serviceUrl(): string {
   if (typeof window === 'undefined' || typeof window.location?.search !== 'string')
     return DEFAULT_SERVICE;
@@ -164,7 +177,7 @@ function Practise(props: { env: TutorEnv; kv: KeyValueStore; now: () => number; 
     ledger: () => <LedgerScreen kv={kv} now={now} />,
     universe: () => <UniverseScreen />,
     compare: () => <CompareScreen kv={kv} now={now} market={market} />,
-    report: () => <ReportScreen kv={kv} now={now} market={market} />,
+    report: () => <ReportScreen kv={kv} now={now} market={market} profileName={env.names[0] ?? ''} />,
   };
   return (
     <>
@@ -290,7 +303,7 @@ function AppBody() {
   const [section, setSection] = useState<SectionId>('home');
   const online = useOnline();
   const client = useMemo(() => new DataServiceClient(browserFetch, serviceUrl()), []);
-  const now = useMemo(() => () => Date.now(), []);
+  const now = useMemo(() => testClock() ?? (() => Date.now()), []);
   const d = useDevice();
   const others = useOthers(d);
   const { profile, settings } = d;

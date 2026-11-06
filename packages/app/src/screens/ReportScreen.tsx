@@ -8,6 +8,7 @@ import { Note, Row, Section, colors } from '../ui/Section';
 import { toWinLossView, tradeCount } from '../viewModels/winLossView';
 import type { BreakdownTable } from '../viewModels/winLossView';
 import { CoachHint } from '../ui/CoachHint';
+import { ReasonReport } from './ReasonReport';
 
 function Table({ t }: { t: BreakdownTable }) {
   if (t.rows.length === 0) return null;
@@ -49,10 +50,12 @@ export function ReportScreen({
   kv,
   now,
   market,
+  profileName = '',
 }: {
   kv: KeyValueStore;
   now: () => number;
   market: Market;
+  profileName?: string;
 }) {
   const [report, setReport] = useState<WinLossReport | null>(null);
   const [view, setView] = useState<CostView>('net');
@@ -79,6 +82,7 @@ export function ReportScreen({
       {text.breakdowns.map((t) => (
         <Table key={t.title} t={t} />
       ))}
+      <ReasonReport kv={kv} now={now} market={market} profileName={profileName} />
     </ScrollView>
   );
 }
