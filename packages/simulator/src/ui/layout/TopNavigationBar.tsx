@@ -178,11 +178,14 @@ export const TopNavigationBar: React.FC<TopNavigationBarProps> = ({
     setIsSyncing(true);
     try {
       const res = await onSyncOnline();
-      const targetDate = (res as { maxDate?: string })?.maxDate || '2026-11-03';
+      const targetDate = (res as { maxDate?: string })?.maxDate || '2026-11-05';
+      const todayStr = new Date().toISOString().slice(0, 10);
       setSyncStatus(`Up to: ${targetDate}`);
-      setSyncNotice(
-        `✓ Synced with official NSE archive up to ${targetDate}. (Today's Nov 4 Bhavcopy is published by NSE ~5:30-6:30 PM IST)`
-      );
+      const isTodaySynced = targetDate >= todayStr;
+      const notice = isTodaySynced
+        ? `✓ Synced with official NSE Bhavcopy up to ${targetDate}. All latest trading sessions up to date.`
+        : `✓ Synced with official NSE Bhavcopy up to ${targetDate}. (Today's ${todayStr} Bhavcopy is published by NSE after market close ~6:30 PM IST).`;
+      setSyncNotice(notice);
       setTimeout(() => {
         setSyncStatus(null);
         setSyncNotice(null);

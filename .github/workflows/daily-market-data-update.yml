@@ -33,16 +33,21 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Fetch latest market bars
-        run: pnpm update:bars
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Fetch and Sync Latest NSE Bhavcopy
+        run: python packages/simulator/scripts/syncLatestNseMarketData.py
 
       - name: Commit and push updated market data
         run: |
-          if ! git diff --quiet packages/simulator/src/core/data/fixtures/historicalBars.json; then
+          if ! git diff --quiet packages/simulator/src/core/data/fixtures/barsManifest.json; then
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
-            git add packages/simulator/src/core/data/fixtures/historicalBars.json
-            git commit -m "chore(data): update daily market bars up to $(date +'%Y-%m-%d') [skip ci]"
+            git add packages/simulator/public/data/bars/ packages/simulator/src/core/data/fixtures/barsManifest.json packages/simulator/src/core/data/fixtures/nifty500Prices.json
+            git commit -m "chore(data): auto-sync latest NSE Bhavcopy market data"
             git push
             echo "Successfully committed and pushed updated market data."
           else
