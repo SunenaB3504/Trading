@@ -10,7 +10,7 @@ import { readFileSync } from 'node:fs';
 import type { AddressInfo } from 'node:net';
 import { chromium } from 'playwright-core';
 import type { Page } from 'playwright-core';
-import { FixedClock, parseLearningMarket } from '../../packages/core/src/index';
+import { FixedClock, parseLearningMarket, sessionOn } from '../../packages/core/src/index';
 import {
   SeriesStore,
   SnapshotStore,
@@ -42,6 +42,38 @@ async function placeReliance(page: Page): Promise<string> {
   await page.getByTestId('place-order').click();
   await page.getByText(/Order h-0001 placed/).waitFor({ timeout: 30_000 });
   return page.getByTestId('trade-screen').innerText();
+}
+
+/** The first regular session after `date`: an exit date the plan accepts. */
+function nextSession(date: string): string {
+  const d = new Date(`${date}T00:00:00Z`);
+  do d.setUTCDate(d.getUTCDate() + 1);
+  while (sessionOn(d.toISOString().slice(0, 10)).kind !== 'regular');
+  return d.toISOString().slice(0, 10);
+}
+
+/** Sets an exit plan on the holding, sees it listed, changes it, and takes it away again. */
+async function exitPlan(page: Page, lastDate: string): Promise<void> {
+  const exitDate = nextSession(lastDate);
+  await page.getByTestId('plan-edit-RELIANCE').click();
+  await page.getByTestId('plan-date').fill(exitDate);
+  await page.getByTestId('plan-save').click();
+  const line = page.getByTestId('plan-line-RELIANCE');
+  await line.getByText(new RegExp(`close of ${exitDate}`)).waitFor({ timeout: 10_000 });
+  check('an exit date can be set on a holding, asking first by default', /asks you first/.test(await line.innerText()), await line.innerText());
+  await page.getByTestId('plan-edit-RELIANCE').click();
+  await page.getByTestId('plan-stop').fill('1');
+  await page.getByTestId('plan-mode-auto').click();
+  await page.getByTestId('plan-save').click();
+  await line.getByText(/sells automatically/).waitFor({ timeout: 10_000 });
+  check('the plan can be changed: a stop and selling automatically', /stop ₹1\.00/.test(await line.innerText()), await line.innerText());
+  await page.getByTestId('plan-edit-RELIANCE').click();
+  await page.getByTestId('plan-date').fill(lastDate);
+  await page.getByTestId('plan-save').click();
+  check('an exit date that is not after the last prices is refused', await page.getByText(/must be a trading day after/).isVisible());
+  await page.getByTestId('plan-remove').click();
+  await line.getByText('No exit plan').waitFor({ timeout: 10_000 });
+  check('the plan can be taken away', true);
 }
 
 async function main(): Promise<void> {
@@ -82,6 +114,7 @@ async function main(): Promise<void> {
     const bar = await page.getByTestId('order-bar').innerText();
     check('tapping a holding prepares a sell of all of it, with the profit before charges', /Sell 10 × RELIANCE/.test(bar) && /profit ≈/.test(bar) && /Place sell order/.test(bar), bar);
     check('the chosen stock says what is held of it', /You hold 10 · average ₹/.test(await page.getByTestId('selected-holding').innerText()));
+    await exitPlan(page, market.to);
     service.close();
     await page.goto(appOrigin); // no data helper now: the saved copy must serve
     await appReady(page);

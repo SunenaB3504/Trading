@@ -19,6 +19,8 @@ import { toComparisonView } from '../viewModels/comparisonView';
 import type { ComparisonView } from '../viewModels/comparisonView';
 import { demoMarket, requestsKey } from './market';
 import type { Market } from './market';
+import { exitEvent, exitRequest, loadExitPlans, readExitPlan, saveExitPlans } from './exitPlans';
+import type { ExitPlan, ExitPlanInput } from './exitPlans';
 import { makeOrderRequest } from './orderRequest';
 import { describeOrder, reasonText } from './orderText';
 import { shareNoteLines } from './shareNote';
@@ -46,6 +48,8 @@ export interface Holding {
   valuePaise: number | null;
   pnlPaise: number | null;
   pnlRatio: number | null;
+  /** Its exit plan, while one is waiting or has been reached. */
+  plan: ExitPlan | null;
 }
 
 export interface SessionView {
@@ -68,6 +72,7 @@ export { demoMarket } from './market';
  */
 export class PaperSession {
   private adapter: PaperExecutionAdapter;
+  private plans: ExitPlan[] = [];
 
   private constructor(
     private readonly stored: Stored[],
@@ -102,7 +107,94 @@ export class PaperSession {
     market: Market = demoMarket(),
   ): Promise<PaperSession> {
     const saved = await getStamped<Stored[]>(kv, requestsKey(market.id, REQUESTS_KEY));
-    return new PaperSession([...(saved?.value ?? [])], kv, now, market);
+    const session = new PaperSession([...(saved?.value ?? [])], kv, now, market);
+    session.plans = await loadExitPlans(kv, market.id);
+    await session.runExitPlans();
+    return session;
+  }
+
+  private async saveBook(): Promise<void> {
+    await putStamped(this.kv, requestsKey(this.market.id, REQUESTS_KEY), this.stored, this.now());
+    this.adapter = PaperSession.rebuild(this.stored, this.market);
+  }
+
+  /**
+   * Checks every waiting exit plan against the prices since it was set. In `auto` mode the first event becomes the one
+   * sell order that carries it out (so there are never two competing exits); in `ask` mode the plan is marked reached
+   * and waits for the person. A plan whose shares are gone (sold by hand) ends quietly.
+   */
+  private async runExitPlans(): Promise<void> {
+    const held = new Map((await this.adapter.getPositions()).map((p) => [p.instrumentId, p.quantity]));
+    let changed = false;
+    for (const plan of this.plans.filter((p) => p.status === 'active'))
+      changed = this.stepPlan(plan, held.get(plan.instrumentId) ?? 0) || changed;
+    if (!changed) return;
+    await this.saveBook();
+    await saveExitPlans(this.kv, this.market.id, this.plans, this.now());
+  }
+
+  /** One waiting plan against the prices: true when it changed (reached, carried out, or ended with its shares). */
+  private stepPlan(plan: ExitPlan, held: number): boolean {
+    const quantity = Math.min(plan.quantity, held);
+    if (quantity <= 0) {
+      plan.status = 'done';
+      return true;
+    }
+    const bars = this.market.snapshot.bars[plan.instrumentId] ?? [];
+    const event = exitEvent(plan, bars);
+    if (event === null) return false;
+    plan.event = event;
+    plan.status = plan.mode === 'auto' ? 'done' : 'reached';
+    if (plan.mode === 'auto') {
+      const previous = [...bars].reverse().find((b) => b.date < event.date)?.date ?? event.date;
+      const id = `x-${String(this.stored.filter((x) => x.request.order.id.startsWith('x-')).length + 1).padStart(4, '0')}`;
+      this.stored.push({ key: `exit-${plan.id}`, request: exitRequest(plan, event, quantity, previous, id) });
+      plan.orderId = id;
+    }
+    return true;
+  }
+
+  /** Sets or replaces the exit plan of a holding; it counts from the market's last date on, never looking back. */
+  async setExitPlan(instrumentId: string, input: ExitPlanInput): Promise<{ ok: true } | { ok: false; error: string }> {
+    const held = (await this.adapter.getPositions()).find((p) => p.instrumentId === instrumentId)?.quantity ?? 0;
+    const bars = this.market.snapshot.bars[instrumentId] ?? [];
+    const close = bars[bars.length - 1]?.close ?? 0;
+    const read = readExitPlan(input, held, close, this.market.lastDate);
+    if (!read.ok) return read;
+    const plan: ExitPlan = {
+      id: `${instrumentId}@${String(this.now())}`,
+      instrumentId,
+      quantity: read.quantity,
+      stopPaise: read.stopPaise,
+      targetPaise: read.targetPaise,
+      exitDate: read.exitDate,
+      mode: input.mode,
+      startDate: this.market.lastDate,
+      status: 'active',
+    };
+    this.plans = [...this.plans.filter((p) => p.instrumentId !== instrumentId || p.status === 'done'), plan];
+    await saveExitPlans(this.kv, this.market.id, this.plans, this.now());
+    return { ok: true };
+  }
+
+  /** Takes a waiting or reached plan away: the shares are simply kept. */
+  async removeExitPlan(instrumentId: string): Promise<void> {
+    this.plans = this.plans.filter((p) => p.instrumentId !== instrumentId || p.status === 'done');
+    await saveExitPlans(this.kv, this.market.id, this.plans, this.now());
+  }
+
+  /** A reached plan in `ask` mode, confirmed: a market sell at the next open, since the moment itself has passed. */
+  async sellReached(instrumentId: string): Promise<PlaceOutcome> {
+    const plan = this.plans.find((p) => p.instrumentId === instrumentId && p.status === 'reached');
+    const held = (await this.adapter.getPositions()).find((p) => p.instrumentId === instrumentId)?.quantity ?? 0;
+    if (plan === undefined || held === 0) return { ok: false, error: 'There is nothing to sell for this plan.' };
+    const form: OrderForm = { instrumentId, side: 'sell', type: 'market', quantity: String(Math.min(plan.quantity, held)), limit: '', stop: '', date: this.market.lastDate };
+    const placed = await this.place(form);
+    if (!placed.ok) return placed;
+    plan.status = 'done';
+    plan.orderId = placed.orderId;
+    await saveExitPlans(this.kv, this.market.id, this.plans, this.now());
+    return placed;
   }
 
   async place(form: OrderForm): Promise<PlaceOutcome> {
@@ -192,7 +284,10 @@ export class PaperSession {
     const marks = marksAsOf(this.market.snapshot, this.market.config.actions, this.adapter.result().state, this.market.lastDate);
     return {
       cash: formatPaise(cash),
-      positions: positions.map((p) => holdingOf(p, symbolOf(p.instrumentId), marks[p.instrumentId] ?? null)),
+      positions: positions.map((p) => ({
+        ...holdingOf(p, symbolOf(p.instrumentId), marks[p.instrumentId] ?? null),
+        plan: this.plans.find((x) => x.instrumentId === p.instrumentId && x.status !== 'done') ?? null,
+      })),
       orders: orders
         .map((o) => ({
           id: o.orderId,
@@ -206,7 +301,7 @@ export class PaperSession {
   }
 }
 
-function holdingOf(p: Position, symbol: string, mark: number | null): Holding {
+function holdingOf(p: Position, symbol: string, mark: number | null): Omit<Holding, 'plan'> {
   const value = mark === null ? null : mark * p.quantity;
   const pnl = value === null ? null : value - p.basisPaise;
   return {

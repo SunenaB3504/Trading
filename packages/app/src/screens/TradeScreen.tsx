@@ -9,6 +9,7 @@ import type { OrderForm } from '../trading/orderRequest';
 import type { Market } from '../trading/market';
 import { PaperSession } from '../trading/paperSession';
 import type { Holding, SessionView } from '../trading/paperSession';
+import type { PlanActions } from './ExitPlanPanel';
 import { Holdings, holdingLine } from './Holdings';
 import { OrderBar } from './OrderBar';
 import { Note, Row, Section, colors } from '../ui/Section';
@@ -212,7 +213,36 @@ function useTrade(kv: KeyValueStore, now: () => number, market: Market) {
     setTouched(true);
     setMessage(`Ready to sell ${String(h.quantity)} ${h.symbol}. Change the quantity to sell part, then tap Place sell order.`);
   };
-  return { view, form, message, set, submit, cancel, journal, setJournal, touched, prepareSell };
+  const plans = planActions(session, market, setView, setMessage);
+  return { view, form, message, set, submit, cancel, journal, setJournal, touched, prepareSell, plans };
+}
+
+/** Exit plans of the book's holdings: set or change, take away, and confirm a reached one. */
+function planActions(
+  session: PaperSession | null,
+  market: Market,
+  setView: (v: SessionView) => void,
+  setMessage: (m: string) => void,
+): PlanActions {
+  return {
+    save: async (id, input) => {
+      if (session === null) return { ok: false, error: 'Your practice book is still opening.' };
+      const r = await session.setExitPlan(id, input);
+      if (r.ok) setView(await session.view());
+      return r;
+    },
+    remove: async (id) => {
+      if (session === null) return;
+      await session.removeExitPlan(id);
+      setView(await session.view());
+    },
+    sellReached: async (id) => {
+      if (session === null) return;
+      const r = await session.sellReached(id);
+      setMessage(r.ok ? placedMessage(r, market, { ...firstForm(market), instrumentId: id }) : r.error);
+      setView(await session.view());
+    },
+  };
 }
 
 /** The stocks offered before anything is typed: what the book holds, the watchlist, and recent picks. */
@@ -381,7 +411,7 @@ function CostSection({ market, form }: { market: Market; form: OrderForm }) {
 const orderText = (f: OrderForm): string => `${f.side} ${f.quantity || '?'} of ${f.instrumentId || '(no stock chosen)'}, ${f.type} order`;
 
 export function TradeScreen({ kv, now, market, env, embedded = false }: { kv: KeyValueStore; now: () => number; market: Market; env: TutorEnv; embedded?: boolean }) {
-  const { view, form, message, set, submit, cancel, journal, setJournal, touched, prepareSell } = useTrade(kv, now, market);
+  const { view, form, message, set, submit, cancel, journal, setJournal, touched, prepareSell, plans } = useTrade(kv, now, market);
   const holding = view?.positions.find((p) => p.instrumentId === form.instrumentId);
   const lists = useStockLists(kv, now, market, view);
   useUnsaved('trade', touched, 'an order you have not placed');
@@ -390,7 +420,7 @@ export function TradeScreen({ kv, now, market, env, embedded = false }: { kv: Ke
   const content = (
     <>
       <CoachHint screen="trade" />
-      {view !== null ? <Holdings cash={view.cash} holdings={view.positions} onSell={prepareSell} /> : null}
+      {view !== null ? <Holdings cash={view.cash} holdings={view.positions} onSell={prepareSell} plans={plans} /> : null}
       <View>
         <Section title="New order (virtual money)">
           <OrderFields market={market} form={form} set={set} lists={lists} holding={holding} />
