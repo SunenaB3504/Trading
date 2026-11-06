@@ -23,6 +23,9 @@ const PAIRS: Array<[string, string, string]> = [
   ['online green on page', '#0a7d33', colors.background],
   ['pass or profit green on page', '#0a7d33', colors.background],
   ['fail or loss red on page', '#b00020', colors.background],
+  ['white text on the Buy button', '#ffffff', colors.gain],
+  ['white text on the Sell button', '#ffffff', colors.loss],
+  ['body text on a selected row', colors.text, colors.selected],
 ];
 
 describe('colour contrast (NFR-9, WCAG AA)', () => {

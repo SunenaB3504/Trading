@@ -33,7 +33,7 @@ async function buy(page: Page): Promise<void> {
 }
 
 async function wrongLimit(page: Page): Promise<void> {
-  await pick(page, 'pick-side', 'sell');
+  await pick(page, 'pick-side', 'Sell');
   await pick(page, 'pick-type', 'Stop-loss limit (SL)');
   await page.getByTestId('trigger-input').fill('950');
   await page.getByTestId('limit-input').fill('960');

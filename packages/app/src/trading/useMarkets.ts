@@ -104,6 +104,7 @@ export function useMarkets(
       ? fresh === 'checking'
         ? 'Looking for real prices...'
         : 'This build carries no real prices. Build them with pnpm market:build, then pnpm market:bundle.'
-      : `${real.instruments.length} NSE stocks, prices to ${real.lastDate}${fresh === 'saved' ? ' (saved copy; the data helper is not reachable)' : ''}.`;
+      : // a phone never has the laptop's data helper, so saying it is unreachable there only reads like an error
+        `${real.instruments.length} NSE stocks, prices to ${real.lastDate}${fresh === 'saved' && PLATFORM !== 'android' ? ' (saved copy; the data helper is not reachable)' : ''}.`;
   return { market: kind === 'real' && real !== null ? real : demoMarket(), real, realNote, choose };
 }

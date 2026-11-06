@@ -187,7 +187,7 @@ function Play({ ctx, session, onChange, onBack }: { ctx: Ctx; session: TmSession
       {over ? null : <StepButtons step={step} finish={finish} />}
       <TabStrip tabs={tabs} active={tab} onSelect={setTab} small />
       <View key={`${session.id}-${session.current}`}>
-        {tab === 'trade' && market !== null ? <TradeScreen kv={kv} now={ctx.now} market={market} env={ctx.env} /> : null}
+        {tab === 'trade' && market !== null ? <TradeScreen kv={kv} now={ctx.now} market={market} env={ctx.env} embedded /> : null}
         {tab === 'funds' ? <FundsScreen kv={kv} now={ctx.now} funds={funds} /> : null}
         {tab === 'summary' ? <Summary ctx={ctx} s={session} /> : null}
       </View>

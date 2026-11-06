@@ -25,7 +25,7 @@ const MARKET_FILE = 'data/derived/market/learning-market-v1.json';
 async function chooseReal(page: Page): Promise<void> {
   await openTab(page, 'Trade');
   await page.getByTestId('market-real').click();
-  await page.getByText(/Selected: /).waitFor({ timeout: 30_000 });
+  await page.getByTestId('stock-search').waitFor({ timeout: 30_000 });
 }
 
 async function placeReliance(page: Page): Promise<string> {

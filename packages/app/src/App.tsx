@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import type { ReactNode } from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { DataServiceClient } from './dataClient/client';
 import type { FetchLike } from './dataClient/client';
+import { useKeyboardHeight } from './hooks/useKeyboardHeight';
 import { useOnline } from './hooks/useOnline';
 import { openDeviceStores, removeRetiredStores, secureRandomHex } from './platform/device';
 import { prepareDevice } from './profiles/migrate';
@@ -301,17 +304,33 @@ function AppBody() {
     );
   }
   return (
-    <SafeAreaView style={styles.root}>
+    <SafeFrame>
       <Header profile={profile} online={online} onProfile={() => setSection('settings')} />
       {body}
-    </SafeAreaView>
+    </SafeFrame>
+  );
+}
+
+/**
+ * Keeps the app clear of the status bar, the phone's navigation bar and an open keyboard. Android draws edge to edge,
+ * so nothing does this by default (EasyCTET runbook, safe navigation padding).
+ */
+function SafeFrame({ children }: { children: ReactNode }) {
+  const insets = useSafeAreaInsets();
+  const keyboard = useKeyboardHeight();
+  return (
+    <View style={[styles.root, { paddingTop: insets.top, paddingBottom: Math.max(insets.bottom, keyboard) }]}>
+      {children}
+    </View>
   );
 }
 
 export default function App() {
   return (
     <RootErrorBoundary>
-      <AppBody />
+      <SafeAreaProvider>
+        <AppBody />
+      </SafeAreaProvider>
     </RootErrorBoundary>
   );
 }

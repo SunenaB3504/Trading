@@ -11,5 +11,6 @@
 | `expo-sharing` | ~58.0.20 | Expo | System share sheet to save or send a backup | Stage 1 |
 | `expo-build-properties` | ~58.0.11 | Expo | Single-sourced SDK levels, ABI by build profile, cleartext off (R1, R2, R5) | Stage 1 |
 | `expo-status-bar` | ~58.0.3 | Expo | Status bar (existing) | before D42 |
+| `react-native-safe-area-context` | ~5.11.1 | Expo SDK (bundled version, installed with `npx expo install`) | Status-bar and navigation-bar insets: Android draws edge to edge, so without it the Trade screen's order bar sat under the phone's navigation bar | Stage 2c UI, 2026-11-06 |
 
 `expo-document-picker` was installed while building Stage 1 and removed again: `expo-file-system` can pick files itself. No `expo-dev-client` in any release build (R4.1).

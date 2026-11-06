@@ -1,5 +1,7 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import type { ScrollViewInstance } from 'react-native';
+import { formatPaise } from '../format/rupees';
 import { addBefore } from '../journal/journalStore';
 import type { BeforeFields } from '../journal/journalStore';
 import type { KeyValueStore } from '../store/kv';
@@ -13,10 +15,19 @@ import { preTrade } from '@trading/tutor';
 import { AskPanel } from '../tutor/AskPanel';
 import type { TutorEnv } from '../tutor/run';
 import { CoachHint } from '../ui/CoachHint';
+import { quoteOf } from '../trading/quote';
+import { loadList, pushRecent, recentKey, toggleWatch, watchlistKey } from '../trading/stockLists';
+import { StockPicker } from './StockPicker';
+import type { StockGroup } from './StockPicker';
 
-/** Where the form starts: the first stock and a date whose next session has prices, so a first order fills. */
+export { StockPicker } from './StockPicker';
+
+/**
+ * Where the form starts: a date whose next session has prices, so a first order fills. A short list starts on its
+ * first instrument; a long one starts with nothing chosen, so no order goes to a stock the person never picked.
+ */
 const firstForm = (market: Market): OrderForm => ({
-  instrumentId: market.instruments[0] ?? '',
+  instrumentId: market.instruments.length <= 6 ? (market.instruments[0] ?? '') : '',
   side: 'buy',
   type: 'market',
   quantity: '10',
@@ -165,6 +176,10 @@ function useTrade(kv: KeyValueStore, now: () => number, market: Market) {
   const set: SetField = (k, v) => setForm((f) => ({ ...f, [k]: v }));
   const submit = useCallback(async () => {
     if (session === null) return;
+    if (form.instrumentId === '') {
+      setMessage('Choose a stock first: type its name in the search box.');
+      return;
+    }
     const r = await session.place(form);
     setMessage(r.ok ? placedMessage(r, market, form) : r.error);
     if (r.ok) {
@@ -185,6 +200,28 @@ function useTrade(kv: KeyValueStore, now: () => number, market: Market) {
   return { view, form, message, set, submit, cancel, journal, setJournal };
 }
 
+/** The stocks offered before anything is typed: what the book holds, the watchlist, and recent picks. */
+function useStockLists(kv: KeyValueStore, now: () => number, market: Market, view: SessionView | null) {
+  const [watch, setWatch] = useState<string[]>([]);
+  const [recent, setRecent] = useState<string[]>([]);
+  useEffect(() => {
+    void loadList(kv, watchlistKey(market.id)).then(setWatch);
+    void loadList(kv, recentKey(market.id)).then(setRecent);
+  }, [kv, market.id]);
+  const known = (ids: readonly string[]) => ids.filter((id) => market.instruments.includes(id));
+  const groups: StockGroup[] = [
+    { title: 'Holdings', ids: known(view?.positions.map((p) => p.instrumentId) ?? []) },
+    { title: 'Watchlist', ids: known(watch) },
+    { title: 'Recent', ids: known(recent) },
+  ];
+  return {
+    groups,
+    watching: (id: string) => watch.includes(id),
+    toggle: (id: string) => void toggleWatch(kv, market.id, id, now()).then(setWatch),
+    picked: (id: string) => void pushRecent(kv, market.id, id, now()).then(setRecent),
+  };
+}
+
 const NO_JOURNAL: BeforeFields = { why: '', target: '', exitPlan: '', confidence: null };
 const CONFIDENCE = ['1', '2', '3', '4', '5'] as const;
 
@@ -199,42 +236,6 @@ function JournalFields(props: { value: BeforeFields; onChange: (v: BeforeFields)
       <Field label="Exit if wrong: at what price or reason will you sell?" value={value.exitPlan} onChange={(exitPlan) => onChange({ ...value, exitPlan })} testID="journal-exit" />
       <Choice label="Confidence (1 low, 5 high)" value={value.confidence === null ? '' : String(value.confidence)} options={CONFIDENCE} onChange={(c) => onChange({ ...value, confidence: Number(c) })} testID="journal-confidence" />
     </View>
-  );
-}
-
-/** A few instruments are buttons; a longer list gets a search box and shows the matches as buttons. */
-export function StockPicker(props: { market: Market; value: string; onChange: (id: string) => void }) {
-  const { market } = props;
-  const [query, setQuery] = useState('');
-  if (market.instruments.length <= 6)
-    return (
-      <Choice
-        label="Instrument"
-        value={props.value}
-        options={market.instruments}
-        labels={market.symbols}
-        onChange={props.onChange}
-        testID="pick-instrument"
-      />
-    );
-  const q = query.trim().toUpperCase();
-  const base = (id: string): string => market.symbols[id] ?? id;
-  const name = (id: string): string => (market.kinds[id] === 'etf' ? `${base(id)} (ETF)` : base(id));
-  const labels = Object.fromEntries(market.instruments.map((id) => [id, name(id)]));
-  const matches = market.instruments.filter((id) => q === '' || name(id).includes(q) || (q === 'ETF' && market.kinds[id] === 'etf')).slice(0, 12);
-  const shown = matches.includes(props.value) ? matches : [props.value, ...matches.slice(0, 11)];
-  return (
-    <>
-      <Field label={`Stock (${market.instruments.length} to choose from): type to search`} value={query} onChange={setQuery} testID="stock-search" />
-      <Choice
-        label={`Selected: ${name(props.value)}`}
-        value={props.value}
-        options={shown}
-        labels={labels}
-        onChange={props.onChange}
-        testID="pick-instrument"
-      />
-    </>
   );
 }
 
@@ -284,17 +285,27 @@ function PriceFields({ form, set }: { form: OrderForm; set: SetField }) {
   );
 }
 
-function OrderFields(props: { market: Market; form: OrderForm; set: SetField }) {
-  const { market, form, set } = props;
+function OrderFields(props: {
+  market: Market;
+  form: OrderForm;
+  set: SetField;
+  lists: ReturnType<typeof useStockLists>;
+  onSearchFocus: () => void;
+}) {
+  const { market, form, set, lists } = props;
   return (
     <>
-      <StockPicker market={market} value={form.instrumentId} onChange={(v) => set('instrumentId', v)} />
-      <Choice
-        label="Side"
-        value={form.side}
-        options={['buy', 'sell'] as const}
-        onChange={(v) => set('side', v)}
-        testID="pick-side"
+      <StockPicker
+        market={market}
+        value={form.instrumentId}
+        onChange={(v) => {
+          set('instrumentId', v);
+          lists.picked(v);
+        }}
+        groups={lists.groups}
+        watched={lists.watching(form.instrumentId)}
+        onToggleWatch={() => lists.toggle(form.instrumentId)}
+        onSearchFocus={props.onSearchFocus}
       />
       <Choice
         label="Type"
@@ -354,37 +365,119 @@ function CostSection({ market, form }: { market: Market; form: OrderForm }) {
 
 const orderText = (f: OrderForm): string => `${f.side} ${f.quantity || '?'} of ${f.instrumentId || '(no stock chosen)'}, ${f.type} order`;
 
-export function TradeScreen({ kv, now, market, env }: { kv: KeyValueStore; now: () => number; market: Market; env: TutorEnv }) {
-  const { view, form, message, set, submit, cancel, journal, setJournal } = useTrade(kv, now, market);
+/**
+ * Always in reach at the bottom: Buy or Sell, what the order comes to at the last close, and the button that places
+ * it, coloured by side so a sell never looks like a buy.
+ */
+function OrderBar(props: { market: Market; form: OrderForm; set: SetField; submit: () => void; message: string | null }) {
+  const { market, form, set } = props;
+  const quote = form.instrumentId === '' ? null : quoteOf(market, form.instrumentId, form.date);
+  const qty = Number(form.quantity);
+  const name = market.symbols[form.instrumentId] ?? form.instrumentId;
+  const verb = form.side === 'buy' ? 'Buy' : 'Sell';
+  const summary =
+    form.instrumentId === ''
+      ? 'Choose a stock to trade.'
+      : quote === null || !Number.isSafeInteger(qty) || qty <= 0
+        ? `${verb} ${name}: enter a quantity.`
+        : `${verb} ${String(qty)} × ${name} ≈ ${formatPaise(quote.close * qty)} at the last close`;
   return (
-    <ScrollView contentContainerStyle={styles.page} testID="trade-screen">
+    <View style={styles.bar} testID="order-bar">
+      {props.message !== null ? (
+        <Text style={styles.message} testID="order-message">
+          {props.message}
+        </Text>
+      ) : null}
+      <View style={styles.sides} testID="pick-side">
+        {(['buy', 'sell'] as const).map((side) => {
+          const on = form.side === side;
+          const tone = side === 'buy' ? colors.gain : colors.loss;
+          return (
+            <Pressable
+              key={side}
+              accessibilityRole="button"
+              accessibilityState={{ selected: on }}
+              onPress={() => set('side', side)}
+              style={[styles.side, { borderColor: tone }, on ? { backgroundColor: tone } : null]}
+            >
+              <Text style={[styles.sideText, { color: on ? '#fff' : tone }]}>{side === 'buy' ? 'Buy' : 'Sell'}</Text>
+            </Pressable>
+          );
+        })}
+      </View>
+      <Text style={styles.summary} testID="order-summary">
+        {summary}
+      </Text>
+      <Pressable
+        accessibilityRole="button"
+        onPress={props.submit}
+        style={[styles.place, { backgroundColor: form.side === 'buy' ? colors.gain : colors.loss }]}
+        testID="place-order"
+      >
+        <Text style={styles.placeText}>{`Place ${form.side} order`}</Text>
+      </Pressable>
+    </View>
+  );
+}
+
+export function TradeScreen({ kv, now, market, env, embedded = false }: { kv: KeyValueStore; now: () => number; market: Market; env: TutorEnv; embedded?: boolean }) {
+  const { view, form, message, set, submit, cancel, journal, setJournal } = useTrade(kv, now, market);
+  const lists = useStockLists(kv, now, market, view);
+  const scroll = useRef<ScrollViewInstance>(null);
+  const [orderTop, setOrderTop] = useState(0);
+  // The keyboard covers the lower half of a phone: bring the search box to the top while it is open.
+  const toSearch = () => setTimeout(() => scroll.current?.scrollTo({ y: orderTop, animated: true }), 150);
+  const content = (
+    <>
       <CoachHint screen="trade" />
-      <Section title="New order (virtual money)">
-        <OrderFields market={market} form={form} set={set} />
-        <JournalFields value={journal} onChange={setJournal} />
-        <AskPanel env={env} label="Check my plan before I trade" testID="pre-trade" build={() => preTrade({ order: orderText(form), facts: [{ key: 'side', label: 'side', value: form.side }, { key: 'quantity', label: 'quantity', value: form.quantity || 'not set' }], flags: [], journal, symbols: form.instrumentId === '' ? [] : [form.instrumentId], names: env.names, lessonIds: ['habits-that-help', 'types-of-risk'] })} />
-        <Pressable
-          accessibilityRole="button"
-          onPress={() => void submit()}
-          style={styles.place}
-          testID="place-order"
-        >
-          <Text style={styles.placeText}>Place order</Text>
-        </Pressable>
-        {message !== null ? (
-          <Text style={styles.message} testID="order-message">
-            {message}
-          </Text>
-        ) : null}
-      </Section>
-      <CostSection market={market} form={form} />
+      <View onLayout={(e) => setOrderTop(e.nativeEvent.layout.y)}>
+        <Section title="New order (virtual money)">
+          <OrderFields market={market} form={form} set={set} lists={lists} onSearchFocus={toSearch} />
+          <JournalFields value={journal} onChange={setJournal} />
+          <AskPanel env={env} label="Check my plan before I trade" testID="pre-trade" build={() => preTrade({ order: orderText(form), facts: [{ key: 'side', label: 'side', value: form.side }, { key: 'quantity', label: 'quantity', value: form.quantity || 'not set' }], flags: [], journal, symbols: form.instrumentId === '' ? [] : [form.instrumentId], names: env.names, lessonIds: ['habits-that-help', 'types-of-risk'] })} />
+        </Section>
+      </View>
+      {form.instrumentId !== '' ? <CostSection market={market} form={form} /> : null}
       {view !== null ? <Book view={view} onCancel={(id) => void cancel(id)} /> : <Note>Loading the book...</Note>}
-    </ScrollView>
+    </>
+  );
+  const bar = <OrderBar market={market} form={form} set={set} submit={() => void submit()} message={message} />;
+  // Inside a Time Machine session the page already scrolls, so the bar follows the form instead of floating.
+  if (embedded)
+    return (
+      <View testID="trade-screen">
+        <View style={styles.page}>
+          {content}
+          {bar}
+        </View>
+      </View>
+    );
+  return (
+    <View style={styles.screen}>
+      <ScrollView ref={scroll} contentContainerStyle={styles.page} keyboardShouldPersistTaps="handled" testID="trade-screen">
+        {content}
+      </ScrollView>
+      {bar}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  screen: { flex: 1 },
   page: { padding: 16, maxWidth: 720, width: '100%', alignSelf: 'center' },
+  bar: {
+    borderTopWidth: 1,
+    borderTopColor: colors.line,
+    backgroundColor: colors.background,
+    paddingHorizontal: 16,
+    paddingTop: 8,
+    paddingBottom: 10,
+    gap: 6,
+  },
+  sides: { flexDirection: 'row', gap: 8 },
+  side: { flex: 1, borderWidth: 2, borderRadius: 8, minHeight: 44, alignItems: 'center', justifyContent: 'center' },
+  sideText: { fontWeight: '700', fontSize: 16 },
+  summary: { color: colors.text, fontSize: 13 },
   field: { marginBottom: 10 },
   label: { color: colors.muted, fontSize: 13, marginBottom: 4 },
   input: {
@@ -406,7 +499,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  choiceOn: { borderColor: colors.accent, backgroundColor: '#e8f0fe' },
+  choiceOn: { borderColor: colors.accent, backgroundColor: colors.selected },
   choiceText: { color: colors.text },
   choiceTextOn: { color: colors.accent, fontWeight: '600' },
   place: {
@@ -415,10 +508,9 @@ const styles = StyleSheet.create({
     minHeight: 48,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 6,
   },
-  placeText: { color: '#fff', fontWeight: '600' },
-  message: { marginTop: 8, color: colors.text },
+  placeText: { color: '#fff', fontWeight: '700', fontSize: 16 },
+  message: { color: colors.text },
   cancel: { minHeight: 44, justifyContent: 'center', marginBottom: 6 },
   contractNote: { paddingLeft: 12, marginBottom: 8 },
   tapRow: { minHeight: 44, justifyContent: 'center' },
