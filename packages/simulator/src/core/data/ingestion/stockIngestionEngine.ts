@@ -226,10 +226,11 @@ export async function fetchOnlineYahooBars(symbol: string): Promise<RawCsvBarInp
   const ticker = norm.endsWith('.NS') || norm.endsWith('.BO') ? norm : `${norm}.NS`;
   const proxyUrl = `/api/yfinance/v8/finance/chart/${ticker}?range=5y&interval=1d`;
   const directUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?range=5y&interval=1d`;
-  const corsProxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(directUrl)}`;
+  const corsProxyUrl = `https://corsproxy.io/?${encodeURIComponent(directUrl)}`;
+  const fallbackCorsProxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(directUrl)}`;
 
   let response: Response | null = null;
-  const urlsToTry = [proxyUrl, corsProxyUrl, directUrl];
+  const urlsToTry = [proxyUrl, corsProxyUrl, fallbackCorsProxyUrl, directUrl];
 
   for (const url of urlsToTry) {
     try {
