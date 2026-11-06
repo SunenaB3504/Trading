@@ -8,6 +8,7 @@ import { useKeyboardHeight } from './hooks/useKeyboardHeight';
 import { useOnline } from './hooks/useOnline';
 import { openDeviceStores, removeRetiredStores, secureRandomHex } from './platform/device';
 import { prepareDevice } from './profiles/migrate';
+import { ProfileSwitcher } from './profiles/ProfileSwitcher';
 import { ProfileStore } from './profiles/profiles';
 import type { Profile } from './profiles/profiles';
 import { BackupScreen } from './screens/BackupScreen';
@@ -43,7 +44,6 @@ import type { SecureStore } from './secure/secureStore';
 import { fundsNote, useFunds } from './trading/useFunds';
 import { useMarkets } from './trading/useMarkets';
 import type { Markets } from './trading/useMarkets';
-import { MarketSwitch } from './ui/MarketSwitch';
 import type { FundsMarket, IndexUnderlyingId } from '@trading/core';
 import { fnoDataOf } from './fno/fnoSessions';
 import type { KeyValueStore } from './store/kv';
@@ -168,7 +168,6 @@ function Practise(props: { env: TutorEnv; kv: KeyValueStore; now: () => number; 
   };
   return (
     <>
-      <MarketSwitch markets={markets} />
       <TabStrip tabs={PRACTISE} active={tab} onSelect={setTab} small />
       <View style={styles.body} key={market.id}>{screens[tab]()}</View>
     </>
@@ -183,8 +182,9 @@ function Settings(props: {
   client: DataServiceClient;
   prices: string[];
   onImported: (p: Profile) => void;
+  first?: SettingsId;
 }) {
-  const [tab, setTab] = useState<SettingsId>('general');
+  const [tab, setTab] = useState<SettingsId>(props.first ?? 'general');
   const { d, profile, now } = props;
   const profileKv = useMemo(() => d.device.profiles.scope(profile.id), [d.device, profile.id]);
   return (
@@ -205,13 +205,23 @@ function Settings(props: {
   );
 }
 
+/** The title bar. The open profile's name opens the profile switcher (the ▾ says it is a list). */
 function Header(props: { profile: Profile | null; online: boolean; onProfile: () => void }) {
   return (
     <View style={styles.header}>
       <Text style={styles.brand}>Market Learning</Text>
       {props.profile !== null ? (
-        <Pressable accessibilityRole="button" onPress={props.onProfile} testID="profile-badge" style={styles.badge}>
-          <Text style={styles.profile}>{props.profile.name}</Text>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={`Profile ${props.profile.name}: switch or add a profile`}
+          onPress={props.onProfile}
+          testID="profile-switch"
+          style={styles.badge}
+        >
+          <Text style={styles.profile} testID="profile-badge">
+            {props.profile.name}
+          </Text>
+          <Text style={styles.profile}> ▾</Text>
         </Pressable>
       ) : null}
       <Text style={props.online ? styles.online : styles.offline}>{props.online ? 'Online' : 'Offline'}</Text>
@@ -229,9 +239,12 @@ function Main(props: {
   now: () => number;
   client: DataServiceClient;
   onImported: (p: Profile) => void;
+  /** Opens Settings on this tab; a new `settingsKey` opens it again even when Settings is already showing. */
+  settingsFirst: SettingsId;
+  settingsKey: number;
 }) {
   const { d, profile, settings, profileKv, section, now } = props;
-  const markets = useMarkets(d.device.kv, profileKv, props.client, now);
+  const markets = useMarkets(d.device.kv, props.client, now);
   const funds = useFunds(d.device.kv, props.client, now);
   const prices = [markets.realNote, fundsNote(funds)];
   const env = useMemo((): TutorEnv => ({ device: d.device.kv, profile: profileKv, secure: d.device.secure, settings, names: [profile.name], now }), [d.device, profileKv, settings, profile.name, now]);
@@ -257,7 +270,7 @@ function Main(props: {
       {section === 'measure' ? <MeasureScreen kv={profileKv} now={now} market={markets.market} env={env} /> : null}
       {section === 'tutor' ? <TutorScreen env={env} owner={profile.owner} deviceKv={d.device.kv} profileKv={profileKv} onDevice={d.setSettings} /> : null}
       {section === 'settings' ? (
-        <Settings d={d} profile={profile} settings={settings} now={now} client={props.client} prices={prices} onImported={props.onImported} />
+        <Settings key={props.settingsKey} d={d} profile={profile} settings={settings} now={now} client={props.client} prices={prices} onImported={props.onImported} first={props.settingsFirst} />
       ) : null}
     </>
   );
@@ -281,12 +294,24 @@ function AppBody() {
   const d = useDevice();
   const others = useOthers(d);
   const { profile, settings } = d;
+  const [switcher, setSwitcher] = useState(false);
+  const [manage, setManage] = useState<{ first: SettingsId; key: number }>({ first: 'general', key: 0 });
+  // Bumped after a backup import, so every screen reads the profile's data again; a rename or an added profile
+  // keeps the same store, so the open screens (and the prices) are not reloaded for nothing.
+  const [generation, setGeneration] = useState(0);
+  const profileId = profile?.id ?? null;
   const profileKv = useMemo(
-    () => (profile === null ? null : d.device.profiles.scope(profile.id)),
-    [d.device, profile],
+    () => (profileId === null ? null : d.device.profiles.scope(profileId)),
+    [d.device, profileId, generation],
   );
-  // Screens read their data when they open and when the open profile changes, so a reload is enough here.
-  const onImported = () => void d.reload();
+  const onImported = () =>
+    void d.reload().then(() => {
+      setGeneration((g) => g + 1);
+    });
+  const openManage = () => {
+    setManage((m) => ({ first: 'profiles', key: m.key + 1 }));
+    setSection('settings');
+  };
   let body = null;
   if (profile !== null && settings !== null && profileKv !== null) {
     body = d.locked ? (
@@ -299,14 +324,25 @@ function AppBody() {
       />
     ) : (
       <View style={styles.body}>
-        <Main d={d} profile={profile} settings={settings} profileKv={profileKv} section={section} setSection={setSection} now={now} client={client} onImported={onImported} />
+        <Main d={d} profile={profile} settings={settings} profileKv={profileKv} section={section} setSection={setSection} now={now} client={client} onImported={onImported} settingsFirst={manage.first} settingsKey={manage.key} />
       </View>
     );
   }
   return (
     <SafeFrame>
-      <Header profile={profile} online={online} onProfile={() => setSection('settings')} />
-      {body}
+      <Header profile={profile} online={online} onProfile={() => setSwitcher((o) => !o)} />
+      <View style={styles.body}>
+        {body}
+        {switcher && profile !== null && !d.locked ? (
+          <ProfileSwitcher
+            profiles={d.device.profiles}
+            open={profile}
+            onSwitch={(id) => void d.open(id)}
+            onManage={openManage}
+            onClose={() => setSwitcher(false)}
+          />
+        ) : null}
+      </View>
     </SafeFrame>
   );
 }
@@ -340,7 +376,7 @@ const styles = StyleSheet.create({
   body: { flex: 1 },
   header: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 16, flexShrink: 0 },
   brand: { fontSize: 18, fontWeight: '700', color: colors.text, flex: 1 },
-  badge: { minHeight: 44, minWidth: 44, justifyContent: 'center', paddingHorizontal: 8 },
+  badge: { minHeight: 44, minWidth: 44, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 8 },
   profile: { color: colors.accent, fontWeight: '600' },
   online: { color: '#0a7d33', fontWeight: '600' },
   offline: { color: colors.warn, fontWeight: '600' },

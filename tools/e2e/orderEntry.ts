@@ -16,6 +16,7 @@ async function openTrade(page: Page, url: string): Promise<void> {
   await page.goto(url);
   await openTab(page, 'Trade');
   await page.getByText('New order (virtual money)').waitFor({ timeout: 30_000 });
+  await page.getByText(/Loading the book/).waitFor({ state: 'detached', timeout: 60_000 });
 }
 
 async function place(page: Page): Promise<void> {

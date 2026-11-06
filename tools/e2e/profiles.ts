@@ -2,6 +2,8 @@
  * Profiles check for the web app (MIP Stage 1, exit gate 4). The first start makes the "Owner" profile and shows
  * the "not advice" note; a second profile is added and opened, an order placed in it stays out of Owner's book, a
  * PIN set on it is asked for after a reload (a wrong PIN is refused), and the PIN screen can open Owner instead.
+ * The switcher under the name at the top adds and opens a profile in one go, keeps the screen, asks before throwing
+ * away an order being typed, sends a PIN profile to its PIN screen, and leads to the Profiles tab.
  *
  * Usage:  pnpm --filter @trading/app export:web && pnpm tsx tools/e2e/profiles.ts
  */
@@ -34,7 +36,7 @@ async function addAndUseNeil(page: Page): Promise<void> {
   await openTab(page, 'Profiles');
   await page.getByTestId('new-profile-name').fill('Neil');
   await page.getByTestId('add-profile').click();
-  await page.getByText('Profile added.').waitFor({ timeout: 5_000 });
+  await page.getByTestId('profile-added').getByText(/Neil added/).waitFor({ timeout: 5_000 });
   await page.getByRole('button', { name: 'Open Neil', exact: true }).click();
   await page.getByTestId('profile-badge').getByText('Neil').waitFor({ timeout: 5_000 });
   check('a second profile can be added and opened', true);
@@ -68,6 +70,44 @@ async function pinAndSwitch(page: Page, url: string): Promise<void> {
   check('Owner’s book does not hold Neil’s order', (await orderCount(page)) === 0);
 }
 
+const badge = async (page: Page): Promise<string> => page.getByTestId('profile-badge').innerText();
+
+async function switcher(page: Page): Promise<void> {
+  await page.getByTestId('profile-switch').click();
+  await page.getByTestId('profile-switcher').waitFor({ timeout: 5_000 });
+}
+
+async function headerSwitcher(page: Page): Promise<void> {
+  await openTab(page, 'Trade');
+  await switcher(page);
+  const listed = await page.getByTestId('profile-switcher').innerText();
+  check('the name at the top lists every profile, the open one and the PIN one marked', /Owner/.test(listed) && /open now/.test(listed) && /Neil/.test(listed) && /PIN/.test(listed), listed);
+  await page.getByTestId('switcher-add').click();
+  await page.getByTestId('switcher-new-name').fill('Asha');
+  await page.getByTestId('switcher-add-confirm').click();
+  await page.getByTestId('profile-badge').getByText('Asha').waitFor({ timeout: 10_000 });
+  check('a profile added from the switcher is opened at once', (await badge(page)) === 'Asha');
+  check('the switch keeps the screen (Trade)', await page.getByText('New order (virtual money)').isVisible());
+  await page.getByTestId('qty-input').fill('7');
+  await switcher(page);
+  await page.getByTestId('switch-to-Owner').click();
+  await page.getByTestId('switcher-discard').waitFor({ timeout: 5_000 });
+  check('an order being typed is not thrown away without asking', (await badge(page)) === 'Asha');
+  await page.getByTestId('switcher-discard-confirm').click();
+  await page.getByTestId('profile-badge').getByText('Owner').waitFor({ timeout: 10_000 });
+  check('"Discard and switch" opens the other profile', (await badge(page)) === 'Owner');
+  await switcher(page);
+  await page.getByTestId('switch-to-Neil').click();
+  await page.getByTestId('pin-screen').waitFor({ timeout: 10_000 });
+  check('a profile with a PIN asks for it when picked from the switcher', true);
+  await page.getByRole('button', { name: 'Owner', exact: true }).click();
+  await appReady(page);
+  await switcher(page);
+  await page.getByTestId('switcher-manage').click();
+  await page.getByTestId('profiles-screen').waitFor({ timeout: 5_000 });
+  check('"Manage profiles" opens the Profiles tab', true);
+}
+
 async function main(): Promise<void> {
   const web = await serveStatic();
   const url = `http://127.0.0.1:${(web.address() as AddressInfo).port}/`;
@@ -79,6 +119,7 @@ async function main(): Promise<void> {
     await firstStart(page, url);
     await addAndUseNeil(page);
     await pinAndSwitch(page, url);
+    await headerSwitcher(page);
     check('no page errors', errors.length === 0, errors.join(' | '));
   } finally {
     await browser.close();

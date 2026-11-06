@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { Keyboard, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { ProfileError } from '../profiles/profiles';
 import type { Profile, ProfileStore } from '../profiles/profiles';
 import { Button } from '../ui/Button';
@@ -87,6 +87,50 @@ function ProfileCard(props: { p: Profile; open: Profile; profiles: ProfileStore;
   );
 }
 
+/**
+ * "Add a profile". The result is shown under the button, where the person is looking: with the keyboard open the top
+ * of the page, and the list the new card joins, are out of sight.
+ */
+function AddProfile(props: { profiles: ProfileStore; onAdded: () => Promise<void>; onSwitch: (id: string) => void }) {
+  const [newName, setNewName] = useState('');
+  const [added, setAdded] = useState<Profile | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const add = () => {
+    Keyboard.dismiss();
+    setError(null);
+    props.profiles.create(newName).then(
+      async (p) => {
+        setNewName('');
+        setAdded(p);
+        await props.onAdded();
+      },
+      (e: unknown) => setError(e instanceof ProfileError ? e.message : 'That did not work.'),
+    );
+  };
+  return (
+    <Section title="Add a profile">
+      <TextInput
+        value={newName}
+        onChangeText={setNewName}
+        onSubmitEditing={add}
+        style={styles.input}
+        placeholder="Name, for example Neil"
+        accessibilityLabel="New profile name"
+        testID="new-profile-name"
+      />
+      <Button label="Add profile" testID="add-profile" onPress={add} />
+      {error !== null ? <Text style={styles.message}>{error}</Text> : null}
+      {added !== null ? (
+        <View style={styles.added} testID="profile-added">
+          <Text style={styles.message}>{`${added.name} added. It is listed above; open it now, or later from the name at the top.`}</Text>
+          <Button label={`Open ${added.name} now`} testID="open-added" onPress={() => props.onSwitch(added.id)} />
+        </View>
+      ) : null}
+      <Note>Each profile has its own practice account, settings and backup.</Note>
+    </Section>
+  );
+}
+
 /** Profiles on this device (MIP Stage 1.4): open, add, rename, PIN, owner and delete. */
 export function ProfilesScreen(props: {
   profiles: ProfileStore;
@@ -95,7 +139,6 @@ export function ProfilesScreen(props: {
   onChanged: () => void;
 }) {
   const [list, setList] = useState<Profile[]>([]);
-  const [newName, setNewName] = useState('');
   const [message, setMessage] = useState<string | null>(null);
   const refresh = useCallback(async () => setList(await props.profiles.list()), [props.profiles]);
   useEffect(() => {
@@ -111,35 +154,19 @@ export function ProfilesScreen(props: {
       (e: unknown) => setMessage(e instanceof ProfileError ? e.message : 'That did not work.'),
     );
   };
+  const onAdded = async () => {
+    await refresh();
+    props.onChanged();
+  };
   return (
-    <ScrollView contentContainerStyle={styles.page} testID="profiles-screen">
+    <ScrollView contentContainerStyle={styles.page} testID="profiles-screen" keyboardShouldPersistTaps="handled">
       {message !== null ? <Text style={styles.message} testID="profiles-message">{message}</Text> : null}
       <Section title="Profiles on this device">
         {list.map((p) => (
           <ProfileCard key={`${p.id}-${p.name}`} p={p} open={props.open} profiles={props.profiles} run={run} onSwitch={props.onSwitch} />
         ))}
       </Section>
-      <Section title="Add a profile">
-        <TextInput
-          value={newName}
-          onChangeText={setNewName}
-          style={styles.input}
-          placeholder="Name, for example Neil"
-          accessibilityLabel="New profile name"
-          testID="new-profile-name"
-        />
-        <Button
-          label="Add profile"
-          testID="add-profile"
-          onPress={() =>
-            run(async () => {
-              await props.profiles.create(newName);
-              setNewName('');
-            }, 'Profile added.')
-          }
-        />
-        <Note>Each profile has its own practice account, settings and backup.</Note>
-      </Section>
+      <AddProfile profiles={props.profiles} onAdded={onAdded} onSwitch={props.onSwitch} />
     </ScrollView>
   );
 }
@@ -159,4 +186,5 @@ const styles = StyleSheet.create({
     marginTop: 6,
   },
   message: { color: colors.text, marginBottom: 12 },
+  added: { marginTop: 10 },
 });

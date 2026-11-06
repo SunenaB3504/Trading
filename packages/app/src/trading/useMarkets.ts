@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { parseLearningMarket } from '@trading/core';
 import type { LearningMarket } from '@trading/core';
 import type { DataServiceClient } from '../dataClient/client';
@@ -13,12 +13,8 @@ import type { Market } from './market';
 
 /** Device-wide: the last real-price market file received, so practice works offline. */
 export const REAL_MARKET_KEY = 'device/market/real';
-/** Per profile: which prices the Practise section uses. */
-export const MARKET_CHOICE_KEY = 'practise/market';
 
 const IST_OFFSET_MS = 5.5 * 3_600_000;
-
-export type MarketKind = 'demo' | 'real';
 
 export interface Markets {
   /** The market Practise uses now. */
@@ -27,7 +23,6 @@ export interface Markets {
   real: Market | null;
   /** One sentence on where the real prices stand. */
   realNote: string;
-  choose: (kind: MarketKind) => void;
 }
 
 async function savedReal(device: KeyValueStore): Promise<LearningMarket | null> {
@@ -41,17 +36,15 @@ async function savedReal(device: KeyValueStore): Promise<LearningMarket | null> 
  */
 export function useMarkets(
   device: KeyValueStore,
-  profile: KeyValueStore,
   client: DataServiceClient,
   now: () => number,
 ): Markets {
   const [file, setFile] = useState<LearningMarket | null>(null);
   const [fresh, setFresh] = useState<'checking' | 'fresh' | 'saved' | 'none'>('checking');
-  const [kind, setKind] = useState<MarketKind>('demo');
+  // The prices themselves are device-wide: loaded once, not again on every profile switch (a 26 MB file on a phone).
   useEffect(() => {
     let live = true;
     void (async () => {
-      const choice = await profile.get(MARKET_CHOICE_KEY);
       let saved = await savedReal(device);
       const bundled = await bundledMarket();
       if (!live) return;
@@ -67,7 +60,6 @@ export function useMarkets(
       }
       if (!live) return;
       if (saved !== null) setFile(saved);
-      setKind(choice === 'real' ? 'real' : 'demo');
       const r = await client.market();
       if (!live) return;
       const helper = r.ok ? await trimForDevice(device, r.data) : null;
@@ -90,15 +82,8 @@ export function useMarkets(
     return () => {
       live = false;
     };
-  }, [device, profile, client, now]);
+  }, [device, client, now]);
   const real = useMemo(() => (file === null ? null : realMarket(file)), [file]);
-  const choose = useCallback(
-    (k: MarketKind) => {
-      setKind(k);
-      void profile.set(MARKET_CHOICE_KEY, k);
-    },
-    [profile],
-  );
   const realNote =
     real === null
       ? fresh === 'checking'
@@ -106,5 +91,6 @@ export function useMarkets(
         : 'This build carries no real prices. Build them with pnpm market:build, then pnpm market:bundle.'
       : // a phone never has the laptop's data helper, so saying it is unreachable there only reads like an error
         `${real.instruments.length} NSE stocks, prices to ${real.lastDate}${fresh === 'saved' && PLATFORM !== 'android' ? ' (saved copy; the data helper is not reachable)' : ''}.`;
-  return { market: kind === 'real' && real !== null ? real : demoMarket(), real, realNote, choose };
+  // Real NSE prices whenever the device has them; the small demo set only stands in when it has none (owner, D44 UI).
+  return { market: real ?? demoMarket(), real, realNote };
 }

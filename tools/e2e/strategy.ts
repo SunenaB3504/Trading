@@ -16,8 +16,8 @@ const text = (page: Page, id: string): Promise<string> => page.getByTestId(id).i
 
 async function charts(page: Page): Promise<void> {
   await openTab(page, 'Charts');
-  await page.getByTestId('market-real').click();
   await page.getByTestId('chart-screen').waitFor({ timeout: 60_000 });
+  await page.getByTestId('stock-search-open').click();
   await page.getByTestId('stock-search').fill('reliance');
   await page.getByTestId('pick-instrument').getByText('RELIANCE', { exact: true }).click();
   await page.getByTestId('chart-candles').waitFor({ timeout: 30_000 });

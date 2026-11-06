@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
-import type { ScrollViewInstance } from 'react-native';
+import { useKeyboardHeight } from '../hooks/useKeyboardHeight';
 import { formatPaise } from '../format/rupees';
 import { addBefore } from '../journal/journalStore';
 import type { BeforeFields } from '../journal/journalStore';
@@ -15,6 +15,7 @@ import { preTrade } from '@trading/tutor';
 import { AskPanel } from '../tutor/AskPanel';
 import type { TutorEnv } from '../tutor/run';
 import { CoachHint } from '../ui/CoachHint';
+import { useUnsaved } from '../ui/unsaved';
 import { quoteOf } from '../trading/quote';
 import { loadList, pushRecent, recentKey, toggleWatch, watchlistKey } from '../trading/stockLists';
 import { StockPicker } from './StockPicker';
@@ -166,16 +167,34 @@ function useTrade(kv: KeyValueStore, now: () => number, market: Market) {
   const [view, setView] = useState<SessionView | null>(null);
   const [form, setForm] = useState<OrderForm>(() => firstForm(market));
   const [message, setMessage] = useState<string | null>(null);
-  const [journal, setJournal] = useState<BeforeFields>(NO_JOURNAL);
+  const [journal, setJournalState] = useState<BeforeFields>(NO_JOURNAL);
+  // Typed but not placed: a profile switch asks before throwing it away.
+  const [touched, setTouched] = useState(false);
+  const setJournal = (j: BeforeFields) => {
+    setJournalState(j);
+    setTouched(true);
+  };
   useEffect(() => {
+    // another profile or market: start a clean form, so nothing typed for the last one carries over
+    setForm(firstForm(market));
+    setJournalState(NO_JOURNAL);
+    setTouched(false);
+    setMessage(null);
     void PaperSession.open(kv, now, market).then(async (s) => {
       setSession(s);
       setView(await s.view());
     });
   }, [kv, now, market]);
-  const set: SetField = (k, v) => setForm((f) => ({ ...f, [k]: v }));
+  const set: SetField = (k, v) => {
+    setForm((f) => ({ ...f, [k]: v }));
+    setTouched(true);
+  };
   const submit = useCallback(async () => {
-    if (session === null) return;
+    if (session === null) {
+      // the first start also saves the price file, so the book can take a moment to open: say so, never do nothing
+      setMessage('Your practice book is still opening. Try again in a moment.');
+      return;
+    }
     if (form.instrumentId === '') {
       setMessage('Choose a stock first: type its name in the search box.');
       return;
@@ -184,7 +203,8 @@ function useTrade(kv: KeyValueStore, now: () => number, market: Market) {
     setMessage(r.ok ? placedMessage(r, market, form) : r.error);
     if (r.ok) {
       await addBefore(kv, market.id, r.orderId, journal, now());
-      setJournal(NO_JOURNAL);
+      setJournalState(NO_JOURNAL);
+      setTouched(false);
     }
     setView(await session.view());
   }, [session, form, market, journal, kv, now]);
@@ -197,7 +217,7 @@ function useTrade(kv: KeyValueStore, now: () => number, market: Market) {
     },
     [session],
   );
-  return { view, form, message, set, submit, cancel, journal, setJournal };
+  return { view, form, message, set, submit, cancel, journal, setJournal, touched };
 }
 
 /** The stocks offered before anything is typed: what the book holds, the watchlist, and recent picks. */
@@ -290,7 +310,6 @@ function OrderFields(props: {
   form: OrderForm;
   set: SetField;
   lists: ReturnType<typeof useStockLists>;
-  onSearchFocus: () => void;
 }) {
   const { market, form, set, lists } = props;
   return (
@@ -305,7 +324,6 @@ function OrderFields(props: {
         groups={lists.groups}
         watched={lists.watching(form.instrumentId)}
         onToggleWatch={() => lists.toggle(form.instrumentId)}
-        onSearchFocus={props.onSearchFocus}
       />
       <Choice
         label="Type"
@@ -421,18 +439,17 @@ function OrderBar(props: { market: Market; form: OrderForm; set: SetField; submi
 }
 
 export function TradeScreen({ kv, now, market, env, embedded = false }: { kv: KeyValueStore; now: () => number; market: Market; env: TutorEnv; embedded?: boolean }) {
-  const { view, form, message, set, submit, cancel, journal, setJournal } = useTrade(kv, now, market);
+  const { view, form, message, set, submit, cancel, journal, setJournal, touched } = useTrade(kv, now, market);
   const lists = useStockLists(kv, now, market, view);
-  const scroll = useRef<ScrollViewInstance>(null);
-  const [orderTop, setOrderTop] = useState(0);
-  // The keyboard covers the lower half of a phone: bring the search box to the top while it is open.
-  const toSearch = () => setTimeout(() => scroll.current?.scrollTo({ y: orderTop, animated: true }), 150);
+  useUnsaved('trade', touched, 'an order you have not placed');
+  // While a field is being typed in, the bar steps aside so the keyboard leaves room for the field itself.
+  const typing = useKeyboardHeight() > 0;
   const content = (
     <>
       <CoachHint screen="trade" />
-      <View onLayout={(e) => setOrderTop(e.nativeEvent.layout.y)}>
+      <View>
         <Section title="New order (virtual money)">
-          <OrderFields market={market} form={form} set={set} lists={lists} onSearchFocus={toSearch} />
+          <OrderFields market={market} form={form} set={set} lists={lists} />
           <JournalFields value={journal} onChange={setJournal} />
           <AskPanel env={env} label="Check my plan before I trade" testID="pre-trade" build={() => preTrade({ order: orderText(form), facts: [{ key: 'side', label: 'side', value: form.side }, { key: 'quantity', label: 'quantity', value: form.quantity || 'not set' }], flags: [], journal, symbols: form.instrumentId === '' ? [] : [form.instrumentId], names: env.names, lessonIds: ['habits-that-help', 'types-of-risk'] })} />
         </Section>
@@ -454,10 +471,10 @@ export function TradeScreen({ kv, now, market, env, embedded = false }: { kv: Ke
     );
   return (
     <View style={styles.screen}>
-      <ScrollView ref={scroll} contentContainerStyle={styles.page} keyboardShouldPersistTaps="handled" testID="trade-screen">
+      <ScrollView contentContainerStyle={styles.page} keyboardShouldPersistTaps="handled" testID="trade-screen">
         {content}
       </ScrollView>
-      {bar}
+      {typing ? null : bar}
     </View>
   );
 }

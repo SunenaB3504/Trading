@@ -25,6 +25,7 @@ async function dayOne(page: Page): Promise<void> {
   await page.getByTestId('start-recovery-2020').click();
   await page.getByTestId('tm-session').waitFor({ timeout: 30_000 });
   check('a scenario starts on its first day', /Date: 2020-04-01/.test(await text(page, 'tm-date')));
+  await page.getByTestId('stock-search-open').click();
   await page.getByTestId('stock-search').fill('infy');
   check('only the scenario’s instruments can be chosen', (await page.getByTestId('pick-instrument').getByText('INFY', { exact: true }).count()) === 0);
   await page.getByTestId('stock-search').fill('nifty');
