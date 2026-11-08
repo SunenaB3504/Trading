@@ -14,7 +14,7 @@ export interface SyncResult {
 }
 
 export function getManifestMaxDate(): string {
-  return (barsManifestData as { max_date?: string }).max_date || '2026-11-05';
+  return (barsManifestData as { max_date?: string }).max_date || '2026-11-06';
 }
 
 /**

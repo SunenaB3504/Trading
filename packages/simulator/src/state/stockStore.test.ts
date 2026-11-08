@@ -24,7 +24,7 @@ describe('useStockStore & Forward Date Anchoring', () => {
   });
 
   it('anchors to the latest historical bar when given a future evaluation date', () => {
-    const futureDate = '2026-10-31';
+    const futureDate = '2026-12-31';
     useStockStore.getState().loadStock('TCS', futureDate);
 
     const stock = useStockStore.getState();
